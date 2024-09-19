@@ -26,8 +26,8 @@ public class Site {
     @Column(name = "Site_Name", nullable = false, length = 10, unique = true) //구역이름
     private String siteName;
 
-    @Column(name = "Site_IsAvailable", nullable = false, length = 1)    // 예약 가능여부
-    private char siteIsAvailable = 'N';
+    @Column(nullable = false, length = 1)    // 예약 가능여부
+    private char siteIsavailable = 'N';
 
     @Column(name = "Site_Res_Limit", nullable = false, length = 1)      // 예약 제한
     private char siteResLimit = 'N';

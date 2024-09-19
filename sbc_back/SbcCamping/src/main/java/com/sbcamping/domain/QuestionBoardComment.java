@@ -31,11 +31,11 @@ public class QuestionBoardComment { // 문의게시판 댓글
     @Column(name="Qboard_Comment_Content", length = 200, nullable = false)
     private String qCommentContent; // 댓글 내용
 
-    @Column(name="QBoard_Comment_Date", nullable = false)
+    @Column(name = "QBoard_Comment_Date", nullable = false)
     private String qCommentDate;  // 댓글 작성일
 
-    @Column(name = "QBaord_isAdmin", nullable = false)
-    private char qBaordIsAdmin = 'N';
+    @Column(nullable = false)
+    private char qBoardIsadmin = 'N';
 
     @PrePersist
     protected void onCreate() {
