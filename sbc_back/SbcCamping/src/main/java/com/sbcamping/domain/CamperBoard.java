@@ -38,14 +38,10 @@ public class CamperBoard {
     private Long cBoardViews;      //게시글 조회수
 
     @Column(name = "Cboard_Date", nullable = false)
-    private String cBoardDate;       //캠퍼게시판 게시글 작성일자
+    @Temporal(TemporalType.DATE)
+    private Date cBoardDate;       //캠퍼게시판 게시글 작성일자
 
     @Column(name = "Cboard_Attachment", nullable = true, length = 200)
     private String cBoardAttachment;    //파일 첨부여부(url,링크)
 
-    @PrePersist
-    protected void onCreate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        cBoardDate = sdf.format(new Date());  // 현재 날짜를 패턴에 맞춰 저장한다
-    }
 }

@@ -34,15 +34,10 @@ public class NoticeBoard {
     private String nBoardContent;
 
     @Column(name = "nboard_Date", nullable = false) // 작성일
-    private String nBoardDate;
+    @Temporal(TemporalType.DATE)
+    private Date nBoardDate;
 
     @Column(name = "nboard_Views", nullable = false, columnDefinition = "NUMBER(10,0)")       // 조회수
     private Long nBoardViews;
 
-    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
-    @PrePersist
-    protected void dateFormat() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        nBoardDate = sdf.format(new Date());
-    }
 }

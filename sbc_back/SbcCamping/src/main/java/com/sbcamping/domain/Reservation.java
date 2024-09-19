@@ -30,9 +30,11 @@ public class Reservation {
     private Long resPeople; // 인원수
 
     @Column(name = "CHECKIN_DATE", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date checkinDate; // 입실 날짜
 
     @Column(name = "CHECKOUT_DATE", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date checkoutDate; // 퇴실 날짜
 
     @Column(name = "RES_DATE", nullable = false)
@@ -62,13 +64,5 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "SITE_ID", referencedColumnName = "Site_ID")
     private Site site;
-
-    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
-    @PrePersist
-    protected void dateFormat() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        resDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-        resCancelDate = sdf.format(new Date());
-    }
 
 }

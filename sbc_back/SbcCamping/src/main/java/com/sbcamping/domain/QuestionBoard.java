@@ -37,7 +37,8 @@ public class QuestionBoard { // 문의게시판
     private Long qBoardViews;   // 문의 게시판 글 조회수
 
     @Column(name = "QBoard_Date", nullable = false)
-    private String qBoardDate; // 문의 게시판 글 작성일 (기본값 설정)
+    @Temporal(TemporalType.DATE)
+    private Date qBoardDate; // 문의 게시판 글 작성일 (기본값 설정)
 
     @Column(name = "QBoard_asked", length = 1, nullable = false)
     private char qBoardAsked = 'N'; // 관리자 답변 상태 (기본값 설정)
@@ -45,9 +46,4 @@ public class QuestionBoard { // 문의게시판
     @Column(name = "QBoard_notice", length = 1, nullable = false)
     private char qBoardNotice = 'N';    // 공지 여부 (기본값 설정)
 
-    @PrePersist
-    protected void onCreate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        qBoardDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-    }
 }

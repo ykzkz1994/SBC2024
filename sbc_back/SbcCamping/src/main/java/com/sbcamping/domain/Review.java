@@ -27,7 +27,8 @@ public class Review {
     private String reviewContent; // 리뷰 내용
 
     @Column(name = "REVIEW_DATE", nullable = false)
-    private String reviewDate; // 리뷰 작성일
+    @Temporal(TemporalType.DATE)
+    private Date reviewDate; // 리뷰 작성일
 
     @Column(name = "REVIEW_ATTACHMENT", length = 200)
     private String reviewAttachment; // 파일 첨부
@@ -67,12 +68,5 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
     private Member member;
-
-    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
-    @PrePersist
-    protected void dateFormat() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        reviewDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-    }
 
 }

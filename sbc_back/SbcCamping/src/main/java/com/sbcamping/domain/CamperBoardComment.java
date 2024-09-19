@@ -34,12 +34,7 @@ public class CamperBoardComment {   // 캠퍼 게시판 댓글
     private String cCommentContent; // 댓글 내용
 
     @Column(name = "Cboard_Date",nullable = false)
-    private String cCommentDate;  // 댓글 작성일
-
-    @PrePersist
-    protected void onCreate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        cCommentDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-    }
+    @Temporal(TemporalType.DATE)
+    private Date cCommentDate;  // 댓글 작성일
 
 }

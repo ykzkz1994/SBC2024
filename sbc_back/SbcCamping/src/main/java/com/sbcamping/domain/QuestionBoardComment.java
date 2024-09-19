@@ -32,15 +32,10 @@ public class QuestionBoardComment { // 문의게시판 댓글
     private String qCommentContent; // 댓글 내용
 
     @Column(name = "QBoard_Comment_Date", nullable = false)
-    private String qCommentDate;  // 댓글 작성일
+    @Temporal(TemporalType.DATE)
+    private Date qCommentDate;  // 댓글 작성일
 
     @Column(nullable = false)
     private char qBoardIsadmin = 'N';
-
-    @PrePersist
-    protected void onCreate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        qCommentDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-    }
 
 }

@@ -37,26 +37,22 @@ public class Member {
     private char memberGender; // 회원 성별
 
     @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date memberBirth; // 회원 생년월일
 
     @Column(length = 30, nullable = false)
     private String memberLocal; // 회원 지역
 
-    private String memberRegDate; // 회원 등록일
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date memberRegDate; // 회원 등록일
 
-    @Column(name = "MEMBER_STATUS", nullable = false, length = 3)
+    @Column(name = "MEMBER_STATUS", nullable = false, length = 3, columnDefinition = "CHAR(3)")
     @Builder.Default
     private String memberStatus = "ON"; // 회원 상태
 
     @Column(length = 10, nullable = false)
     @Builder.Default
     private String memberRole = "ROLE_USER"; // 회원 권한
-
-    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
-    @PrePersist
-    protected void dateFormat() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        memberRegDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
-    }
 
 }

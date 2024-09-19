@@ -48,5 +48,4 @@ public class Site {
     @Builder.Default
     private Long siteMaxPeople = 6L;
 
-
 }
