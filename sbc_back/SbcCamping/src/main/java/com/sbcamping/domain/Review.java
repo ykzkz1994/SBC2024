@@ -2,9 +2,8 @@ package com.sbcamping.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import javax.print.attribute.standard.MediaSize;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -18,7 +17,7 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REVIEW_ID", precision = 10)
+    @Column(name = "REVIEW_ID", columnDefinition = "NUMBER(10,0)")
     private Long reviewID; // 리뷰 번호
 
     @Column(name = "REVIEW_TITLE", nullable = false, length = 50)
@@ -28,7 +27,7 @@ public class Review {
     private String reviewContent; // 리뷰 내용
 
     @Column(name = "REVIEW_DATE", nullable = false)
-    private Date reviewDate; // 리뷰 작성일
+    private String reviewDate; // 리뷰 작성일
 
     @Column(name = "REVIEW_ATTACHMENT", length = 200)
     private String reviewAttachment; // 파일 첨부
@@ -69,5 +68,11 @@ public class Review {
     @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
     private Member member;
 
+    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
+    @PrePersist
+    protected void dateFormat() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        reviewDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
+    }
 
 }

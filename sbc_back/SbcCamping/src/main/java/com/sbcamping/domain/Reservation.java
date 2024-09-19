@@ -26,27 +26,27 @@ public class Reservation {
     @Column(name = "RES_USER_PHONE", nullable = false, length = 11)
     private String resUserPhone; // 예약자 핸드폰 번호
 
-    @Column(name = "RES_PEOPLE", nullable = false, precision = 1)
+    @Column(name = "RES_PEOPLE", nullable = false, columnDefinition = "NUMBER(1,0)")
     private Long resPeople; // 인원수
 
     @Column(name = "CHECKIN_DATE", nullable = false)
-    private String checkinDate; // 입실 날짜
+    private Date checkinDate; // 입실 날짜
 
     @Column(name = "CHECKOUT_DATE", nullable = false)
     private Date checkoutDate; // 퇴실 날짜
 
     @Column(name = "RES_DATE", nullable = false)
-    private Date resDate;// 예약날자
+    private String resDate;// 예약 날짜
 
     @Column(name = "RES_STATUS", nullable = false, length = 10)
     @Builder.Default
     private String resStatus = "예약완료"; // 예약 상태
 
-    @Column(name = "RES_TOTAL_PAY", nullable = false, precision = 10)
+    @Column(name = "RES_TOTAL_PAY", nullable = false, columnDefinition = "NUMBER(10,0)")
     private Long resTotalPay; // 결제금액
 
     @Column(name = "RES_CANCEL_DATE")
-    private Date resCancelDate; // 취소날짜
+    private String resCancelDate; // 취소날짜
 
     @Column(name = "RES_CANCEL_REASON")
     private String resCancelReason; // 취소사유
@@ -67,7 +67,8 @@ public class Reservation {
     @PrePersist
     protected void dateFormat() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        checkinDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
+        resDate = sdf.format(new Date());  // 현재 날짜를 포맷하여 저장
+        resCancelDate = sdf.format(new Date());
     }
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -23,19 +24,25 @@ public class NoticeBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_BOARD_SEQ_GEN")
     //Long = scale    String,Char = length
-    @Column(name = "nboard_Id", nullable = false, precision = 10)          // 공지사항 글 번호
-    private Long nboardID;
+    @Column(name = "nboard_Id", nullable = false, columnDefinition = "NUMBER(10,0)")          // 공지사항 글 번호
+    private Long nBoardID;
 
     @Column(name = "nboard_Title", nullable = false, length = 50)       // 공지사항 글 제목
-    private String nboardTitle;
+    private String nBoardTitle;
 
     @Column(name = "nboard_Content", nullable = false, length = 1000)   // 공지사항 글 내용
-    private String nboardContent;
+    private String nBoardContent;
 
-    @Column(name = "nboard_Date", nullable = false) //작성일
-    @ColumnDefault("sysdate")
-    private Date nboardDate;
+    @Column(name = "nboard_Date", nullable = false) // 작성일
+    private String nBoardDate;
 
-    @Column(name = "nboard_Views", nullable = false, length = 50)       // 조회수
-    private String nboardViews;
+    @Column(name = "nboard_Views", nullable = false, columnDefinition = "NUMBER(10,0)")       // 조회수
+    private Long nBoardViews;
+
+    // 날짜 yyyy-MM-dd 형태로 변경한 후 DB에 저장하는 메소드
+    @PrePersist
+    protected void dateFormat() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        nBoardDate = sdf.format(new Date());
+    }
 }
