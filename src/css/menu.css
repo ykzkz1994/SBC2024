@@ -1,0 +1,47 @@
+
+.imgwrap{
+    width: 100%;
+    max-height: 420px;
+}
+.quickmenuwrap{
+    margin: auto 0;
+    height: 50px;
+    width: 100%;
+}
+#menuImg{
+    width: 100%;
+    max-height: 420px;
+}
+
+#menubuttonwrap{
+    margin: -60px 0;
+    display: flex;
+    justify-content: space-between;
+    border-collapse: collapse;
+}
+
+.menubutton{
+    margin-bottom: 70px;
+    padding: 20px 0;
+    text-decoration: none;
+    background-color: white;
+    border: 1px solid rgb(168, 168, 168);
+    color: black;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    border-collapse: collapse;
+    margin-right: -1px;
+}
+
+
+
+.menubutton:hover{
+    background-color: #f68b1e;
+    color: white;
+}
+
+.clicked{
+    background-color: #f68b1e;
+    color: white;
+}
