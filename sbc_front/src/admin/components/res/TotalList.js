@@ -3,7 +3,7 @@ const TotalList = () => {
 
     return (
         <div>
-            <h2>전체 예약 리스트</h2>
+            <h2>전체 예약 리스트 컴포넌트 </h2>
 
             <div>
                 <table className="min-w-full border-collapse border border-gray-400">

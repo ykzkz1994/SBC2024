@@ -3,7 +3,7 @@ const ResList = () => {
     return (
 
         <div>
-            <h2>예약 현황 리스트</h2>
+            <h2>예약 현황 리스트 컴포넌트</h2>
 
             <div>
                 <table className="table-fixed w-full border-separate rounded-[20px] border-8">

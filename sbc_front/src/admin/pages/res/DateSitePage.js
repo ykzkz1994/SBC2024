@@ -22,7 +22,7 @@ const DateSitePage = () => {
                 </div>
 
             </div>
-            <h1>날짜/구역별 예약 리스트 컴포넌트 페이지</h1>
+            <h1>날짜/구역별 예약 리스트 페이지</h1>
 
             <DateSiteResList/>
 
