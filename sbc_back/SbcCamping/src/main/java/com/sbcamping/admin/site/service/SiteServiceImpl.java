@@ -11,5 +11,5 @@ public class SiteServiceImpl implements SiteService{
     private SiteRepository siteRepository;
 
     @Override
-    public List<Site> getSiteById(Long id) {}
+    public List<Site> getSiteById(Long id);
 }
