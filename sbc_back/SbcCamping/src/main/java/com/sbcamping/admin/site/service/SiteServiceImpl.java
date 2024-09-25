@@ -9,7 +9,7 @@ public class SiteServiceImpl implements SiteService{
 
     @Autowired
     private SiteRepository siteRepository;
-#주석
+
     @Override
     public List<Site> getSiteById(Long id);
 }

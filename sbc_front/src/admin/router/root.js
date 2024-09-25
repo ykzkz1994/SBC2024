@@ -1,49 +1,45 @@
 //root.js는 createBrowserRouter를 통해서 어떤 컴포넌트를 보여줄 것인지 결정한다
 
-import { Suspense, lazy } from "react";
-import SiteManagementsPage from "../pages/site/SiteManagementsPage";
-import TotalPage from "../pages/res/TotalPage";
-import DateSitePage from "../pages/res/DateSitePage";
-import { createBrowserRouter } from "react-router-dom";
+import {Suspense, lazy} from "react";
 
-
+import {createBrowserRouter} from "react-router-dom";
+import SiteManagementsPage   from "../pages/site/SiteManagementsPage";
+import resRouter from "./resRouter";
 
 const Loading = <div>Loading....</div>
 
 
-
-
 //지연로딩을 하는 리액트 지원함수 lazy =>미리 로딩하지않고 필요 할 때 로딩하여 초기 로딩 시간을 개선하여 사용 경험을 좋게만듦
+//메인페이지
 const Main = lazy(() => import("../pages/MainPage.js"))
-const site = lazy(() => import("../pages/site/SiteManagementsPage.js"))
-const res = lazy(() => import("../pages/res/TotalPage.js"))
+//구역관리페이지
+const Site = lazy(() => import("../pages/site/SiteManagementsPage.js"))
+//예약 인덱스 페이지(전체/취소/예약은 인덱스페이지 안에서 Outlet으로 분류됨 )
+const ResIndex = lazy(() => import("../pages/res/ResIndexPage.js"))
 
 
 
 const root = createBrowserRouter([
     {//메인페이지 라우터
-        path: "",
+        path: "/",
         element: <Suspense fallback={Loading}><Main/></Suspense>
     },
-    
+
     { //구역관리 페이지 라우터
         path: "site",
-        element: <Suspense fallback={Loading}><SiteManagementsPage/></Suspense>
+        element: <Suspense fallback={Loading}><Site/></Suspense>
     },
 
-    { //예약리스트 페이지 라우터
-        path: "res/total",
-        element: <Suspense fallback={Loading}><TotalPage/></Suspense>
-    },
+    { //예약관리의 기본경로 자식은 resRouter
+        path: "res",
+        //root 페이지 위에서 선언한 lazy지연기능이 포함된 페이지 이동 함수
+        element: <Suspense fallback={Loading}><ResIndex/></Suspense>,
+        children: resRouter()
 
-    { //예약리스트 달력형  페이지 라우터
-        path: "res/datesite",
-        element: <Suspense fallback={Loading}><DateSitePage/></Suspense>
     },
-
-    { //공지사항 페이지 라우터
-        path: "notice",
-        element: <Suspense fallback={Loading}><SiteManagementsPage/></Suspense>
+    { // 기타 모든 경로에 대한 404 페이지
+        path: "*",
+        element: <div>404 페이지를 찾을 수 없습니다.</div>
     }
-    ])
+])
 export default root;
