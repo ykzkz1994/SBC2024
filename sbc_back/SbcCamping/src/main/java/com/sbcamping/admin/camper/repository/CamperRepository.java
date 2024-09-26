@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CamperRepository extends JpaRepository<CamperBoard, Long> {
 
-    @Query("select c from CamperBoard c where c.cBoardID = :cBoardID")
+    @Query("select c, m.memberName from CamperBoard c join c.member m")
     Optional<CamperBoard> selectOne(@Param("cBoardID") Long cbno);
 
 }

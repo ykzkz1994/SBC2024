@@ -46,8 +46,8 @@ public class CamperServiceImpl implements CamperService {
         java.util.Optional<CamperBoard> result = camperRepository.selectOne(cbno);
 
         CamperBoard cb = result.orElseThrow();
-        CamperDTO camperDTOdto = entityToDTO(cb);
-        return camperDTOdto;
+        CamperDTO camperDTO = entityToDTO(cb);
+        return camperDTO;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class CamperServiceImpl implements CamperService {
         CamperDTO camperDTO = CamperDTO.builder().cBoardID(cb.getCBoardID())
                 .cBoardTitle(cb.getCBoardTitle()).cBoardContent(cb.getCBoardContent())
                 .cBoardDate(cb.getCBoardDate()).cBoardCategory(cb.getCBoardCategory())
-                .cBoardViews(cb.getCBoardViews()).memberId(member.getMemberID()).build();
+                .cBoardViews(cb.getCBoardViews()).member(cb.getMember()).build();
 
         return camperDTO;
     }
