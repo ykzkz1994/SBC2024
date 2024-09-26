@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import BasicLayout from "../../layouts/BasicLayout";
+import BasicLayout from "../../layout/BasicLayout";
 import CommunityMenu from "../../components/menus/CommunityMenu";
 
 const CamperIndexPage = () =>{

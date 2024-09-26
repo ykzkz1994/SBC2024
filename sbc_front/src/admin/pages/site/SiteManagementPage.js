@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import BasicLayout from "../../layouts/BasicLayout";
+import BasicLayout from "../../layout/BasicLayout";
 import SiteMenu from "../../components/menus/SiteMenu";
 
 const SiteIndexPage = () =>{
