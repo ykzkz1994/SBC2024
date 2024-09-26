@@ -2,12 +2,17 @@ import React, { useState } from 'react'; // React 기본 라이브러리 및 use
 import CancelList from '../../components/res/CancelList'; // 취소 리스트 컴포넌트
 import ResList from '../../components/res/ResList'; // 예약 리스트 컴포넌트
 import TotalList from '../../components/res/TotalList'; // 전체 리스트 컴포넌트
-import { Link } from "react-router-dom";
-import BasicLayout from "../../layout/BasicLayout"; // 페이지 이동을 위한 Link 훅
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import ResMenu  from "../../components/menus/ResMenu";
+import BasicLayout from "../../layout/BasicLayout";
+import CommunityMenu from "../../components/menus/CommunityMenu"; // 페이지 이동을 위한 Link 훅
 
 const TotalPage = () => {
+
     // 컴포넌트 상태를 변경할 수 있는 함수, 기본값은 'TotalList'
     const [currentComponent, setCurrentComponent] = useState('TotalList');
+    const navigate = useNavigate(); // 경로 이동을 위한 훅
+    const location = useLocation(); // 현재 경로 정보를 얻기 위한 훅
 
     //디버깅확인용 로그
     console.log("TotalPage 로드 됐따!!!!");
@@ -26,33 +31,26 @@ const TotalPage = () => {
                 return <TotalList />;
         }
     };
+    // 현재 경로와 비교하여 버튼을 비활성화할 조건
+    const isCurrentPage = (path) => location.pathname === path;
+
 
     return (
-        <BasicLayout>
-            <div>
-                <div>
-                    <div>
-                        {/*a tag이용시 어플리케이션 자체 로딩이 새로 시작되기 때문에 리액트에선 쓰면 안됨*/}
-                        {/*그래서 Link태그로 대체하여 사용*/}
-                        {/*누르면 전체 예약리스트로 이동*/}
-                        <Link to={'/res/total'}>전체예약리스트</Link>
-                        <br/>
-                        {/*누르면 달력형 예약리스트로 이동*/}
-                        <Link to={'/res/datesite'}>날짜 / 구역별 예약 리스트</Link>
-                    </div>
-                </div>
-                <h1>전체 예약 조회 페이지</h1>
+
+        <div>
+
+            <h1>전체 예약 조회 페이지</h1>
 
 
-                <select value={currentComponent} onChange={(e) => setCurrentComponent(e.target.value)}>
-                    <option value="TotalList">전체 예약 조회</option>
-                    <option value="ResList">예약 완료 조회</option>
-                    <option value="CancelList">예약 취소 조회</option>
-                </select>
+            <select value={currentComponent} onChange={(e) => setCurrentComponent(e.target.value)}>
+                <option value="TotalList">전체 예약 조회</option>
+                <option value="ResList">예약 완료 조회</option>
+                <option value="CancelList">예약 취소 조회</option>
+            </select>
 
-                {renderComponent()}
-            </div>
-        </BasicLayout>
+            {renderComponent()}
+        </div>
+
 
     );
 };
