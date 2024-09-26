@@ -1,28 +1,80 @@
-import {createBrowserRouter} from "react-router-dom"
-import { Suspense, lazy } from "react"
-import camperRouter from "../router/camperRouter"
+import {Suspense, lazy} from "react";
+import { createBrowserRouter } from "react-router-dom"; 
+import Spinner from 'react-bootstrap/Spinner';
+import siteRouter from "../router/siteRouter";
+import memberRouter from "../router/memberRouter";
+import camperRouter from "../router/camperRouter";
+import noticeRouter from "../router/noticeRouter";
+import statsRouter from "../router/statsRouter";
+import reviewRouter from "../router/reviewRouter";
+import qnaRouter from "../router/qnaRouter";
+import resRouter from "../router/resRouter";
 
-// 컴포넌트 처리가 끝나지 않았을때 하면에 보여지는 메시지
-const Loading = <div>Loading....</div> 
 
-const Main = lazy(()=> import("../../admin/pages/MainPage"))
-const Member = lazy(()=> import("../pages/MemberPage"))
-const CamperIndex = lazy(()=> import("../pages/camper/IndexPage"))
+const Loading = <Spinner animation="border"/>
+const Main = lazy(()=> import("../pages/MainPage"))
+const MemberIndex = lazy(()=> import("../pages/member/MemberIndexPage"))
+const ResIndex = lazy(()=>import("../pages/res/ResIndexPage"))
+const StatsIndex = lazy(()=>import("../pages/stats/StatsIndexPage"))
+const Site = lazy(()=>import("../pages/site/SiteManagementPage"))
+
+// 커뮤니티
+const CamperIndex = lazy(() => import("../pages/camper/CamperIndexPage"))
+const NoticeIndex = lazy(()=> import("../pages/notice/NoticeIndexPage"))
+const QnaIndex = lazy(()=> import("../pages/qna/QnaIndexPage"))
+const ReviewIndex = lazy(()=> import("../pages/review/ReviewIndexPage"))
+
+// 주소
+const prefix = "api/admin/"
 
 const root = createBrowserRouter([
+   
     {
-        path : "/api/admin",
-        element : <Suspense fallback={Loading}><Main/></Suspense>
+        path : `${prefix}`,
+        element: <Suspense fallback={Loading}><Main/></Suspense>
     },
     {
-        path : "/api/admin/members",
-        element : <Suspense fallback={Loading}><Member/></Suspense>
+        path: `${prefix}site/`,
+        element: <Suspense fallback={Loading}><Site/></Suspense>,
+        children: siteRouter()
     },
     {
-        path : "/api/admin/campers",
+        path: `${prefix}res/`,
+        element: <Suspense fallback={Loading}><ResIndex/></Suspense>,
+        children: resRouter()
+    },
+    {
+        path: `${prefix}member/`,
+        element: <Suspense fallback={Loading}><MemberIndex/></Suspense>,
+        children: memberRouter()
+    },
+    {
+        path: `${prefix}campers/`,
         element: <Suspense fallback={Loading}><CamperIndex/></Suspense>,
         children: camperRouter()
+    },
+    {
+        path: `${prefix}notices/`,
+        element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
+        children: noticeRouter()
+    },
+    {
+        path: `${prefix}qnas/`,
+        element: <Suspense fallback={Loading}><QnaIndex/></Suspense>,
+        children: qnaRouter()
+    },
+    {
+        path: `${prefix}reviews/`,
+        element: <Suspense fallback={Loading}><ReviewIndex/></Suspense>,
+        children: reviewRouter()
+    },
+    {
+        path: `${prefix}stats/`,
+        element: <Suspense fallback={Loading}><StatsIndex/></Suspense>,
+        children: statsRouter()
     }
+
+
 ])
 
 export default root;

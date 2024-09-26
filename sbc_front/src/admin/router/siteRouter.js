@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 const Loading = <div>Loading . . .</div>
 
-const camperRouter = () => {
+const siteRouter = () => {
     return[
         {
             path: "*",
@@ -12,4 +12,4 @@ const camperRouter = () => {
     ]
 }
 
-export default camperRouter;
+export default siteRouter;

@@ -3,13 +3,13 @@ import { Navigate } from "react-router-dom";
 
 const Loading = <div>Loading . . .</div>
 
-const camperRouter = () => {
+const noticeRouter = () => {
     return[
         {
-            path: "*",
-            element : <Navigate replace to="notice"/>
+            path: "",
+            element : <Navigate replace to="/api/admin/notices"/>
         },
     ]
 }
 
-export default camperRouter;
+export default noticeRouter;
