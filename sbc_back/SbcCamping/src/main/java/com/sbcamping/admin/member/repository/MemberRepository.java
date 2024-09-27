@@ -15,4 +15,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 휴면회원 리스트
     @Query("select m from Member m where m.memberStatus='OFF'")
     Page<Member> selectInactive(Pageable pageable);
+
+    // 회원 검색 (1) 회원명
+    Page<Member> findByMemberNameContaining(String name, Pageable pageable);
+
+    // 회원 검색 (2) 핸드폰 뒷자리
+    Page<Member> findByMemberPhoneContaining(String phone, Pageable pageable);
+
+    // 회원 검색 (3) 이메일
+    Page<Member> findByMemberEmailContaining(String email, Pageable pageable);
+
 }

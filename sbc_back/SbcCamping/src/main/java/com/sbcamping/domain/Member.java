@@ -36,7 +36,7 @@ public class Member {
     @Column(nullable = false, length = 1)
     private char memberGender; // 회원 성별
 
-    @Column(nullable = false)
+    @Column(length=8, nullable = false)
     private String memberBirth; // 회원 생년월일
 
     @Column(length = 30, nullable = false)

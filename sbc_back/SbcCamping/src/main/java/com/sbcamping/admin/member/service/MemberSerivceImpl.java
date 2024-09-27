@@ -34,22 +34,20 @@ public class MemberSerivceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDTO<MemberDTO> fullList(PageRequestDTO requestDTO, String keyword) {
+    public PageResponseDTO<MemberDTO> fullList(PageRequestDTO requestDTO, String order) {
         Pageable pageable = null;
 
-        if (keyword == null) {
+        if (order == null) {
             pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("memberID").ascending());
         } else {
-            if (String.valueOf(keyword.charAt(0)).equals("-")) {
-                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(keyword.substring(1)).descending());
+            if (String.valueOf(order.charAt(0)).equals("-")) {
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order.substring(1)).descending());
             } else {
-                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(keyword).ascending());
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order).ascending());
             }
         }
 
         Page<Member> members = memberRepository.findAll(pageable);
-
-        log.info("member?! : " + members.getContent());
 
         long totalCount = members.getTotalElements();
 
@@ -64,22 +62,20 @@ public class MemberSerivceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDTO<MemberDTO> inactiveFullList(PageRequestDTO requestDTO, String keyword) {
+    public PageResponseDTO<MemberDTO> inactiveFullList(PageRequestDTO requestDTO, String order) {
         Pageable pageable = null;
 
-        if (keyword == null) {
+        if (order == null) {
             pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("memberID").ascending());
         } else {
-            if (String.valueOf(keyword.charAt(0)).equals("-")) {
-                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(keyword.substring(1)).descending());
+            if (String.valueOf(order.charAt(0)).equals("-")) {
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order.substring(1)).descending());
             } else {
-                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(keyword).ascending());
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order).ascending());
             }
         }
 
         Page<Member> members = memberRepository.selectInactive(pageable);
-
-        log.info("member?! : " + members.getContent());
 
         long totalCount = members.getTotalElements();
 
@@ -90,5 +86,42 @@ public class MemberSerivceImpl implements MemberService {
                 .totalCount(totalCount)
                 .pageRequestDTO(requestDTO)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageResponseDTO<MemberDTO> searchMember(PageRequestDTO requestDTO, String type, String keyword, String order) {
+        Pageable pageable = null;
+        Page<Member> searchMembers = null;
+
+        if (keyword != null) {
+            if (String.valueOf(order.charAt(0)).equals("-")) {
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order.substring(1)).descending());
+            } else {
+                pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by(order).ascending());
+            }
+
+            searchMembers = switch (type) {
+                case "name" -> memberRepository.findByMemberNameContaining(keyword, pageable);
+                case "phone" -> memberRepository.findByMemberPhoneContaining(keyword, pageable);
+                case "email" -> memberRepository.findByMemberEmailContaining(keyword, pageable);
+                default -> null;
+            };
+
+        } else {
+            pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("memberID").ascending());
+            searchMembers = memberRepository.findAll(pageable);
+        }
+
+        long totalCount = searchMembers.getTotalElements();
+
+        List<MemberDTO> dtoList = searchMembers.getContent().stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+
+        return PageResponseDTO.<MemberDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(totalCount)
+                .pageRequestDTO(requestDTO)
+                .build();
+
     }
 }

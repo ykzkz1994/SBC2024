@@ -16,6 +16,7 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 @Log4j2
@@ -27,14 +28,15 @@ public class ServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Commit
-    @Transactional
+
     @Test
     public void test() {
-        Member member = Member.builder().memberEmail("hong@naver.com").memberGender('F').memberPw("1234").memberBirth("19921010").memberPhone("01011117896").memberName("반길동").memberLocal("충남").memberRole("ROLE_USER").memberRegDate(new Date(2020/10/10)).memberStatus("OFF").build();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("memberID").ascending());
+        Page<Member> page = memberRepository.findByMemberNameContaining("반", pageable);
 
-        memberRepository.save(member);
-        log.info(member);
+        List<Member> members = page.getContent();
 
+        log.info(page);
+        log.info(members);
     }
 }
