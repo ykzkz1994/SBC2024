@@ -73,7 +73,7 @@ const root = createBrowserRouter([
         children: camperRouter()
     },
     {
-        path: `${prefix}notices/`,
+        path: `notice`,
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
         children: noticeRouter()
     },

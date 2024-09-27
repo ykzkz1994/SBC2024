@@ -1,4 +1,9 @@
 package com.sbcamping.admin.notice.repository;
 
-public class NoticeRepository {
+import com.sbcamping.domain.NoticeBoard;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface NoticeRepository extends JpaRepository<NoticeBoard,Long> {
+
 }

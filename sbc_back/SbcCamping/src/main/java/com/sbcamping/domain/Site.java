@@ -48,4 +48,36 @@ public class Site {
     @Builder.Default
     private Long siteMaxPeople = 6L;
 
+    //
+    public void changeSiteName(String Name) {
+        this.siteName = Name;
+    }
+
+
+    public void changeIsAvailable(char IsAvailable) {
+        this.siteIsavailable = IsAvailable;
+    }
+
+    public void changeResLimit(char ResLimit) {
+        this.siteResLimit = ResLimit;
+    }
+
+    public void changeWeekendPay(Long WeekendPay) {
+        this.siteWeekendPay = WeekendPay;
+    }
+
+    public void changeWeekdayPay(Long WeekdayPay) {
+        this.siteWeekdayPay = WeekdayPay;
+    }
+
+    public void changeMinPeople(Long MinPeople) {
+        this.siteMinPeople = MinPeople;
+    }
+
+    public void changeMaxPeople(Long MaxPeople) {
+        this.siteMaxPeople = MaxPeople;
+    }
+
+
+    
 }
