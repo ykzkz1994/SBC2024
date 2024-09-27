@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -38,7 +39,7 @@ public class Reservation {
     private Date checkoutDate; // 퇴실 날짜
 
     @Column(name = "RES_DATE", nullable = false)
-    private String resDate;// 예약 날짜
+    private LocalDate resDate;// 예약 날짜
 
     @Column(name = "RES_STATUS", nullable = false, length = 10)
     @Builder.Default
