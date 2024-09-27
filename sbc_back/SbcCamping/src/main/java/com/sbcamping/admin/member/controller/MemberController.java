@@ -27,12 +27,11 @@ public class MemberController {
     @Autowired
     private final MemberService memberService;
 
-    @GetMapping("/list")  // 전체 회원 리스트
-    public List<Member> totalList() throws Exception {
-        log.info("totallisttest");
-        return memberService.list();
+    @GetMapping("/totallist")
+    public PageResponseDTO<MemberDTO> totallist(PageRequestDTO pageRequestDTO) {
+        log.info("list....."+pageRequestDTO);
+        return memberService.fullList(pageRequestDTO);
     }
-
 //    @GetMapping("/inactiveList")  // 휴면 회원 리스트
 //    public PageResponseDTO<MemberDTO> inactiveList(PageRequestDTO pageRequestDTO) {
 //        log.info(pageRequestDTO);

@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,11 +32,31 @@ public class MemberSerivceImpl implements MemberService {
     @Autowired
     private final MemberRepository memberRepository;
 
-    public List<Member> list() {
-        return memberRepository.findAll();
+    @Transactional(readOnly = true)
+    @Override
+    public PageResponseDTO<MemberDTO> fullList(PageRequestDTO pagerequestDTO) {
+        log.info("getFullList");
+
+        // 페이지 시작 번호가 0부터 시작하므로
+        Pageable pageable = PageRequest.of(pagerequestDTO.getPage()-1, pagerequestDTO.getSize(), Sort.by("memberID").ascending());
+        Page<Member> members = memberRepository.findAll(pageable);
+
+        log.info("member?! : " + members.getContent());
+
+        long totalCount = members.getTotalElements();
+
+        List<MemberDTO> dtoList = members.getContent().stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+
+        return PageResponseDTO.<MemberDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(totalCount)
+                .pageRequestDTO(pagerequestDTO)
+                .build();
     }
 
-//    @Override
+
+
+    //    @Override
 //    public PageResponseDTO<MemberDTO> totalList(PageRequestDTO pageRequestDTO) {
 //        Pageable pageable = PageRequest.of(
 //                pageRequestDTO.getPage() -1 , // 1페이지가 0이므로 주의

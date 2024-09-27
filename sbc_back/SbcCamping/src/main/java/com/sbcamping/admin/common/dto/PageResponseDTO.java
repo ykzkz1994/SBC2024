@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Data
-public class PageResponseDTO<E> {
+public class PageResponseDTO<E> {   // 다른 타입의 DTO들을 이욯할 수 있도록 제네릭 타입으로 작성
     private List<E> dtoList;
     private List<Integer> pageNumList;
     private PageRequestDTO pageRequestDTO;
@@ -20,6 +20,7 @@ public class PageResponseDTO<E> {
     private int totalPage;
     private int current;
 
+    // 목록 처리에 필요한 모든 데이터를 반환
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(List<E> dtoList, PageRequestDTO pageRequestDTO, long totalCount) {
 

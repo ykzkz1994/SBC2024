@@ -37,8 +37,7 @@ public class Member {
     private char memberGender; // 회원 성별
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date memberBirth; // 회원 생년월일
+    private String memberBirth; // 회원 생년월일
 
     @Column(length = 30, nullable = false)
     private String memberLocal; // 회원 지역

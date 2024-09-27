@@ -1,5 +1,6 @@
 package com.sbcamping.admin.member.dto;
 
+import com.sbcamping.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -20,15 +21,13 @@ public class MemberDTO {
 
     private String memberEmail; // 회원 이메일
 
-    private String memberPw; // 회원 비밀번호
-
     private String memberName; // 회원 명
 
     private String memberPhone; // 회원 핸드폰번호
 
     private char memberGender; // 회원 성별
 
-    private Date memberBirth; // 회원 생년월일
+    private String memberBirth; // 회원 생년월일
 
     private String memberLocal; // 회원 지역
 
@@ -37,4 +36,5 @@ public class MemberDTO {
     private String memberStatus; // 회원 상태 (휴면 off)
 
     private String memberRole; // 회원 권한 (ROLE_MEMBER, ROLE_ADMIN)
+
 }
