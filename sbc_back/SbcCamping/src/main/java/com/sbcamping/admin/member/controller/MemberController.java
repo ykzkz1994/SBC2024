@@ -27,24 +27,23 @@ public class MemberController {
     @Autowired
     private final MemberService memberService;
 
-    @GetMapping("/totallist")
-    public PageResponseDTO<MemberDTO> totallist(PageRequestDTO pageRequestDTO) {
-        log.info("list....."+pageRequestDTO);
-        return memberService.fullList(pageRequestDTO);
+    @GetMapping("/totalList")
+    public PageResponseDTO<MemberDTO> totallist(PageRequestDTO pageRequestDTO,
+                                                @RequestParam(required = false) String keyword) {
+        log.info("total list..... : "+pageRequestDTO);
+         return memberService.fullList(pageRequestDTO, keyword);  // 기본 정렬 : memberID 오름차순
+
     }
-//    @GetMapping("/inactiveList")  // 휴면 회원 리스트
-//    public PageResponseDTO<MemberDTO> inactiveList(PageRequestDTO pageRequestDTO) {
-//        log.info(pageRequestDTO);
-//        return memberService.inactiveList(pageRequestDTO);
-//    }
+
+    @GetMapping("/inactiveList")  // 휴면 회원 리스트
+    public PageResponseDTO<MemberDTO> inactiveList(PageRequestDTO pageRequestDTO,
+                                                   @RequestParam(required = false) String keyword) {
+        log.info("inactive list...... : "+pageRequestDTO);
+        return memberService.inactiveFullList(pageRequestDTO, keyword);
+    }
 
     @GetMapping("/search")   // 회원 검색
     public ResponseEntity<List<Member>> searchMember(@RequestParam(required = false) String keyword) {
-        return null;
-    }
-
-    @GetMapping("/sort")   // 리스트 정렬
-    public ResponseEntity<List<Member>> sortList(@RequestParam(required = false) String keyword, @RequestParam(required = false) String sort) {
         return null;
     }
 }
