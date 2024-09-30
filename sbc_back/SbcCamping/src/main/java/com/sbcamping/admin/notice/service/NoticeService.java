@@ -1,14 +1,11 @@
 package com.sbcamping.admin.notice.service;
 
-
-import com.sbcamping.admin.notice.dto.NoticeDTO;
+import com.sbcamping.domain.NoticeBoard;
 
 public interface NoticeService {
 
-    Long readNotice(NoticeDTO noticeDTO);   //공지 조회
-    Long updateNotice(NoticeDTO noticeDTO); //공지 수정
-    Long deleteNotice(NoticeDTO noticeDTO); //공지 삭제
-    Long createNotice(NoticeDTO noticeDTO); // 공지 등록
-
-
+    public NoticeBoard readNotice(String nboard_Id);   // 공지 조회
+    public void updateNotice(String nboard_Id); // 공지 수정
+    public void deleteNotice(String nboard_Id); // 공지 삭제
+    public void createNotice(String nboard_Id);      // 공지 등록
 }

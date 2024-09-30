@@ -1,11 +1,6 @@
-package com.sbcamping.admin.notice;
+package com.sbcamping.admin.notice.repository;
 
-import com.sbcamping.admin.notice.repository.NoticeRepository;
-import com.sbcamping.admin.res.repository.ResRepository;
-import com.sbcamping.admin.site.repository.SiteRepository; // SiteRepository 추가
 import com.sbcamping.domain.NoticeBoard;
-import com.sbcamping.domain.Reservation;
-import com.sbcamping.domain.Site;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +10,6 @@ import org.springframework.test.annotation.Commit;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -74,7 +68,7 @@ public class NoticeRepositoryTests{
 
         notice.changeNBoardTitle("긴급 공지 테스트1번");
         notice.changeNBoardContent("현시간부로 예약금지 ");
-        
+
         noticeRepository.save(notice);
 
 
@@ -84,9 +78,9 @@ public class NoticeRepositoryTests{
     @DisplayName("Notice 삭제 테스트 ") //테스트이름
     @Commit //변경사항 저장
     public void testDeleteNotice() {
-
         Long noticeId = 1L; //근데 롱타입변수인데 L을 붙여야함?
 
         noticeRepository.deleteById(noticeId);
+
     }
 }
