@@ -29,32 +29,31 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
     private String uploadPath;
 
     // 파일 업로드 작업
-    public List<String> saveFiles(List<MultipartFile> files) throws RuntimeException {
-        if (files == null || files.size() == 0) {
+    public String saveFile(MultipartFile file) throws RuntimeException {
+        if (file == null) {
             return null;
         }
 
-        List<String> uploadNames = new ArrayList<>();
-
-        for (MultipartFile multipartFile : files) {
-            String savedName = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
-            Path savePath = Paths.get(uploadPath, savedName);
+        String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path savePath = Paths.get(uploadPath, savedName);
+        String uploadName = null;
 
             try {
-                Files.copy(multipartFile.getInputStream(), savePath);
-                String contentType = multipartFile.getContentType();
+                Files.copy(file.getInputStream(), savePath);
+                String contentType = file.getContentType();
 
                 // 이미지 여부 확인
                 if (contentType != null && contentType.startsWith("image")) {
                     Path thumbnailPath = Paths.get(uploadPath, "s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
                     Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
                 }
-                uploadNames.add(savedName);
+                uploadName = savePath.toString();
+
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-        } // end for
-        return uploadNames;
+
+        return uploadName;
     }
 
     // 업로드 파일 보여주기
@@ -76,13 +75,10 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
     }
 
     // 서버 내부에서 파일 삭제
-    public void deleteFiles(List<String> fileNames) {
-        if (fileNames == null || fileNames.size() == 0) {
+    public void deleteFile(String fileName) {
+        if (fileName == null) {
             return;
         }
-
-        fileNames.forEach(fileName -> {
-            // 썸네일이 있는지 확인하고 삭제
             String thumbnaileFileName = "s_" + fileName;
             Path thumbnailPath = Paths.get(uploadPath, thumbnaileFileName);
             Path filePath = Paths.get(uploadPath, fileName);
@@ -93,7 +89,7 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-        });
+
     }
 }
 

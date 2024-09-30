@@ -46,4 +46,16 @@ public class QuestionBoard { // 문의게시판
     @Column(name = "QBoard_notice", length = 1, nullable = false)
     private char qBoardNotice = 'N';    // 공지 여부 (기본값 설정)
 
+    // 글 수정 시, 수정 가능한 항목
+    public void changeTitle(String title) {
+        this.qBoardTitle = title;
+    }
+
+    public void changeContent(String content) {
+        this.qBoardContent = content;
+    }
+
+    public void changeAttachment(String attachment) {
+        this.qBoardAttachment = attachment;
+    }
 }

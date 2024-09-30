@@ -10,7 +10,7 @@ const Inactive = lazy(()=> import("../components/member/InactiveListComponent"))
 const memberRouter = () => {
     return[
         {
-            path: "totallist",
+            path: "totalList",
             element : <Suspense fallback={Loading}><Total/></Suspense>
         },
         {
@@ -18,7 +18,7 @@ const memberRouter = () => {
             element: <Navigate replace to="totallist"/>
         },
         {
-            path: "inactivelist",
+            path: "inactiveList",
             element : <Suspense fallback={Loading}><Inactive/></Suspense>
         }
     ]
