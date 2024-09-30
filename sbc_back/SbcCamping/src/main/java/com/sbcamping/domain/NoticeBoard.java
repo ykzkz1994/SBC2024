@@ -38,4 +38,15 @@ public class NoticeBoard {
     @Column(name = "nboard_Views", nullable = false, columnDefinition = "NUMBER(10,0)")       // 조회수
     private Long nBoardViews;
 
+    public void changeNBoardTitle(String nBoardTitle) { //공지 제목 수정 메서드
+        this.nBoardTitle = nBoardTitle;
+    }
+
+    public void changeNBoardContent(String nBoardContent) { //공지 내용 수정 메서드
+        this.nBoardContent = nBoardContent;
+    }
+
+
+
+
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +54,7 @@ public class NoticeRepositoryTests{
         // 생성한 객체를 DB에 저장
         log.info("------------------------------------------------------------------------------");
         noticeRepository.save(noticeBoard); // 객체를 저장
-        log.info("noticeBoard saved: " + noticeBoard);
+        log.info("저장된 공지: " + noticeBoard);
         log.info("------------------------------------------------------------------------------");
 
 
@@ -62,15 +63,30 @@ public class NoticeRepositoryTests{
         log.info("------------------------------------------------------------------------------");
     }
 
-    @Test
-    @DisplayName("Notice 수정 테스트 ")
+    @Test //테스트
+    @DisplayName("공지 수정 테스트") //테스트 이름 할당
+    @Commit //커밋
+    //Notice 객체 생성
     public void testUpdateNotice() {
-        //여기에 넣어 코드
+
+        Optional<NoticeBoard> result = noticeRepository.findById(1L);
+        NoticeBoard notice = result.orElseThrow();
+
+        notice.changeNBoardTitle("긴급 공지 테스트1번");
+        notice.changeNBoardContent("현시간부로 예약금지 ");
+        
+        noticeRepository.save(notice);
+
+
     }
 
-    @Test
-    @DisplayName("Notice 삭제 테스트 ")
+    @Test   //테스트 메서드
+    @DisplayName("Notice 삭제 테스트 ") //테스트이름
+    @Commit //변경사항 저장
     public void testDeleteNotice() {
-        //여기에 넣어 코드
+
+        Long noticeId = 1L; //근데 롱타입변수인데 L을 붙여야함?
+
+        noticeRepository.deleteById(noticeId);
     }
 }

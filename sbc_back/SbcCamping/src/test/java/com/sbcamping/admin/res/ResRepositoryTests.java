@@ -4,11 +4,13 @@ import com.sbcamping.admin.res.repository.ResRepository;
 import com.sbcamping.admin.site.repository.SiteRepository; // SiteRepository 추가
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.domain.Site;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,5 +67,16 @@ public class ResRepositoryTests {
         log.info("------------------------------------------------------------------------------");
         log.info(resRepository.findAll().toString());
         log.info("------------------------------------------------------------------------------");
+    }
+
+    
+    //주석 달아
+    @Test
+    public void testResPaging(){
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("resId").descending());
+        Page<Reservation> result = resRepository.findAll(pageable);
+        log.info(String.valueOf(result.getTotalElements()));
+        result.getContent().forEach(System.out::println);
     }
 }

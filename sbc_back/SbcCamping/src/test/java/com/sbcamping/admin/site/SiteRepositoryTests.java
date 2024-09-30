@@ -25,14 +25,15 @@ public class SiteRepositoryTests {
 
 
     @Test //
-    @DisplayName("site 테이블 값 제대로 전달 되는지 테스트 ") //테스트 할 때 보기 편하게 지정해주는 어노테이션
+    @DisplayName("site 객체 만들어서 값 할당 후 객체를 DB에 저장 ") //테스트 할 때 보기 편하게 지정해주는 어노테이션
+    @Commit //커밋이 없어서 안됐구나
     public void testCreateSite() {
         // Site 객체 생성
         Site site = Site.builder()
-                .siteName("D 구역")
+                .siteName("E 구역")
                 .siteIsavailable('Y')
                 .siteResLimit('N')
-                .siteWeekendPay(150000L)
+                .siteWeekendPay(10000L)
                 .siteWeekdayPay(70000L)
                 .siteMinPeople(4L)
                 .siteMaxPeople(6L)
@@ -45,28 +46,31 @@ public class SiteRepositoryTests {
 
         log.info(site != null ? site.toString() : "site is null");
         log.info("------------------------------------------------------------------------------");
-        log.info(siteRepository.findAll().toString());
+        log.info(siteRepository.findAll().toString()); //다 받아와서 출력
         log.info("------------------------------------------------------------------------------");
     }
 
 
 
+    //이 새끼 왜 되다 안되다함?
     @Test
     @DisplayName("Site 수정 테스트 ")
+    @Commit //클래스에서 선언한 트렌젝션을 적용하지 않고 커밋을 하기 위함
     public void UpdateSite() {
         /*CamperBoard camperBoard = camperRepository.findById(3L).orElseThrow();*/
         Optional<Site> result = siteRepository.findById(1L);
         Site site = result.orElseThrow();
 
-        site.changeSiteName("거의다 왔다222222");
+        site.changeSiteName("왜 안대냐고 6트");
         site.changeIsAvailable('N');
         site.changeResLimit('N');
-        site.changeWeekendPay(5L);
-        site.changeWeekdayPay(200000L);
+        site.changeWeekendPay(10000L);
+        site.changeWeekdayPay(50000L);
         site.changeMinPeople(5L);
         site.changeMaxPeople(6L);
         siteRepository.save(site);
     }
+
 
 }
 
