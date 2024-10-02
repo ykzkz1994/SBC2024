@@ -55,6 +55,16 @@ public class QnaServiceImpl implements QnaService {
                 .build();
     }
 
+    // 2. 등록 (Register)
+    @Override
+    public Long register(QnaDTO qnaDTO) {
+
+        QuestionBoard qb = modelMapper.map(qnaDTO, QuestionBoard.class);
+        QuestionBoard result = qnaRepository.save(qb);
+
+        return result.getQBoardID();
+    }
+
     // 3. 상세 (Read)
     @Override
     public QnaDTO get(Long qbID) {
@@ -72,14 +82,22 @@ public class QnaServiceImpl implements QnaService {
         QuestionBoard qb = result.orElseThrow();
 
         // 2. change : title, content, file
-        qb.changeTitle(qnaDTO.getQBoardTitle());
-        qb.changeContent(qnaDTO.getQBoardContent());
-        qb.changeAttachment(qnaDTO.getQBoardAttachment());
+        String updatedTitle = qnaDTO.getQBoardTitle();
+        String updatedContent = qnaDTO.getQBoardContent();
+        String updatedAttachment = qnaDTO.getQBoardAttachment();
+
+        if (updatedTitle != null) { qb.changeTitle(updatedTitle); } else { qb.changeTitle(qb.getQBoardTitle()); }
+        if (updatedContent != null) {qb.changeContent(updatedContent); } else { qb.changeContent(qb.getQBoardContent()); }
+        if (updatedAttachment != null) {qb.changeAttachment(updatedAttachment); } else { qb.changeAttachment(qb.getQBoardAttachment()); }
 
         qnaRepository.save(qb);
     }
 
     // 5. 삭제 (Delete)
+    @Override
+    public void remove(Long qbID) {
+        qnaRepository.deleteById(qbID);
+    }
 
     // 6. 검색 (Search) : type (title, content 일부분 검색), keyword가 null인 경우 전체리스트 반환
     @Transactional(readOnly = true)

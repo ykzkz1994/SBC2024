@@ -12,11 +12,17 @@ public interface QnaService {
     // 1. 목록 (List)
     PageResponseDTO<QnaDTO> getList(PageRequestDTO requestDTO);
 
+    // 2. 등록 (Register)
+    Long register(QnaDTO qnaDTO);
+
     // 3. 상세 (Read)
     QnaDTO get(Long qbID);
 
     // 4. 수정 (Update)
     void modify(QnaDTO qnaDTO);
+
+    // 5. 삭제 (Remove)
+    void remove(Long qbID);
 
     // 6. 검색 (Search) : type (title, content 일부분 검색), keyword가 null인 경우 전체리스트 반환
     PageResponseDTO<QnaDTO> searchQboard(PageRequestDTO requestDTO, String type, String keyword);

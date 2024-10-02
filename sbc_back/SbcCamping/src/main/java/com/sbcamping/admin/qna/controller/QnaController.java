@@ -36,8 +36,17 @@ public class QnaController {
     }
 
     // 2. 등록 : ROLE에 따라서 게시글 또는 자주하는 질문으로 뷰에서 표시됨 -> Question_Board 공지여부 컬럼(Qboard_notice)
-    //@PostMapping("/")
+    @PostMapping("/")
+    public Map<String, Long> register(QnaDTO qnaDTO) {
+        log.info("register............." + qnaDTO);
+        MultipartFile file = qnaDTO.getFile();
+        String uploadFileName = fileUtil.saveFile(file);
+        qnaDTO.setQBoardAttachment(uploadFileName);
+        log.info(uploadFileName);
 
+        Long qbId = qnaService.register(qnaDTO);
+        return Map.of("RESULT", qbId);
+    }
     // 3. 상세
     @GetMapping("/{qbID}")
     public QnaDTO read(@PathVariable("qbID") Long qbID) {
@@ -49,29 +58,45 @@ public class QnaController {
         qnaDTO.setQBoardID(qbID);
         QnaDTO oldQnaDTO = qnaService.get(qbID);
 
-        // 화면에서 변화없이 계속 유지된 파일(기존 파일)
-        String oldUploadedFileName = oldQnaDTO.getQBoardAttachment();
+        if (qnaDTO.getFile() != null) {
+            // 새로 업로드 할 파일
+            MultipartFile newFile = qnaDTO.getFile();
+            log.info("modify.............." + newFile.getOriginalFilename());
 
-        // 새로 업로드 할 파일
-        MultipartFile newFile = qnaDTO.getFile();
+            // 새로 업로드되어서 만들어진 파일 이름
+            String newUploadedFileName = fileUtil.saveFile(newFile);
+            qnaDTO.setQBoardAttachment(newUploadedFileName);
+            log.info("modify.............." + qnaDTO.getQBoardAttachment());
 
-        // 새로 업로드되어서 만들어진 파일 이름
-        String newUploadedFileName = fileUtil.saveFile(newFile);
-        qnaDTO.setQBoardAttachment(newUploadedFileName);
+            // 기존 파일
+            String oldUploadedFileName = oldQnaDTO.getQBoardAttachment();
+            log.info("modify.............." + oldQnaDTO);
+
+            // 실제 파일 삭제
+            if (oldUploadedFileName != null) {
+                fileUtil.deleteFile(oldUploadedFileName);
+                log.info("삭제완료");
+            }
+        } else {
+            qnaDTO.setQBoardAttachment(oldQnaDTO.getQBoardAttachment());
+        }
 
         // 수정
         qnaService.modify(qnaDTO);
-
-        // 실제 파일 삭제
-        if (oldUploadedFileName != null) {
-            fileUtil.deleteFile(oldUploadedFileName);
-        }
 
         return Map.of("RESULT", "SUCCESS");
     }
 
     // 5. 삭제 (Delete)
-    // @DeleteMapping("/{qbID}")
+    @DeleteMapping("/{qbID}")
+    public Map<String, String> remove(@PathVariable("qbID") Long qbID) {
+        String oldFileName = qnaService.get(qbID).getQBoardAttachment();
+
+        qnaService.remove(qbID);
+        fileUtil.deleteFile(oldFileName);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
 
     // 6. 검색
     @GetMapping("/search")

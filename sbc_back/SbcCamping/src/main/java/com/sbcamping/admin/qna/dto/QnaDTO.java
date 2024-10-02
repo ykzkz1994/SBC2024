@@ -36,5 +36,4 @@ public class QnaDTO {
 
     MultipartFile file; // 등록, 수정 시 실제 파일 데이터가 담기는 객체
 
-
 }

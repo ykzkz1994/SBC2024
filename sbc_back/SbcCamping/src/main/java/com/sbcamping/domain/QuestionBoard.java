@@ -58,4 +58,5 @@ public class QuestionBoard { // 문의게시판
     public void changeAttachment(String attachment) {
         this.qBoardAttachment = attachment;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.sbcamping.admin.qna.repository;
 
+import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
 import org.springframework.data.domain.Page;

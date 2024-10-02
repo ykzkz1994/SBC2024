@@ -44,11 +44,12 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
 
                 // 이미지 여부 확인
                 if (contentType != null && contentType.startsWith("image")) {
-                    Path thumbnailPath = Paths.get(uploadPath, "s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
+                    Path thumbnailPath = Paths.get(uploadPath,"s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
                     Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
                 }
-                uploadName = savePath.toString();
 
+                uploadName = (savePath.toString()).substring(7);
+                log.info("저장될 이름 :" + uploadName);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
@@ -79,13 +80,17 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         if (fileName == null) {
             return;
         }
-            String thumbnaileFileName = "s_" + fileName;
-            Path thumbnailPath = Paths.get(uploadPath, thumbnaileFileName);
+            String thumbnailFileName = "s_" + fileName;
+            Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
+            log.info(thumbnailPath.toString());
             Path filePath = Paths.get(uploadPath, fileName);
-
+            log.info(filePath.toString());
             try {
+
                 Files.deleteIfExists(filePath);
+                log.info("원본 파일 삭제");
                 Files.deleteIfExists(thumbnailPath);
+                log.info("썸네일 파일 삭제");
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
