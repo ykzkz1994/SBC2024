@@ -107,6 +107,7 @@ public class QnaController {
         return qnaService.searchQboard(pageRequestDTO, type, keyword);  // 기본 정렬 : qBoardID 내림차순
 
     }
+
     // 1. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
     //@PostMapping("/comments/")
 
@@ -119,24 +120,4 @@ public class QnaController {
     // 4. 댓글 삭제
    // @DeleteMapping("/comments/{qbcommentID}")
 
-//    // 파일첨부 테스트
-//    @PostMapping("/")
-//    public Map<String, String> registerPhoto(QnaDTO qnaDTO) {
-//        log.info("register photo : " + qnaDTO);
-//        MultipartFile file = qnaDTO.getFile();
-//        String uploadFileName = fileUtil.saveFile(file);
-//        qnaDTO.setQBoardAttachment(uploadFileName);
-//        log.info(uploadFileName);
-//
-//        return Map.of("RESULT", "SUCCESS");
-//
-//
-//
-//    }
-//
-//    // 파일 보기 테스트
-//    @GetMapping("/view/{fileName}")
-//    public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
-//        return fileUtil.getFile(fileName);
-//    }
 }

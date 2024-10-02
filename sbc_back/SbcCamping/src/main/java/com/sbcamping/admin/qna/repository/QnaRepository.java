@@ -3,10 +3,13 @@ package com.sbcamping.admin.qna.repository;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
+import com.sbcamping.domain.QuestionBoardComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface QnaRepository extends JpaRepository<QuestionBoard, Long> {
 

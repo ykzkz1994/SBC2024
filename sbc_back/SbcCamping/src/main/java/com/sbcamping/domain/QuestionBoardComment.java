@@ -36,6 +36,6 @@ public class QuestionBoardComment { // 문의게시판 댓글
     private Date qCommentDate;  // 댓글 작성일
 
     @Column(nullable = false)
-    private char qBoardIsadmin = 'N';
+    private char qBoardIsAdmin = 'N';   // 관리자 댓글 여부
 
 }

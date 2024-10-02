@@ -3,10 +3,13 @@ package com.sbcamping.admin.qna.service;
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.member.dto.MemberDTO;
+import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
+import com.sbcamping.admin.qna.repository.QnaCommentRepository;
 import com.sbcamping.admin.qna.repository.QnaRepository;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
+import com.sbcamping.domain.QuestionBoardComment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +38,9 @@ public class QnaServiceImpl implements QnaService {
 
     @Autowired
     private final QnaRepository qnaRepository;
+
+    @Autowired
+    private final QnaCommentRepository qnaCommentRepository;
 
     // 1. 목록 (List)
     @Transactional(readOnly = true)
@@ -141,5 +148,44 @@ public class QnaServiceImpl implements QnaService {
                 .pageRequestDTO(requestDTO)
                 .build();
 
+    }
+
+    // 7. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
+    @Override
+    public Long registerComment(QnaCommentDTO qnaCommentDTO) {
+        Member member = qnaCommentDTO.getMember();
+        String memberRole = member.getMemberRole();
+
+        // 관리자가 작성할 경우 공지여부 'Y' 로 변경
+        if (memberRole.equals("ROLE_ADMIN")) {
+            qnaCommentDTO.setQBoardIsAdmin('Y');
+        } else {
+            qnaCommentDTO.setQBoardIsAdmin('N');
+        }
+
+        QuestionBoardComment qbComment = modelMapper.map(qnaCommentDTO, QuestionBoardComment.class);
+        QuestionBoardComment result = qnaCommentRepository.save(qbComment);
+
+        return result.getQCommentID();
+    }
+
+    // 8. 댓글 수정
+    @Override
+    public void modifyComment(QnaCommentDTO qnaCommentDTO) {
+
+    }
+
+    // 9. 댓글 목록 : 페이징 처리 없음
+    @Override
+    public List<QnaCommentDTO> list() {
+        List<QuestionBoardComment> getList = qnaCommentRepository.findAllByOrderByQCommentDateAsc();
+        List<QnaCommentDTO> result = getList.stream().map(qnaComm -> modelMapper.map(qnaComm, QnaCommentDTO.class)).collect(Collectors.toList());
+        return result;
+    }
+
+    // 10. 댓글 삭제
+    @Override
+    public void removeComment(Long qbcommID) {
+        qnaRepository.deleteById(qbcommID);
     }
 }
