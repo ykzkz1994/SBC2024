@@ -58,6 +58,17 @@ public class QnaServiceImpl implements QnaService {
     // 2. 등록 (Register)
     @Override
     public Long register(QnaDTO qnaDTO) {
+        Member member = qnaDTO.getMember();
+        String memberRole = member.getMemberRole();
+
+        // 관리자가 작성할 경우 공지여부 'Y' 로 변경
+        if (memberRole.equals("ROLE_ADMIN")) {
+            qnaDTO.setQBoardNotice('Y');
+            qnaDTO.setQBoardTitle("[자주하는 질문] "+qnaDTO.getQBoardTitle());
+        } else {
+            qnaDTO.setQBoardNotice('N');
+            qnaDTO.setQBoardTitle(qnaDTO.getQBoardTitle());
+        }
 
         QuestionBoard qb = modelMapper.map(qnaDTO, QuestionBoard.class);
         QuestionBoard result = qnaRepository.save(qb);

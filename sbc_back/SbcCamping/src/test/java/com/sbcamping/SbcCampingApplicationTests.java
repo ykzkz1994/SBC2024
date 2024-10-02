@@ -25,10 +25,13 @@ class SbcCampingApplicationTests {
     @Autowired
     MemberRepository memberRepository;
 
+    @Test
+    void memberInsert() {
+        Member member = Member.builder().memberGender('F').memberEmail("drvan@ac.kr").memberRegDate(new Date()).memberStatus("ON").memberPw("1234").memberRole("ROLE_ADMIN").memberPhone("01088889999").memberLocal("인천").memberName("아나콘다").memberBirth("19880101")
+                .build();
 
-
-
-
+        memberRepository.save(member);
+    }
 
 //       @Commit
 //       @Transactional
@@ -37,27 +40,19 @@ class SbcCampingApplicationTests {
 //           qnaRepository.deleteById(qbno);
 //       }
 
-       @Test
-        void testInsert() {
-           Optional<Member> memberOptional = memberRepository.findById(62L);
-           Member selectedMember = memberOptional.get();
-
-            QuestionBoard qb = QuestionBoard.builder().qBoardTitle("자주하는 질문 1").qBoardContent("테스트중1").qBoardViews(8L).qBoardNotice('Y').member(selectedMember).qBoardDate(new Date()).qBoardAsked('N')
-                    .qBoardAttachment(UUID.randomUUID().toString()+"-"+"default.jpg").build();
-
-           QuestionBoard qb2 = QuestionBoard.builder().qBoardTitle("자주하는 질문 2").qBoardContent("테스트중2").qBoardViews(8L).qBoardNotice('Y').member(selectedMember).qBoardDate(new Date()).qBoardAsked('N')
-                   .qBoardAttachment(UUID.randomUUID().toString()+"-"+"default.jpg").build();
-
-           QuestionBoard qb3 = QuestionBoard.builder().qBoardTitle("자주하는 질문 3").qBoardContent("테스트중3").qBoardViews(8L).qBoardNotice('Y').member(selectedMember).qBoardDate(new Date()).qBoardAsked('N')
-                   .qBoardAttachment(UUID.randomUUID().toString()+"-"+"default.jpg").build();
-
-
-           qnaRepository.save(qb);
-           qnaRepository.save(qb2);
-           qnaRepository.save(qb3);
-
-            log.info(qb.toString() + "등록완료!");
-        }
+//       @Test
+//        void testInsert() {
+//           Optional<Member> memberOptional = memberRepository.findById(61L);
+//           Member selectedMember = memberOptional.get();
+//
+//            QuestionBoard qb = QuestionBoard.builder().qBoardTitle("자주하는 질문 1").qBoardContent("테스트중1").qBoardViews(8L).qBoardNotice('Y').member(selectedMember).qBoardDate(new Date()).qBoardAsked('N')
+//                    .qBoardAttachment(UUID.randomUUID().toString()+"-"+"apple.jpg").build();
+//
+//           qnaRepository.save(qb);
+//
+//
+//            log.info(qb.toString() + "등록완료!");
+//        }
 
 //    @Test
 //    public void testUpdate() {
