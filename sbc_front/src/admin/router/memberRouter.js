@@ -1,15 +1,9 @@
-import { Suspense } from "react";
-import { Navigate } from "react-router-dom";
+import React from 'react';
 
-const Loading = <div>Loading . . .</div>
+const MemberRouter = () => {
+    return [
 
-const memberRouter = () => {
-    return[
-        {
-            path: "*",
-            element : <Navigate replace to="notice"/>
-        },
     ]
-}
+};
 
-export default memberRouter;
+export default MemberRouter;

@@ -1,8 +1,9 @@
 package com.sbcamping.admin.res.service;
 
 import com.sbcamping.admin.res.dto.ResDTO;
+import com.sbcamping.domain.Reservation;
 
 public interface ResService {
 
-    Long readRes(ResDTO resDTO);    //예약 조회
+    public Reservation readRes(String RES_ID);   // 예약 조회
 }
