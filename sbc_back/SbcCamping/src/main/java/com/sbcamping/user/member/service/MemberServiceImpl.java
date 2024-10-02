@@ -4,7 +4,11 @@ import com.sbcamping.domain.Member;
 import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,14 +16,32 @@ import java.util.Optional;
 @Service
 @Transactional
 @Slf4j
+@AllArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     // 회원 등록
     @Override
     public void addMember(Member member) {
+        String pw = passwordEncoder.encode(member.getMemberPw());
+        member.changePw(pw);
         memberRepository.save(member);
+    }
+
+    // 이메일 중복 체크
+    @Override
+    public String emailCheck(String memberEmail) {
+        Integer count = memberRepository.countByMemberEmail(memberEmail);
+        String msg = "";
+        if(count == 0){
+            msg = "enable";
+        } else{
+            msg = "disable";
+        }
+        return msg;
     }
 
     // 회원 정보 수정

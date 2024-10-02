@@ -8,4 +8,5 @@ public interface MemberService {
     public void updateMember(Long memberID, MemberDTO member);
     public void deleteMember(Long memberID);
     public Member getMember(Long memberId);
+    public String emailCheck(String memberEmail);
 }

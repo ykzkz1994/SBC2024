@@ -4,12 +4,19 @@ import com.sbcamping.domain.Member;
 import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.service.MemberServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/member")
 public class MemberController {
 
+    @Autowired
     private MemberServiceImpl memberService;
 
     // 회원가입
@@ -18,6 +25,7 @@ public class MemberController {
         memberService.addMember(member);
     }
 
+
     // 나의 예약내역 조회
     @GetMapping("/memberRes")
     public void getMemberRes(){
@@ -25,8 +33,8 @@ public class MemberController {
     }
 
     // 예약 상세 내역 조회
-    @GetMapping("/getMemberDetailRes")
-    public void getDetailMyRes(){
+    @GetMapping("/{resID}")
+    public void getDetailMyRes(@PathVariable(name = "resID") Long resID){
 
     }
 

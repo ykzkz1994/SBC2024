@@ -29,7 +29,7 @@ class MemberControllerTest {
     @DisplayName("멤버 생성하기")
     public void join() {
         Member member = Member.builder()
-                .memberEmail("test1234@gmail.com")
+                .memberEmail("test12@gmail.com")
                 .memberName("이길동")
                 .memberBirth("20001010")
                 .memberGender('M')
