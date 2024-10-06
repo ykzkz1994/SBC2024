@@ -154,18 +154,18 @@ const ResCalendar = () => {
             <div className="flex justify-between items-center mb-6">
                 <button
                     onClick={handlePrevMonth}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="px-3 py-1 bg-green-500 text-white rounded-full hover:bg-green-600 transition duration-300"
                 >
-                    &lt;
+                    이전
                 </button>
                 <h2 className="text-2xl font-semibold">
                     {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                 </h2>
                 <button
                     onClick={handleNextMonth}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="px-3 py-1 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition duration-300"
                 >
-                    &gt;
+                    다음
                 </button>
             </div>
 

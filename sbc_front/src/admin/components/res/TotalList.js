@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
-import Search from '../res/Search';
+import Search from '../res/Search'; // Search 컴포넌트 경로
 
 const TotalList = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 15; // 페이지당 아이템 수를 15로 설정
+    const itemsPerPage = 15; // 페이지당 아이템 수
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedColumn, setSelectedColumn] = useState('reservationNumber');
-    const [filteredItems, setFilteredItems] = useState([]);
+    const [selectedColumn, setSelectedColumn] = useState('reservationNumber'); // 기본 검색 조건
 
-    // 샘플 데이터 배열 (실제로는 서버로부터 데이터를 가져와 사용)
+    // 샘플 데이터 배열
     const reservations = Array.from({ length: 100 }).map((_, index) => ({
         id: index + 1,
         reservationNumber: `RES-${index + 1}`,
-        reservationDate: `2024-01-${String(index + 1).padStart(2, '0')}`,
+        reservationDate: '2024-01-01',
         zoneName: 'Zone A',
         memberName: '홍길동',
         memberPhone: '010-1234-5678',
@@ -24,48 +23,31 @@ const TotalList = () => {
         checkOutDate: '2024-01-05',
         cancelDate: '2024-01-03',
         cancelReason: '개인 사정',
-        payment: '100,000원'
+        payment: '100,000원',
     }));
-
-    // 필터링된 데이터를 상태에 저장하고 페이지를 1로 초기화
-    useEffect(() => {
-        const filtered = filterItems();
-        setFilteredItems(filtered);
-        setCurrentPage(1); // 검색 시 페이지를 첫 페이지로 초기화
-    }, [searchTerm, selectedColumn]);
-
-    // 선택된 컬럼을 변경하는 함수
-    const handleSelectChange = (e) => {
-        setSelectedColumn(e.target.value);
-        setSearchTerm(''); // 검색어 초기화
-    };
-
-    // 검색어 입력 값을 업데이트하는 함수
-    const handleSearchChange = (e) => {
-        setSearchTerm(e.target.value);
-    };
-
-    // 검색어와 선택된 컬럼에 따라 데이터를 필터링하는 함수
-    const filterItems = () => {
-        if (!searchTerm) {
-            return reservations;
-        }
-
-        return reservations.filter((reservation) => {
-            const value = reservation[selectedColumn]?.toString().toLowerCase() || '';
-            return value.includes(searchTerm.toLowerCase());
-        });
-    };
 
     // 현재 페이지의 데이터 계산
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-    // 총 페이지 수 계산
-    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+    // 검색 필터링
+    const filteredReservations = reservations.filter((reservation) => {
+        const term = searchTerm.toLowerCase();
+        switch (selectedColumn) {
+            case 'reservationNumber':
+                return reservation.reservationNumber.toLowerCase().includes(term);
+            case 'reservationDate':
+                return reservation.reservationDate.includes(term);
+            default:
+                return true;
+        }
+    });
 
-    // 현재 보여줄 페이지 번호 목록 계산 (1부터 10까지 표시)
+    // 현재 페이지에 보여줄 항목
+    const currentItems = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
+
+    // 페이지 번호 계산
     const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
     const endPage = Math.min(startPage + 9, totalPages);
     const pageNumbers = [];
@@ -100,45 +82,43 @@ const TotalList = () => {
                 setSearchTerm={setSearchTerm}
                 selectedColumn={selectedColumn}
                 setSelectedColumn={setSelectedColumn}
-                onSearch={() => setFilteredItems(filterItems())} // onSearch 함수 추가
             />
-            <p className="mb-4 text-gray-500">날짜 형식: 년-월-일</p> {/* 날짜 형식에 대한 설명 추가 */}
 
             <Table bordered hover responsive className="text-sm">
                 <thead>
                 <tr>
-                    <th className="text-center">#</th>
-                    <th className="text-center">예약번호</th>
-                    <th className="text-center">예약한 날짜</th>
-                    <th className="text-center">예약 구역 이름</th>
-                    <th className="text-center">회원 이름</th>
-                    <th className="text-center">회원 전화번호</th>
-                    <th className="text-center">이용자명</th>
-                    <th className="text-center">이용자 전화번호</th>
-                    <th className="text-center">입실 날짜</th>
-                    <th className="text-center">퇴실 날짜</th>
-                    <th className="text-center">취소 날짜</th>
-                    <th className="text-center">취소 사유</th>
-                    <th className="text-center">결제금액 (단위: 원)</th>
+                    <th>#</th>
+                    <th>예약번호</th>
+                    <th>예약한 날짜</th>
+                    <th>예약 구역 이름</th>
+                    <th>회원 이름</th>
+                    <th>회원 전화번호</th>
+                    <th>이용자명</th>
+                    <th>이용자 전화번호</th>
+                    <th>입실 날짜</th>
+                    <th>퇴실 날짜</th>
+                    <th>취소 날짜</th>
+                    <th>취소 사유</th>
+                    <th>결제금액 (단위: 원)</th>
                 </tr>
                 </thead>
 
                 <tbody>
                 {currentItems.map((reservation) => (
                     <tr key={reservation.id}>
-                        <td className="text-center">{reservation.id}</td>
-                        <td className="text-center">{reservation.reservationNumber}</td>
-                        <td className="text-center">{reservation.reservationDate}</td>
-                        <td className="text-left">{reservation.zoneName}</td>
-                        <td className="text-left">{reservation.memberName}</td>
-                        <td className="text-center">{reservation.memberPhone}</td>
-                        <td className="text-left">{reservation.userName}</td>
-                        <td className="text-center">{reservation.userPhone}</td>
-                        <td className="text-center">{reservation.checkInDate}</td>
-                        <td className="text-center">{reservation.checkOutDate}</td>
-                        <td className="text-center">{reservation.cancelDate}</td>
-                        <td className="text-left">{reservation.cancelReason}</td>
-                        <td className="text-right">{reservation.payment}</td>
+                        <td>{reservation.id}</td>
+                        <td>{reservation.reservationNumber}</td>
+                        <td>{reservation.reservationDate}</td>
+                        <td>{reservation.zoneName}</td>
+                        <td>{reservation.memberName}</td>
+                        <td>{reservation.memberPhone}</td>
+                        <td>{reservation.userName}</td>
+                        <td>{reservation.userPhone}</td>
+                        <td>{reservation.checkInDate}</td>
+                        <td>{reservation.checkOutDate}</td>
+                        <td>{reservation.cancelDate}</td>
+                        <td>{reservation.cancelReason}</td>
+                        <td>{reservation.payment}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -191,6 +171,6 @@ const TotalList = () => {
             </div>
         </div>
     );
-}
+};
 
 export default TotalList;

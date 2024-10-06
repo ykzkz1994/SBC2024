@@ -19,7 +19,7 @@ const BasicLayout = ({ children }) => {
             </Nav>
             <Nav className="justify-content-end">
               <NavDropdown href="/api/admin/site" title="구역 관리">
-                <NavDropdown.Item href="/api/admin/site">구역 관리</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/site">구역 관리</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="캠핑장 예약 관리">
                 <NavDropdown.Item as={Link} to="/res/total">전체 예약 리스트</NavDropdown.Item>

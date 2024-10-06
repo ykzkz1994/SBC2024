@@ -1,27 +1,25 @@
-import {Outlet,useNavigate} from "react-router-dom";
-import SiteManagements from '../../components/site/SiteManagements'; //해당 페이지에서 보여줄 components import (구역관리 컴포넌트 )
-import {Link} from "react-router-dom";
-//클릭하면 컴포넌트를 교체하려고했으나 링크는 페이지 교체라 아마 {useState}를 사용해서 컴포넌트만 교체 할 것 같음
+// src/admin/pages/site/SiteManagementPage.js
+
+import React from 'react';
+import SiteManagements from "../../components/site/ListComponent";
 import BasicLayout from "../../layout/BasicLayout";
+import SiteMenu from "../../components/menus/SiteMenu"; // SiteManagements 컴포넌트 import
 
-//함수
-const SiteManagementsPage = () => {
-
-
-
+const SiteManagementPage = () => {
     return (
         <BasicLayout>
-            <div className="text-3xl">
-                <button className>
-                    <Link to={'/'}>이렇게?</Link>
-                </button>
+            {/*메뉴도 필요 없을 듯 <SiteMenu/>*/}
+            <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
+                <h1 className="text-2xl font-bold mb-6">구역 관리 페이지</h1>
 
-                <SiteManagements/>
+                {/* SiteManagements 컴포넌트 렌더링 */}
+                <div className="mt-4 border-t border-gray-300 pt-4">
+                    <SiteManagements/>
+                </div>
             </div>
         </BasicLayout>
-
 
     );
 };
 
-export default SiteManagementsPage;
+export default SiteManagementPage;

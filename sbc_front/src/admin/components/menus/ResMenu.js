@@ -1,37 +1,43 @@
 import '../../css/menu.css';
-import {useNavigate} from "react-router-dom"
-import React, {useCallback} from "react";
-import Button from "react-bootstrap/Button";
-
-
+import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
 
 const ResMenu = () => {
-    //동적 데이터 처리이동하는 useNavigate() Navigate나 Link대신 사용
-    const navigate = useNavigate();
+    useEffect(() => {
+        // 클릭 이벤트 핸들러
+        const handleClick = (event) => {
+            const div2 = document.getElementsByClassName("menubutton");
 
-// 클릭 시 'total'의 경로로 네비게이트 하는 이벤트 용도  함수
-    const handleClickTotal = useCallback(() => {
-        navigate('total'); // 경로 문자열 사용
-    }, [navigate]); // 의존성 배열에 navigate 추가
+            if (event.target.classList.contains("clicked")) {
+                event.target.classList.remove("clicked");
+            } else {
+                for (let i = 0; i < div2.length; i++) {
+                    div2[i].classList.remove("clicked");
+                }
+                event.target.classList.add("clicked");
+            }
+        };
 
-// 클릭 시 'datesite'의 경로로 네비게이트 하는 이벤트 용도 함수
-    const handleClickDateSite = useCallback(() => {
-        navigate('datesite'); // 경로 문자열 사용
-    }, [navigate]); // 의존성 배열에 navigate 추가
+        // 초기화 및 이벤트 리스너 추가
+        const div2 = document.getElementsByClassName("menubutton");
+        for (let i = 0; i < div2.length; i++) {
+            div2[i].addEventListener("click", handleClick);
+        }
+
+        // 클린업 함수: 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            for (let i = 0; i < div2.length; i++) {
+                div2[i].removeEventListener("click", handleClick);
+            }
+        };
+    }, []);
 
     return (
-
-        <>
-            <div id='menubuttonwrap'>
-                {/*버튼을 클릭하면 경로이동 이벤트 발생*/}
-                <Button className='menubutton' onClick={handleClickTotal}>전체 예약 리스트 </Button>
-                <Button className='menubutton' onClick={handleClickDateSite}>날짜 / 구역별 예약</Button>
-
-            </div>
-        </>
-
+        <div id='menubuttonwrap'>
+            <Link to='total' className='menubutton'>전체 예약 리스트</Link>
+            <Link to='datesite' className='menubutton'>날짜 / 구역별 예약</Link>
+        </div>
     );
-
 }
 
 export default ResMenu;
