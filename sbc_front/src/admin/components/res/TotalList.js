@@ -1,133 +1,196 @@
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
+import { Button } from 'react-bootstrap';
+import Search from '../res/Search';
 
 const TotalList = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 15; // 페이지당 아이템 수를 15로 설정
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedColumn, setSelectedColumn] = useState('reservationNumber');
+    const [filteredItems, setFilteredItems] = useState([]);
 
+    // 샘플 데이터 배열 (실제로는 서버로부터 데이터를 가져와 사용)
+    const reservations = Array.from({ length: 100 }).map((_, index) => ({
+        id: index + 1,
+        reservationNumber: `RES-${index + 1}`,
+        reservationDate: `2024-01-${String(index + 1).padStart(2, '0')}`,
+        zoneName: 'Zone A',
+        memberName: '홍길동',
+        memberPhone: '010-1234-5678',
+        userName: '이용자명',
+        userPhone: '010-8765-4321',
+        checkInDate: '2024-01-02',
+        checkOutDate: '2024-01-05',
+        cancelDate: '2024-01-03',
+        cancelReason: '개인 사정',
+        payment: '100,000원'
+    }));
+
+    // 필터링된 데이터를 상태에 저장하고 페이지를 1로 초기화
+    useEffect(() => {
+        const filtered = filterItems();
+        setFilteredItems(filtered);
+        setCurrentPage(1); // 검색 시 페이지를 첫 페이지로 초기화
+    }, [searchTerm, selectedColumn]);
+
+    // 선택된 컬럼을 변경하는 함수
+    const handleSelectChange = (e) => {
+        setSelectedColumn(e.target.value);
+        setSearchTerm(''); // 검색어 초기화
+    };
+
+    // 검색어 입력 값을 업데이트하는 함수
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    // 검색어와 선택된 컬럼에 따라 데이터를 필터링하는 함수
+    const filterItems = () => {
+        if (!searchTerm) {
+            return reservations;
+        }
+
+        return reservations.filter((reservation) => {
+            const value = reservation[selectedColumn]?.toString().toLowerCase() || '';
+            return value.includes(searchTerm.toLowerCase());
+        });
+    };
+
+    // 현재 페이지의 데이터 계산
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
+    // 총 페이지 수 계산
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+    // 현재 보여줄 페이지 번호 목록 계산 (1부터 10까지 표시)
+    const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1;
+    const endPage = Math.min(startPage + 9, totalPages);
+    const pageNumbers = [];
+    for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+    }
+
+    // 페이지 변경 핸들러
+    const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+    // 이전 10페이지로 이동
+    const handlePrevGroup = () => {
+        if (startPage > 1) {
+            setCurrentPage(startPage - 1);
+        }
+    };
+
+    // 다음 10페이지로 이동
+    const handleNextGroup = () => {
+        if (endPage < totalPages) {
+            setCurrentPage(endPage + 1);
+        }
+    };
 
     return (
-        <div>
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4">예약 완료 리스트</h2>
 
-            <br/>
-            <br/>
+            {/* 검색 컴포넌트 */}
+            <Search
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectedColumn={selectedColumn}
+                setSelectedColumn={setSelectedColumn}
+                onSearch={() => setFilteredItems(filterItems())} // onSearch 함수 추가
+            />
+            <p className="mb-4 text-gray-500">날짜 형식: 년-월-일</p> {/* 날짜 형식에 대한 설명 추가 */}
 
-            <h2>전체 예약 리스트 나중에 다중 for로 돌려도 될 듯 </h2>
-            <br/>
-            <div>
-                <Table  border hover responsive className="text-sm">
-                    <thead>
-                    <tr>
-                        <th>#</th>
+            <Table bordered hover responsive className="text-sm">
+                <thead>
+                <tr>
+                    <th className="text-center">#</th>
+                    <th className="text-center">예약번호</th>
+                    <th className="text-center">예약한 날짜</th>
+                    <th className="text-center">예약 구역 이름</th>
+                    <th className="text-center">회원 이름</th>
+                    <th className="text-center">회원 전화번호</th>
+                    <th className="text-center">이용자명</th>
+                    <th className="text-center">이용자 전화번호</th>
+                    <th className="text-center">입실 날짜</th>
+                    <th className="text-center">퇴실 날짜</th>
+                    <th className="text-center">취소 날짜</th>
+                    <th className="text-center">취소 사유</th>
+                    <th className="text-center">결제금액 (단위: 원)</th>
+                </tr>
+                </thead>
 
-                        {/*예약번호,예약날짜,예약구역,회원이름,회원전화번호,예약자이름,예약자 전화번호,입실날짜,퇴실날짜,취소날짜,취소사유,총결제금액 순서로 불러와서 배열에 저장해야함*/}
+                <tbody>
+                {currentItems.map((reservation) => (
+                    <tr key={reservation.id}>
+                        <td className="text-center">{reservation.id}</td>
+                        <td className="text-center">{reservation.reservationNumber}</td>
+                        <td className="text-center">{reservation.reservationDate}</td>
+                        <td className="text-left">{reservation.zoneName}</td>
+                        <td className="text-left">{reservation.memberName}</td>
+                        <td className="text-center">{reservation.memberPhone}</td>
+                        <td className="text-left">{reservation.userName}</td>
+                        <td className="text-center">{reservation.userPhone}</td>
+                        <td className="text-center">{reservation.checkInDate}</td>
+                        <td className="text-center">{reservation.checkOutDate}</td>
+                        <td className="text-center">{reservation.cancelDate}</td>
+                        <td className="text-left">{reservation.cancelReason}</td>
+                        <td className="text-right">{reservation.payment}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </Table>
 
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <th key={index}>DB에서 받아온 정보</th>
-                        ))}
-                    </tr>
-                    </thead>
+            {/* 페이징 처리 */}
+            <div className="mt-4 d-flex justify-content-center">
+                <nav>
+                    <ul className="pagination">
+                        {/* 이전 10페이지로 이동 */}
+                        <li className={`page-item ${startPage === 1 ? 'disabled' : ''}`}>
+                            <Button
+                                className="page-link"
+                                onClick={handlePrevGroup}
+                                disabled={startPage === 1}
+                            >
+                                &laquo;
+                            </Button>
+                        </li>
 
-                    <tbody>
-                    <tr>
-                        <td>1</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>첫번째 예약 컬럼 값{index}</td>
+                        {pageNumbers.map((pageNumber) => (
+                            <li key={pageNumber} className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}>
+                                <Button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(pageNumber)}
+                                    style={{
+                                        color: currentPage === pageNumber ? 'white' : 'blue',
+                                        fontWeight: currentPage === pageNumber ? 'bold' : 'normal',
+                                        backgroundColor: currentPage === pageNumber ? 'blue' : 'transparent',
+                                        border: 'none'
+                                    }}
+                                >
+                                    {pageNumber}
+                                </Button>
+                            </li>
                         ))}
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>두번째 예약 컬럼 값{index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>세번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>4번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>5번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>6번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>7번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>8번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>9번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>10번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>11번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>12번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>13</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>13번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>14번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
-                    <tr>
-                        <td>15</td>
-                        {Array.from({length: 12}).map((_, index) => (
-                            <td key={index}>15번째 예약 컬럼 값 {index}</td>
-                        ))}
-                    </tr>
 
-
-                    </tbody>
-                </Table>
-
-                <h1>여기에 페이징 들어가야함!!!</h1>
-
+                        {/* 다음 10페이지로 이동 */}
+                        <li className={`page-item ${endPage === totalPages ? 'disabled' : ''}`}>
+                            <Button
+                                className="page-link"
+                                onClick={handleNextGroup}
+                                disabled={endPage === totalPages}
+                            >
+                                &raquo;
+                            </Button>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-
         </div>
-
     );
 }
 
-export default TotalList
+export default TotalList;
