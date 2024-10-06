@@ -30,7 +30,7 @@ const BasicLayout = ({ children }) => {
                 <NavDropdown.Item href="#action5">휴면 회원 리스트</NavDropdown.Item>
                 </NavDropdown>
               <NavDropdown title="커뮤니티 관리">
-                <NavDropdown.Item href="/api/admin/notices">공지사항</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/notice/list">공지사항</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/qnas">문의 게시판</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/campers">캠퍼 게시판</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/reviews">리뷰 게시판</NavDropdown.Item>
