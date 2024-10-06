@@ -2,7 +2,7 @@
 
 import {Suspense, lazy} from "react";
 import Spinner from 'react-bootstrap/Spinner';
-import siteRouter from "./SiteRouter";
+
 import memberRouter from "./MemberRouter";
 import camperRouter from "../router/camperRouter";
 import noticeRouter from "../router/noticeRouter";
