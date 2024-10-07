@@ -1,27 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
+import axios from "axios";  /*백엔드와 통신하기위해 import*/
 
 // **상수 선언**
 // 최대 허용 인원 수를 상수로 선언하여 코드의 의도를 명확히 하고 유지보수를 용이하게 합니다.
-const MAX_ALLOWED_PEOPLE = 6;
+const MAX_LIMIT_PEOPLE = 6;
 
 // **SiteManagements 컴포넌트 정의**
 const SiteManagements = () => {
-    // **상태 관리**
-    // sites: 구역 정보 목록을 저장합니다.
-    const [sites, setSites] = useState([
-        { id: 1, siteName: 'Deck A', reservationLimit: 'N', minPeople: 4, maxPeople: 6, weekdayRate: 50000, weekendRate: 80000 },
-        { id: 2, siteName: 'Deck B', reservationLimit: 'N', minPeople: 4, maxPeople: 6, weekdayRate: 40000, weekendRate: 80000 },
-        { id: 3, siteName: 'Deck C', reservationLimit: 'N', minPeople: 4, maxPeople: 6, weekdayRate: 40000, weekendRate: 80000 },
-        { id: 4, siteName: 'Deck D', reservationLimit: 'Y', minPeople: 4, maxPeople: 6, weekdayRate: 40000, weekendRate: 80000 },
-        { id: 5, siteName: 'Deck E', reservationLimit: 'N', minPeople: 3, maxPeople: 5, weekdayRate: 45000, weekendRate: 75000 },
-        { id: 6, siteName: 'Deck F', reservationLimit: 'Y', minPeople: 2, maxPeople: 4, weekdayRate: 35000, weekendRate: 70000 },
-        { id: 7, siteName: 'Deck G', reservationLimit: 'N', minPeople: 5, maxPeople: 8, weekdayRate: 60000, weekendRate: 90000 },
-        { id: 8, siteName: 'Deck H', reservationLimit: 'Y', minPeople: 3, maxPeople: 6, weekdayRate: 55000, weekendRate: 85000 },
-        { id: 9, siteName: 'Deck I', reservationLimit: 'N', minPeople: 4, maxPeople: 7, weekdayRate: 50000, weekendRate: 80000 },
-        { id: 10, siteName: 'Deck J', reservationLimit: 'Y', minPeople: 2, maxPeople: 4, weekdayRate: 45000, weekendRate: 70000 },
-    ]);
+     //sites: 구역 정보 목록을 저장하는 빈 배열
+     const [sites, setSites] = useState([]);
 
     // showModal: 수정 모달 창의 표시 여부를 관리합니다.
     const [showModal, setShowModal] = useState(false);
@@ -41,13 +30,13 @@ const SiteManagements = () => {
     // siteNameRef: 구역 이름 입력 필드에 대한 참조를 생성하여 자동 포커스를 설정할 때 사용합니다.
     const siteNameRef = useRef(null);
 
-    // **useEffect 훅**
-    // showModal 상태가 변경될 때마다 실행되며, 모달이 열릴 때 구역 이름 입력 필드에 자동으로 포커스를 설정합니다.
+    // **useEffect 훅** - 백엔드에서 전체 구역 정보 가져오기
     useEffect(() => {
-        if (showModal && siteNameRef.current) {
-            siteNameRef.current.focus();
-        }
-    }, [showModal]);
+        axios.get('http://localhost:8080/site') // 백엔드 전체 주소와 함께 요청
+            .then(response => setSites(response.data)) // 응답 데이터를 상태에 저장
+            .catch(error => console.error('구역정보가 없습니다.:', error));
+    }, []);
+
 
     // **모달 창 열기 함수**
     // 선택한 구역의 정보를 설정하고 수정 모달 창을 엽니다.
@@ -85,24 +74,15 @@ const SiteManagements = () => {
     const handleFinalSave = () => {
         setSites((prevSites) =>
             prevSites.map((site) =>
-                site.id === selectedSite.id ? { ...site, ...newValues } : site
+                site.siteID === selectedSite.siteID ? { ...site, ...newValues } : site
             )
         );
+
         setShowReviewModal(false);  // 수정 확인 모달 창을 숨김
         setSelectedSite(null);      // 선택된 구역 정보 초기화
         setNewValues({});           // 수정된 값 초기화
-        setError('');               // 에러 메시지 초기화
+        setError('');               // 에러 메시지 초기화z
     };
-
-   /* // **구역 삭제 함수**
-    // 특정 구역을 삭제하는 기능을 제공합니다.
-    const handleDelete = (siteId) => {
-        // 사용자에게 삭제 확인을 요청합니다.
-        if (window.confirm('정말 삭제하시겠습니까?')) {
-            // sites 배열에서 해당 구역을 제거합니다.
-            setSites(sites.filter(site => site.id !== siteId));
-        }
-    };*/
 
     // **입력 필드 변경 처리 함수 - 텍스트 필드**
     // 텍스트 기반 입력 필드의 값 변경을 처리합니다.
@@ -119,8 +99,8 @@ const SiteManagements = () => {
         const numberValue = Number(value);
 
         // 'maxPeople' 필드의 경우 최대 인원 제한을 검증합니다.
-        if (name === 'maxPeople' && numberValue > MAX_ALLOWED_PEOPLE) {
-            setError(`최대 인원은 ${MAX_ALLOWED_PEOPLE}명을 초과할 수 없습니다.`);
+        if (name === 'maxPeople' && numberValue > MAX_LIMIT_PEOPLE) {
+            setError(`최대 인원은 ${MAX_LIMIT_PEOPLE}명을 초과할 수 없습니다.`);
             return; // 검증 실패 시 함수 종료
         }
 
@@ -164,43 +144,36 @@ const SiteManagements = () => {
                 </thead>
                 <tbody>
                 {/* sites 배열을 순회하여 각 구역의 정보를 테이블에 표시 */}
-                {sites.map((site) => (
-                    <tr key={site.id}>
-                        <td>{site.id}</td>
-                        <td>{site.siteName}</td>
-                        <td>{site.reservationLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
-                        <td>{site.minPeople}</td>
-                        <td>{site.maxPeople}</td>
-                        {/* 요금은 숫자에 쉼표를 추가하여 가독성을 높입니다 */}
-                        <td>{site.weekdayRate.toLocaleString()}</td>
-                        <td>{site.weekendRate.toLocaleString()}</td>
-                        <td>
-                            {/* **수정하기 버튼** */}
-                            <Button
-                                variant="secondary"
-                                className="w-full mb-2"
-                                onClick={() => handleShowModal(site)} // 클릭 시 해당 구역을 수정하기 위한 모달 열기
-                            >
-                                수정하기
-                            </Button>
-                            {/* **삭제 버튼** */}
-                    {/*        <Button
-                                variant="danger"
-                                className="w-full"
-                                onClick={() => handleDelete(site.id)} // 클릭 시 해당 구역 삭제
-                            >
-                                삭제
-                            </Button>*/}
-                        </td>
+                {sites.length > 0 ? (
+                    sites.map(site => (
+                        <tr key={site.siteID}>
+                            <td>{site.siteID}</td>
+                            <td>{site.siteName}</td>
+                            <td>{site.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
+                            <td>{site.minPeople}</td>
+                            <td>{site.maxPeople}</td>
+                            <td>{site.weekdayPay ? site.weekdayPay.toLocaleString() : 0}</td>
+                            <td>{site.weekendPay ? site.weekendPay.toLocaleString() : 0}</td>
+                            <td>
+                                <Button variant="secondary" onClick={() => handleShowModal(site)}>
+                                    수정하기
+                                </Button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="7">Loading...</td>
                     </tr>
-                ))}
+                )}
+
                 </tbody>
             </Table>
 
             {/* **수정 모달 창** */}
             <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>구역 수정 - {selectedSite?.id}번</Modal.Title>
+                    <Modal.Title>구역 수정 - {selectedSite?.siteID ? selectedSite.siteID : 'N/A'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {selectedSite && (
@@ -247,7 +220,7 @@ const SiteManagements = () => {
                                     value={newValues.minPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
                                     min={1}                       // 최소값 설정
-                                    max={MAX_ALLOWED_PEOPLE}      // 최대값 설정
+                                    max={MAX_LIMIT_PEOPLE}      // 최대값 설정
                                 />
                             </Form.Group>
 
@@ -260,7 +233,7 @@ const SiteManagements = () => {
                                     value={newValues.maxPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
                                     min={1}                       // 최소값 설정
-                                    max={MAX_ALLOWED_PEOPLE}      // 최대값 설정
+                                    max={MAX_LIMIT_PEOPLE}      // 최대값 설정
                                 />
                             </Form.Group>
 

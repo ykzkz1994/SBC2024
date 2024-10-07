@@ -1,7 +1,7 @@
 // src/admin/pages/site/SiteManagementPage.js
 
 import React from 'react';
-import SiteManagements from "../../components/site/ListComponent";
+import SiteManagements from "../../components/site/SiteManagements";
 import BasicLayout from "../../layout/BasicLayout";
 import SiteMenu from "../../components/menus/SiteMenu"; // SiteManagements 컴포넌트 import
 
