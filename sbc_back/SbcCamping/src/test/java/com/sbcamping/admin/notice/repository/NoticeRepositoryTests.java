@@ -38,7 +38,7 @@ public class NoticeRepositoryTests{
 
         // Reservation 객체 생성
         NoticeBoard noticeBoard = NoticeBoard.builder()
-                .nBoardID(123456L)
+                .nBoardId(123456L)
                 .nBoardTitle("제목")
                 .nBoardContent("진짜 Optional부숴버리고싶어")
                 .nBoardDate(nBoardDate)
