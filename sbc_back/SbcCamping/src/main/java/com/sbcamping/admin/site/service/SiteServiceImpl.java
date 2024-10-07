@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 @Log4j2
@@ -24,25 +26,37 @@ public class SiteServiceImpl implements SiteService{
     private final ModelMapper modelMapper;  //매퍼 인스턴스
 
     @Override
-    public Long readSite(SiteDTO siteDTO) {
-        //디버깅용
-        log.info("읽기 메서드");
+    public List<SiteDTO> getAllSites() {
+        log.info("구역전체 불러오는 메서드 시작");
+        // 모든 Site 엔티티를 가져옵니다.
+        List<Site> sites = siteRepository.findAll();
 
-        //ModelMapper를 이용하여  siteDTO객체=>Site엔티객체로 변환
-        //modelMapper.map(siteDTO, Site.class)는 siteDTO의 필드 값을 Site 클래스의 필드에 자동으로 복사하여 새로운 Site 객체를 생성합니다.
-        //Site객체를 site라는 변수에 저장
-        Site site = modelMapper.map(siteDTO, Site.class);
-        //사이트 레포지토리를 이용해서 위에서 생성한 site엔티티를 데이터베이스에 저장함
-        //siteRepository.save(site)는 site 객체를 데이터베이스에 저장한 후, 저장된 결과를 반환
-        Site savedSite = siteRepository.save(site);
+        log.info("구역전체 불러오는 메서드 끝 ");
+        // ModelMapper를 사용하여 Site 엔티티를 SiteDTO로 변환한 후 리스트로 반환합니다.
+        return sites.stream()
+                .map(site -> modelMapper.map(site, SiteDTO.class))
+                .toList();
 
-        //site엔티티에서 pk인 SiteID를 반환한다
-        return savedSite.getSiteID();
     }
 
     @Override
-    public Long updateSite(SiteDTO siteDTO) {
-        log.info("수정 메서드");
-        return null;
+    public void updateSite(Long siteId, SiteDTO siteDTO) {  //구역정보 수정 메서드
+        log.info("구역정보 수정 메서드 시작");
+        Site site = siteRepository.findById(siteId)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 사이트가 존재하지 않습니다."));
+
+        // Site 엔티티의 change 메서드 사용하여 필드 업데이트
+        site.changeSiteName(siteDTO.getSiteName());
+        site.changeIsAvailable(siteDTO.getSiteIsAvailable().charAt(0)); // String -> char 변환
+        site.changeResLimit(siteDTO.getSiteResLimit().charAt(0)); // String -> char 변환
+        site.changeWeekendPay((long) siteDTO.getWeekendPay());
+        site.changeWeekdayPay((long) siteDTO.getWeekdayPay());
+        site.changeMinPeople((long) siteDTO.getMinPeople());
+        site.changeMaxPeople((long) siteDTO.getMaxPeople());
+
+        // 변경된 엔티티 저장
+        siteRepository.save(site);
+        log.info("구역정보 수정 메서드 끝");
     }
+
 }

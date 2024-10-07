@@ -21,7 +21,7 @@ public class Site {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SITE_SEQ_GEN")
     @Column(name = "Site_ID", nullable = false, columnDefinition = "NUMBER(10,0)") //구역번호
-    private Long siteID;
+    private Long siteId;
 
     @Column(name = "Site_Name", nullable = false, length = 10, unique = true) //구역이름
     private String siteName;
