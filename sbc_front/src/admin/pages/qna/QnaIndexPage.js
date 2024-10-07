@@ -9,7 +9,6 @@ const QnaIndexPage = () =>{
             <CommunityMenu/>
             </div>
             <div>
-                <div> Qna Index Page </div>
                 <Outlet/>
             </div>
         </BasicLayout>

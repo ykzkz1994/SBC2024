@@ -15,7 +15,7 @@ const memberRouter = () => {
         },
         {
             path: "",
-            element: <Navigate replace to="totallist"/>
+            element: <Navigate replace to="totalList"/>
         },
         {
             path: "inactiveList",

@@ -2,19 +2,18 @@ package com.sbcamping.admin.qna.controller;
 
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
-import com.sbcamping.admin.member.dto.MemberDTO;
+import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.admin.qna.service.QnaService;
 import com.sbcamping.admin.util.CustomFileUtil;
-import com.sbcamping.domain.QuestionBoard;
+import com.sbcamping.domain.QuestionBoardComment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,6 +46,7 @@ public class QnaController {
         Long qbId = qnaService.register(qnaDTO);
         return Map.of("RESULT", qbId);
     }
+
     // 3. 상세
     @GetMapping("/{qbID}")
     public QnaDTO read(@PathVariable("qbID") Long qbID) {
@@ -109,15 +109,37 @@ public class QnaController {
     }
 
     // 1. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
-    //@PostMapping("/comments/")
+    @PostMapping("/comments/")
+    public Map<String, Long> register(QnaCommentDTO qnaCommentDTO) {
+
+        Long qbcommentID = qnaService.registerComment(qnaCommentDTO);
+        return Map.of("RESULT", qbcommentID);
+    }
 
     // 2. 댓글 수정
-    // @PutMapping("/comments/{qbcommentID}")
+    @PutMapping("/comments/{qbcommentID}")
+    public Map<String, String> modify(@PathVariable("qbcommentID") Long qbcommentID, QnaCommentDTO qnaCommentDTO) {
+        qnaCommentDTO.setQCommentID(qbcommentID);
+
+        // 수정
+        qnaService.modifyComment(qnaCommentDTO);
+
+        return Map.of("RESULT", "SUCCESS");
+    }
 
     // 3. 댓글 목록
-    // @GetMapping("/comments/list")
+    @GetMapping("/comments/list")
+    public List<QnaCommentDTO> commentList() {
+        return qnaService.commentlist();
+    }
 
     // 4. 댓글 삭제
-   // @DeleteMapping("/comments/{qbcommentID}")
+   @DeleteMapping("/comments/{qbcommentID}")
+   public Map<String, String> removeComment(@PathVariable("qbcommentID") Long qbcommentID) {
+
+       qnaService.removeComment(qbcommentID);
+
+       return Map.of("RESULT", "SUCCESS");
+   }
 
 }

@@ -9,7 +9,6 @@ const MemberIndexPage = () =>{
             <MemberMenu/>
             </div>
             <div>
-                <div> Member Index Page </div>
                 <Outlet/>
             </div>
         </BasicLayout>

@@ -1,9 +1,11 @@
 package com.sbcamping;
 
 import com.sbcamping.admin.member.repository.MemberRepository;
+import com.sbcamping.admin.qna.repository.QnaCommentRepository;
 import com.sbcamping.admin.qna.repository.QnaRepository;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
+import com.sbcamping.domain.QuestionBoardComment;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,13 +27,16 @@ class SbcCampingApplicationTests {
     @Autowired
     MemberRepository memberRepository;
 
-    @Test
-    void memberInsert() {
-        Member member = Member.builder().memberGender('F').memberEmail("drvan@ac.kr").memberRegDate(new Date()).memberStatus("ON").memberPw("1234").memberRole("ROLE_ADMIN").memberPhone("01088889999").memberLocal("인천").memberName("아나콘다").memberBirth("19880101")
-                .build();
+    @Autowired
+    QnaCommentRepository qnaCommentRepository;
 
-        memberRepository.save(member);
-    }
+//    @Test
+//    void memberInsert() {
+//        Member member = Member.builder().memberGender('F').memberEmail("drvan@ac.kr").memberRegDate(new Date()).memberStatus("ON").memberPw("1234").memberRole("ROLE_ADMIN").memberPhone("01088889999").memberLocal("인천").memberName("아나콘다").memberBirth("19880101")
+//                .build();
+//
+//        memberRepository.save(member);
+//    }
 
 //       @Commit
 //       @Transactional
@@ -40,19 +45,24 @@ class SbcCampingApplicationTests {
 //           qnaRepository.deleteById(qbno);
 //       }
 
-//       @Test
-//        void testInsert() {
-//           Optional<Member> memberOptional = memberRepository.findById(61L);
-//           Member selectedMember = memberOptional.get();
-//
-//            QuestionBoard qb = QuestionBoard.builder().qBoardTitle("자주하는 질문 1").qBoardContent("테스트중1").qBoardViews(8L).qBoardNotice('Y').member(selectedMember).qBoardDate(new Date()).qBoardAsked('N')
-//                    .qBoardAttachment(UUID.randomUUID().toString()+"-"+"apple.jpg").build();
-//
-//           qnaRepository.save(qb);
-//
-//
-//            log.info(qb.toString() + "등록완료!");
-//        }
+       @Commit
+       @Transactional
+       @Test
+        void testInsert() {
+           Optional<Member> memberOptional = memberRepository.findById(61L);
+           Member selectedMember = memberOptional.get();
+
+           Optional<QuestionBoard> qbOptional = qnaRepository.findById(43L);
+           QuestionBoard qb = qbOptional.get();
+
+            QuestionBoardComment qbcomm = QuestionBoardComment.builder().qBoard(qb).qBoardIsAdmin('N').qCommentDate(new Date("2024/07/07")).qCommentContent("댓글 테스트")
+                    .build();
+
+           qnaCommentRepository.save(qbcomm);
+
+
+            log.info(qbcomm.toString() + "등록완료!");
+        }
 
 //    @Test
 //    public void testUpdate() {

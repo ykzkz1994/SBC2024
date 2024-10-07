@@ -18,7 +18,7 @@ public interface QnaService {
     // 2. 등록 (Register)
     Long register(QnaDTO qnaDTO);
 
-    // 3. 상세 (Read)
+    // 3. 상세 (Read), 조회수
     QnaDTO get(Long qbID);
 
     // 4. 수정 (Update)
@@ -37,8 +37,11 @@ public interface QnaService {
     void modifyComment(QnaCommentDTO qnaCommentDTO);
 
     // 9. 댓글 목록 : 페이징 처리 없음
-    List<QnaCommentDTO> list();
+    List<QnaCommentDTO> commentlist();
 
     // 10. 댓글 삭제
     void removeComment(Long qbcommID);
+
+    // 11. 댓글 수 (Count)
+    // Long countByQBoardID(Long qboardID);
 }

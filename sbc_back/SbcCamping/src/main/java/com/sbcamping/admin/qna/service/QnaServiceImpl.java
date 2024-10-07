@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,11 +84,18 @@ public class QnaServiceImpl implements QnaService {
         return result.getQBoardID();
     }
 
-    // 3. 상세 (Read)
+    // 3. 상세 (Read), 조회수 변경
     @Override
     public QnaDTO get(Long qbID) {
         Optional<QuestionBoard> result = qnaRepository.findById(qbID);
-        QuestionBoard qb = result.orElseThrow();
+        QuestionBoard qb = null;
+
+        if (result.isPresent()) {
+            qb = result.orElseThrow();
+            qb.changeViews(qb.getQBoardViews()+1);
+            this.qnaRepository.save(qb);
+        }
+
         QnaDTO dto = modelMapper.map(qb, QnaDTO.class);
         return dto;
     }
@@ -156,15 +164,19 @@ public class QnaServiceImpl implements QnaService {
         Member member = qnaCommentDTO.getMember();
         String memberRole = member.getMemberRole();
 
-        // 관리자가 작성할 경우 공지여부 'Y' 로 변경
+        QuestionBoard qb = qnaCommentDTO.getQBoard();
+
+        // 관리자가 작성할 경우 관리자 답변 여부 'Y' 로 변경, 해당 게시글 관리자 답변 여부 'Y'로 변경
         if (memberRole.equals("ROLE_ADMIN")) {
             qnaCommentDTO.setQBoardIsAdmin('Y');
+            qb.changeAsked('Y');
+            qnaRepository.save(qb);   // 이렇게 바로 저장해도 되는건가?!
         } else {
             qnaCommentDTO.setQBoardIsAdmin('N');
         }
 
-        QuestionBoardComment qbComment = modelMapper.map(qnaCommentDTO, QuestionBoardComment.class);
-        QuestionBoardComment result = qnaCommentRepository.save(qbComment);
+        QuestionBoardComment qbcomm = modelMapper.map(qnaCommentDTO, QuestionBoardComment.class);
+        QuestionBoardComment result = qnaCommentRepository.save(qbcomm);
 
         return result.getQCommentID();
     }
@@ -172,13 +184,24 @@ public class QnaServiceImpl implements QnaService {
     // 8. 댓글 수정
     @Override
     public void modifyComment(QnaCommentDTO qnaCommentDTO) {
+        // 1. read
+        Optional<QuestionBoardComment> result = qnaCommentRepository.findById(qnaCommentDTO.getQCommentID());
+        QuestionBoardComment qbcomm = result.orElseThrow();
 
+        // 2. change : content, Date
+        String updatedContent = qnaCommentDTO.getQCommentContent();
+        if (updatedContent != null) {qbcomm.changeContent(updatedContent); } else { qbcomm.changeContent(qbcomm.getQCommentContent()); }
+
+        Date updatedDate = new Date();
+        qnaCommentDTO.setQCommentDate(updatedDate);
+
+        qnaCommentRepository.save(qbcomm);
     }
 
     // 9. 댓글 목록 : 페이징 처리 없음
     @Override
-    public List<QnaCommentDTO> list() {
-        List<QuestionBoardComment> getList = qnaCommentRepository.findAllByOrderByQCommentDateAsc();
+    public List<QnaCommentDTO> commentlist() {
+        List<QuestionBoardComment> getList = qnaCommentRepository.orderedList();
         List<QnaCommentDTO> result = getList.stream().map(qnaComm -> modelMapper.map(qnaComm, QnaCommentDTO.class)).collect(Collectors.toList());
         return result;
     }
@@ -188,4 +211,11 @@ public class QnaServiceImpl implements QnaService {
     public void removeComment(Long qbcommID) {
         qnaRepository.deleteById(qbcommID);
     }
+
+    // 11. 댓글 수 (Count)
+
+//    @Override
+//    public Long countByQBoardID(Long qboardID) {
+//        return qnaCommentRepository.countByQboardID(qboardID);
+//    }
 }
