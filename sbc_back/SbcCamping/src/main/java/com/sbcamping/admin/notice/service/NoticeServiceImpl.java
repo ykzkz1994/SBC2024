@@ -59,19 +59,13 @@ public class NoticeServiceImpl implements NoticeService{
     public NoticeDTO readNotice(Long noticeId) { // 공지 조회 메서드
         log.info("공지 조회 메서드 시작");//디버깅
 
-        //findByID로 공지글번호로 noticeRepsotiry에서 정보를 result에 할당
-        //문자열로 전달된 nboard_id를 Long타입으로 변환 이는 findById(=Dto에서 선언한 변수의 타입)의 타입이 Long타입이기 때문
-        //noticeRepository를 통해 데이터베이스에서 해당 ID에 해당하는 공지글을 조회합니다.
-        // findById 메서드는 조회 결과가 없을 수 있기 때문에, 결과를 Optional로 반환합니다.
-        //공지글 번호로 noticeRepository에서 정보를 조회하여 result에 할당
-
         //orElse를 사용시 null로 반환 될 수도 있어서 orElseThrow를 이용하면 null인경우 예외처리 되기 때문에
         //null인지 검증하는 코드가 들어가지 않아도 괜찮고 그렇기 때문에 옵셔널로 반환받지 않아도 괜찮아서 이렇게 사용한다고 함
         NoticeBoard notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 공지사항이 존재하지 않습니다."));
 
         //조회수 증가 메서드
-        increaseViews(notice);
+        increaseViews(notice.getNBoardId());
 
         // 엔티티를 DTO로 변환
         NoticeDTO noticeDTO = new NoticeDTO();

@@ -10,6 +10,7 @@ import org.springframework.test.annotation.Commit;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class NoticeRepositoryTests{
 
     // SimpleDateFormat을 사용해 Date 생성
-    Date nBoardDate = new SimpleDateFormat("yyyy-MM-dd").parse("2024-09-27");
+    LocalDateTime nBoardDate = new SimpleDateFormat("yyyy-MM-dd").parse("2024-09-27");
 
     @Autowired
     private NoticeRepository noticeRepository;
