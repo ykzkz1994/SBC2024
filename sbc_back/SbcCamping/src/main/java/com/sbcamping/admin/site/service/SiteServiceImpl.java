@@ -42,7 +42,7 @@ public class SiteServiceImpl implements SiteService{
     @Override
     public void updateSite(Long siteId, SiteDTO siteDTO) {  //구역정보 수정 메서드
         log.info("구역정보 수정 메서드 시작");
-        Site site = siteRepository.findById(siteId)
+        Site site = siteRepository.findById(siteId)//구역번호를 매개변수로 사이트 레포지토리에서 정보를 받아와서 site에 할당
                 .orElseThrow(() -> new RuntimeException("해당 ID의 사이트가 존재하지 않습니다."));
 
         // Site 엔티티의 change 메서드 사용하여 필드 업데이트

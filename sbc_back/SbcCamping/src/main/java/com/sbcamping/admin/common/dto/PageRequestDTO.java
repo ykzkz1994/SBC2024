@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageRequestDTO {
+public class PageRequestDTO {  // 페이지 번호나 사이즈 등을 처리
 
     @Builder.Default
     private int page = 1;

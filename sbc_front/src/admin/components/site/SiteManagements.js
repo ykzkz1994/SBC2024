@@ -1,94 +1,73 @@
+// src/components/SiteManagements.js
+
 import React, { useState, useEffect, useRef } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
-import axios from "axios";  /*백엔드와 통신하기위해 import*/
+import { getSiteDataAll, updateSiteData } from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
 
-// **상수 선언**
 // 최대 허용 인원 수를 상수로 선언하여 코드의 의도를 명확히 하고 유지보수를 용이하게 합니다.
 const MAX_LIMIT_PEOPLE = 6;
 
-// **SiteManagements 컴포넌트 정의**
+// SiteManagements 컴포넌트
 const SiteManagements = () => {
-     //sites: 구역 정보 목록을 저장하는 빈 배열
-     const [sites, setSites] = useState([]);
 
-    // showModal: 수정 모달 창의 표시 여부를 관리합니다.
-    const [showModal, setShowModal] = useState(false);
+    // 사이트 정보 목록을 저장하는 상태
+    const [sites, setSites] = useState([]);
 
-    // selectedSite: 현재 선택된 구역의 정보를 저장합니다.
+    // 수정 모달 창의 표시 여부를 관리하는 상태
+    const [firstModal, setFirstModal] = useState(false);
+
+    // 현재 선택된 구역의 정보를 저장하는 상태
     const [selectedSite, setSelectedSite] = useState(null);
 
-    // newValues: 모달 창에서 수정된 새로운 값을 임시로 저장합니다.
-    const [newValues, setNewValues] = useState({});
+    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 상태
+    const [newSiteValue, setNewSiteValue] = useState({});
 
-    // showReviewModal: 수정 확인 모달 창의 표시 여부를 관리합니다.
-    const [showReviewModal, setShowReviewModal] = useState(false);
+    // 수정 확인 모달 창의 표시 여부를 관리하는 상태
+    const [secondModal, setSecondModal] = useState(false);
 
-    // error: 입력 검증 시 발생한 에러 메시지를 저장합니다.
+    // 입력 검증 시 발생한 에러 메시지를 저장하는 상태
     const [error, setError] = useState('');
 
-    // siteNameRef: 구역 이름 입력 필드에 대한 참조를 생성하여 자동 포커스를 설정할 때 사용합니다.
+    // 구역 이름 입력 필드에 대한 참조를 생성하여 자동 포커스를 설정할 때 사용
     const siteNameRef = useRef(null);
-
-    // **useEffect 훅** - 백엔드에서 전체 구역 정보 가져오기
-    useEffect(() => {
-        axios.get('http://localhost:8080/site') // 백엔드 전체 주소와 함께 요청
-            .then(response => setSites(response.data)) // 응답 데이터를 상태에 저장
-            .catch(error => console.error('구역정보가 없습니다.:', error));
-    }, []);
-
-
     // **모달 창 열기 함수**
     // 선택한 구역의 정보를 설정하고 수정 모달 창을 엽니다.
     const handleShowModal = (site) => {
         setSelectedSite(site); // 선택된 구역 정보를 상태에 저장
-        setNewValues(site);    // 선택된 구역 정보를 수정할 수 있도록 새로운 값으로 설정
-        setShowModal(true);    // 수정 모달 창을 표시
+        setNewSiteValue(site); // 선택된 구역 정보를 수정할 수 있도록 새로운 값으로 설정
+        setFirstModal(true); // 수정 모달 창을 표시
+        console.log(site);
     };
 
     // **모달 창 닫기 함수**
     // 수정 모달 창을 닫고 선택된 구역 정보를 초기화합니다.
     const handleCloseModal = () => {
-        setShowModal(false);      // 수정 모달 창을 숨김
-        setSelectedSite(null);    // 선택된 구역 정보 초기화
-        setNewValues({});         // 수정된 값 초기화
-        setError('');             // 에러 메시지 초기화
+        setFirstModal(false); // 수정 모달 창을 숨김
+        setSelectedSite(null); // 선택된 구역 정보 초기화
+        setNewSiteValue({}); // 수정된 값 초기화
+        setError(''); // 에러 메시지 초기화
     };
 
     // **수정 사항 저장 함수**
     // 입력된 값을 검증한 후 수정 확인 모달 창을 엽니다.
     const handleSaveChanges = () => {
         // 기준 인원이 최대 인원보다 큰지 검증
-        if (newValues.minPeople > newValues.maxPeople) {
+        if (newSiteValue.minPeople > newSiteValue.maxPeople) {
             setError('기준 인원은 최대 인원보다 클 수 없습니다.');
             return; // 검증 실패 시 함수 종료
         }
         // 추가적인 검증 로직을 여기에 추가할 수 있습니다.
 
-        setShowModal(false);         // 수정 모달 창을 숨김
-        setShowReviewModal(true);    // 수정 확인 모달 창을 표시
-    };
-
-    // **최종 수정 저장 함수**
-    // 실제로 sites 상태를 업데이트하여 변경 사항을 저장합니다.
-    const handleFinalSave = () => {
-        setSites((prevSites) =>
-            prevSites.map((site) =>
-                site.siteID === selectedSite.siteID ? { ...site, ...newValues } : site
-            )
-        );
-
-        setShowReviewModal(false);  // 수정 확인 모달 창을 숨김
-        setSelectedSite(null);      // 선택된 구역 정보 초기화
-        setNewValues({});           // 수정된 값 초기화
-        setError('');               // 에러 메시지 초기화z
+        setFirstModal(false); // 수정 모달 창을 숨김
+        setSecondModal(true); // 수정 확인 모달 창을 표시
     };
 
     // **입력 필드 변경 처리 함수 - 텍스트 필드**
     // 텍스트 기반 입력 필드의 값 변경을 처리합니다.
     const handleTextChange = (e) => {
         const { name, value } = e.target;
-        setNewValues((prev) => ({ ...prev, [name]: value }));
+        setNewSiteValue((prev) => ({ ...prev, [name]: value }));
         setError(''); // 입력 변경 시 에러 메시지를 초기화
     };
 
@@ -104,7 +83,7 @@ const SiteManagements = () => {
             return; // 검증 실패 시 함수 종료
         }
 
-        setNewValues((prev) => ({ ...prev, [name]: numberValue }));
+        setNewSiteValue((prev) => ({ ...prev, [name]: numberValue }));
         setError(''); // 입력 변경 시 에러 메시지를 초기화
     };
 
@@ -116,10 +95,40 @@ const SiteManagements = () => {
         const numericValue = value.replace(/,/g, '');
         // 숫자인지 확인하고, 숫자일 경우 새로운 값으로 설정
         if (!isNaN(numericValue) && numericValue.trim() !== '') {
-            setNewValues((prev) => ({
+            setNewSiteValue((prev) => ({
                 ...prev,
-                [name]: Number(numericValue),
+                [name === 'weekdayRate' ? 'weekdayPay' : 'weekendPay']: Number(numericValue),
             }));
+        }
+    };
+
+    // **최종 수정 저장 함수**
+    // 서버에 PUT 요청을 보내고, 로컬 상태를 업데이트합니다.
+    const handleFinalSave = async () => {
+        if (!selectedSite) {
+            setError('수정할 사이트를 선택해주세요.');
+            return;
+        }
+
+        try {
+            // updateSiteData API 호출
+            const updatedSite = await updateSiteData(selectedSite.siteID, newSiteValue);
+
+            // 로컬 상태 업데이트
+            setSites((prevSites) =>
+                prevSites.map((site) =>
+                    site.siteID === selectedSite.siteID ? { ...site, ...updatedSite } : site
+                )
+            );
+            setSecondModal(false); // 수정 확인 모달 창을 숨김
+            setSelectedSite(null); // 선택된 구역 정보 초기화
+            setNewSiteValue({}); // 수정된 값 초기화
+            setError(''); // 에러 메시지 초기화
+            alert("수정 성공");
+        } catch (error) {
+            console.error('수정에 실패했습니다:', error);
+            setError('수정에 실패했습니다. 다시 시도해주세요.');
+            alert("수정 실패");
         }
     };
 
@@ -142,11 +151,12 @@ const SiteManagements = () => {
                     <th style={{ minWidth: '120px', maxWidth: '160px' }}>요금표 설정</th>
                 </tr>
                 </thead>
-                <tbody>
                 {/* sites 배열을 순회하여 각 구역의 정보를 테이블에 표시 */}
+                <tbody>
+                {/*삼항연산자로 sites의 랭스가 0보다 크다면 출력 작다면 로딩이라는 문구를 띄움 랜더링 시간 고려*/}
                 {sites.length > 0 ? (
                     sites.map(site => (
-                        <tr key={site.siteID}>
+                        <tr key={site.id}>
                             <td>{site.siteID}</td>
                             <td>{site.siteName}</td>
                             <td>{site.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
@@ -163,15 +173,14 @@ const SiteManagements = () => {
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="7">Loading...</td>
+                        <td colSpan="8">Loading...</td>
                     </tr>
                 )}
-
                 </tbody>
             </Table>
 
             {/* **수정 모달 창** */}
-            <Modal show={showModal} onHide={handleCloseModal} centered>
+            <Modal show={firstModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>구역 수정 - {selectedSite?.siteID ? selectedSite.siteID : 'N/A'}</Modal.Title>
                 </Modal.Header>
@@ -184,9 +193,9 @@ const SiteManagements = () => {
                                 <Form.Control
                                     type="text"
                                     name="siteName"
-                                    value={newValues.siteName || ''}
+                                    value={newSiteValue.siteName || ''}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
-                                    ref={siteNameRef}          // 자동 포커스를 위한 참조 설정
+                                    ref={siteNameRef} // 자동 포커스를 위한 참조 설정
                                 />
                             </Form.Group>
 
@@ -198,7 +207,7 @@ const SiteManagements = () => {
                                     label="예약 가능"
                                     name="reservationLimit"
                                     value="Y"
-                                    checked={newValues.reservationLimit === 'Y'}
+                                    checked={newSiteValue.siteResLimit === 'Y'}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                                 <Form.Check
@@ -206,7 +215,7 @@ const SiteManagements = () => {
                                     label="예약 불가능"
                                     name="reservationLimit"
                                     value="N"
-                                    checked={newValues.reservationLimit === 'N'}
+                                    checked={newSiteValue.siteResLimit === 'N'}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                             </Form.Group>
@@ -217,10 +226,10 @@ const SiteManagements = () => {
                                 <Form.Control
                                     type="number"
                                     name="minPeople"
-                                    value={newValues.minPeople || ''}
+                                    value={newSiteValue.minPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
-                                    min={1}                       // 최소값 설정
-                                    max={MAX_LIMIT_PEOPLE}      // 최대값 설정
+                                    min={1} // 최소값 설정
+                                    max={MAX_LIMIT_PEOPLE} // 최대값 설정
                                 />
                             </Form.Group>
 
@@ -230,10 +239,10 @@ const SiteManagements = () => {
                                 <Form.Control
                                     type="number"
                                     name="maxPeople"
-                                    value={newValues.maxPeople || ''}
+                                    value={newSiteValue.maxPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
-                                    min={1}                       // 최소값 설정
-                                    max={MAX_LIMIT_PEOPLE}      // 최대값 설정
+                                    min={1} // 최소값 설정
+                                    max={MAX_LIMIT_PEOPLE} // 최대값 설정
                                 />
                             </Form.Group>
 
@@ -243,7 +252,7 @@ const SiteManagements = () => {
                                 <Form.Control
                                     type="text"
                                     name="weekdayRate"
-                                    value={newValues.weekdayRate?.toLocaleString() || ''}
+                                    value={newSiteValue.weekdayPay?.toLocaleString() || ''}
                                     onChange={handleRateChange} // 값 변경 시 handleRateChange 함수 호출
                                 />
                             </Form.Group>
@@ -254,7 +263,7 @@ const SiteManagements = () => {
                                 <Form.Control
                                     type="text"
                                     name="weekendRate"
-                                    value={newValues.weekendRate?.toLocaleString() || ''}
+                                    value={newSiteValue.weekendPay?.toLocaleString() || ''}
                                     onChange={handleRateChange} // 값 변경 시 handleRateChange 함수 호출
                                 />
                             </Form.Group>
@@ -277,27 +286,29 @@ const SiteManagements = () => {
             </Modal>
 
             {/* **수정 확인 모달 창** */}
-            <Modal show={showReviewModal} onHide={() => setShowReviewModal(false)} centered>
+            <Modal show={secondModal} onHide={() => setSecondModal(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>구역 수정 확인 - {selectedSite?.id}번</Modal.Title>
+                    <Modal.Title>구역 수정 확인 - {selectedSite?.siteID ? selectedSite.siteID : 'N/A'}번</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>
                     {selectedSite && (
                         <div>
                             {/* 수정 전후의 값들을 비교하여 표시 */}
-                            <p><strong>구역 번호:</strong> {selectedSite.id}</p>
-                            <p><strong>구역 이름:</strong> {selectedSite.siteName} => {newValues.siteName}</p>
-                            <p><strong>예약 제한:</strong> {selectedSite.reservationLimit === 'Y' ? '예약 가능' : '예약 불가능'} => {newValues.reservationLimit === 'Y' ? '예약 가능' : '예약 불가능'}</p>
-                            <p><strong>기준 인원:</strong> {selectedSite.minPeople} => {newValues.minPeople}</p>
-                            <p><strong>최대 인원:</strong> {selectedSite.maxPeople} => {newValues.maxPeople}</p>
-                            <p><strong>평일 요금:</strong> {selectedSite.weekdayRate.toLocaleString()} => {newValues.weekdayRate.toLocaleString()}</p>
-                            <p><strong>주말 요금:</strong> {selectedSite.weekendRate.toLocaleString()} => {newValues.weekendRate.toLocaleString()}</p>
+                            <p><strong>구역 번호:</strong> {selectedSite.siteID}</p>
+                            <p><strong>구역 이름:</strong> {selectedSite.siteName} => {newSiteValue.siteName}</p>
+                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'} => {newSiteValue.reservationLimit === 'Y' ? '예약 가능' : '예약 불가능'}</p>
+                            <p><strong>기준 인원:</strong> {selectedSite.minPeople} => {newSiteValue.minPeople}</p>
+                            <p><strong>최대 인원:</strong> {selectedSite.maxPeople} => {newSiteValue.maxPeople}</p>
+                            <p><strong>평일 요금:</strong> {selectedSite.weekdayPay ? selectedSite.weekdayPay.toLocaleString() : 0} => {newSiteValue.weekdayPay ? newSiteValue.weekdayPay.toLocaleString() : 0}</p>
+                            <p><strong>주말 요금:</strong> {selectedSite.weekendPay ? selectedSite.weekendPay.toLocaleString() : 0} => {newSiteValue.weekendPay ? newSiteValue.weekendPay.toLocaleString() : 0}</p>
                         </div>
                     )}
                 </Modal.Body>
+
                 <Modal.Footer>
                     {/* **취소 버튼** */}
-                    <Button variant="secondary" onClick={() => setShowReviewModal(false)}>
+                    <Button variant="secondary" onClick={() => setSecondModal(false)}>
                         취소
                     </Button>
                     {/* **최종 수정 버튼** */}
@@ -308,6 +319,7 @@ const SiteManagements = () => {
             </Modal>
         </div>
     );
+
 };
 
 // **컴포넌트 내보내기**

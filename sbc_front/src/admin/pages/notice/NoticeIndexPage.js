@@ -5,12 +5,8 @@ import {Outlet} from 'react-router-dom';
 
 import CommunityMenu from "../../components/menus/CommunityMenu";
 
-const NoticeIndexPage = () => {
-
-
-
-
-    return (
+const NoticeIndexPage = () =>{
+    return(
         <BasicLayout>
             <CommunityMenu/>
             <div>

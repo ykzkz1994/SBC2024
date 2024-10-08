@@ -1,7 +1,10 @@
+import AddComponent from '../../components/qna/AddComponent'
+
 const AddPage = () => {
     return (
         <div>
-            Camper Add page
+            Qna Add page
+            <AddComponent/>
         </div>
     );
 }

@@ -3,13 +3,13 @@
 import {Suspense, lazy} from "react";
 import Spinner from 'react-bootstrap/Spinner';
 
-import memberRouter from "./MemberRouter";
+import memberRouter from "../router/memberRouter";
 import camperRouter from "../router/camperRouter";
 import noticeRouter from "../router/noticeRouter";
 import statsRouter from "../router/StatsRouter";
 import reviewRouter from "../router/reviewRouter";
 import qnaRouter from "../router/qnaRouter";
-import resRouter from "./resRouter";
+import resRouter from "../router/resRouter";
 
 import {createBrowserRouter} from "react-router-dom";
 import SiteManagementsPage from "../pages/site/SiteManagementsPage";
