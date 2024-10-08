@@ -1,9 +1,9 @@
 // src/components/SiteManagements.js
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
-import { getSiteDataAll, updateSiteData } from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
+import { updateSiteData } from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
 
 // 최대 허용 인원 수를 상수로 선언하여 코드의 의도를 명확히 하고 유지보수를 용이하게 합니다.
 const MAX_LIMIT_PEOPLE = 6;
