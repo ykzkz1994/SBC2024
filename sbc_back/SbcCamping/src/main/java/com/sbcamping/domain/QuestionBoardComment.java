@@ -32,10 +32,14 @@ public class QuestionBoardComment { // 문의게시판 댓글
     private String qCommentContent; // 댓글 내용
 
     @Column(name = "QBoard_Comment_Date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date qCommentDate;  // 댓글 작성일
 
     @Column(nullable = false)
-    private char qBoardIsadmin = 'N';
+    private char qBoardIsAdmin = 'N';   // 관리자 댓글 여부
 
+    // 댓글 수정 시 수정 가능한 항목
+    public void changeContent(String content) {
+        this.qCommentContent = content;
+    }
 }

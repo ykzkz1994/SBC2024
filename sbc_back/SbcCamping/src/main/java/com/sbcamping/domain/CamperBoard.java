@@ -44,4 +44,18 @@ public class CamperBoard {
     @Column(name = "Cboard_Attachment", nullable = true, length = 200)
     private String cBoardAttachment;    //파일 첨부여부(url,링크)
 
+    // 글 머리 변경
+    public void changeCategory(String newCategory) {
+        cBoardCategory = newCategory;
+    }
+
+    // 글 제목 변경
+    public void changeTitle(String title) {
+        this.cBoardTitle = title;
+    }
+
+    // 글 내용 변경
+    public void changeContent(String content) {
+        this.cBoardContent = content;
+    }
 }

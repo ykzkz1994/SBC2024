@@ -34,7 +34,7 @@ public class QuestionBoard { // 문의게시판
     private String qBoardAttachment;    // 문의 게시판 파일 첨부
 
     @Column(name = "Qboard_Views", columnDefinition = "NUMBER(30,0)", nullable = false)
-    private Long qBoardViews;   // 문의 게시판 글 조회수
+    private Long qBoardViews = 0L;   // 문의 게시판 글 조회수
 
     @Column(name = "QBoard_Date", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -45,5 +45,28 @@ public class QuestionBoard { // 문의게시판
 
     @Column(name = "QBoard_notice", length = 1, nullable = false)
     private char qBoardNotice = 'N';    // 공지 여부 (기본값 설정)
+
+    // 글 수정 시, 수정 가능한 항목
+    public void changeTitle(String title) {
+        this.qBoardTitle = title;
+    }
+
+    public void changeContent(String content) {
+        this.qBoardContent = content;
+    }
+
+    public void changeAttachment(String attachment) {
+        this.qBoardAttachment = attachment;
+    }
+
+    // 관리자가 문의글에 댓글 작성 시, 관리자 답변 상태 변경
+    public void changeAsked(char asked) {
+        this.qBoardAsked = asked;
+    }
+
+    // 조회수
+    public void changeViews(long views) {
+        this.qBoardViews = views;
+    }
 
 }
