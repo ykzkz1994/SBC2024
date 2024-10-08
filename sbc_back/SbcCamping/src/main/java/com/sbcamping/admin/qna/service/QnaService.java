@@ -36,8 +36,8 @@ public interface QnaService {
     // 8. 댓글 수정
     void modifyComment(QnaCommentDTO qnaCommentDTO);
 
-    // 9. 댓글 목록 : 페이징 처리 없음
-    List<QnaCommentDTO> commentlist();
+    // 9. 댓글 목록 : 페이징 처리 없음, 해당 글의 댓글 목록만 읽어오기
+    List<QnaCommentDTO> commentlist(Long qbID);
 
     // 10. 댓글 삭제
     void removeComment(Long qbcommID);

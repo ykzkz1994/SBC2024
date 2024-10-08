@@ -2,14 +2,17 @@ import React from 'react';
 import ReadComponent from '../../components/qna/ReadComponent'
 import ListCommentComponent from './../../components/qna/ListCommentComponent';
 import AddCommentComponent from '../../components/qna/AddCommentComponent';
+import {useParams} from "react-router-dom";
+
 
 function ReadPage() {
+    const {qbID} = useParams()
 
     return (
         <div>
             Qna Read Page
             <div>
-            <ReadComponent></ReadComponent>
+                {qbID} <ReadComponent/>
             </div>
 
             <div className="comment_wrapper">
