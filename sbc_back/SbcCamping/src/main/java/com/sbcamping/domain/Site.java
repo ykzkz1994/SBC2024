@@ -21,7 +21,7 @@ public class Site {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SITE_SEQ_GEN")
     @Column(name = "Site_ID", nullable = false, columnDefinition = "NUMBER(10,0)") //구역번호
-    private Long siteID;
+    private Long siteId;
 
     @Column(name = "Site_Name", nullable = false, length = 10, unique = true) //구역이름
     private String siteName;
@@ -48,4 +48,36 @@ public class Site {
     @Builder.Default
     private Long siteMaxPeople = 6L;
 
+    //
+    public void changeSiteName(String Name) {
+        this.siteName = Name;
+    }
+
+
+    public void changeIsAvailable(char IsAvailable) {
+        this.siteIsavailable = IsAvailable;
+    }
+
+    public void changeResLimit(char ResLimit) {
+        this.siteResLimit = ResLimit;
+    }
+
+    public void changeWeekendPay(Long WeekendPay) {
+        this.siteWeekendPay = WeekendPay;
+    }
+
+    public void changeWeekdayPay(Long WeekdayPay) {
+        this.siteWeekdayPay = WeekdayPay;
+    }
+
+    public void changeMinPeople(Long MinPeople) {
+        this.siteMinPeople = MinPeople;
+    }
+
+    public void changeMaxPeople(Long MaxPeople) {
+        this.siteMaxPeople = MaxPeople;
+    }
+
+
+    
 }
