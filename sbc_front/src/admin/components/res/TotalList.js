@@ -1,43 +1,38 @@
-// src/admin/components/res/TotalList.js
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { getResDataAll } from '../../api/ResApi';
+
+
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
-import Search from '../res/Search'; // 올바른 경로로 수정
+import Search from './Search';
+//테이블 헤드 오름차순 내림차순
 import { FaSortUp, FaSortDown } from 'react-icons/fa'; // react-icons 임포트
 
+
 const TotalList = () => {
+
+    //예약목록 전체를 저장 하는 변수
+    const [reservations,setReservations] = useState([]);
+
+    //페이지 값 설정하는 코드 초기값은 1로 설정
     const [currentPage, setCurrentPage] = useState(1);
+
+    //한 페이지에 출력할 예약 수
     const itemsPerPage = 15;
 
     const [searchTerm, setSearchTerm] = useState('');
+
     const [selectedColumn, setSelectedColumn] = useState('reservationNumber');
 
+    //오름차순, 내림차순 상태
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-
-    const reservations = useMemo(() => (
-        Array.from({ length: 100 }).map((_, index) => ({
-            id: index + 1,
-            reservationNumber: `RES-${index + 1}`,
-            reservationDate: '2024-01-01',
-            zoneName: 'Zone A',
-            memberName: '홍길동',
-            memberPhone: '010-1234-5678',
-            userName: '이용자명',
-            userPhone: '010-8765-4321',
-            checkInDate: '2024-01-02',
-            checkOutDate: '2024-01-05',
-            cancelDate: '2024-01-03',
-            cancelReason: '개인 사정',
-            payment: '100,000원',
-        }))
-    ), []);
 
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, selectedColumn]);
 
-    const filteredReservations = useMemo(() => {
+    const filteredReservations = useState(() => {
         if (!searchTerm.trim()) return reservations;
 
         const escapeRegExp = (string) => string.replace(/[-\/\\^$+?.()|[\]{}]/g, '\\$&');
@@ -57,7 +52,7 @@ const TotalList = () => {
         });
     }, [reservations, searchTerm, selectedColumn]);
 
-    const sortedReservations = useMemo(() => {
+    const sortedReservations = useState(() => {
         if (!sortConfig.key) return filteredReservations;
 
         return [...filteredReservations].sort((a, b) => {
@@ -98,18 +93,18 @@ const TotalList = () => {
         });
     }, [filteredReservations, sortConfig]);
 
-    const currentItems = useMemo(() => {
+    const currentItems = useState(() => {
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         return sortedReservations.slice(indexOfFirstItem, indexOfLastItem);
     }, [sortedReservations, currentPage, itemsPerPage]);
 
-    const totalPages = useMemo(() => Math.ceil(sortedReservations.length / itemsPerPage), [sortedReservations.length, itemsPerPage]);
+    const totalPages = useState(() => Math.ceil(sortedReservations.length / itemsPerPage), [sortedReservations.length, itemsPerPage]);
 
-    const startPage = useMemo(() => Math.floor((currentPage - 1) / 10) * 10 + 1, [currentPage]);
-    const endPage = useMemo(() => Math.min(startPage + 9, totalPages), [startPage, totalPages]);
+    const startPage = useState(() => Math.floor((currentPage - 1) / 10) * 10 + 1, [currentPage]);
+    const endPage = useState(() => Math.min(startPage + 9, totalPages), [startPage, totalPages]);
 
-    const pageNumbers = useMemo(() => {
+    const pageNumbers = useState(() => {
         const pages = [];
         for (let i = startPage; i <= endPage; i++) {
             pages.push(i);

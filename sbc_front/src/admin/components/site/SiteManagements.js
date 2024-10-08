@@ -11,22 +11,22 @@ const MAX_LIMIT_PEOPLE = 6;
 // SiteManagements 컴포넌트
 const SiteManagements = () => {
 
-    // 사이트 정보 목록을 저장하는 상태
+    // 사이트 전체 정보 목록을 저장하는 변수
     const [sites, setSites] = useState([]);
 
-    // 수정 모달 창의 표시 여부를 관리하는 상태
+    // 수정 모달 창(1)의 표시 여부를 관리하는 변수
     const [firstModal, setFirstModal] = useState(false);
 
-    // 현재 선택된 구역의 정보를 저장하는 상태
+    // 현재 선택된 구역의 정보를 저장하는 변수
     const [selectedSite, setSelectedSite] = useState(null);
 
-    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 상태
+    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 변수
     const [newSiteValue, setNewSiteValue] = useState({});
 
-    // 수정 확인 모달 창의 표시 여부를 관리하는 상태
+    // 수정 확인 기능을 하는 두 번째 모달 창의 표시 여부를 관리하는 변수
     const [secondModal, setSecondModal] = useState(false);
 
-    // 입력 검증 시 발생한 에러 메시지를 저장하는 상태
+    // 입력 검증 시 발생한 에러 메시지를 저장하는 변수
     const [error, setError] = useState('');
 
     // 구역 이름 입력 필드에 대한 참조를 생성하여 자동 포커스를 설정할 때 사용
