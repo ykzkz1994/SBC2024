@@ -23,6 +23,21 @@ public class MemberServiceImpl implements MemberService{
 
     private final PasswordEncoder passwordEncoder;
 
+
+    // 이메일 찾기 (회원명 + 회원 핸드폰번호)
+    @Override
+    public String findEmail(String memberName, String memberPhone) {
+        Member member = memberRepository.findByMemberNameAndMemberPhone(memberName, memberPhone);
+        log.info("이메일찾기 : " + member.toString());
+        String email;
+        if(member == null) {
+            email = "이메일을 찾을 수 없습니다.";
+        } else{
+            email = member.getMemberEmail();
+        }
+        return email;
+    }
+
     // 회원 등록
     @Override
     public void addMember(Member member) {

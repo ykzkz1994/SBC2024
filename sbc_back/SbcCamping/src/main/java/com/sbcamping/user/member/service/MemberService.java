@@ -9,4 +9,5 @@ public interface MemberService {
     public void deleteMember(Long memberID);
     public Member getMember(Long memberId);
     public String emailCheck(String memberEmail);
+    public String findEmail(String memberName, String memberPhone);
 }

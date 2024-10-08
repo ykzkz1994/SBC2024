@@ -26,7 +26,7 @@ public class Member {
     @Column(updatable = false, name = "MEMBER_ID", columnDefinition = "NUMBER(10,0)")
     private Long memberID; // 회원 번호 (자동생성)
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String memberEmail; // 회원 이메일
 
     @Column(name = "Member_Password", length = 200, nullable = false)
@@ -35,7 +35,7 @@ public class Member {
     @Column(length = 10, nullable = false)
     private String memberName; // 회원 명
 
-    @Column(length = 11, nullable = false)
+    @Column(length = 11, nullable = false, unique = true)
     private String memberPhone; // 회원 핸드폰번호
 
     @Column(nullable = false, length = 1)

@@ -78,6 +78,14 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if(path.startsWith("/api/campers")){
+            return true;
+        }
+
+        if(path.startsWith("/api/res")){
+            return true;
+        }
+
         // 이미지 조회 경로는 체크하지 않음
         // ◆◆◆◆◆◆◆◆◆이미지 경로는 다른 분들꺼 보고 추가 수정◆◆◆◆◆◆◆◆◆◆◆◆◆
         if (path.startsWith("/api/cboard") || path.startsWith("/api/qboard/")){
