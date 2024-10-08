@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -33,8 +34,8 @@ public class CamperBoardComment {   // 캠퍼 게시판 댓글
     @Column(name = "Cboard_Comment_content",nullable = false,length = 200)
     private String cCommentContent; // 댓글 내용
 
-    @Column(name = "Cboard_Date",nullable = false)
+    @Column(name = "Cboard_Comment_Date",nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date cCommentDate;  // 댓글 작성일
+    private LocalDate cCommentDate;  // 댓글 작성일
 
 }
