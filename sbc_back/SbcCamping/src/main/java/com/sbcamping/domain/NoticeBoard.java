@@ -2,10 +2,8 @@ package com.sbcamping.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @SequenceGenerator(name = "NOTICE_BOARD_SEQ_GEN", // 시퀀스 제너레이터 이름
@@ -25,7 +23,7 @@ public class NoticeBoard {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_BOARD_SEQ_GEN")
     //Long = scale    String,Char = length
     @Column(name = "nboard_Id", nullable = false, columnDefinition = "NUMBER(10,0)")          // 공지사항 글 번호
-    private Long nBoardID;
+    private Long nBoardId;
 
     @Column(name = "nboard_Title", nullable = false, length = 50)       // 공지사항 글 제목
     private String nBoardTitle;
@@ -34,10 +32,20 @@ public class NoticeBoard {
     private String nBoardContent;
 
     @Column(name = "nboard_Date", nullable = false) // 작성일
-    @Temporal(TemporalType.DATE)
-    private Date nBoardDate;
+    private LocalDateTime nBoardDate;
 
     @Column(name = "nboard_Views", nullable = false, columnDefinition = "NUMBER(10,0)")       // 조회수
     private Long nBoardViews;
+
+    public void changeNBoardTitle(String nBoardTitle) { //공지 제목 수정 메서드
+        this.nBoardTitle = nBoardTitle;
+    }
+
+    public void changeNBoardContent(String nBoardContent) { //공지 내용 수정 메서드
+        this.nBoardContent = nBoardContent;
+    }
+
+
+
 
 }
