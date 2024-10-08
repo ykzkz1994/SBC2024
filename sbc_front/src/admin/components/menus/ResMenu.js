@@ -15,14 +15,6 @@ else {
 }
 }
 
-function init() {
-for (var i = 0; i < div2.length; i++) {
-    div2[i].addEventListener("click", handleClick);
-}
-}
-
-init();
-
 const ResMenu = () => {
     return(
         <>        

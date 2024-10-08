@@ -33,8 +33,8 @@ const BasicLayout = ({ children }) => {
                 <NavDropdown.Item href="/api/admin/reviews">리뷰 게시판</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="통계 관리">
-                <NavDropdown.Item href="/api/admin/stats">매출 통계</NavDropdown.Item>
-                <NavDropdown.Item href="#action5">추가 통계</NavDropdown.Item>
+                <NavDropdown.Item href="/api/admin/stats">예약 매출 통계</NavDropdown.Item>
+                <NavDropdown.Item href="/api/admin/stats/customer">고객 통계</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </div>
