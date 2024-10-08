@@ -19,6 +19,7 @@ public class ResController {
 
     private final ReservationService service;
 
+    @PreAuthorize("ROLE_USER")
     @PostMapping("/")
     public String register(@RequestBody Reservation reservation) {
 
@@ -34,6 +35,7 @@ public class ResController {
         return service.getSite();
     }
 
+    @PreAuthorize("ROLE_USER")
     @GetMapping("/memberList")
     public List<Member> getMember() {
 
