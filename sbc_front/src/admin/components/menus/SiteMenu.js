@@ -19,7 +19,7 @@ const SiteMenu = () => {
     return(
         <>        
         <div id='menubuttonwrap'>
-          <Link to={'#'} className='menubutton'>구역 관리</Link>
+          <Link to={'/api/admin/site'} className='menubutton'>구역 관리</Link>
         </div>
         </>
 

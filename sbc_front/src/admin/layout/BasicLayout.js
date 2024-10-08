@@ -19,18 +19,18 @@ const BasicLayout = ({ children }) => {
             </Nav>
             <Nav className="justify-content-end">
               <NavDropdown href="/api/admin/site" title="구역 관리">
-                <NavDropdown.Item as={Link} to="/site">구역 관리</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/api/admin/site">구역 관리</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="캠핑장 예약 관리">
-                <NavDropdown.Item as={Link} to="/res/total">전체 예약 리스트</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/res/datesite">날짜/구역별 예약 현황</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/api/admin/res/total">전체 예약 리스트</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/api/admin/res/datesite">날짜/구역별 예약 현황</NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="회원 관리">
                 <NavDropdown.Item href="/api/admin/member">전체 회원 리스트</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/member/inactivelist">휴면 회원 리스트</NavDropdown.Item>
                 </NavDropdown>
               <NavDropdown title="커뮤니티 관리">
-                <NavDropdown.Item as={Link} to="/notice/list">공지사항</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/api/admin/notices/list">공지사항</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/qnas">문의 게시판</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/campers">캠퍼 게시판</NavDropdown.Item>
                 <NavDropdown.Item href="/api/admin/reviews">리뷰 게시판</NavDropdown.Item>

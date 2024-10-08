@@ -41,21 +41,21 @@ const prefix = "api/admin/"
 
 const root = createBrowserRouter([
     {//메인페이지 라우터
-        path: `/`,
+        path: `${prefix}`,
         element: <Suspense fallback={Loading}><Main/></Suspense>
     },
 
     {//위에서 선언한 lazy지연기능이 포함된 페이지 이동 함수
         //예약관리의 기본경로 자식은 resRouter
         //경로가 하나라 라우터 필요 x
-        path: `site`,
+        path: `${prefix}site`,
         element: <Suspense fallback={Loading}><Site/></Suspense>,
 
 
     },
     {//root 페이지 위에서 선언한 lazy지연기능이 포함된 페이지 이동 함수
         //예약관리의 기본경로 자식은 resRouter
-        path: `res`,
+        path: `${prefix}res/`,
         element: <Suspense fallback={Loading}><ResIndex/></Suspense>,
         children: resRouter()
 
@@ -65,7 +65,7 @@ const root = createBrowserRouter([
         element: <div>404 페이지를 찾을 수 없습니다.</div>
     },
     {
-        path: `member`,
+        path: `${prefix}member/`,
         element: <Suspense fallback={Loading}><MemberIndex/></Suspense>,
         children: memberRouter()
     },
@@ -75,7 +75,7 @@ const root = createBrowserRouter([
         children: camperRouter()
     },
     {
-        path: `notice`,
+        path: `${prefix}notices/`,
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
         children: noticeRouter()
     },
