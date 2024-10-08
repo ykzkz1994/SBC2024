@@ -15,20 +15,12 @@ else {
 }
 }
 
-function init() {
-for (var i = 0; i < div2.length; i++) {
-    div2[i].addEventListener("click", handleClick);
-}
-}
-
-init();
-
 const StatsMenu = () => {
     return(
         <>        
         <div id='menubuttonwrap'>
-          <Link to={'#'} className='menubutton'>매출 통계</Link>
-          <Link to={'#'} className='menubutton'>추가 통계</Link>
+          <Link to={'/api/admin/stats/reservation-sales'} className='menubutton'>예약 매출 통계</Link>
+          <Link to={'/api/admin/stats/customer'} className='menubutton'>고객 통계</Link>
         </div>
         </>
 

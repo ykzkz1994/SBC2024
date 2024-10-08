@@ -14,23 +14,17 @@ function handleClick(event) {
     }
 }
 
-function init() {
-    for (var i = 0; i < div2.length; i++) {
-        div2[i].addEventListener("click", handleClick);
-    }
-}
-
-init();
 
 const CommunityMenu = () => {
-    return (
-        <>
-            <div id='menubuttonwrap'>
-                <Link to={'/notice'} className='menubutton'>공지사항</Link>
-                <Link to={'/qna'} className='menubutton'>문의게시판</Link>
-                <Link to={'/campers'} className='menubutton'>캠퍼게시판</Link>
-                <Link to={'/reviews'} className='menubutton'>리뷰게시판</Link>
-            </div>
+    return(
+        <>        
+        <div id='menubuttonwrap'>
+          <Link to={'/api/admin/notices'} className='menubutton'>공지사항</Link>
+          <Link to={'/api/admin/qnas'} className='menubutton'>문의게시판</Link>
+          <Link to={'/api/admin/campers'} className='menubutton'>캠퍼게시판</Link>
+          <Link to={'/api/admin/reviews'} className='menubutton'>리뷰게시판</Link>
+        </div>
+
         </>
     );
 }
