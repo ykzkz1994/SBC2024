@@ -1,0 +1,30 @@
+.orderbox{
+    margin: 20px 0px;
+}
+.detailwrap{
+    text-align: center;
+    font-size: 1.1em;
+}
+input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    vertical-align: middle;
+}
+.agreed{
+    margin : 20px 0px;
+}
+.joinbuttonwrap{
+    display: flex;
+    justify-content: center;
+    margin: 0px auto;
+}
+.joinButton{
+    margin: 20px 0px 50px;
+    width: 300px;
+}
+.joininputwrap{
+    padding: 50px;
+}
+.joininputwrap label{
+    text-align: right;
+}

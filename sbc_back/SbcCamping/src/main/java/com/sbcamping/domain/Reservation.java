@@ -2,8 +2,9 @@ package com.sbcamping.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -11,6 +12,7 @@ import java.util.Date;
 @Getter
 @ToString
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reservation {
@@ -31,14 +33,15 @@ public class Reservation {
 
     @Column(name = "CHECKIN_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date checkinDate; // 입실 날짜
+    private LocalDate checkinDate; // 입실 날짜
 
     @Column(name = "CHECKOUT_DATE", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date checkoutDate; // 퇴실 날짜
+    private LocalDate checkoutDate; // 퇴실 날짜
 
     @Column(name = "RES_DATE", nullable = false)
-    private String resDate;// 예약 날짜
+    @Temporal(TemporalType.DATE)
+    private LocalDate resDate;// 예약 날짜
 
     @Column(name = "RES_STATUS", nullable = false, length = 10)
     @Builder.Default
@@ -48,9 +51,10 @@ public class Reservation {
     private Long resTotalPay; // 결제금액
 
     @Column(name = "RES_CANCEL_DATE")
-    private String resCancelDate; // 취소날짜
+    @Temporal(TemporalType.DATE)
+    private LocalDate resCancelDate; // 취소날짜
 
-    @Column(name = "RES_CANCEL_REASON")
+    @Column(name = "RES_CANCEL_REASON", length = 100)
     private String resCancelReason; // 취소사유
 
     @Column(name = "RES_REVIEW", nullable = false, length = 1)
@@ -64,5 +68,21 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "SITE_ID", referencedColumnName = "Site_ID")
     private Site site;
+
+    public void changeResUserName(String resUserName) {
+        this.resUserName = resUserName;
+    }
+
+    public void changeResUserPhone(String resUserPhone) {
+        this.resUserPhone = resUserPhone;
+    }
+
+    public void changeResPeople(Long resPeople) {
+        this.resPeople = resPeople;
+    }
+
+    public void changeResCancelReason(String resCancelReason) {
+        this.resCancelReason = resCancelReason;
+    }
 
 }
