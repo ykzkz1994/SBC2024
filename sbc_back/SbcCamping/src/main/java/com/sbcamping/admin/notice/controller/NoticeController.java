@@ -20,7 +20,7 @@ public class NoticeController {
     //공지글 생성 post입력 방식 메서드 
     @PostMapping
     public ResponseEntity<Void> createNotice(@RequestBody @Validated NoticeDTO noticeDTO) {
-        noticeService.createNotice(noticeDTO.getNoticeTitle(), noticeDTO.getNoticeContent());
+        noticeService.createNotice(noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -36,7 +36,7 @@ public class NoticeController {
     public ResponseEntity<Void> updateNotice(
             @PathVariable("id") Long noticeId,
             @RequestBody @Validated NoticeDTO noticeDTO) {
-        noticeService.updateNotice(noticeId, noticeDTO.getNoticeTitle(), noticeDTO.getNoticeContent());
+        noticeService.updateNotice(noticeId, noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

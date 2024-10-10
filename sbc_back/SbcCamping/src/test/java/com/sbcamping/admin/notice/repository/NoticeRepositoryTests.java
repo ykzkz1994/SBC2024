@@ -84,9 +84,9 @@ public class NoticeRepositoryTests{
     @DisplayName("Notice 삭제 테스트 ") //테스트이름
     @Commit //변경사항 저장
     public void testDeleteNotice() {
-        Long noticeId = 1L; //근데 롱타입변수인데 L을 붙여야함?
+        Long nboardId = 1L; //근데 롱타입변수인데 L을 붙여야함?
 
-        noticeRepository.deleteById(noticeId);
+        noticeRepository.deleteById(nboardId);
 
     }
 }
