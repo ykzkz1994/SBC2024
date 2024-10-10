@@ -21,49 +21,42 @@ import java.util.UUID;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class CustomFileUtil {
+public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
 
-    @Value("${com.sbcamping.upload.campers.path}")
-    private String campersUploadPath;
-
-    @Value("${com.sbcamping.upload.qna.path}")
-    private String qnaUploadPath;
+    @Value("${com.sbcamping.upload.path}")
+    private String uploadPath;
 
     // 파일 업로드 작업
-    public String saveFile(MultipartFile file, String type) throws RuntimeException {
-        if (file == null || file.isEmpty()) {
-            return null;  // 파일이 없거나 비어있으면 null 반환
+    public String saveFile(MultipartFile file) throws RuntimeException {
+        if (file == null) {
+            return null;
         }
 
-        String uploadPath = type.equals("campers") ? campersUploadPath : qnaUploadPath;
         String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path savePath = Paths.get(uploadPath, savedName);
         String uploadName = null;
 
-        try {
-            // 파일 저장
-            Files.copy(file.getInputStream(), savePath);
-            String contentType = file.getContentType();
+            try {
+                Files.copy(file.getInputStream(), savePath);
+                String contentType = file.getContentType();
 
-            // 이미지 여부 확인
-            if (contentType != null && contentType.startsWith("image")) {
-                Path thumbnailPath = Paths.get(uploadPath, "s_" + savedName);
-                Thumbnails.of(savePath.toFile()).size(200, 200).toFile(thumbnailPath.toFile());
+                // 이미지 여부 확인
+                if (contentType != null && contentType.startsWith("image")) {
+                    Path thumbnailPath = Paths.get(uploadPath,"s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
+                    Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
+                }
+
+                uploadName = (savePath.toString()).substring(7);
+                log.info("저장될 이름 :" + uploadName);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
-
-            uploadName = savePath.toString();  // Windows 경로 설정
-            log.info("저장될 이름 :" + uploadName);
-        } catch (IOException e) {
-            log.error("파일 저장 중 오류 발생. 경로: " + savePath.toString(), e);
-            throw new RuntimeException("파일 저장에 실패했습니다: " + e.getMessage());
-        }
 
         return uploadName;
     }
 
     // 업로드 파일 보여주기
-    public ResponseEntity<Resource> getFile(String fileName, String type) {
-        String uploadPath = type.equals("campers") ? campersUploadPath : qnaUploadPath;
+    public ResponseEntity<Resource> getFile(String fileName) {
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
         if (!resource.exists()) {
@@ -77,28 +70,29 @@ public class CustomFileUtil {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
-
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
     // 서버 내부에서 파일 삭제
-    public void deleteFile(String fileName, String type) {
+    public void deleteFile(String fileName) {
         if (fileName == null) {
             return;
         }
+            String thumbnailFileName = "s_" + fileName;
+            Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
+            log.info(thumbnailPath.toString());
+            Path filePath = Paths.get(uploadPath, fileName);
+            log.info(filePath.toString());
+            try {
 
-        String uploadPath = type.equals("campers") ? campersUploadPath : qnaUploadPath;
-        String thumbnailFileName = "s_" + fileName;
-        Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
-        Path filePath = Paths.get(uploadPath, fileName);
+                Files.deleteIfExists(filePath);
+                log.info("원본 파일 삭제");
+                Files.deleteIfExists(thumbnailPath);
+                log.info("썸네일 파일 삭제");
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
 
-        try {
-            Files.deleteIfExists(filePath);  // 원본 파일 삭제
-            log.info("원본 파일 삭제");
-            Files.deleteIfExists(thumbnailPath);  // 썸네일 파일 삭제
-            log.info("썸네일 파일 삭제");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
     }
 }
+

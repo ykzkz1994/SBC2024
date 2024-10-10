@@ -2,7 +2,6 @@ package com.sbcamping.admin.qna.service;
 
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
-import com.sbcamping.admin.member.dto.MemberDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.admin.qna.repository.QnaCommentRepository;
@@ -21,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

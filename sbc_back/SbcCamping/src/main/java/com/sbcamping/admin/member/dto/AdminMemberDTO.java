@@ -1,9 +1,5 @@
 package com.sbcamping.admin.member.dto;
 
-import com.sbcamping.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +11,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberDTO {
+public class AdminMemberDTO {
 
     private Long memberID; // 회원 번호
 

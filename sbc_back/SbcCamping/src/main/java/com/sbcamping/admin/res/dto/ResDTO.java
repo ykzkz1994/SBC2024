@@ -1,8 +1,7 @@
 package com.sbcamping.admin.res.dto;
 
-import com.sbcamping.admin.member.dto.MemberDTO;
+import com.sbcamping.admin.member.dto.AdminMemberDTO;
 import com.sbcamping.admin.site.dto.SiteDTO;
-import com.sbcamping.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,7 @@ import java.util.Date;
 public class ResDTO {
 
     private Long resId; //예약 번호
-    private MemberDTO memberId; //회원 번호
+    private AdminMemberDTO memberId; //회원 번호
     private SiteDTO siteId; //구역번호
     private String userName;   //예약자 명
     private String userPhone;   //예약자 전화번호

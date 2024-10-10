@@ -2,8 +2,8 @@ package com.sbcamping.admin.member.service;
 
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
-import com.sbcamping.admin.member.dto.MemberDTO;
-import com.sbcamping.admin.member.repository.MemberRepository;
+import com.sbcamping.admin.member.dto.AdminMemberDTO;
+import com.sbcamping.admin.member.repository.AdminMemberRepository;
 import com.sbcamping.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,25 +16,24 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class MemberSerivceImpl implements MemberService {
+public class AdminMemberSerivceImpl implements AdminMemberService {
 
     // 자동 주입 대상은 final로!
     @Autowired
     private final ModelMapper modelMapper;
 
     @Autowired
-    private final MemberRepository memberRepository;
+    private final AdminMemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDTO<MemberDTO> fullList(PageRequestDTO requestDTO, String order) {
+    public PageResponseDTO<AdminMemberDTO> fullList(PageRequestDTO requestDTO, String order) {
         Pageable pageable = null;
 
         if (order == null) {
@@ -51,9 +50,9 @@ public class MemberSerivceImpl implements MemberService {
 
         long totalCount = members.getTotalElements();
 
-        List<MemberDTO> dtoList = members.getContent().stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+        List<AdminMemberDTO> dtoList = members.getContent().stream().map(member -> modelMapper.map(member, AdminMemberDTO.class)).collect(Collectors.toList());
 
-        return PageResponseDTO.<MemberDTO>withAll()
+        return PageResponseDTO.<AdminMemberDTO>withAll()
                 .dtoList(dtoList)
                 .totalCount(totalCount)
                 .pageRequestDTO(requestDTO)
@@ -62,7 +61,7 @@ public class MemberSerivceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDTO<MemberDTO> inactiveFullList(PageRequestDTO requestDTO, String order) {
+    public PageResponseDTO<AdminMemberDTO> inactiveFullList(PageRequestDTO requestDTO, String order) {
         Pageable pageable = null;
 
         if (order == null) {
@@ -79,9 +78,9 @@ public class MemberSerivceImpl implements MemberService {
 
         long totalCount = members.getTotalElements();
 
-        List<MemberDTO> dtoList = members.getContent().stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+        List<AdminMemberDTO> dtoList = members.getContent().stream().map(member -> modelMapper.map(member, AdminMemberDTO.class)).collect(Collectors.toList());
 
-        return PageResponseDTO.<MemberDTO>withAll()
+        return PageResponseDTO.<AdminMemberDTO>withAll()
                 .dtoList(dtoList)
                 .totalCount(totalCount)
                 .pageRequestDTO(requestDTO)
@@ -90,7 +89,7 @@ public class MemberSerivceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponseDTO<MemberDTO> searchMember(PageRequestDTO requestDTO, String type, String keyword, String order) {
+    public PageResponseDTO<AdminMemberDTO> searchMember(PageRequestDTO requestDTO, String type, String keyword, String order) {
         Pageable pageable = null;
         Page<Member> searchMembers = null;
 
@@ -115,9 +114,9 @@ public class MemberSerivceImpl implements MemberService {
 
         long totalCount = searchMembers.getTotalElements();
 
-        List<MemberDTO> dtoList = searchMembers.getContent().stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
+        List<AdminMemberDTO> dtoList = searchMembers.getContent().stream().map(member -> modelMapper.map(member, AdminMemberDTO.class)).collect(Collectors.toList());
 
-        return PageResponseDTO.<MemberDTO>withAll()
+        return PageResponseDTO.<AdminMemberDTO>withAll()
                 .dtoList(dtoList)
                 .totalCount(totalCount)
                 .pageRequestDTO(requestDTO)
