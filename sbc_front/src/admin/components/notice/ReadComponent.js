@@ -13,30 +13,11 @@ const ReadComponent = () => {
     const [createdAt, setCreatedAt] = useState(null); // 작성 시간
     const [views, setViews] = useState(0); // 조회수
 
-    // 공지사항 데이터를 가져오는 효과 (샘플 데이터 사용)
-    useEffect(() => {
-        // 실제로는 API를 통해 nid에 해당하는 공지사항 데이터를 가져와야 함
-        const fetchNoticeData = async () => {
-            // 샘플 데이터 예시
-            const noticeData = {
-                title: '공지 1',
-                content: '이것은 공지사항 내용입니다.',
-                createdAt: '2024-10-07 10:30:00', // 작성 시간을 샘플로 추가
-                views: 123, // 조회수 샘플 데이터
-            };
 
-            setTitle(noticeData.title);
-            setContent(noticeData.content);
-            setCreatedAt(noticeData.createdAt);
-            setViews(noticeData.views); // 조회수 설정
-        };
-
-        fetchNoticeData();
-    }, [nid]);
 
     // 수정하기 버튼 클릭 시 호출되는 함수
     const handleModifyClick = () => {
-        navigate(`/notice/modify/${nid}`); // 수정 페이지로 이동
+        navigate(`/admin/notice/modify/${nid}`); // 수정 페이지로 이동
     };
 
     // 삭제하기 버튼 클릭 시 호출되는 함수
@@ -44,12 +25,12 @@ const ReadComponent = () => {
         // 삭제 로직 추가 (예: API 호출)
         console.log(`${nid}번 공지사항이 삭제되었습니다.`);
         // 삭제 후 목록 페이지로 이동
-        navigate('/notices/list');
+        navigate('/admin/notices/list');
     };
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate('/notices/list'); // 공지사항 목록 페이지로 이동
+        navigate('/admin/notices/list'); // 공지사항 목록 페이지로 이동
     };
 
     return (

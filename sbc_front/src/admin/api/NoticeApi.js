@@ -19,6 +19,7 @@ const axiosInstance = axios.create({
 export const getAllNotices = async () => {
     try {
         const response = await axiosInstance.get('/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
+        console.log(response.data);  //디버깅용임 데이터가 왜 안넘어와
         // 필요한 경우 데이터 가공이나 필터링을 여기서 수행
         return response.data; // 모든 공지사항 데이터 반환
     } catch (error) {
@@ -37,7 +38,7 @@ export const getNoticeById = async (id) => {
             nboardTitle,
             nboardContent,
             nboardDate,
-            nboardView,
+            nboardViews,
         } = response.data;
 
         return {
@@ -45,7 +46,7 @@ export const getNoticeById = async (id) => {
             nboardTitle,
             nboardContent,
             nboardDate,
-            nboardView,
+            nboardViews,
         };
     } catch (error) {
         console.error("공지사항 데이터를 가져오는 중 오류 발생, getNoticeById 함수:", error);
@@ -56,7 +57,7 @@ export const getNoticeById = async (id) => {
 // 공지사항 데이터를 생성하는 함수
 export const createNotice = async (noticeData) => {
     try {
-        await axiosInstance.post('', noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
+        await axiosInstance.post('/add', noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
         console.log("공지사항 생성 성공:", noticeData);
     } catch (error) {
         console.error("공지사항 생성 중 오류 발생, createNotice 함수:", error);

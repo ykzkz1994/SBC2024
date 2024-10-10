@@ -17,12 +17,12 @@ const ListComponent = () => {
 
     // '글쓰기' 버튼 클릭 시 호출되는 함수: 공지 등록 페이지로 이동
     const handleAddClick = () => {
-        navigate('/notices/add'); // 공지 등록 페이지 경로로 이동
+        navigate('/admin/notices/add'); // 공지 등록 페이지 경로로 이동
     };
 
     // 제목 클릭 시 상세보기 페이지로 이동하는 함수
     const handleTitleClick = (id) => {
-        navigate(`/notices/read/${id}`); // 상세보기 페이지 경로로 이동
+        navigate(`/admin/notices/read/${id}`); // 상세보기 페이지 경로로 이동
     };
 
     // 입력 검증 시 발생한 에러 메시지를 저장하는 변수
@@ -73,7 +73,7 @@ const ListComponent = () => {
                             {notice.nboardTitle}
                         </td>
                         <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">{notice.nboardDate}</td>
-                        <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">{notice.nboardView}</td>
+                        <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">{notice.nboardViews}</td>
                     </tr>
                 ))}
                 </tbody>

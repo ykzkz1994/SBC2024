@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/admin/notice") // 기본 URL 경로 설정
+@RequestMapping("/admin/notices") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
 public class NoticeController {
 
@@ -33,7 +33,7 @@ public class NoticeController {
     }
 
     //공지글 생성 post입력 방식 메서드 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<Void> createNotice(@RequestBody @Validated NoticeDTO noticeDTO) {
         noticeService.createNotice(noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
         return new ResponseEntity<>(HttpStatus.CREATED);

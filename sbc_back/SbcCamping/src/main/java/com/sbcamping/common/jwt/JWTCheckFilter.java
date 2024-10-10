@@ -89,6 +89,12 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(path.equals("/api/res/siteList")){
             return true;
         }
+        //상호 노티스 예외
+        if(path.startsWith("/notice")){
+            return true;
+        }
+
+
 
         // 이미지 조회 경로는 체크하지 않음
         // ◆◆◆◆◆◆◆◆◆이미지 경로는 다른 분들꺼 보고 추가 수정◆◆◆◆◆◆◆◆◆◆◆◆◆

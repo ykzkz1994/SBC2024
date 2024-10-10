@@ -17,5 +17,5 @@ public class NoticeDTO {
     private String nboardTitle; //공지글 제목
     private String nboardContent;   //공지글 내용
     private LocalDateTime nboardDate;    //공지글 작성일자
-    private Long nboardView;    //공지글 조회수
+    private Long nboardViews;    //공지글 조회수
 }

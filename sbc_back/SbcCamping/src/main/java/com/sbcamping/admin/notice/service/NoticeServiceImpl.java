@@ -2,14 +2,11 @@ package com.sbcamping.admin.notice.service;
 
 import com.sbcamping.admin.notice.dto.NoticeDTO;
 import com.sbcamping.admin.notice.repository.NoticeRepository;
-import com.sbcamping.admin.site.dto.SiteDTO;
 import com.sbcamping.domain.NoticeBoard;
-import com.sbcamping.domain.Site;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +47,12 @@ public class NoticeServiceImpl implements NoticeService{
 
         //게시글정보를 담은 객체 생성
         NoticeBoard noticeBoard = NoticeBoard.builder()
-                .nBoardTitle(title)
-                .nBoardContent(content)
+                .nboardTitle(title)
+                .nboardContent(content)
                 //현재시간 할당, sysdate랑 비슷한가? =>p.s/변경사항 new Date였는데
                 //LocalDateTime.now()로 변경 뉴데이트는 서버시간만 되는데 로컬데이트타임은 아마 시간 조정이 가능 한 듯?
-                .nBoardDate(LocalDateTime.now())
-                .nBoardViews(0L)//조회메서드가 실행 될 때마다 View가 1씩 증가하게 해놓으면 될 듯?
+                .nboardDate(LocalDateTime.now())
+                .nboardViews(0L)//조회메서드가 실행 될 때마다 View가 1씩 증가하게 해놓으면 될 듯?
                 .build();
 
         //데이터베이스 저장작업은 DB연결,제약조건위반등으로 실패 할 수 있기 때문에 예외처리를 해주는게 좋다고함
@@ -84,11 +81,11 @@ public class NoticeServiceImpl implements NoticeService{
                 .orElseThrow(() -> new RuntimeException("해당 ID의 공지사항이 존재하지 않습니다."));
 
         //조회수 증가 메서드
-        increaseViews(notice.getNBoardId());
+        increaseViews(notice.getNboardId());
 
         // 엔티티를 DTO로 변환 수동변환했던 과거의 잔재
        /* NoticeDTO noticeDTO = new NoticeDTO();
-        noticeDTO.setNboardId(notice.getNBoardId());
+        noticeDTO.setNboardId(notice.getNboardId());
         noticeDTO.setNboardTitle(notice.getNBoardTitle());
         noticeDTO.setNboardContent(notice.getNBoardContent());
         noticeDTO.setNboardDate(notice.getNBoardDate());
@@ -141,7 +138,7 @@ public class NoticeServiceImpl implements NoticeService{
                 .orElseThrow();
 
         // 조회수 증가
-        notice.setNBoardViews(notice.getNBoardViews() + 1);
+        notice.setNboardViews(notice.getNboardViews() + 1);
 
         log.info("조회수 증가 메서드 실행완료 ");
     }
