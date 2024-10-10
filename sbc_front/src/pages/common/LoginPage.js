@@ -7,6 +7,8 @@ import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
 
+    // test
+
     const [loginParam, setLoginParams] = useState({email : '',pw : ''})
     const { doLogin, moveToPath } = useCustomLogin()
     const navigate = useNavigate();
@@ -24,7 +26,11 @@ const LoginPage = () => {
                     alert('이메일과 비밀번호를 확인해주세요.')
                 } else{
                     alert('로그인 성공')
-                    moveToPath('/')
+                    if(data.member.memberRole === 'ROLE_ADMIN'){
+                        moveToPath('/api/admin')
+                    }else{
+                        moveToPath('/')
+                    }
                 }
             })
     }
