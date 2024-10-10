@@ -30,7 +30,7 @@ public class MemberController {
     @GetMapping("/totalList")
     public PageResponseDTO<MemberDTO> totallist(PageRequestDTO pageRequestDTO,
                                                 @RequestParam(required = false) String order) {
-        log.info("total list..... : "+pageRequestDTO);
+        log.info("total list..... : {}", pageRequestDTO);
          return memberService.fullList(pageRequestDTO, order);  // 기본 정렬 : memberID 오름차순
 
     }
@@ -38,7 +38,7 @@ public class MemberController {
     @GetMapping("/inactiveList")  // 휴면 회원 리스트
     public PageResponseDTO<MemberDTO> inactiveList(PageRequestDTO pageRequestDTO,
                                                    @RequestParam(required = false) String order) {
-        log.info("inactive list...... : "+pageRequestDTO);
+        log.info("inactive list...... : {}", pageRequestDTO);
         return memberService.inactiveFullList(pageRequestDTO, order);
     }
 

@@ -29,12 +29,12 @@ public class ResServiceImpl implements ResService {
 
     @Override
     public List<ResDTO> getAllRes() {
-        log.info("예약전체 불러오는 메서드 시작");
-        // 모든 Res 엔티티를 가져옵니다.
+        log.info("ResServiceImpl/getAllRes-예약전체 불러오는 메서드 시작 ");
+        // 모든 Res 엔티티를 불러와서 리스트에 저장
         List<Reservation> res = resRepository.findAll();
 
-        log.info("예앾전체 불러오는 메서드 끝 ");
-        // ModelMapper를 사용하여 Res 엔티티를 ResDTO로 변환한 후 리스트로 반환합니다.
+        log.info("ResServiceImpl/getAllRes-예앾전체 불러오는 메서드 끝 ");
+        // ModelMapper를 사용하여 Res 엔티티를 ResDTO로 변환한 후 리스트로 반환
         return res.stream()
                 .map(reservation -> modelMapper.map(res, ResDTO.class))
                 .toList();
