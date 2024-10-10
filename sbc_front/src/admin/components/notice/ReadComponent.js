@@ -44,12 +44,12 @@ const ReadComponent = () => {
         // 삭제 로직 추가 (예: API 호출)
         console.log(`${nid}번 공지사항이 삭제되었습니다.`);
         // 삭제 후 목록 페이지로 이동
-        navigate('/notice/list');
+        navigate('/notices/list');
     };
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate('/notice/list'); // 공지사항 목록 페이지로 이동
+        navigate('/notices/list'); // 공지사항 목록 페이지로 이동
     };
 
     return (

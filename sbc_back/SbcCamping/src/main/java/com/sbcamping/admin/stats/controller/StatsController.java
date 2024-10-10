@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/admin/stats")
+@RequestMapping("/admin/stats")
 public class StatsController {
     // 1. 예약 매출 통계
     //@GetMapping("/reservation-sales")

@@ -28,12 +28,12 @@ const AddComponent = () => {
         setContent('');
 
         // 작성 완료 후 공지사항 목록 페이지로 이동
-        navigate('/notice/list');
+        navigate('admin/notices/list');
     };
 
     // 목록으로 버튼 클릭 핸들러
     const handleBackToList = () => {
-        navigate('/notice/list');
+        navigate('admin/notices/list');
     };
 
     return (
