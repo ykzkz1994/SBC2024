@@ -1,8 +1,8 @@
-import useCustomMove from '../../hooks/useCustomMove';
+import useCustomMove from '../../../hooks/useCustomMove';
 import {useEffect, useState} from 'react';
-import { getInactiveList } from '../../api/memberApi';
-import PageComponent from '../common/PageComponent';
-import MemberComponent from '../common/MemberComponent';
+import { getInactiveList } from '../../api/A_memberApi';
+import PageComponent from '../../../components/common/PageComponent';
+import MemberComponent from './MemberComponent';
 
 const initState = {
     dtoList:[],

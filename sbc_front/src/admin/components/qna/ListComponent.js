@@ -1,9 +1,9 @@
 // 서버의 데이터에는 dtoList라는 배열 데이터와 pageNumList라는 페이지 번호들이 있고, 이전/다음 등의 추가적인 데이터들이 있다.
 
-import useCustomMove from '../../hooks/useCustomMove';
+import useCustomMove from '../../../hooks/useCustomMove'
 import React, {useEffect, useState} from 'react';
 import { getList } from '../../api/qnaApi';
-import PageComponent from "../common/PageComponent";
+import PageComponent from "../../../components/common/PageComponent";
 
 const initState = {
     dtoList:[],
@@ -65,7 +65,7 @@ function ListComponent(props) {
                 </input>
                 <button>검색</button>
             </div>
-            <PageComponent serverData={serverData} movePage={'#'}></PageComponent>
+            {/*<PageComponent serverData={serverData} movePage={'#'}></PageComponent>*/}
         </div>
     );
 }

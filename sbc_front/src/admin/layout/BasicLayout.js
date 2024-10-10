@@ -6,6 +6,15 @@ import '../css/common.css';
 import {Link} from 'react-router-dom';
 //{children}속성을 활용하여 컴포넌트 내부에 다른 컴포넌트를 적용시킬 수 있음
 const BasicLayout = ({ children }) => {
+
+  const logout = () => {
+    const now = new Date();
+    const currentTime = now.toLocaleString();
+    alert(currentTime + " 관리자 로그아웃");
+
+    window.location.href = "http://localhost:3000/"
+  }
+
   return (
       // 가장 외곽을 묶는 기본 빈태그
     <>
@@ -15,7 +24,7 @@ const BasicLayout = ({ children }) => {
           <Navbar.Brand href="/api/admin" id="logo">LOGO</Navbar.Brand>
           <div id="">
             <Nav className="justify-content-end">
-              <Nav.Link href="#">로그아웃</Nav.Link>
+              <Nav.Link onClick={logout}>로그아웃</Nav.Link>
             </Nav>
             <Nav className="justify-content-end">
               <NavDropdown href="/api/admin/site" title="구역 관리">
