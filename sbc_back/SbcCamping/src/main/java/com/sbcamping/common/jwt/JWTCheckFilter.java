@@ -82,6 +82,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if(path.startsWith("/admin")){
+            return true;
+        }
+
         if(path.equals("/api/res/siteList")){
             return true;
         }
