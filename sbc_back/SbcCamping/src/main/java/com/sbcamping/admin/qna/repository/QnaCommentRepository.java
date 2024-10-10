@@ -13,8 +13,8 @@ import java.util.List;
 public interface QnaCommentRepository extends JpaRepository<QuestionBoardComment, Long> {
 
     // 댓글 정렬 기준 : 등록 날짜(qCommentDate) 오름차순
-    @Query("select q from QuestionBoardComment q order by q.qCommentDate asc")
-    List<QuestionBoardComment> orderedList();
+    @Query("select q from QuestionBoardComment q where q.qBoard.qBoardID= :qbID order by q.qCommentDate asc")
+    List<QuestionBoardComment> orderedList(@Param("qbID") Long qbID);
 
     // 댓글 갯수 카운트
 //    @Query("SELECT COUNT(c) FROM QuestionBoardComment c WHERE c.qBoard.qBoardID = :qBoardID")

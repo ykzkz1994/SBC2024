@@ -1,10 +1,22 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
+
+const initState = {
+    qboardTitle :'',
+    qboardContent:'',
+    file:''
+}
 
 function AddComponent(props) {
+   const [qna,setQna] = useState({...initState})
+    const uploadRef = useRef()
+
+    const handleChangeQna = (e) => {
+
+    }
+
     return (
         <div>
-           <input placeholder='댓글 내용 입력'></input>
-           <button>등록</button>
+제목, 내용, 첨부
         </div>
     );
 }

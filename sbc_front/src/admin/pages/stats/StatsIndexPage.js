@@ -9,7 +9,6 @@ const StatsIndexPage = () =>{
             <StatsMenu/>
             </div>
             <div>
-                <div> Stats Index Page </div>
                 <Outlet/>
             </div>
         </BasicLayout>

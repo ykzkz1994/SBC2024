@@ -15,19 +15,11 @@ else {
 }
 }
 
-function init() {
-for (var i = 0; i < div2.length; i++) {
-    div2[i].addEventListener("click", handleClick);
-}
-}
-
-init();
-
 const SiteMenu = () => {
     return(
         <>        
         <div id='menubuttonwrap'>
-          <Link to={'#'} className='menubutton'>구역 관리</Link>
+          <Link to={'/api/admin/site'} className='menubutton'>구역 관리</Link>
         </div>
         </>
 

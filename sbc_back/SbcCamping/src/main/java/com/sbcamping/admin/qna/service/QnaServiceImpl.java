@@ -200,8 +200,8 @@ public class QnaServiceImpl implements QnaService {
 
     // 9. 댓글 목록 : 페이징 처리 없음
     @Override
-    public List<QnaCommentDTO> commentlist() {
-        List<QuestionBoardComment> getList = qnaCommentRepository.orderedList();
+    public List<QnaCommentDTO> commentlist(Long qbID) {
+        List<QuestionBoardComment> getList = qnaCommentRepository.orderedList(qbID);
         List<QnaCommentDTO> result = getList.stream().map(qnaComm -> modelMapper.map(qnaComm, QnaCommentDTO.class)).collect(Collectors.toList());
         return result;
     }

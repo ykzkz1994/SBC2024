@@ -128,9 +128,9 @@ public class QnaController {
     }
 
     // 3. 댓글 목록
-    @GetMapping("/comments/list")
-    public List<QnaCommentDTO> commentList() {
-        return qnaService.commentlist();
+    @GetMapping("/comments/list/{qbID}")
+    public List<QnaCommentDTO> commentList(@PathVariable("qbID") Long qbID) {
+        return qnaService.commentlist(qbID);
     }
 
     // 4. 댓글 삭제

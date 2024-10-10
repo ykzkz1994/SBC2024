@@ -1,5 +1,5 @@
-import { RouterProvider } from "react-router-dom";
-import root from './admin/router/root';
+import { RouterProvider } from 'react-router-dom';
+import root from './router/root';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
