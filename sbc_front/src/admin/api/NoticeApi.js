@@ -29,7 +29,7 @@ export const getAllNotices = async () => {
 };
 
 // 특정 ID의 공지사항 데이터를 가져오는 함수
-export const getNoticeById = async (id) => {
+export const getOneNotice = async (id) => {
     try {
         //axios에서 제공하는 axiosInstance를 이용하여 get방식으로 ${id}로 받아온 정보를 response의 데이터에 할당
         const response = await axiosInstance.get(`/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청

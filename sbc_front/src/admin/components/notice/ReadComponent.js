@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getAllNotices } from '../../api/NoticeApi'; // 공지사항 전체 조회 API 함수 가져오기
 
 const ReadComponent = () => {
     const { nid } = useParams(); // URL에서 공지사항 ID를 가져옴
@@ -12,12 +13,38 @@ const ReadComponent = () => {
     const [content, setContent] = useState('');
     const [createdAt, setCreatedAt] = useState(null); // 작성 시간
     const [views, setViews] = useState(0); // 조회수
+    const [error, setError] = useState(''); // 오류 메시지 상태 관리
 
+    // 공지사항 데이터를 가져오는 함수
+    const getNotice = async (id) => {
+        try {
+            // 모든 공지사항을 가져와 특정 ID의 공지사항만 필터링
+            const notices = await getAllNotices();
+            const notice = notices.find(n => n.nboardId === parseInt(id));
+            if (notice) {
+                setTitle(notice.nboardTitle);
+                setContent(notice.nboardContent);
+                setCreatedAt(notice.nboardDate);
+                setViews(notice.nboardViews);
+            } else {
+                setError('해당 공지글을 찾을 수 없습니다.');
+            }
+        } catch (e) {
+            console.error('공지글을 불러오는데 실패했습니다:', e);
+            setError('공지글을 불러오는데 실패했습니다. 다시 시도해 주세요.');
+        }
+    };
 
+    // 컴포넌트가 마운트될 때 공지사항 데이터를 가져옴
+    useEffect(() => {
+        if (nid) {
+            getNotice(nid);
+        }
+    }, [nid]);
 
     // 수정하기 버튼 클릭 시 호출되는 함수
     const handleModifyClick = () => {
-        navigate(`/admin/notice/modify/${nid}`); // 수정 페이지로 이동
+        navigate(`/admin/notices/update/${nid}`); // 수정 페이지로 이동
     };
 
     // 삭제하기 버튼 클릭 시 호출되는 함수
@@ -35,6 +62,7 @@ const ReadComponent = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
+            {error && <p className="text-red-500 mb-4">{error}</p>} {/* 오류 메시지 출력 */}
             {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
                 <h2 className="text-2xl font-bold">공지사항 #{nid}</h2> {/* 글 번호 표시 */}
