@@ -20,9 +20,10 @@ public class MemberDTO extends User {
     private String memberBirth;
     private String memberLocal;
     private String memberRole;
+    private Long memberId;
 
     // 생성자
-    public MemberDTO(String email, String memberPw, String memberName, String memberPhone, char memberGender, String memberBirth, String memberLocal, String memberRole) {
+    public MemberDTO(String email, String memberPw, String memberName, String memberPhone, char memberGender, String memberBirth, String memberLocal, String memberRole, Long memberId) {
         super(email, memberPw, convertRoleToCollection(memberRole));
         this.memberEmail = email;
         this.memberPw = memberPw;
@@ -32,6 +33,7 @@ public class MemberDTO extends User {
         this.memberBirth = memberBirth;
         this.memberLocal = memberLocal;
         this.memberRole = memberRole;
+        this.memberId = memberId;
     }
 
     // 문자열을 Collection으로 변환하는 메서드
@@ -52,7 +54,8 @@ public class MemberDTO extends User {
         claims.put("gender", memberGender);
         claims.put("birth", memberBirth);
         claims.put("local", memberLocal);
-        claims.put("role", memberRole);
+        claims.put("memberRole", memberRole);
+        claims.put("memberId", memberId);
         return claims;
     }
 

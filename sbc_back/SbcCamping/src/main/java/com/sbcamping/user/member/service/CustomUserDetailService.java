@@ -20,7 +20,7 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("=========================================loadUserByUsername 온거야 만거야");
+        log.info("=========================================loadUserByUsername 도착");
         log.info("=========================================username: " + username);
 
 //        Optional<Member> memberOptional = memberRepository.findByMemberEmail(username);
@@ -40,7 +40,8 @@ public class CustomUserDetailService implements UserDetailsService {
                 member.getMemberGender(),
                 member.getMemberBirth(),
                 member.getMemberLocal(),
-                member.getMemberRole()
+                member.getMemberRole(),
+                member.getMemberID()
         );
 
         log.info(memberDTO.toString());
