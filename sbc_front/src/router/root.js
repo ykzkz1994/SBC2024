@@ -54,7 +54,7 @@ const A_QnaIndex = lazy(() => import("../admin/pages/qna/QnaIndexPage"))
 const A_ReviewIndex = lazy(() => import("../admin/pages/review/ReviewIndexPage"))
 
 // 관리자 주소
-const A_prefix = "api/admin/"
+const A_prefix = "admin/"
 
 const root = createBrowserRouter([
     // 사용자

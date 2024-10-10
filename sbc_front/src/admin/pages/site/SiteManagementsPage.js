@@ -2,7 +2,7 @@
 
 import React from 'react';
 import SiteManagements from "../../components/site/SiteManagements";
-import BasicLayout from "../../layout/BasicLayout";
+import BasicLayout from "../../layouts/BasicLayout";
 
 const SiteManagementPage = () => {
     return (
