@@ -3,7 +3,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
-import {getSiteDataAll, updateSiteData} from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
+import {getAllSites, updateSiteData} from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
 
 // 최대 허용 인원 수를 상수로 선언
 const MAX_LIMIT_PEOPLE = 6;
@@ -36,7 +36,7 @@ const SiteManagements = () => {
     const fetchSites = async () => {
         try {
             //변수 data에 geSiteDataALL의 Responce.data를 할당
-            const data = await getSiteDataAll();
+            const data = await getAllSites();
             //set 생성자(변수)
             setSites(data);
         } catch (err) {

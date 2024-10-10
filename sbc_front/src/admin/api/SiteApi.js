@@ -16,14 +16,14 @@ const axiosInstance = axios.create({
 });
 
 // 모든 사이트 데이터를 가져오는 함수
-export const getSiteDataAll = async () => {
+export const getAllSites = async () => {
     try {
         const response = await axiosInstance.get('');//모든 site 데이터를 axiosInstace로 get방식으로 가져옴
-        // 필요한 경우, 데이터 가공이나 필터링을 여기서 수행할 수 있습니다.
+        // 필요한 경우 데이터 가공이나 필터링을 여기서 수행
         return response.data; // 모든 사이트 데이터 반환
     } catch (error) {
 
-        console.error("모든 사이트 데이터를 가져오는 중 오류 발생 프론트,getSiteDataAll 함수:", error);
+        console.error("모든 사이트 데이터를 가져오는 중 오류 발생 프론트,getAllSites 함수:", error);
         throw error;
     }
 };

@@ -2,7 +2,9 @@ package com.sbcamping.admin.notice.service;
 
 import com.sbcamping.admin.notice.dto.NoticeDTO;
 import com.sbcamping.admin.notice.repository.NoticeRepository;
+import com.sbcamping.admin.site.dto.SiteDTO;
 import com.sbcamping.domain.NoticeBoard;
+import com.sbcamping.domain.Site;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +14,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service    //서비스 파일임
@@ -26,6 +29,20 @@ public class NoticeServiceImpl implements NoticeService{
     private final ModelMapper modelMapper;
 
 
+    @Override
+    public List<NoticeDTO> getAllNotices() {    //게시글 전체목록을 불러오는 메서드
+        log.info("공지글 전체 불러오는 메서드 시작");
+
+        // 모든 Site 엔티티를 가져옵니다.
+        List<NoticeBoard> notices = noticeRepository.findAll();
+
+        log.info("공지글 전체 불러오는 메서드 끝 ");
+        // ModelMapper를 사용하여 NoticeBoard 엔티티를 NoticeDTO로 변환한 후 리스트로 반환합니다.
+        return notices.stream()
+                .map(notice -> modelMapper.map(notice, NoticeDTO.class))
+                .toList();
+
+    }
 
     @Override
     public void createNotice(String title,String content) {//게시글 작성 메서드
