@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import BasicLayout from "../../layout/BasicLayout";
+import BasicLayout from "../../layouts/BasicLayout";
 import StatsMenu from "../../components/menus/StatsMenu";
 
 const StatsIndexPage = () =>{

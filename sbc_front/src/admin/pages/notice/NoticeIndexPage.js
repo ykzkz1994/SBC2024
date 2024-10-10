@@ -1,6 +1,6 @@
 import React from 'react';
 import {useCallback} from "react";
-import BasicLayout from "../../layout/BasicLayout";
+import BasicLayout from "../../layouts/BasicLayout";
 import {Outlet} from 'react-router-dom';
 
 import CommunityMenu from "../../components/menus/CommunityMenu";

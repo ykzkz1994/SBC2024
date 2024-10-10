@@ -2,7 +2,7 @@
 import React, { useState } from 'react'; // React는 리액트 기본 라이브러리이며, useState는 상태 관리를 위한 훅입니다.
 import ResCalendar from '../../components/res/ResCalendar'; // ResCalendar 컴포넌트를 임포트합니다. 경로에 오타가 없도록 확인하세요.
 import { useNavigate, useLocation } from "react-router-dom"; // useNavigate는 경로 이동을, useLocation은 현재 경로 정보를 얻기 위한 훅입니다.
-import BasicLayout from "../../layout/BasicLayout"; // BasicLayout 컴포넌트를 임포트
+import BasicLayout from "../../layouts/BasicLayout"; // BasicLayout 컴포넌트를 임포트
 
 const DateSitePage = () => {
     const [currentComponent, setCurrentComponent] = useState('DateSitePage'); // 현재 컴포넌트 상태 관리

@@ -19,8 +19,8 @@ const StatsMenu = () => {
     return(
         <>        
         <div id='menubuttonwrap'>
-          <Link to={'/api/admin/stats/reservation-sales'} className='menubutton'>예약 매출 통계</Link>
-          <Link to={'/api/admin/stats/customer'} className='menubutton'>고객 통계</Link>
+          <Link to={'/admin/stats/reservation-sales'} className='menubutton'>예약 매출 통계</Link>
+          <Link to={'/admin/stats/customer'} className='menubutton'>고객 통계</Link>
         </div>
         </>
 
