@@ -1,11 +1,11 @@
 // src/components/SiteManagements.js
 
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
-import { updateSiteData } from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
+import {getSiteDataAll, updateSiteData} from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
 
-// 최대 허용 인원 수를 상수로 선언하여 코드의 의도를 명확히 하고 유지보수를 용이하게 합니다.
+// 최대 허용 인원 수를 상수로 선언
 const MAX_LIMIT_PEOPLE = 6;
 
 // SiteManagements 컴포넌트
@@ -31,6 +31,25 @@ const SiteManagements = () => {
 
     // 구역 이름 입력 필드에 대한 참조를 생성하여 자동 포커스를 설정할 때 사용
     const siteNameRef = useRef(null);
+
+    // 데이터 불러오는 비동기 함수
+    const fetchSites = async () => {
+        try {
+            //변수 data에 geSiteDataALL의 Responce.data를 할당
+            const data = await getSiteDataAll();
+            //set 생성자(변수)
+            setSites(data);
+        } catch (err) {
+            console.error('사이트 데이터를 불러오는데 실패했습니다:', err);
+            setError('사이트 데이터를 불러오는데 실패했습니다.');
+        }
+    };
+
+    // useEffect를 사용하여 컴포넌트 마운트 시 데이터 불러오기
+    useEffect(() => {
+        fetchSites();
+    }, []);
+
     // **모달 창 열기 함수**
     // 선택한 구역의 정보를 설정하고 수정 모달 창을 엽니다.
     const handleShowModal = (site) => {
@@ -112,12 +131,12 @@ const SiteManagements = () => {
 
         try {
             // updateSiteData API 호출
-            const updatedSite = await updateSiteData(selectedSite.siteID, newSiteValue);
+            const updatedSite = await updateSiteData(selectedSite.siteId, newSiteValue);
 
             // 로컬 상태 업데이트
             setSites((prevSites) =>
                 prevSites.map((site) =>
-                    site.siteID === selectedSite.siteID ? { ...site, ...updatedSite } : site
+                    site.siteId === selectedSite.siteId ? { ...site, ...updatedSite } : site
                 )
             );
             setSecondModal(false); // 수정 확인 모달 창을 숨김
@@ -156,13 +175,13 @@ const SiteManagements = () => {
                 {/*삼항연산자로 sites의 랭스가 0보다 크다면 출력 작다면 로딩이라는 문구를 띄움 랜더링 시간 고려*/}
                 {sites.length > 0 ? (
                     sites.map(site => (
-                        <tr key={site.id}>
-                            <td>{site.siteID}</td>
+                        <tr key={site.siteId}>
+                            <td>{site.siteId}</td>
                             <td>{site.siteName}</td>
                             <td>{site.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
                             <td>{site.minPeople}</td>
                             <td>{site.maxPeople}</td>
-                            <td>{site.weekdayPay ? site.weekdayPay.toLocaleString() : 0}</td>
+                            <td>{site.weekdayPay}</td>
                             <td>{site.weekendPay ? site.weekendPay.toLocaleString() : 0}</td>
                             <td>
                                 <Button variant="secondary" onClick={() => handleShowModal(site)}>
@@ -182,7 +201,7 @@ const SiteManagements = () => {
             {/* **수정 모달 창** */}
             <Modal show={firstModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>구역 수정 - {selectedSite?.siteID ? selectedSite.siteID : 'N/A'}</Modal.Title>
+                    <Modal.Title>구역 수정 - {selectedSite?.siteId ? selectedSite.siteId : 'N/A'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {selectedSite && (
@@ -205,7 +224,7 @@ const SiteManagements = () => {
                                 <Form.Check
                                     type="radio"
                                     label="예약 가능"
-                                    name="reservationLimit"
+                                    name="siteResLimit"
                                     value="Y"
                                     checked={newSiteValue.siteResLimit === 'Y'}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
@@ -213,7 +232,7 @@ const SiteManagements = () => {
                                 <Form.Check
                                     type="radio"
                                     label="예약 불가능"
-                                    name="reservationLimit"
+                                    name="siteResLimit"
                                     value="N"
                                     checked={newSiteValue.siteResLimit === 'N'}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
@@ -288,16 +307,16 @@ const SiteManagements = () => {
             {/* **수정 확인 모달 창** */}
             <Modal show={secondModal} onHide={() => setSecondModal(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>구역 수정 확인 - {selectedSite?.siteID ? selectedSite.siteID : 'N/A'}번</Modal.Title>
+                    <Modal.Title>구역 수정 확인 - {selectedSite?.siteId ? selectedSite.siteId : 'N/A'}번</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
                     {selectedSite && (
                         <div>
                             {/* 수정 전후의 값들을 비교하여 표시 */}
-                            <p><strong>구역 번호:</strong> {selectedSite.siteID}</p>
+                            <p><strong>구역 번호:</strong> {selectedSite.siteId}</p>
                             <p><strong>구역 이름:</strong> {selectedSite.siteName} => {newSiteValue.siteName}</p>
-                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'} => {newSiteValue.reservationLimit === 'Y' ? '예약 가능' : '예약 불가능'}</p>
+                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'} => {newSiteValue.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</p>
                             <p><strong>기준 인원:</strong> {selectedSite.minPeople} => {newSiteValue.minPeople}</p>
                             <p><strong>최대 인원:</strong> {selectedSite.maxPeople} => {newSiteValue.maxPeople}</p>
                             <p><strong>평일 요금:</strong> {selectedSite.weekdayPay ? selectedSite.weekdayPay.toLocaleString() : 0} => {newSiteValue.weekdayPay ? newSiteValue.weekdayPay.toLocaleString() : 0}</p>

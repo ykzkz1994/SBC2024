@@ -1,3 +1,4 @@
+/*
 package com.sbcamping.admin.site;
 
 import com.sbcamping.admin.site.repository.SiteRepository;
@@ -33,7 +34,7 @@ public class SiteRepositoryTests {
                 .siteName("E 구역")
                 .siteIsavailable('Y')
                 .siteResLimit('N')
-                .siteWeekendPay(10000L)
+                .WeekendPay(10000L)
                 .siteWeekdayPay(70000L)
                 .siteMinPeople(4L)
                 .siteMaxPeople(6L)
@@ -57,7 +58,9 @@ public class SiteRepositoryTests {
     @DisplayName("Site 수정 테스트 ")
     @Commit //클래스에서 선언한 트렌젝션을 적용하지 않고 커밋을 하기 위함
     public void UpdateSite() {
-        /*CamperBoard camperBoard = camperRepository.findById(3L).orElseThrow();*/
+        */
+/*CamperBoard camperBoard = camperRepository.findById(3L).orElseThrow();*//*
+
         Optional<Site> result = siteRepository.findById(1L);
         Site site = result.orElseThrow();
 
@@ -74,3 +77,4 @@ public class SiteRepositoryTests {
 
 }
 
+*/

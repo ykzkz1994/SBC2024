@@ -36,7 +36,7 @@ export const getSiteData = async (id) => {
         const {
             maxPeople,
             minPeople,
-            siteID,
+            siteId,
             siteIsAvailable,
             siteName,
             siteResLimit,
@@ -47,15 +47,16 @@ export const getSiteData = async (id) => {
         return {
             maxPeople,
             minPeople,
-            siteID,
+            siteId,
             siteIsAvailable,
             siteName,
             siteResLimit,
             weekdayPay,
             weekendPay,
         };
+
     } catch (error) {//실패시 예외처리
-        //콘솔에 에러메세지와
+        //콘솔에 에러메세지출력
         console.error("사이트 데이터를 가져오는 중 오류 발생 프론트,getSiteData 함수:", error);
         throw error;
     }
