@@ -5,9 +5,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration("userRootConfig")
 public class RootConfig {
-    @Bean
+    @Bean("userMapper") //사용자 매퍼
     public ModelMapper getMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()

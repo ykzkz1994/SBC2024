@@ -1,6 +1,6 @@
 package com.sbcamping.admin.member.controller;
 
-import com.sbcamping.admin.camper.dto.CamperDTO;
+/*import com.sbcamping.admin.camper.dto.CamperDTO;*/
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.member.dto.MemberDTO;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@RestController("adminMemberController")    //관리자 관련 멤버 컨트롤러
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/admin/member")

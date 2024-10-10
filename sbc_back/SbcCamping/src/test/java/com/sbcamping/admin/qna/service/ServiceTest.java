@@ -1,6 +1,6 @@
 package com.sbcamping.admin.qna.service;
 
-import com.sbcamping.admin.member.repository.MemberRepository;
+import com.sbcamping.admin.member.repository.AdminMemberRepository;
 import com.sbcamping.admin.qna.repository.QnaCommentRepository;
 import com.sbcamping.admin.qna.repository.QnaRepository;
 import com.sbcamping.domain.Member;
@@ -21,7 +21,7 @@ public class ServiceTest {
     @Autowired
     QnaRepository qnaRepository;
     @Autowired
-    MemberRepository memberRepository;
+    AdminMemberRepository adminMemberRepository;
 
     @Autowired
     QnaCommentRepository qnaCommentRepository;
@@ -29,7 +29,7 @@ public class ServiceTest {
 
     @Test
     void testInsert() {
-        Optional<Member> memberOptional = memberRepository.findById(61L);
+        Optional<Member> memberOptional = adminMemberRepository.findById(61L);
         Member selectedMember = memberOptional.get();
 
         Optional<QuestionBoard> qbOptional = qnaRepository.findById(43L);

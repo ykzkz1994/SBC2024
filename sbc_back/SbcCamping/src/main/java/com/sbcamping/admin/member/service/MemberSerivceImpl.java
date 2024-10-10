@@ -3,7 +3,7 @@ package com.sbcamping.admin.member.service;
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.member.dto.MemberDTO;
-import com.sbcamping.admin.member.repository.MemberRepository;
+import com.sbcamping.admin.member.repository.AdminMemberRepository;
 import com.sbcamping.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class MemberSerivceImpl implements MemberService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    private final MemberRepository memberRepository;
+    private final AdminMemberRepository adminMemberRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -47,7 +46,7 @@ public class MemberSerivceImpl implements MemberService {
             }
         }
 
-        Page<Member> members = memberRepository.findAll(pageable);
+        Page<Member> members = adminMemberRepository.findAll(pageable);
 
         long totalCount = members.getTotalElements();
 
@@ -75,7 +74,7 @@ public class MemberSerivceImpl implements MemberService {
             }
         }
 
-        Page<Member> members = memberRepository.selectInactive(pageable);
+        Page<Member> members = adminMemberRepository.selectInactive(pageable);
 
         long totalCount = members.getTotalElements();
 
@@ -102,15 +101,15 @@ public class MemberSerivceImpl implements MemberService {
             }
 
             searchMembers = switch (type) {
-                case "name" -> memberRepository.findByMemberNameContaining(keyword, pageable);
-                case "phone" -> memberRepository.findByMemberPhoneContaining(keyword, pageable);
-                case "email" -> memberRepository.findByMemberEmailContaining(keyword, pageable);
+                case "name" -> adminMemberRepository.findByMemberNameContaining(keyword, pageable);
+                case "phone" -> adminMemberRepository.findByMemberPhoneContaining(keyword, pageable);
+                case "email" -> adminMemberRepository.findByMemberEmailContaining(keyword, pageable);
                 default -> null;
             };
 
         } else {
             pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("memberID").ascending());
-            searchMembers = memberRepository.findAll(pageable);
+            searchMembers = adminMemberRepository.findAll(pageable);
         }
 
         long totalCount = searchMembers.getTotalElements();

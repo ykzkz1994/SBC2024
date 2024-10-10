@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+@Component("adminFileUtil")
 @Log4j2
 @RequiredArgsConstructor
 public class CustomFileUtil {  // 파일 데이터 입출력 담당 util

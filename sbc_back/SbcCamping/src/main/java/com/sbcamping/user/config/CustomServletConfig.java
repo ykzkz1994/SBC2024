@@ -6,7 +6,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // 스프링 mvc 동작 과정에서 사용되는 설정
-@Configuration
+@Configuration("userCustomServletConfig")
 public class CustomServletConfig implements WebMvcConfigurer {
 
     @Override

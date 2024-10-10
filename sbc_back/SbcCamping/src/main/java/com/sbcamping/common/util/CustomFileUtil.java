@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Component
+@Component("commonFileUtil")
 @Log4j2
 @RequiredArgsConstructor
 public class CustomFileUtil {

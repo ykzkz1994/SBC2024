@@ -1,13 +1,12 @@
 package com.sbcamping;
 
-import com.sbcamping.admin.member.repository.MemberRepository;
+import com.sbcamping.admin.member.repository.AdminMemberRepository;
 import com.sbcamping.admin.qna.repository.QnaCommentRepository;
 import com.sbcamping.admin.qna.repository.QnaRepository;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
 import com.sbcamping.domain.QuestionBoardComment;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Log4j2
 @SpringBootTest
@@ -25,7 +23,7 @@ class SbcCampingApplicationTests {
     @Autowired
     QnaRepository qnaRepository;
     @Autowired
-    MemberRepository memberRepository;
+    AdminMemberRepository memberRepository;
 
     @Autowired
     QnaCommentRepository qnaCommentRepository;

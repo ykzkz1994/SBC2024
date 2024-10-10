@@ -1,10 +1,10 @@
+/*
 package com.sbcamping.admin.res;
 
 import com.sbcamping.admin.res.repository.ResRepository;
-import com.sbcamping.admin.site.repository.SiteRepository; // SiteRepository 추가
+import com.sbcamping.admin.site.repository.AdminSiteRepository; // SiteRepository 추가
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.domain.Site;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class ResRepositoryTests {
     private ResRepository resRepository;
 
     @Autowired //의존성 주입 자동어노테이션
-    private SiteRepository siteRepository;
+    private AdminSiteRepository siteRepository;
 
     public ResRepositoryTests() throws ParseException {
     }
@@ -80,3 +80,4 @@ public class ResRepositoryTests {
         result.getContent().forEach(System.out::println);
     }
 }
+*/

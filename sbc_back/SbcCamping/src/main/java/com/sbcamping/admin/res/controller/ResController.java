@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@RestController("adminResController")   //관리자 예약컨트롤러
 @RequestMapping("/res") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
 public class ResController {
