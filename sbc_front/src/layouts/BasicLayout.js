@@ -28,10 +28,10 @@ const BasicLayout = ({children}) => {
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">
-                            {!loginState.email ?
-                            <Nav.Link href="/login">로그인</Nav.Link> : <Nav.Link href="/logout" onClick={handleClickLogout}>로그아웃</Nav.Link>
+                            {!loginState.member.memberEmail ?
+                                <Nav.Link href="/login">로그인</Nav.Link> : <Nav.Link href="/logout" onClick={handleClickLogout}>로그아웃</Nav.Link>
                             }
-                            {!loginState.email ?
+                            {!loginState.member.memberEmail ?
                                 <Nav.Link href="/join">회원가입</Nav.Link> : <Nav.Link href="/mypage">마이페이지</Nav.Link>
                             }
 

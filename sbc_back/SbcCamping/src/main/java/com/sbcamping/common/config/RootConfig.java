@@ -1,4 +1,4 @@
-package com.sbcamping.admin.config;
+package com.sbcamping.common.config;
 // DTO <-> 엔티티 처리를 수월하게 할 수 있는 ModelMapper를 활용하면 편리
 
 import org.modelmapper.ModelMapper;

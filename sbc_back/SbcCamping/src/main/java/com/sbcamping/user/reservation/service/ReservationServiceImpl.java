@@ -1,11 +1,11 @@
 package com.sbcamping.user.reservation.service;
 
+import com.sbcamping.admin.site.repository.SiteRepository;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.domain.Site;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
-import com.sbcamping.user.reservation.repository.SiteRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

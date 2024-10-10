@@ -1,4 +1,4 @@
-import BasicLayout from '../layout/BasicLayout';
+import BasicLayout from '../layouts/BasicLayout';
 import Button from 'react-bootstrap/Button';
 import Carousel from 'react-bootstrap/Carousel';
 import '../css/mainPage.css';

@@ -2,7 +2,6 @@ package com.sbcamping.admin.qna.service;
 
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
-import com.sbcamping.admin.member.dto.MemberDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import org.springframework.transaction.annotation.Transactional;

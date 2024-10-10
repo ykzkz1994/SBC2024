@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import BasicLayout from "../../layout/BasicLayout";
+import BasicLayout from "../../layouts/BasicLayout";
 import ResMenu from "../../components/menus/ResMenu";
 
 const ResIndexPage = () =>{
