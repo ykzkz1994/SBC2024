@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/admin/member")
+@RequestMapping("/admin/member")
 public class AdminMemberController {
 
     @Autowired
