@@ -32,7 +32,7 @@ export const getAllNotices = async () => {
 export const getOneNotice = async (id) => {
     try {
         //axios에서 제공하는 axiosInstance를 이용하여 get방식으로 ${id}로 받아온 정보를 response의 데이터에 할당
-        const response = await axiosInstance.get(`/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
+        const response = await axiosInstance.get(`/read/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
         const {
             nboardId,
             nboardTitle,
@@ -68,7 +68,7 @@ export const createNotice = async (noticeData) => {
 // 특정 ID의 공지사항 데이터를 업데이트하는 함수
 export const updateNotice = async (id, updateData) => {
     try {
-        await axiosInstance.put(`/${id}`, updateData); // 특정 ID의 공지사항 데이터를 axiosInstance를 이용해 PUT 방식으로 업데이트
+        await axiosInstance.put(`/update/${id}`, updateData); // 특정 ID의 공지사항 데이터를 axiosInstance를 이용해 PUT 방식으로 업데이트
         console.log(`공지사항 ID ${id} 업데이트 성공:`, updateData);
     } catch (error) {
         console.error(`공지사항 업데이트 중 오류 발생, updateNotice 함수 (ID: ${id}):`, error);
@@ -79,7 +79,7 @@ export const updateNotice = async (id, updateData) => {
 // 특정 ID의 공지사항 데이터를 삭제하는 함수
 export const deleteNotice = async (id) => {
     try {
-        await axiosInstance.delete(`/${id}`); // 특정 ID의 공지사항 데이터를 axiosInstance를 이용해 DELETE 방식으로 삭제
+        await axiosInstance.delete(`/delete/${id}`); // 특정 ID의 공지사항 데이터를 axiosInstance를 이용해 DELETE 방식으로 삭제
         console.log(`공지사항 ID ${id} 삭제 성공`);
     } catch (error) {
         console.error(`공지사항 삭제 중 오류 발생, deleteNotice 함수 (ID: ${id}):`, error);

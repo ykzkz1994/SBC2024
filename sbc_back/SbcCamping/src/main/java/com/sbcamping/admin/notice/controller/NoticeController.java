@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@CrossOrigin(origins = "http://localhost:3000") //cors정책이라는데 그게 뭐임
 @RestController
 @RequestMapping("/admin/notices") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
@@ -47,16 +47,25 @@ public class NoticeController {
     }
 
     //공지글 번호를 매개변수로 받아서 put방식으로 id에 해당하는 필드값을 수정한다
-    @PutMapping("update/{id}")
-    public ResponseEntity<Void> updateNotice(
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateNotice(
             @PathVariable("id") Long noticeId,
             @RequestBody @Validated NoticeDTO noticeDTO) {
-        noticeService.updateNotice(noticeId, noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            // 공지사항 수정 로직
+            noticeService.updateNotice(noticeId, noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
+
+            // 200 OK와 성공 메시지 반환
+            return ResponseEntity.ok("공지사항이 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            // 400 Bad Request와 오류 메시지 반환
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("공지사항 수정 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 
+
     //공지글 번호를 매개변수로 받아서 id에 해당하는 로우를 삭제한다
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteNotice(@PathVariable("id") Long noticeId) {
         noticeService.deleteNotice(noticeId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

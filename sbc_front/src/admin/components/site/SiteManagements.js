@@ -154,7 +154,7 @@ const SiteManagements = () => {
     return (
         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
             {/* **페이지 제목** */}
-            <h2 className="text-2xl font-bold mb-4">구역 관리</h2>
+            <h2 className="text-2xl font-bold mb-4">구역 정보 </h2>
 
             {/* **구역 정보 테이블** */}
             <Table bordered hover responsive className="text-sm">
