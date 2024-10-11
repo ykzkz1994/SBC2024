@@ -1,7 +1,7 @@
 
-import { getResDataAll } from '../../api/ResApi';
 
 
+import {getAllRes} from "../../api/ResApi"; //pk로 멤버 아이디와 구역아이디,예약정보를 가져와서 사용할  메서드
 import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
@@ -10,19 +10,23 @@ import Search from './Search';
 import { FaSortUp, FaSortDown } from 'react-icons/fa'; // react-icons 임포트
 
 
+
 const TotalList = () => {
 
-    //예약목록 전체를 저장 하는 변수
+    //예약목록 전체를 저장 하는 변수 현재는 빈배열 api에서 악시오스로 받아온거 할당할거임
     const [reservations,setReservations] = useState([]);
 
     //페이지 값 설정하는 코드 초기값은 1로 설정
     const [currentPage, setCurrentPage] = useState(1);
+    
+    //에러 메세지 상태 설정  디폴트 빈문자열
+    const [error,setError] = useState("");
 
-    //한 페이지에 출력할 예약 수
+    //한 페이지에 출력할 예약 수 한 페이지당 15개만 출력 예정
     const itemsPerPage = 15;
-
+    //서치에서 사용하는 현재 검색어 상태
     const [searchTerm, setSearchTerm] = useState('');
-
+    //서치에서 선택할 셀렉/옵션
     const [selectedColumn, setSelectedColumn] = useState('reservationNumber');
 
     //오름차순, 내림차순 상태
@@ -32,13 +36,36 @@ const TotalList = () => {
         setCurrentPage(1);
     }, [searchTerm, selectedColumn]);
 
-    const filteredReservations = useState(() => {
+
+    //api에서 받아온 함수를  변수에 할당할거임 사용 하러 곳에서 reservation.map(res=>({res.필드명})의 형태로 사용)
+    const settingReservations = async ()=>{
+
+        try{//정삭적 작동
+            //변수 data에 getAllRes의 Response.data를 비동기식으로 할당
+            const data = await getAllRes();
+            // 컴포넌트 상단에서 선언한 reservation을 set으로 설정
+            setReservations(data);
+        }catch (err){//예외처리
+            console.error("예약정보를 불러오는데 실패했습니다 TotalList파일-settingReservations함수",err)
+            setError("예약정보를 불러오는데 실패했습니다")
+        }
+
+    }
+
+    //특정 예약만 추려서 출력하는 filterRes함수
+    const filterRes = useState(() => {
+
+        //만약(searchTerm이 비어있다면 reservations를 반환해라)
+        //.trim()은 search가 공백열을 제거 했을 때""라면 true를 반환하는데  
+        //!가  붙어 부정형이기 때문에 false를 반환 근데 if문은 ture에서 작동하기 때문에
+        //비어있다면 예약리스트를 반환하라는 코드가 된다
         if (!searchTerm.trim()) return reservations;
 
         const escapeRegExp = (string) => string.replace(/[-\/\\^$+?.()|[\]{}]/g, '\\$&');
         const regexPattern = escapeRegExp(searchTerm).replace(/\*/g, '.*').replace(/\?/g, '.');
 
         let regex;
+
         try {
             regex = new RegExp(regexPattern, 'i');
         } catch (e) {
@@ -53,13 +80,13 @@ const TotalList = () => {
     }, [reservations, searchTerm, selectedColumn]);
 
     const sortedReservations = useState(() => {
-        if (!sortConfig.key) return filteredReservations;
+        if (!sortConfig.key) return filterRes;
 
-        return [...filteredReservations].sort((a, b) => {
+        return [...filterRes].sort((a, b) => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
 
-            // 결제금액 (payment) 컬럼 처리: 문자열을 숫자로 변환
+            // 결제금액 (totalPay) 컬럼 처리: 문자열을 숫자로 변환
             if (sortConfig.key === 'payment') {
                 aValue = parseInt(aValue.replace(/,/g, '').replace('원', ''), 10);
                 bValue = parseInt(bValue.replace(/,/g, '').replace('원', ''), 10);
@@ -91,8 +118,9 @@ const TotalList = () => {
 
             return 0;
         });
-    }, [filteredReservations, sortConfig]);
+    }, [filterRes, sortConfig]);
 
+    //페이지네이션처리
     const currentItems = useState(() => {
         const indexOfLastItem = currentPage * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -135,35 +163,32 @@ const TotalList = () => {
                 setSelectedColumn={setSelectedColumn}
             />
             <Table bordered hover responsive className="text-sm">
+                {/*표의 머리부분로우*/}
                 <thead>
                 <tr>
                     {/* 각 컬럼 헤더에 정렬 기능 추가 */}
-                    <th onClick={() => handleSort('reservationNumber')} style={{ cursor: 'pointer' }}>
-                        예약번호 {renderSortIcon('reservationNumber')}
+                    <th onClick={() => handleSort('resId')} style={{ cursor: 'pointer' }}>
+                        예약번호 {renderSortIcon('resId')}
                     </th>
-                    <th onClick={() => handleSort('reservationDate')} style={{ cursor: 'pointer' }}>
-                        예약한 날짜 {renderSortIcon('reservationDate')}
+                    <th onClick={() => handleSort('resDate')} style={{ cursor: 'pointer' }}>
+                        예약한 날짜 {renderSortIcon('resDate')}
                     </th>
-                    <th onClick={() => handleSort('zoneName')} style={{ cursor: 'pointer' }}>
-                        예약 구역 이름 {renderSortIcon('zoneName')}
+                    <th onClick={() => handleSort('siteId')} style={{ cursor: 'pointer' }}>
+                        예약 구역 번호 {renderSortIcon('siteId')}
                     </th>
-                    <th onClick={() => handleSort('memberName')} style={{ cursor: 'pointer' }}>
-                        회원 이름 {renderSortIcon('memberName')}
-                    </th>
-                    <th onClick={() => handleSort('memberPhone')} style={{ cursor: 'pointer' }}>
-                        회원 전화번호 {renderSortIcon('memberPhone')}
-                    </th>
+
                     <th onClick={() => handleSort('userName')} style={{ cursor: 'pointer' }}>
                         이용자명 {renderSortIcon('userName')}
                     </th>
+
                     <th onClick={() => handleSort('userPhone')} style={{ cursor: 'pointer' }}>
                         이용자 전화번호 {renderSortIcon('userPhone')}
                     </th>
-                    <th onClick={() => handleSort('checkInDate')} style={{ cursor: 'pointer' }}>
-                        입실 날짜 {renderSortIcon('checkInDate')}
+                    <th onClick={() => handleSort('checkinDate')} style={{ cursor: 'pointer' }}>
+                        입실 날짜 {renderSortIcon('checkinDate')}
                     </th>
-                    <th onClick={() => handleSort('checkOutDate')} style={{ cursor: 'pointer' }}>
-                        퇴실 날짜 {renderSortIcon('checkOutDate')}
+                    <th onClick={() => handleSort('checkoutDate')} style={{ cursor: 'pointer' }}>
+                        퇴실 날짜 {renderSortIcon('checkoutDate')}
                     </th>
                     <th onClick={() => handleSort('cancelDate')} style={{ cursor: 'pointer' }}>
                         취소 날짜 {renderSortIcon('cancelDate')}
@@ -171,27 +196,28 @@ const TotalList = () => {
                     <th onClick={() => handleSort('cancelReason')} style={{ cursor: 'pointer' }}>
                         취소 사유 {renderSortIcon('cancelReason')}
                     </th>
-                    <th onClick={() => handleSort('payment')} style={{ cursor: 'pointer' }}>
-                        결제금액 (단위: 원) {renderSortIcon('payment')}
+                    <th onClick={() => handleSort('totalPay')} style={{ cursor: 'pointer' }}>
+                        결제금액 (단위: 원) {renderSortIcon('totalPay')}
                     </th>
                 </tr>
                 </thead>
+                {/*표의 바디부분*/}
                 <tbody>
-                {currentItems.length > 0 ? (
-                    currentItems.map((reservation) => (
-                        <tr key={reservation.id}>
-                            <td>{reservation.reservationNumber}</td>
-                            <td>{reservation.reservationDate}</td>
-                            <td>{reservation.zoneName}</td>
-                            <td>{reservation.memberName}</td>
-                            <td>{reservation.memberPhone}</td>
-                            <td>{reservation.userName}</td>
-                            <td>{reservation.userPhone}</td>
-                            <td>{reservation.checkInDate}</td>
-                            <td>{reservation.checkOutDate}</td>
-                            <td>{reservation.cancelDate}</td>
-                            <td>{reservation.cancelReason}</td>
-                            <td>{reservation.payment}</td>
+                {reservations.length > 0 ? (
+                    reservations.map(reservation => (
+                        <tr key={reservations.resId}>
+                            <td>{reservations.resId}</td>
+                            <td>{reservations.resDate}</td>
+                            <td>{reservations.siteId}</td>
+                            <td>{reservations.userName}</td>
+                            <td>{reservations.userPhone}</td>
+                            <td>{reservations.userName}</td>
+                            <td>{reservations.userPhone}</td>
+                            <td>{reservations.checkinDate}</td>
+                            <td>{reservations.checkoutDate}</td>
+                            <td>{reservations.cancelDate}</td>
+                            <td>{reservations.cancelReason}</td>
+                            <td>{reservations.payment}</td>
                         </tr>
                     ))
                 ) : (

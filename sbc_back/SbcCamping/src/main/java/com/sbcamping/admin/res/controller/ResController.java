@@ -22,10 +22,10 @@ public class ResController {
     private final ResService resService;
 
 
-    @GetMapping // 전체 예약 목록을 가져오는 GET 요청을 처리합니다.
+    @GetMapping("/all") // 전체 예약 목록을 가져오는 GET 요청을 처리
     public ResponseEntity<List<ResDTO>> getAllRes() {
         // 서비스의 getAllSites 메서드를 호출하여 모든 사이트 정보를 가져옵니다.
-        List<ResDTO> res = (List<ResDTO>) resService.getAllRes();
+        List<ResDTO> res = resService.getAllRes();
 
         // 상태 코드 200 (OK)와 함께 사이트 목록을 응답 본문으로 반환하는 코드 아마 요청이 문제없이 처리 됐다고 알리는 코드인듯
         return new ResponseEntity<>(res, HttpStatus.OK);

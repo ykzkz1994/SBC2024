@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table';
 import { Button, Spinner, Alert } from 'react-bootstrap';
 import Search from '../res/Search'; // 검색 컴포넌트 경로
 import { FaSortUp, FaSortDown } from 'react-icons/fa'; // react-icons 임포트
-import { getResDataAll } from '../../api/ResApi'; // 실제 API 호출 함수
+import { getAllRes } from '../../api/ResApi'; // 실제 API 호출 함수
 
 const ResList = () => {
     // 예약목록 전체를 저장 하는 변수
@@ -33,9 +33,9 @@ const ResList = () => {
 
 
     // 데이터 페칭 함수
-    const fetchReservations = async () => {
+    const settingReservations = async () => {
         try {
-            const data = await getResDataAll();
+            const data = await getAllRes();
             setReservations(data);
             setError('');
         } catch (err) {
@@ -46,7 +46,7 @@ const ResList = () => {
 
     // 컴포넌트 마운트 시 데이터 불러오기
     useEffect(() => {
-        fetchReservations();
+        settingReservations();
     }, []);
 
     // 필터링된 데이터 계산 (useMemo 사용)
@@ -78,7 +78,7 @@ const ResList = () => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
 
-            // 결제금액 (payment) 컬럼 처리: 문자열을 숫자로 변환
+            // 결제금액 (totalPay) 컬럼 처리: 문자열을 숫자로 변환
             if (sortConfig.key === 'payment') {
                 aValue = parseInt(aValue.replace(/,/g, '').replace('원', ''), 10);
                 bValue = parseInt(bValue.replace(/,/g, '').replace('원', ''), 10);

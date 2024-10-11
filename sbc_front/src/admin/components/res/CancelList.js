@@ -15,15 +15,15 @@ const CancelList = () => {
     // 샘플 데이터 배열 (예약 취소 데이터)
     const reservations = Array.from({ length: 50 }).map((_, index) => ({
         id: index + 1,
-        reservationNumber: `RES-${index + 1}`, // 예약번호 추가
-        reservationDate: `2024-02-${String(index + 1).padStart(2, '0')}`,
-        zoneName: 'Zone C',
+        resId: `RES-${index + 1}`, // 예약번호 추가
+        resDate: `2024-02-${String(index + 1).padStart(2, '0')}`,
+        siteId: 'Zone C',
         memberName: '이영희',
         memberPhone: '010-5555-6666',
         userName: '취소자명',
         userPhone: '010-7777-8888',
         cancelDate: '2024-02-05',
-        payment: '50,000원'
+        totalPay: '50,000원'
     }));
 
     // 필터링된 데이터를 상태에 저장하고 페이지를 1로 초기화

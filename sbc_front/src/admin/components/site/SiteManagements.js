@@ -5,8 +5,9 @@ import Table from 'react-bootstrap/Table';
 import { Button, Modal, Form } from 'react-bootstrap';
 import {getAllSites, updateSiteData} from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
 
-// 최대 허용 인원 수를 상수로 선언
-const MAX_LIMIT_PEOPLE = 6;
+// 최대,최소 허용 인원 수를 상수로 선언
+const maxLimitPeople = 6;
+const minLimitPeople = 1;
 
 // SiteManagements 컴포넌트
 const SiteManagements = () => {
@@ -97,8 +98,8 @@ const SiteManagements = () => {
         const numberValue = Number(value);
 
         // 'maxPeople' 필드의 경우 최대 인원 제한을 검증합니다.
-        if (name === 'maxPeople' && numberValue > MAX_LIMIT_PEOPLE) {
-            setError(`최대 인원은 ${MAX_LIMIT_PEOPLE}명을 초과할 수 없습니다.`);
+        if (name === 'maxPeople' && numberValue > maxLimitPeople) {
+            setError(`최대 인원은 ${maxLimitPeople}명을 초과할 수 없습니다.`);
             return; // 검증 실패 시 함수 종료
         }
 
@@ -110,8 +111,10 @@ const SiteManagements = () => {
     // 요금 입력 필드의 값 변경을 처리하고 숫자로 변환합니다.
     const handleRateChange = (e) => {
         const { name, value } = e.target;
+
         // 입력된 값에서 쉼표를 제거하여 숫자만 추출
         const numericValue = value.replace(/,/g, '');
+
         // 숫자인지 확인하고, 숫자일 경우 새로운 값으로 설정
         if (!isNaN(numericValue) && numericValue.trim() !== '') {
             setNewSiteValue((prev) => ({
@@ -176,12 +179,19 @@ const SiteManagements = () => {
                 {sites.length > 0 ? (
                     sites.map(site => (
                         <tr key={site.siteId}>
+                            {/*크기 넘버10*/}
                             <td>{site.siteId}</td>
+                            {/*크기 바챠2 10*/}
                             <td>{site.siteName}</td>
+                            {/*크기 챠 1*/}
                             <td>{site.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
+                            {/*크기 넘버 1*/}
                             <td>{site.minPeople}</td>
+                            {/*크기 넘버 1*/}
                             <td>{site.maxPeople}</td>
+                            {/*크기 넘버10*/}
                             <td>{site.weekdayPay}</td>
+                            {/*크기 넘버10*/}
                             <td>{site.weekendPay ? site.weekendPay.toLocaleString() : 0}</td>
                             <td>
                                 <Button variant="secondary" onClick={() => handleShowModal(site)}>
@@ -208,7 +218,7 @@ const SiteManagements = () => {
                         <div>
                             {/* **구역 이름 입력 필드** */}
                             <Form.Group className="mb-3">
-                                <Form.Label>구역 이름</Form.Label>
+                                <Form.Label>구역 이름</Form.Label> {/*바챠2 10*/}
                                 <Form.Control
                                     type="text"
                                     name="siteName"
@@ -220,13 +230,13 @@ const SiteManagements = () => {
 
                             {/* **예약 제한 라디오 버튼** */}
                             <Form.Group className="mb-3">
-                                <Form.Label>예약 제한</Form.Label>
+                                <Form.Label>예약 제한</Form.Label> {/*챠 1 - Y=예약 불가 ,N= 예약 가능*/}
                                 <Form.Check
                                     type="radio"
                                     label="예약 가능"
                                     name="siteResLimit"
                                     value="Y"
-                                    checked={newSiteValue.siteResLimit === 'Y'}
+                                    checked={newSiteValue.siteResLimit === 'N'} //디폴트가 N=가능
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                                 <Form.Check
@@ -234,7 +244,7 @@ const SiteManagements = () => {
                                     label="예약 불가능"
                                     name="siteResLimit"
                                     value="N"
-                                    checked={newSiteValue.siteResLimit === 'N'}
+                                    checked={newSiteValue.siteResLimit === 'Y'} //
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                             </Form.Group>
@@ -248,7 +258,7 @@ const SiteManagements = () => {
                                     value={newSiteValue.minPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
                                     min={1} // 최소값 설정
-                                    max={MAX_LIMIT_PEOPLE} // 최대값 설정
+                                    max={maxLimitPeople} // 최대값 설정 위에서 선언해놓은 상수 값은 6
                                 />
                             </Form.Group>
 
@@ -261,7 +271,7 @@ const SiteManagements = () => {
                                     value={newSiteValue.maxPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
                                     min={1} // 최소값 설정
-                                    max={MAX_LIMIT_PEOPLE} // 최대값 설정
+                                    max={maxLimitPeople} // 최대값 설정
                                 />
                             </Form.Group>
 
@@ -326,10 +336,12 @@ const SiteManagements = () => {
                 </Modal.Body>
 
                 <Modal.Footer>
+
                     {/* **취소 버튼** */}
                     <Button variant="secondary" onClick={() => setSecondModal(false)}>
                         취소
                     </Button>
+
                     {/* **최종 수정 버튼** */}
                     <Button variant="primary" onClick={handleFinalSave}>
                         최종 수정

@@ -25,8 +25,8 @@ public class SiteServiceImpl implements SiteService{
     private final AdminSiteRepository adminSiteRepository;    //레포지토리 인스턴스
     private final ModelMapper modelMapper;  //매퍼 인스턴스
 
-    @Override
-    public List<SiteDTO> getAllSites() {
+    @Override   //서비스선언 impl재정의
+    public List<SiteDTO> getAllSites() {    //
         log.info("구역전체 불러오는 메서드 시작");
         // 모든 Site 엔티티를 가져옵니다.
         List<Site> sites = adminSiteRepository.findAll();
