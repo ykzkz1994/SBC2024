@@ -1,8 +1,10 @@
 import useCustomMove from '../../../hooks/useCustomMove';
-import {useEffect, useState} from 'react';
-import { getInactiveList } from '../../api/A_memberApi';
-import PageComponent from '../../../components/common/PageComponent';
-import MemberComponent from './MemberComponent';
+import React, {useEffect, useState} from 'react';
+import {getInactiveList, searchMember} from '../../api/A_memberApi';
+import MemberSearchComponent from '../util/MemberSearchComponent';
+import DateFormatter from "../util/DateFormatter";
+import BootstrapPagination from "../util/BootstrapPagination";
+import Table from 'react-bootstrap/Table';
 
 const initState = {
     dtoList:[],
@@ -20,24 +22,46 @@ const initState = {
 function InactiveListComponent() {
     
     const {page, size} = useCustomMove()
-
     const [serverData, setServerData] = useState(initState)
+    const [searchParams, setSearchParams] = useState({ type: 'name', keyword: ''});
 
-    useEffect(()=>{
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = searchParams.keyword
+                    ? await searchMember(searchParams.type, searchParams.keyword, { page, size })
+                    : await getInactiveList({ page, size });
 
-        getInactiveList({page,size}).then(data=> {
-            console.log(data)
-            setServerData(data)
-        })
-    }, [page,size])
-    
+                console.log(data);
+                setServerData(data);
+            } catch (error) {
+                console.error('API 호출 중 오류 발생:', error);
+            }
+        };
+
+        fetchData();
+    }, [page, size, searchParams]);
+
+    const handleSearch = (type, keyword) => {
+        setSearchParams({ type, keyword}); // 검색 파라미터 설정
+    };
+
+    // 페이지네이션
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = serverData.totalPage; // 총 페이지 수
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        // 데이터 요청 등 필요한 작업 수행
+    };
+
     return (
         <div>
             <div>
             <p>휴면 회원 리스트 </p> 
-                <MemberComponent/>
+                <MemberSearchComponent onSearch={handleSearch}/>
             </div>
-           <table>
+           <Table bordered hover responsive className="text-sm">
             <tr>
                 <th>회원번호</th>
                 <th>이메일</th>
@@ -48,7 +72,7 @@ function InactiveListComponent() {
                 <th>지역</th>
                 <th>가입일</th>
             </tr>
-            {serverData.dtoList.map(member => 
+            {serverData.dtoList.map(member =>
                 <tr key={member.memberID}>
                     <td>{member.memberID}</td>
                     <td>{member.memberEmail}</td>
@@ -57,11 +81,15 @@ function InactiveListComponent() {
                     <td>{member.memberGender}</td>
                     <td>{member.memberBirth}</td>
                     <td>{member.memberLocal}</td>
-                    <td>{member.memberRegDate}</td>
+                    <td><DateFormatter dateString={member.memberRegDate}/></td>
                 </tr>
             )}
-            
-            </table>  
+           </Table>
+            <BootstrapPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 }

@@ -1,5 +1,6 @@
 package com.sbcamping.user.camper.controller;
 
+import com.sbcamping.common.util.CustomFileUtil;
 import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.user.camper.dto.CamperBoardDTO;
 import com.sbcamping.user.camper.dto.PageRequestDTO;
@@ -11,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.Map;
 @RequestMapping("/api/campers")
 public class CamperController {
     private final CamperService camperService;
+
+    private final CustomFileUtil fileUtil;
 
     //게시글 목록
     @GetMapping("/list")
@@ -56,11 +60,15 @@ public class CamperController {
 
 
     //게시글 등록
-    @PreAuthorize("ROLE_USER")
     @PostMapping("/")
     //Map<String(컬럼명과 같은 label의 개념), Long(컬럼명에 해당하는 Long타입의 cBoardID의 값을 의미)>
-    public Map<String, Long> register(@RequestBody CamperBoardDTO camperBoardDTO){
+    public Map<String, Long> register(CamperBoardDTO camperBoardDTO){
         log.info("CamperBoardDTO: " + camperBoardDTO);
+        MultipartFile file = camperBoardDTO.getFile();
+        String uploadFileName = fileUtil.saveFile(file);
+        camperBoardDTO.setCBoardAttachment(uploadFileName);
+        log.info(uploadFileName);
+
         Long cBoardId = camperService.register(camperBoardDTO);
 
         return Map.of("CBoardID: ", cBoardId);

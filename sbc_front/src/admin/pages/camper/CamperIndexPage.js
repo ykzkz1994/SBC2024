@@ -6,10 +6,10 @@ const CamperIndexPage = () =>{
     return(
         <BasicLayout>
             <div>
-            <CommunityMenu/>
+                <CommunityMenu/>
             </div>
+            <div><h1>캠퍼 게시판</h1></div>
             <div>
-                <div> Camper Index Page </div>
                 <Outlet/>
             </div>
         </BasicLayout>

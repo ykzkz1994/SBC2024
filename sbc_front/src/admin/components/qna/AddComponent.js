@@ -8,16 +8,11 @@ const initState = {
 
 function AddComponent(props) {
    const [qna,setQna] = useState({...initState})
-    const uploadRef = useRef()
-
-    const handleChangeQna = (e) => {
-
-    }
 
     return (
-        <div>
-제목, 내용, 첨부
-        </div>
+      <>
+      <div>qna add component</div>
+      </>
     );
 }
 

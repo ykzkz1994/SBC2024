@@ -90,6 +90,8 @@ public class QnaController {
     @DeleteMapping("/{qbID}")
     public Map<String, String> remove(@PathVariable("qbID") Long qbID) {
         String oldFileName = qnaService.get(qbID).getQBoardAttachment();
+        // 해당 아이디의 댓글 리스트를 받아온 다음 댓글 번호들을 넣어서 서비스에서 댓글 먼저 삭제 후 글 삭제
+        // qnaService.removeComment();
 
         qnaService.remove(qbID);
         fileUtil.deleteFile(oldFileName);

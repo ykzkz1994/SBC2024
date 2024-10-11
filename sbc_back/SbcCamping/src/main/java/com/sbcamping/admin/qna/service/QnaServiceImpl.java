@@ -201,6 +201,9 @@ public class QnaServiceImpl implements QnaService {
     public List<QnaCommentDTO> commentlist(Long qbID) {
         List<QuestionBoardComment> getList = qnaCommentRepository.orderedList(qbID);
         List<QnaCommentDTO> result = getList.stream().map(qnaComm -> modelMapper.map(qnaComm, QnaCommentDTO.class)).collect(Collectors.toList());
+        int count = getList.size();
+        log.info(count + " comments found");
+
         return result;
     }
 

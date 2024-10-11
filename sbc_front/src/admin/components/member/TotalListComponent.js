@@ -1,45 +1,70 @@
-// 서버의 데이터에는 dtoList라는 배열 데이터와 pageNumList라는 페이지 번호들이 있고, 이전/다음 등의 추가적인 데이터들이 있다.
-
 import useCustomMove from '../../../hooks/useCustomMove';
-import React, {useEffect, useState} from 'react';
-import { getFullList } from '../../api/A_memberApi';
+import React, { useEffect, useState } from 'react';
+import { getFullList, searchMember } from '../../api/A_memberApi';
 import PageComponent from '../../../components/common/PageComponent';
-import MemberComponent from './MemberComponent';
+import MemberSearchComponent from '../util/MemberSearchComponent';
+import DateFormatter from "../util/DateFormatter";
+import Pagination from "../util/Pagination";
+import BootstrapPagination from "../util/BootstrapPagination";
+import Table from 'react-bootstrap/Table';
+
 
 const initState = {
-    dtoList:[],
-    pageNumList:[],
-    pageRequestDTO : null,
-    prev : false,
+    dtoList: [],
+    pageNumList: [],
+    pageRequestDTO: null,
+    prev: false,
     next: false,
     totalCount: 0,
-    prevPage : 0,
-    nextPage : 0,
-    totalPage : 0,
-    current : 0
-}
+    prevPage: 0,
+    nextPage: 0,
+    totalPage: 0,
+    current: 0
+};
 
 function TotalListComponent(props) {
-    
-    const {page, size, moveToList} = useCustomMove()
+    const { page, size, moveToList } = useCustomMove();
+    const [serverData, setServerData] = useState(initState);
+    const [searchParams, setSearchParams] = useState({ type: 'name', keyword: ''});
 
-    const [serverData, setServerData] = useState(initState)
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = searchParams.keyword
+                    ? await searchMember(searchParams.type, searchParams.keyword, { page, size })
+                    : await getFullList({ page, size });
 
-    useEffect(()=>{
+                console.log(data);
+                setServerData(data);
+            } catch (error) {
+                console.error('API 호출 중 오류 발생:', error);
+            }
+        };
 
-        getFullList({page,size}).then(data=> {
-            console.log(data)
-            setServerData(data)
-        })
-    }, [page,size])
-    
+        fetchData();
+    }, [page, size, searchParams]);
+
+    const handleSearch = (type, keyword) => {
+        setSearchParams({ type, keyword}); // 검색 파라미터 설정
+    };
+
+    // 페이지네이션
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = serverData.totalPage; // 총 페이지 수
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        // 데이터 요청 등 필요한 작업 수행
+    };
+
     return (
         <div>
             <div>
                 <p>전체 회원 리스트 </p>
-                <MemberComponent/>
+                <MemberSearchComponent onSearch={handleSearch} />
             </div>
-            <table>
+            <Table bordered hover responsive className="text-sm">
+                <thead>
                 <tr>
                     <th>회원번호</th>
                     <th>이메일</th>
@@ -51,7 +76,9 @@ function TotalListComponent(props) {
                     <th>가입일</th>
                     <th>휴면회원여부</th>
                 </tr>
-                {serverData.dtoList.map(member =>
+                </thead>
+                <tbody>
+                {serverData.dtoList.map(member => (
                     <tr key={member.memberID}>
                         <td>{member.memberID}</td>
                         <td>{member.memberEmail}</td>
@@ -60,16 +87,19 @@ function TotalListComponent(props) {
                         <td>{member.memberGender}</td>
                         <td>{member.memberBirth}</td>
                         <td>{member.memberLocal}</td>
-                        <td>{member.memberRegDate}</td>
-                        {member.memberStatus.trim().toUpperCase() === "ON" ? (<td></td>) : (<td>휴면</td>)}
+                        <td><DateFormatter dateString={member.memberRegDate} /></td>
+                        <td>{member.memberStatus.trim().toUpperCase() === "ON" ? '' : '휴면'}</td>
                     </tr>
-                )}
-
-            </table>
-            {/*<PageComponent serverData={serverData} movePage={'#'}></PageComponent>*/}
+                ))}
+                </tbody>
+            </Table>
+            <BootstrapPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 }
-
 
 export default TotalListComponent;

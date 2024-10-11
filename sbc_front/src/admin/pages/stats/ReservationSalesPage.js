@@ -1,7 +1,9 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import SalesComponent from "../../components/stats/SalesComponent";
 import ResRateComponent from "../../components/stats/ResRateComponent";
 import ResCancelComponent from "../../components/stats/ResCancelComponent";
+import DateSearchComponent from "../../components/stats/DateSearchComponent";
+import {getAllSites} from "../../api/SiteApi";
 
 const ReservationSalesPage = () => {
     const wrapperStyle = {
@@ -25,6 +27,25 @@ const ReservationSalesPage = () => {
         setCurrentComponent(component);
     }
 
+    // 사이트 전체 정보 목록을 저장하는 변수
+    const [sites, setSites] = useState([]);
+
+// 데이터 불러오는 비동기 함수
+    const fetchSites = async () => {
+        try {
+            //변수 data에 geSiteDataALL의 Responce.data를 할당
+            const data = await getAllSites();
+            //set 생성자(변수)
+            setSites(data);
+        } catch (err) {
+            console.error('사이트 데이터를 불러오는데 실패했습니다:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchSites();
+    }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 호출
+
     return (
         <>
             <h1>예약 매출 통계</h1>
@@ -35,23 +56,22 @@ const ReservationSalesPage = () => {
                 <button onClick={()=> handleButtonClick('cancel')}>예약취소 현황</button>
 
             </nav>
-            <div>사이트
+            <div>
+                <label>
+                    사이트
                 <select className="siteName">
-                    <option value="A">DECK-A</option>
-                    <option value="B">DECK-B</option>
-                    <option value="C">DECK-C</option>
-                    <option value="D">DECK-D</option>
-                    <option value="E">DECK-E</option>
-                </select></div>
-            <div>조회기간
-                <select className="dateType">
-                    <option value="day">일간</option>
-                    <option value="month">월간</option>
-                    <option value="year">연간</option>
-                </select>
-                <input type={"date"} id={"start"}/> ~ <input type={"date"} id={"end"}/>
-                <button>조회</button>
-                <span>* 한 번에 조회할 수 있는 기간은 최대 90일입니다.</span>
+                    {/* value: site ID */}
+                    {sites.length > 0 ? (
+                        sites.map(site => (
+                            <option key={site.siteId} value={site.siteId}>
+                                {site.siteName}
+                            </option>
+                        ))
+                    ) : (
+                        <option value="">사이트 데이터가 없습니다.</option>
+                    )}
+                </select> </label>
+            <DateSearchComponent/>
             </div>
             <div className={"componentWrapper"}>
                 {currentComponent === 'sales' && <SalesComponent/>}

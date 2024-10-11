@@ -15,9 +15,9 @@ const SalesComponent = () => {
             <div className={"graphWrapper"} style={wrapperStyle}>
                 graph
             </div>
-            <h3>목록 (총 00건)</h3>
             <div className={"listWrapper"} style={wrapperStyle}>
                 <table style={{width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc'}}>
+                    <caption>목록 (총 00건)</caption>
                     <thead>
                     <tr>
                         <th rowSpan={2}>날짜</th>

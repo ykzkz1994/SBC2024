@@ -11,12 +11,12 @@ const commentStyle = {
     fontsize: 10
 };
 
-function ListCommentComponent(props) {
+function ListCommentComponent(qbID) {
     
     const [serverData, setServerData] = useState([])
 
     useEffect(()=>{
-        getCommentList().then(data=> {
+        getCommentList(qbID).then(data=> {
             console.log(data)
             setServerData(data)
         })

@@ -15,7 +15,7 @@ const ListComponent = () => {
 
     // '글쓰기' 버튼 클릭 시 호출되는 함수: 공지 등록 페이지로 이동
     const handleAddClick = () => {
-        navigate('/notice/add'); // 공지 등록 페이지 경로로 이동
+        navigate('/admin/notices/add'); // 공지 등록 페이지 경로로 이동
     };
 
     // 제목 클릭 시 상세보기 페이지로 이동하는 함수

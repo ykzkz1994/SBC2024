@@ -39,7 +39,7 @@ public class AdminMemberController {
     @GetMapping("/search")   // 회원 검색
     public PageResponseDTO<AdminMemberDTO> searchMember(PageRequestDTO pageRequestDTO,
                                                         @RequestParam(defaultValue = "name", required = false) String type, @RequestParam(required = false) String keyword,
-                                                        @RequestParam(required = false) String order) {
+                                                        @RequestParam(defaultValue = "memberID", required = false) String order) {
         log.info("search result list..... : "+pageRequestDTO);
         return adminMemberService.searchMember(pageRequestDTO, type, keyword, order);  // 기본 정렬 : memberID 오름차순
 

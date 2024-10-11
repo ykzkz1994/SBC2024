@@ -16,7 +16,7 @@ public interface AdminMemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findByMemberNameContaining(String name, Pageable pageable);
 
     // 회원 검색 (2) 핸드폰 뒷자리
-    Page<Member> findByMemberPhoneContaining(String phone, Pageable pageable);
+    Page<Member> findByMemberPhoneEndingWith(String phone, Pageable pageable);
 
     // 회원 검색 (3) 이메일
     Page<Member> findByMemberEmailContaining(String email, Pageable pageable);
