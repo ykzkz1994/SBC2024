@@ -3,10 +3,12 @@ import {Table} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import "../../../pages/reservation/css/RealTimeResPage.css"
 import {getSiteList} from "../../../api/ResApi";
+import {useSelector} from "react-redux";
 
 // td 태그를 재사용 하고싶은데 어케할까? 흠....
 
 const OctComponent = () => {
+
     const initState = {
         0: {
             siteID: 0,
@@ -16,6 +18,7 @@ const OctComponent = () => {
             siteID: 0,
             siteName: ''
         }
+
     }
 
     const [site, setSite] = useState(initState);
@@ -27,7 +30,6 @@ const OctComponent = () => {
         })
     }, []);
 
-
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth() + 1;
@@ -35,6 +37,8 @@ const OctComponent = () => {
 
     const [year, setYear] = useState(currentYear);
     const [month, setMonth] = useState(10);
+
+    const loginState = useSelector((state) => state.loginSlice)
 
     const isPastDate = (setMonth, setDay) => {
         // 날짜 비교 : 현재 날짜보다 과거인지 확인
@@ -74,12 +78,21 @@ const OctComponent = () => {
                                 ) : (
                                     <Link
                                         to={`/res/respage`}
-                                        state={{year: year, month: month, day: "1"}}
+                                        state={{
+                                            year: year,
+                                            month: month,
+                                            day: "1",
+                                            memberName: loginState.member.memberName,
+                                            memberPhone: loginState.member.memberPhone,
+                                            memberEmail: loginState.member.memberEmail,
+                                            siteId: site[0].siteId,
+                                            siteName: site[0].siteName
+                                        }}
                                     >
                                         Site A
                                         <span>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40000원
-                            </span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40000원
+                                            </span>
                                     </Link>
                                 )}
                             </li>
@@ -97,7 +110,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "2"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "2",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -121,7 +143,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "3"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "3",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -145,11 +176,20 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "4"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "4",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40000원
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;80000원
                                             </span>
                                         </Link>
                                     )}
@@ -169,7 +209,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "5"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "5",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -195,11 +244,20 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "6"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "6",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;80000원
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;40000원
                                             </span>
                                         </Link>
                                     )}
@@ -219,7 +277,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "7"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "7",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -243,7 +310,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "8", siteName: site[0].siteName}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "8",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -267,7 +343,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "9"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "9",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -291,7 +376,17 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "10"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "10",
+                                                memberId: loginState.member.memberId,
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -315,7 +410,17 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "11"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "11",
+                                                memberId: loginState.member.memberId,
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -339,7 +444,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "12"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "12",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -365,7 +479,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "13"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "13",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -389,7 +512,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "14"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "14",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -413,7 +545,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "15"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "15",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -437,7 +578,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "16"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "16",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -461,7 +611,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "17"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "17",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -485,7 +644,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "18"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "18",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -509,7 +677,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "19"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "19",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -535,7 +712,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "20"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "20",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -559,7 +745,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "21"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "21",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -583,7 +778,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "22"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "22",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -607,7 +811,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "23"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "23",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -631,7 +844,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "24"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "24",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -655,7 +877,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "25"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "25",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -679,7 +910,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "26"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "26",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -705,7 +945,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "27"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "27",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -722,14 +971,23 @@ const OctComponent = () => {
                             <span>28</span>
                             <ul>
                                 <li>
-                                    {isPastDate(month, 1) ? (
+                                    {isPastDate(month, 28) ? (
                                         <div>
                                             예약 불가
                                         </div>
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "28"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "28",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -753,7 +1011,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "29"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "29",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -777,7 +1044,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "30"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "30",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -801,7 +1077,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: month, day: "31"}}
+                                            state={{
+                                                year: year,
+                                                month: month,
+                                                day: "31",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -825,7 +1110,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: "11", day: "1"}}
+                                            state={{
+                                                year: year,
+                                                month: "11",
+                                                day: "1",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>
@@ -849,7 +1143,16 @@ const OctComponent = () => {
                                     ) : (
                                         <Link
                                             to={`/res/respage`}
-                                            state={{year: year, month: "11", day: "2"}}
+                                            state={{
+                                                year: year,
+                                                month: "11",
+                                                day: "2",
+                                                memberName: loginState.member.memberName,
+                                                memberPhone: loginState.member.memberPhone,
+                                                memberEmail: loginState.member.memberEmail,
+                                                siteId: site[0].siteId,
+                                                siteName: site[0].siteName
+                                            }}
                                         >
                                             Site A
                                             <span>

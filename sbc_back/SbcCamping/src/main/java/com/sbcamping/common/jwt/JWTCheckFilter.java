@@ -39,7 +39,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String birth = (String) claims.get("birth");
             String local = (String) claims.get("local");
             String memberRole = (String) claims.get("memberRole");
-            MemberDTO memberDTO = new MemberDTO(email, pw, name, phone, gender, birth, local, memberRole);
+            Long memberId = (Long) claims.get("memberId");
+            MemberDTO memberDTO = new MemberDTO(email, pw, name, phone, gender, birth, local, memberRole, memberId);
             log.info("memberDTO.getMemberEmail : {}", memberDTO.getMemberEmail());
 
             // ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ getAuthorities() 동작 확인하세요
@@ -79,6 +80,14 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         if(path.startsWith("/api/campers")){
+            return true;
+        }
+
+        if(path.startsWith("/admin")){
+            return true;
+        }
+
+        if (path.startsWith("/api/res/")) {
             return true;
         }
 

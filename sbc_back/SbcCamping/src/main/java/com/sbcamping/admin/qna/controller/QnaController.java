@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/api/admin/qnas")
+@RequestMapping("/admin/qnas")
 public class QnaController {
 
     @Autowired

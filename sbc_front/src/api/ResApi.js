@@ -9,3 +9,13 @@ export const getSiteList = async () => {
 
     return res.data
 }
+
+export const resAdd = async (resObj) => {
+    try {
+        const res = await axios.post(`${prefix}/`, resObj)
+        return res.data
+    } catch (error) {
+        console.log("Error while adding reservation: ", error)
+        throw error;
+    }
+}
