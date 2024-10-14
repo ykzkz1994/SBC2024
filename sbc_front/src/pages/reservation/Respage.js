@@ -8,7 +8,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {resAdd} from "../../api/ResApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from "react-bootstrap/Modal";
-import {postAdd} from "../../api/camperApi";
 
 const Respage = () => {
 
@@ -35,7 +34,17 @@ const Respage = () => {
     // location에서 받은 값들
     const {year, month, day, siteName, siteId, memberId, memberName, memberPhone, memberEmail} = location.state || {};
 
+    // 날짜 상태 관리
     const [checkinDate, setCheckinDate] = useState('');
+
+    // 모달 상태 관리
+    const [firstShow, firstSetShow] = useState(false);
+    const [secondShow, secondSetShow] = useState(false);
+    const [thirdShow, thirdSetShow] = useState(false);
+
+    // check 상태를 동적으로 변경
+    const checkRef = useRef();
+    const [isChecked, setIsChecked] = useState(false);
 
     // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
     useEffect(() => {
@@ -77,39 +86,37 @@ const Respage = () => {
         }
     };
 
-    // 모달 상태 관리
-    const [show, setShow] = useState(false);
-
     // 모달 false true 함수
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const firstShowClose = () => firstSetShow(false);
+    const firstHandleShow = () => firstSetShow(true);
 
-    // 취소 버튼 클릭 핸들러 추기
+    const secondShowClose = () => firstSetShow(false);
+    const thirdShowClose = () => thirdSetShow(false);
+
+
+    // 취소 버튼 클릭시 전페이지로 이동하는 함수
     const handleCancel = () => {
         navigate(-1);
     }
 
-    // 모달 상태 변경
+    // 예약 완료시 예약확인페이지로 이동함수
+
+    // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
         console.log(res);
         resAdd(res)
             .then(result => {
-                setShow(false)
-                navigate("/")
-                console.log(result);
+                firstSetShow(false)
+                secondSetShow(true);
                 setRes({...initState});
             })
-            .catch(error => exceptionHandle(error))
+            .catch(error => {
+                firstSetShow(false)
+                thirdSetShow(true)
+                exceptionHandle(error)
+            })
     };
-    // 데이터 등록
-    const handleConfirm = async () => {
-        console.log(res);
-    }
 
-
-    // check 상태를 동적으로 변경
-    const checkRef = useRef();
-    const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckChange = () => {
         if (checkRef.current) {
@@ -132,7 +139,6 @@ const Respage = () => {
             }
         }
     };
-
 
     return (
         <div>
@@ -157,7 +163,7 @@ const Respage = () => {
                     </Form.Label>
                     <Col sm="10">
                         <Form.Control type="text" name="memberName" defaultValue={memberName}
-                                        onChange={handleChangeRes}/>
+                                      onChange={handleChangeRes}/>
                         <Form.Check
                             ref={checkRef}
                             aria-label="option 1"
@@ -262,20 +268,71 @@ const Respage = () => {
                 </Form.Group>
             </Form>
 
-            <Button variant="success" onClick={handleShow}>확인</Button>
-            <Button variant="success" onClick={handleCancel}>취소</Button>
+            <div style={{
+                display: "flex", alignItems: "center", justifyContent: "center"
+            }}>
+                <Button variant="success" onClick={firstHandleShow}
+                        style={{marginBottom: "15px", marginRight: "10px", width: "80px"}}>확인</Button>
+                <Button variant="success" onClick={handleCancel} style={{marginBottom: "15px", width: "80px"}}>취소</Button>
+            </div>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal
+                show={firstShow}
+                onHide={firstShowClose}
+                backdrop="static"
+                keyboard={false}
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>예약</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>예약 하시겠습니까?</Modal.Body>
+                <Modal.Body>
+                    예약을 하시겠습니까?
+                </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClickAdd}>
-                        예
+                    <Button variant="primary" onClick={handleClickAdd}>
+                        확인
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        아니요
+                    <Button variant="secondary" onClick={firstShowClose}>
+                        취소
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={secondShow}
+                onHide={secondShowClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>예약성공</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    예약이 성공적으로 완료되었습니다! 소중한 시간을 예약해 주셔서 감사합니다. 예약 관련하여 추가적인 질문이나 도움이 필요하시면 언제든지 연락해 주세요. 즐거운 경험이 되시길
+                    바랍니다!
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleCancel}>
+                        확인
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={thirdShow}
+                onHide={firstShowClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>예약실패</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    죄송합니다. 예약을 완료하는 데 어려움이 발생했습니다. 입력하신 정보나 조건을 다시 한번 확인해 주시기 바랍니다. 도움이 필요하시면 언제든지 문의해 주세요.
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={thirdShowClose}>
+                        확인
                     </Button>
                 </Modal.Footer>
             </Modal>

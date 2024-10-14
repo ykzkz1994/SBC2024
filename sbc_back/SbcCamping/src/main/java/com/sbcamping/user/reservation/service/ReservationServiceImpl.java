@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -84,14 +83,6 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservation);
 
         return reservation;
-    }
-
-    @Override
-    public Reservation get(String RES_ID) {
-
-        Optional<Reservation> result = reservationRepository.findById(Long.valueOf(RES_ID));
-
-        return result.orElseThrow();
     }
 
     @Override

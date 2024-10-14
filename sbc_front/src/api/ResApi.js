@@ -15,7 +15,6 @@ export const resAdd = async (resObj) => {
         const res = await axios.post(`${prefix}/`, resObj)
         return res.data
     } catch (error) {
-        console.log("Error while adding reservation: ", error)
         throw error;
     }
 }
