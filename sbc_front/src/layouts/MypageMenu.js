@@ -9,7 +9,7 @@ const MypageMenu = () => {
             </div>
             <div id='menubuttonwrap'>
                 <Link to={'/mypage/resdetail'} className='menubutton'>나의예약내역</Link>
-                <Link to={'/mypage/info'} className='menubutton'>회원정보수정</Link>
+                <Link to={'/mypage/authpw'} className='menubutton'>회원정보수정</Link>
             </div>
         </>
 

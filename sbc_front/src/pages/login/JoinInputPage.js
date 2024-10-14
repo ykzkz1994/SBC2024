@@ -7,6 +7,7 @@ import {emailCheck, joinPost} from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from 'react-bootstrap/Modal';
 import "../../css/join.css";
+import ListGroup from "react-bootstrap/ListGroup";
 
 
 const JoinInputPage = () => {
@@ -230,9 +231,11 @@ const JoinInputPage = () => {
 
     return (
         <div>
-            <div className={"orderbox"}>
-                <span>이용약관</span> > <span><b>정보입력</b></span> > <span>가입완료</span>
-            </div>
+            <ListGroup horizontal>
+                <ListGroup.Item>이용약관</ListGroup.Item>
+                <ListGroup.Item><b>정보입력</b></ListGroup.Item>
+                <ListGroup.Item>가입완료</ListGroup.Item>
+            </ListGroup>
             <div className={"joininputwrap"}>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {/* 이메일 */}

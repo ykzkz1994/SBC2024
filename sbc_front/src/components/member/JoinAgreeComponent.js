@@ -2,6 +2,8 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
+import "../../css/join.css";
+import ListGroup from "react-bootstrap/ListGroup";
 
 const JoinAgreeComponent = () => {
 
@@ -19,9 +21,11 @@ const JoinAgreeComponent = () => {
 
     return(
         <div>
-            <div className={"orderbox"}>
-                <span><b>이용약관</b></span> > <span>정보입력</span> > <span>가입완료</span>
-            </div>
+            <ListGroup horizontal>
+                <ListGroup.Item><b>이용약관</b></ListGroup.Item>
+                <ListGroup.Item>정보입력</ListGroup.Item>
+                <ListGroup.Item>가입완료</ListGroup.Item>
+            </ListGroup>
             <div className={"detailwrap"}>
                 <FloatingLabel controlId="floatingTextarea1" label="이용약관">
                     <Form.Control
