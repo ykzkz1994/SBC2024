@@ -36,7 +36,7 @@ public class ResServiceImpl implements ResService {
         log.info("ResServiceImpl/getAllRes-예앾전체 불러오는 메서드 끝 ");
         // ModelMapper를 사용하여 Res 엔티티를 ResDTO로 변환한 후 리스트로 반환
         return res.stream()
-                .map(reservation -> modelMapper.map(res, ResDTO.class))
+                .map(reservation -> modelMapper.map(reservation, ResDTO.class))
                 .toList();
     }
 

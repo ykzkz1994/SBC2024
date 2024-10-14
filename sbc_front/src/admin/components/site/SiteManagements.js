@@ -34,21 +34,21 @@ const SiteManagements = () => {
     const siteNameRef = useRef(null);
 
     // 데이터 불러오는 비동기 함수
-    const fetchSites = async () => {
+    const settingSites = async () => {
         try {
             //변수 data에 geSiteDataALL의 Responce.data를 할당
             const data = await getAllSites();
             //set 생성자(변수)
             setSites(data);
         } catch (err) {
-            console.error('사이트 데이터를 불러오는데 실패했습니다:', err);
+            console.error('사이트 데이터를 불러오는데 실패했습니다 SiteManagements파일 settingSites함수:', err);
             setError('사이트 데이터를 불러오는데 실패했습니다.');
         }
     };
 
     // useEffect를 사용하여 컴포넌트 마운트 시 데이터 불러오기
     useEffect(() => {
-        fetchSites();
+        settingSites();
     }, []);
 
     // **모달 창 열기 함수**

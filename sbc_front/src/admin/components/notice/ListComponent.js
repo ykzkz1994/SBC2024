@@ -30,21 +30,21 @@ const ListComponent = () => {
     const [error, setError] = useState('');
 
     // 데이터 불러오는 비동기 함수
-    const fetchNotices = async () => {
+    const settingNotices = async () => {
         try {
             //변수 data에 getAllNotices의 Responce.data를 할당
             const data = await getAllNotices();
             //set 생성자(변수)
             setNotices(data);
         } catch (err) {
-            console.error('사이트 데이터를 불러오는데 실패했습니다:', err);
-            setError('사이트 데이터를 불러오는데 실패했습니다.');
+            console.error('Notice 데이터를 불러오는데 실패했습니다:', err);
+            setError('Notice 데이터를 불러오는데 실패했습니다.');
         }
     };
 
     //useEffect를 사용하여 컴포넌트를 부를 때 최신데이터를 부르는 함수 근데 왜 안댐?
     useEffect(()=>{
-        fetchNotices();
+        settingNotices();
     },[]);
 
     return (
