@@ -1,6 +1,7 @@
 package com.sbcamping.user.camper.service;
 
 import com.sbcamping.domain.CamperBoard;
+import com.sbcamping.domain.NoticeBoard;
 import com.sbcamping.exception.NoResultsFoundException;
 import com.sbcamping.user.camper.dto.CamperBoardDTO;
 import com.sbcamping.user.camper.dto.PageRequestDTO;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,15 +35,34 @@ public class CamperServiceImpl implements CamperService {
     private final ModelMapper modelMapper;
     private final CamperRepository camperRepository;
 
-    //생성
+
     @Override
-    public Long register(CamperBoardDTO camperBoardDTO) {
-        log.info(".........");
+    public void register(String title,String content) {
+        log.info("공지 등록 메서드 시작");//디버깅
 
-        CamperBoard camperBoard = modelMapper.map(camperBoardDTO, CamperBoard.class);
-        CamperBoard savedCamperBoard = camperRepository.save(camperBoard);
+        //게시글정보를 담은 객체 생성
+        CamperBoard camperBoard = CamperBoard.builder()
+                .cBoardTitle(title)
+                .cBoardContent(content)
+                //현재시간 할당, sysdate랑 비슷한가? =>p.s/변경사항 new Date였는데
+                //LocalDateTime.now()로 변경 뉴데이트는 서버시간만 되는데 로컬데이트타임은 아마 시간 조정이 가능 한 듯?
+                .cBoardDate(LocalDate.now())
+                .cBoardViews(0L)//조회메서드가 실행 될 때마다 View가 1씩 증가하게 해놓으면 될 듯?
+                .build();
 
-        return savedCamperBoard.getCBoardID();
+        //데이터베이스 저장작업은 DB연결,제약조건위반등으로 실패 할 수 있기 때문에 예외처리를 해주는게 좋다고함
+        try {
+            //노티스 레포지토리를 이용해서 위에서 생성한 데이터를 담고있는 notice엔티티를 데이터베이스에 저장함
+            //noticeRepository.save(notice)는 noticeBoard 객체를 데이터베이스에 저장한 후, 저장된 결과를 반환
+            camperRepository.save(camperBoard);
+            log.info("공지 등록 성공");
+        } catch (Exception e) {//등록 실패처리
+
+            log.error("공지 등록 실패: {}", e.getMessage());
+            throw new RuntimeException("공지 등록 중 오류 발생", e);
+        }
+
+        log.info("공지 등록 메서드 끝");//디버깅
     }
 
     @Override

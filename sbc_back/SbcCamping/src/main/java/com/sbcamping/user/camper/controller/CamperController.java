@@ -1,5 +1,6 @@
 package com.sbcamping.user.camper.controller;
 
+import com.sbcamping.admin.notice.dto.NoticeDTO;
 import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.user.camper.dto.CamperBoardDTO;
 import com.sbcamping.user.camper.dto.PageRequestDTO;
@@ -8,8 +9,10 @@ import com.sbcamping.user.camper.service.CamperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -57,13 +60,12 @@ public class CamperController {
 
     //게시글 등록
     @PreAuthorize("ROLE_USER")
-    @PostMapping("/")
     //Map<String(컬럼명과 같은 label의 개념), Long(컬럼명에 해당하는 Long타입의 cBoardID의 값을 의미)>
-    public Map<String, Long> register(@RequestBody CamperBoardDTO camperBoardDTO){
-        log.info("CamperBoardDTO: " + camperBoardDTO);
-        Long cBoardId = camperService.register(camperBoardDTO);
-
-        return Map.of("CBoardID: ", cBoardId);
+    //공지글 생성 post입력 방식 메서드
+    @PostMapping("/")
+    public ResponseEntity<Void> registerCamper(@RequestBody @Validated CamperBoardDTO camperDTO) {
+        camperService.register(camperDTO.getCBoardTitle(), camperDTO.getCBoardContent());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //게시글 삭제

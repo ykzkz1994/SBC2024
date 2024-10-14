@@ -29,7 +29,7 @@ const ResCalendar = () => {
 
 
     // 데이터 불러오는 비동기 함수
-    const fetchSites = async () => {
+    const settingSites = async () => {
         try {
             //변수 data에 getALLSties함수의 Responce.data를 할당
             const siteData = await getAllSites();
@@ -236,6 +236,7 @@ const ResCalendar = () => {
                                 {isCurrentMonth && day.isCurrentMonth && day.date === currentDay && (
                                     <span className="text-sm text-red-500">오늘</span>
                                 )}
+
                             </div>
                             {/* 구역 목록 */}
                             <div className="flex flex-col space-y-1">

@@ -184,7 +184,7 @@ const SiteManagements = () => {
                             {/*크기 바챠2 10*/}
                             <td>{site.siteName}</td>
                             {/*크기 챠 1*/}
-                            <td>{site.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</td>
+                            <td>{site.siteResLimit ===  'Y' ?   '예약 불가능':'예약 가능'}</td>
                             {/*크기 넘버 1*/}
                             <td>{site.minPeople}</td>
                             {/*크기 넘버 1*/}
@@ -235,7 +235,7 @@ const SiteManagements = () => {
                                     type="radio"
                                     label="예약 가능"
                                     name="siteResLimit"
-                                    value="Y"
+                                    value="N"
                                     checked={newSiteValue.siteResLimit === 'N'} //디폴트가 N=가능
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
@@ -243,7 +243,7 @@ const SiteManagements = () => {
                                     type="radio"
                                     label="예약 불가능"
                                     name="siteResLimit"
-                                    value="N"
+                                    value="Y"
                                     checked={newSiteValue.siteResLimit === 'Y'} //
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
@@ -326,7 +326,7 @@ const SiteManagements = () => {
                             {/* 수정 전후의 값들을 비교하여 표시 */}
                             <p><strong>구역 번호:</strong> {selectedSite.siteId}</p>
                             <p><strong>구역 이름:</strong> {selectedSite.siteName} => {newSiteValue.siteName}</p>
-                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'} => {newSiteValue.siteResLimit === 'Y' ? '예약 가능' : '예약 불가능'}</p>
+                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ?   '예약 불가능':'예약 가능'} => {newSiteValue.siteResLimit === 'Y' ?   '예약 불가능':'예약 가능'}</p>
                             <p><strong>기준 인원:</strong> {selectedSite.minPeople} => {newSiteValue.minPeople}</p>
                             <p><strong>최대 인원:</strong> {selectedSite.maxPeople} => {newSiteValue.maxPeople}</p>
                             <p><strong>평일 요금:</strong> {selectedSite.weekdayPay ? selectedSite.weekdayPay.toLocaleString() : 0} => {newSiteValue.weekdayPay ? newSiteValue.weekdayPay.toLocaleString() : 0}</p>
