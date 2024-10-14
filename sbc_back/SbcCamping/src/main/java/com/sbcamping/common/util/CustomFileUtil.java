@@ -59,6 +59,8 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
     public ResponseEntity<Resource> getFile(String fileName) {
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
+        log.info("리소스 이름 :" + resource.getFilename());
+
         if (!resource.exists()) {
             resource = new FileSystemResource(uploadPath + File.separator + "default.jpg");
         }

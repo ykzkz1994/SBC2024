@@ -4,11 +4,14 @@ import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
+import com.sbcamping.admin.qna.dto.QnaReqDTO;
 import com.sbcamping.admin.qna.service.QnaService;
 import com.sbcamping.common.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +38,7 @@ public class QnaController {
 
     // 2. 등록 : ROLE에 따라서 게시글 또는 자주하는 질문으로 뷰에서 표시됨 -> Question_Board 공지여부 컬럼(Qboard_notice)
     @PostMapping("/")
-    public Map<String, Long> register(QnaDTO qnaDTO) {
+    public Map<String, Long> register(QnaReqDTO qnaDTO) {
         log.info("register............." + qnaDTO);
         MultipartFile file = qnaDTO.getFile();
         String uploadFileName = fileUtil.saveFile(file);
@@ -53,23 +56,20 @@ public class QnaController {
 
     // 4. 수정 (Update)
     @PutMapping("/{qbID}")
-    public Map<String, String> modify(@PathVariable("qbID") Long qbID, QnaDTO qnaDTO) {
+    public Map<String, String> modify(@PathVariable("qbID") Long qbID, QnaReqDTO qnaDTO) {
         qnaDTO.setQBoardID(qbID);
         QnaDTO oldQnaDTO = qnaService.get(qbID);
 
         if (qnaDTO.getFile() != null) {
             // 새로 업로드 할 파일
             MultipartFile newFile = qnaDTO.getFile();
-            log.info("modify.............." + newFile.getOriginalFilename());
 
             // 새로 업로드되어서 만들어진 파일 이름
             String newUploadedFileName = fileUtil.saveFile(newFile);
             qnaDTO.setQBoardAttachment(newUploadedFileName);
-            log.info("modify.............." + qnaDTO.getQBoardAttachment());
 
             // 기존 파일
             String oldUploadedFileName = oldQnaDTO.getQBoardAttachment();
-            log.info("modify.............." + oldQnaDTO);
 
             // 실제 파일 삭제
             if (oldUploadedFileName != null) {
@@ -77,7 +77,11 @@ public class QnaController {
                 log.info("삭제완료");
             }
         } else {
-            qnaDTO.setQBoardAttachment(oldQnaDTO.getQBoardAttachment());
+            if (qnaDTO.getQBoardAttachment() != null) {
+                qnaDTO.setQBoardAttachment(oldQnaDTO.getQBoardAttachment());
+            } else {
+                qnaDTO.setQBoardAttachment(null);
+            }
         }
 
         // 수정
@@ -142,5 +146,11 @@ public class QnaController {
 
        return Map.of("RESULT", "SUCCESS");
    }
+
+   // 상품 보기
+    @GetMapping("/view/{fileName}")
+    public ResponseEntity<Resource> viewFileGET(@PathVariable("fileName") String fileName) {
+        return fileUtil.getFile(fileName);
+    }
 
 }

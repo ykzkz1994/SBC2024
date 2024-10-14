@@ -87,7 +87,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if(path.startsWith("/admin/qnas")){
+        if(path.startsWith("/admin/qnas/")){
             return true;
         }
 

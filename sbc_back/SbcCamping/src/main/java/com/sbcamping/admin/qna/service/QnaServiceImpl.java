@@ -4,11 +4,13 @@ import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
+import com.sbcamping.admin.qna.dto.QnaReqDTO;
 import com.sbcamping.admin.qna.repository.QnaCommentRepository;
 import com.sbcamping.admin.qna.repository.QnaRepository;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.QuestionBoard;
 import com.sbcamping.domain.QuestionBoardComment;
+import com.sbcamping.user.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -41,13 +44,15 @@ public class QnaServiceImpl implements QnaService {
     @Autowired
     private final QnaCommentRepository qnaCommentRepository;
 
+    private final MemberRepository memberRepository;
+
     // 1. 목록 (List)
     @Transactional(readOnly = true)
     @Override
     public PageResponseDTO<QnaDTO> getList(PageRequestDTO requestDTO) {
         log.info("getList");
 
-        Pageable pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("qBoardID").descending());
+        Pageable pageable = PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize());
         Page<QuestionBoard> qnas = qnaRepository.orderdList(pageable);
 
         long totalCount = qnas.getTotalElements();
@@ -63,23 +68,40 @@ public class QnaServiceImpl implements QnaService {
 
     // 2. 등록 (Register)
     @Override
-    public Long register(QnaDTO qnaDTO) {
-        Member member = qnaDTO.getMember();
-        String memberRole = member.getMemberRole();
+    public Long register(QnaReqDTO qnaDTO) {
 
-        // 관리자가 작성할 경우 공지여부 'Y' 로 변경
-        if (memberRole.equals("ROLE_ADMIN")) {
-            qnaDTO.setQBoardNotice('Y');
-            qnaDTO.setQBoardTitle("[자주하는 질문] "+qnaDTO.getQBoardTitle());
-        } else {
-            qnaDTO.setQBoardNotice('N');
-            qnaDTO.setQBoardTitle(qnaDTO.getQBoardTitle());
+        Optional<Member> member = memberRepository.findById(qnaDTO.getMemberID());
+
+        if (member.isPresent()) {
+
+            // 관리자가 작성할 경우 공지여부 'Y' 로 변경
+            if (member.get().getMemberRole().equals("ROLE_ADMIN")) {
+                qnaDTO.setQBoardNotice('Y');
+                qnaDTO.setQBoardTitle("[자주하는 질문] " + qnaDTO.getQBoardTitle());
+            } else {
+                qnaDTO.setQBoardNotice('N');
+                qnaDTO.setQBoardTitle(qnaDTO.getQBoardTitle());
+            }
+
+            QuestionBoard questionBoard  = QuestionBoard.builder()
+                    .qBoardAttachment(qnaDTO.getQBoardAttachment())
+                    .qBoardTitle(qnaDTO.getQBoardTitle())
+                    .qBoardContent(qnaDTO.getQBoardContent())
+                    .member(member.get())
+                    .qBoardNotice(qnaDTO.getQBoardNotice())
+                    .qBoardViews(0L)
+                    .qBoardAsked('N')
+                    .qBoardDate(new Date())
+                    .build();
+
+          //  QuestionBoard qb = modelMapper.map(qnaDTO, QuestionBoard.class);
+            QuestionBoard result = qnaRepository.save(questionBoard);
+
+            return result.getQBoardID();
+
         }
 
-        QuestionBoard qb = modelMapper.map(qnaDTO, QuestionBoard.class);
-        QuestionBoard result = qnaRepository.save(qb);
-
-        return result.getQBoardID();
+        return null;
     }
 
     // 3. 상세 (Read), 조회수 변경
@@ -90,7 +112,7 @@ public class QnaServiceImpl implements QnaService {
 
         if (result.isPresent()) {
             qb = result.orElseThrow();
-            qb.changeViews(qb.getQBoardViews()+1);
+            qb.changeViews(qb.getQBoardViews() + 1);
             this.qnaRepository.save(qb);
         }
 
@@ -100,7 +122,7 @@ public class QnaServiceImpl implements QnaService {
 
     // 4. 수정 (Update)
     @Override
-    public void modify(QnaDTO qnaDTO) {
+    public void modify(QnaReqDTO qnaDTO) {
         // 1. read
         Optional<QuestionBoard> result = qnaRepository.findById(qnaDTO.getQBoardID());
         QuestionBoard qb = result.orElseThrow();
@@ -110,9 +132,21 @@ public class QnaServiceImpl implements QnaService {
         String updatedContent = qnaDTO.getQBoardContent();
         String updatedAttachment = qnaDTO.getQBoardAttachment();
 
-        if (updatedTitle != null) { qb.changeTitle(updatedTitle); } else { qb.changeTitle(qb.getQBoardTitle()); }
-        if (updatedContent != null) {qb.changeContent(updatedContent); } else { qb.changeContent(qb.getQBoardContent()); }
-        if (updatedAttachment != null) {qb.changeAttachment(updatedAttachment); } else { qb.changeAttachment(qb.getQBoardAttachment()); }
+        if (updatedTitle != null) {
+            qb.changeTitle(updatedTitle);
+        } else {
+            qb.changeTitle(qb.getQBoardTitle());
+        }
+        if (updatedContent != null) {
+            qb.changeContent(updatedContent);
+        } else {
+            qb.changeContent(qb.getQBoardContent());
+        }
+        if (updatedAttachment != null) {
+            qb.changeAttachment(updatedAttachment);
+        } else {
+            qb.changeAttachment(qb.getQBoardAttachment());
+        }
 
         qnaRepository.save(qb);
     }
@@ -131,7 +165,7 @@ public class QnaServiceImpl implements QnaService {
         Page<QuestionBoard> searchQbs = null;
 
         if (keyword != null) {
-            pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("qBoardID").descending());
+            pageable = PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("qBoardID").descending());
 
             searchQbs = switch (type) {
                 case "title" -> qnaRepository.findByqBoardTitleContaining(keyword, pageable);
@@ -140,7 +174,7 @@ public class QnaServiceImpl implements QnaService {
             };
 
         } else {
-            pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("qBoardID").descending());
+            pageable = PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(), Sort.by("qBoardID").descending());
             searchQbs = qnaRepository.orderdList(pageable);
         }
 
@@ -188,7 +222,11 @@ public class QnaServiceImpl implements QnaService {
 
         // 2. change : content, Date
         String updatedContent = qnaCommentDTO.getQCommentContent();
-        if (updatedContent != null) {qbcomm.changeContent(updatedContent); } else { qbcomm.changeContent(qbcomm.getQCommentContent()); }
+        if (updatedContent != null) {
+            qbcomm.changeContent(updatedContent);
+        } else {
+            qbcomm.changeContent(qbcomm.getQCommentContent());
+        }
 
         Date updatedDate = new Date();
         qnaCommentDTO.setQCommentDate(updatedDate);
@@ -213,10 +251,4 @@ public class QnaServiceImpl implements QnaService {
         qnaRepository.deleteById(qbcommID);
     }
 
-    // 11. 댓글 수 (Count)
-
-//    @Override
-//    public Long countByQBoardID(Long qboardID) {
-//        return qnaCommentRepository.countByQboardID(qboardID);
-//    }
 }
