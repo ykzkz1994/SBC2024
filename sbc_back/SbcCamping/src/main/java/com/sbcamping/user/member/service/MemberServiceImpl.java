@@ -1,8 +1,10 @@
 package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
+import com.sbcamping.domain.Reservation;
 import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
+import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,20 +26,52 @@ public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
 
+    private final ReservationRepository reservationRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-    // 비밀번호 인증 (회원정보 들어갈 때 사용)
+    // 예약 상태 변경
     @Override
-    public String authPw(Member member) {
-        Member memResult = memberRepository.findById(member.getMemberID()).orElse(null);
-        boolean result = passwordEncoder.matches(memResult.getMemberPw(), passwordEncoder.encode(member.getMemberPw()));
+    public void cancleRes(Long resId) {
+        Reservation res = reservationRepository.findById(resId).orElse(null);
+        res.setResStatus("예약취소");
+        res.setResCancelDate(LocalDate.now());
+        // 예약 취소 사유도 추가
+        res.setResCancelReason("그냥");
+        reservationRepository.save(res);
+    }
+
+    // 예약 내역 상세 조회
+    @Override
+    public Reservation getResDetail(Long resId) {
+        Reservation res = reservationRepository.findById(resId).orElse(null);
+        log.info("res : " + res);
+        return res;
+    }
+
+    @Override
+    public List<Reservation> getMemberRes(Long memberId) {
+        List list = reservationRepository.findByMemberId(memberId);
+        log.info("예약내역 : " + list);
+        if(list == null){
+            list.add("예약내역이 없습니다.");
+        }
+        return list;
+    }
+
+    // 비밀번호 인증 (회원정보수정 들어갈 때 사용)
+    @Override
+    public String authPw(Long memberId, String memberPw) {
+        log.info("memberId : " + memberId + " memberPw : " + memberPw);
+        Member memResult = memberRepository.findById(memberId).orElse(null);
+        boolean result = passwordEncoder.matches(memResult.getMemberPw(), memberPw);
         String msg = null;
-        if(result == false) {
+        if(result == false || memResult == null) {
             msg = "fail";
         } else{
             msg = "success";
         }
-        return "msg";
+        return msg;
     }
 
     // 회원명 + 이메일로 회원 찾기

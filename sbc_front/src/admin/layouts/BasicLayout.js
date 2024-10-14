@@ -61,7 +61,6 @@ const BasicLayout = ({ children }) => {
         </main>
 
       </>
->>>>>>> origin/main
   );
 };
 
