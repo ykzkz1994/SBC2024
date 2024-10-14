@@ -54,35 +54,3 @@ export const getOne = async (qbID) => {
     console.log(res.data);
     return res.data
 }
-
-// postAdd : 게시글 등록 (Create)
-export const postAdd = async (qna) => {
-    try {
-        const res = await axios.post(`${prefix}/`, qna, {
-            headers: {
-                'Content-Type': 'multipart/form-data' // 파일 업로드를 위한 헤더 설정
-            }
-        });
-
-        console.log(res.data);
-        return res.data;
-    } catch (error) {
-        console.error("Error posting Q&A:", error);
-        throw error; // 에러를 다시 던져서 호출하는 곳에서 처리할 수 있게 합니다.
-    }
-}
-
-// putOne : 게시글 수정(Modify)
-export const putOne = async (qbID, qna) => {
-    const header = {headers:{"Content-Type" : "multipart/form-data"}};
-    const res = await axios.put(`${prefix}/${qbID}`, qna, header)
-    return res.data;
-}
-
-// deleteOne : 게시글 삭제
-export const deleteOne = async (qbID) => {
-    const res = await axios.delete(`${prefix}/${qbID}`);
-    return res.data;
-}
-
-

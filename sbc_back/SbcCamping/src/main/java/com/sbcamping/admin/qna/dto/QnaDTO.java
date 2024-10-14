@@ -1,7 +1,6 @@
 package com.sbcamping.admin.qna.dto;
 
 import com.sbcamping.domain.Member;
-import com.sbcamping.user.member.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

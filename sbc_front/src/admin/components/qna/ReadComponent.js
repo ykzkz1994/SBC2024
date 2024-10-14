@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {deleteOne, getOne} from "../../api/qnaApi";
+import {getOne} from "../../api/qnaApi";
 import defaultImage from '../../../images/default.jpg';
-import ConfirmModal from "../util/ConfirmModal";
 
 const initState = {
     qboardID : 0,
@@ -28,32 +27,16 @@ function ReadComponent() {
 
     // 수정하기 버튼 클릭 시 호출되는 함수
     const handleModifyClick = (qbID) => {
-        navigate(`/admin/qnas/modify/${qbID}`); // 수정 페이지로 이동
+        navigate(`/qnas/modify/${qbID}`); // 수정 페이지로 이동
     };
 
     // 삭제하기 버튼 클릭 시 호출되는 함수
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [currentID, setCurrentID] = useState(null);
-
     const handleDeleteClick = (qbID) => {
-        setCurrentID(qbID);
-        setModalOpen(true);
+        // 삭제 로직 추가 (예: API 호출)
+        console.log(`${qbID}번 공지사항이 삭제되었습니다.`);
+        // 삭제 후 목록 페이지로 이동
+        navigate('/admin/qnas/list');
     };
-
-    const confirmDelete = async () => {
-        try {
-            await deleteOne(currentID);
-            alert("삭제 완료");
-            console.log(`${currentID}번 삭제되었습니다.`);
-            navigate('/admin/qnas/list');
-        } catch (error) {
-            alert("삭제 실패: " + error.message);
-            console.error("삭제 중 오류 발생:", error);
-        } finally {
-            setModalOpen(false); // 작업 후 모달 닫기
-        }
-    };
-
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
@@ -76,8 +59,8 @@ function ReadComponent() {
             </div>
 
             <div className="mb-8">
-                <div className="text-gray-700 bg-gray-100 p-4 rounded-lg"><img
-                    src={`http://localhost:8080/admin/qnas/view/${qboard.qboardAttachment}`}
+                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg"><img
+                    src={qboard.qboardAttachment}
                     alt="게시물 첨부 이미지"
                     className="rounded-lg"
                     onError={(e) => {
@@ -85,7 +68,7 @@ function ReadComponent() {
                         e.target.src = defaultImage; // 기본 이미지 경로
                     }}
                 />
-                </div>
+                </p>
             </div>
 
             <div className="mb-8">
@@ -114,13 +97,6 @@ function ReadComponent() {
                     삭제하기
                 </button>
             </div>
-            <ConfirmModal
-                isOpen={isModalOpen}
-                onRequestClose={() => setModalOpen(false)}
-                onConfirm={confirmDelete}
-                title="삭제 확인"
-                message="정말 삭제하시겠습니까?"
-            />
         </div>
     );
 }

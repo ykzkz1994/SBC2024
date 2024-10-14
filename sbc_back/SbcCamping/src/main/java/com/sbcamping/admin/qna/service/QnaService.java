@@ -4,7 +4,6 @@ import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
-import com.sbcamping.admin.qna.dto.QnaReqDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,13 +15,13 @@ public interface QnaService {
     PageResponseDTO<QnaDTO> getList(PageRequestDTO requestDTO);
 
     // 2. 등록 (Register)
-    Long register(QnaReqDTO qnaDTO);
+    Long register(QnaDTO qnaDTO);
 
     // 3. 상세 (Read), 조회수
     QnaDTO get(Long qbID);
 
     // 4. 수정 (Update)
-    void modify(QnaReqDTO qnaDTO);
+    void modify(QnaDTO qnaDTO);
 
     // 5. 삭제 (Remove)
     void remove(Long qbID);

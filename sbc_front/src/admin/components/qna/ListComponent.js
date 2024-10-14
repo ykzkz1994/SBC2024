@@ -1,73 +1,87 @@
 import useCustomMove from '../../../hooks/useCustomMove';
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { getCommentList, getList, searchBoard } from '../../api/qnaApi';
 import BootstrapPagination from "../util/BootstrapPagination";
 import BoardSearchComponent from "../util/BoardSearchComponent";
 import Table from "react-bootstrap/Table";
 import { Button } from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const initState = {
     dtoList: [],
+    pageNumList: [],
+    pageRequestDTO: null,
+    prev: false,
+    next: false,
+    totalCount: 0,
+    prevPage: 0,
+    nextPage: 0,
     totalPage: 0,
+    current: 0
 };
 
 function ListComponent(props) {
     const { page, size } = useCustomMove();
     const [serverData, setServerData] = useState(initState);
-    const [commentCounts, setCommentCounts] = useState({});
+    const [commentCounts, setCommentCounts] = useState({}); // 각 게시글의 댓글 개수 상태
     const [searchParams, setSearchParams] = useState({ type: 'name', keyword: '' });
-    const navigate = useNavigate();
-
-    const fetchData = async (page) => {
-        try {
-            const data = searchParams.keyword
-                ? await searchBoard(searchParams.type, searchParams.keyword, { page, size })
-                : await getList({ page, size });
-
-            setServerData(data);
-
-            // 댓글 수 가져오기
-            const commentCounts = await Promise.all(
-                data.dtoList.map(async (qb) => {
-                    const commentsData = await getCommentList(qb.qboardID);
-                    return { qbID: qb.qboardID, count: commentsData.length || 0 };
-                })
-            );
-
-            const countsMap = commentCounts.reduce((acc, { qbID, count }) => {
-                acc[qbID] = count;
-                return acc;
-            }, {});
-
-            setCommentCounts(countsMap);
-
-        } catch (error) {
-            console.error('API 호출 중 오류 발생:', error);
-        }
-    };
 
     useEffect(() => {
-        fetchData(page); // 페이지가 변경될 때마다 데이터 로드
+        const fetchData = async () => {
+            try {
+                // 게시물 리스트 가져오기
+                const data = searchParams.keyword
+                    ? await searchBoard(searchParams.type, searchParams.keyword, { page, size })
+                    : await getList({ page, size });
+
+                console.log(data);
+                setServerData(data);
+
+                // 댓글 갯수 가져오기
+                const commentCounts = await Promise.all(
+                    data.dtoList.map(async (qb) => {
+                        const commentsData = await getCommentList(qb.qboardID); // qbID를 사용
+                        console.log(`게시글 ID: ${qb.qboardID}의 댓글 수: ${commentsData.length}`);
+                        return { qbID: qb.qboardID, count: commentsData.length || 0 }; // 댓글이 없으면 0으로 처리
+                    })
+                );
+
+                // 댓글 개수 상태 업데이트
+                const countsMap = commentCounts.reduce((acc, { qbID, count }) => {
+                    acc[qbID] = count;
+                    return acc;
+                }, {});
+                setCommentCounts(countsMap); // 상태에 저장
+
+                console.log(`댓글 갯수:`, countsMap);
+
+            } catch (error) {
+                console.error('API 호출 중 오류 발생:', error);
+            }
+        };
+        fetchData();
     }, [page, size, searchParams]);
 
+    // 페이지네이션
+    const totalPages = serverData.totalPage; // 총 페이지 수
+
     const handlePageChange = (newPage) => {
-        // 페이지가 변경될 때 상태 업데이트
-        fetchData(newPage);
+        // 페이지 변경 시, API 호출 등 필요한 작업 수행
     };
 
     const handleSearch = (type, keyword) => {
-        setSearchParams({ type, keyword });
-        fetchData(1); // 검색 후 첫 페이지로 이동
+        setSearchParams({ type, keyword }); // 검색 파라미터 설정
     };
 
+    const navigate = useNavigate();
+
     const handleAddClick = () => {
-        navigate('/admin/qnas/add');
+        navigate('/admin/qnas/add'); // 공지 등록 페이지 경로로 이동
     };
 
     const handleReadClick = (qbID) => {
-        navigate(`/admin/qnas/read/${qbID}`);
-    };
+        navigate(`/admin/qnas/read/${qbID}`)
+    }
 
     return (
         <div>
@@ -82,7 +96,7 @@ function ListComponent(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {serverData.dtoList.map(qb => (
+                {serverData.dtoList.map(qb =>
                     <tr key={qb.qboardID}>
                         {qb.member.memberRole === "ROLE_ADMIN" ? (
                             <td>
@@ -98,24 +112,19 @@ function ListComponent(props) {
                         ) : (
                             <td>{qb.qboardID}</td>
                         )}
-                        <td onClick={() => handleReadClick(qb.qboardID)}>
-                            {qb.qboardTitle} <span style={{ fontWeight: 'bold', color: 'red' }}>{commentCounts[qb.qboardID] > 0 ? `[${commentCounts[qb.qboardID]}]` : ''}</span>
-                        </td>
+                        <td onClick={()=> handleReadClick(qb.qboardID)}>{qb.qboardTitle} <span style={{fontWeight: 'bold', color:'red'}}>{commentCounts[qb.qboardID] >0 ? `[${commentCounts[qb.qboardID]}]`: ''}</span></td>
                         <td>{qb.member.memberName}</td>
                         <td>{qb.qboardViews}</td>
-                        <td> {qb.member.memberRole === "ROLE_ADMIN" ? (
-                            ''
-                        ) : (
-                            qb.qboardAsked.trim().toUpperCase() === "Y" ? "답변완료" : "미답변"
-                        )}</td>
+                        <td>{qb.qboardAsked.trim().toUpperCase() === "Y" ? "미답변" : "답변완료"}</td>
                     </tr>
-                ))}
+                )}
                 </tbody>
             </Table>
             <Button onClick={handleAddClick}>글쓰기</Button>
+
             <BootstrapPagination
                 currentPage={page}
-                totalPages={serverData.totalPage}
+                totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
             <BoardSearchComponent onSearch={handleSearch} />
