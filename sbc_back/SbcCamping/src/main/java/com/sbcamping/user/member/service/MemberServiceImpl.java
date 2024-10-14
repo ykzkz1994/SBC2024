@@ -23,6 +23,42 @@ public class MemberServiceImpl implements MemberService{
 
     private final PasswordEncoder passwordEncoder;
 
+    // 비밀번호 인증 (회원정보 들어갈 때 사용)
+    @Override
+    public String authPw(Member member) {
+        Member memResult = memberRepository.findById(member.getMemberID()).orElse(null);
+        boolean result = passwordEncoder.matches(memResult.getMemberPw(), passwordEncoder.encode(member.getMemberPw()));
+        String msg = null;
+        if(result == false) {
+            msg = "fail";
+        } else{
+            msg = "success";
+        }
+        return "msg";
+    }
+
+    // 회원명 + 이메일로 회원 찾기
+    @Override
+    public Member findMemberByNameAndEmail(Member member) {
+        Member memResult = memberRepository.findByMemberNameAndMemberEmail(member.getMemberName(), member.getMemberEmail());
+        return memResult;
+    }
+
+    // 회원 비밀번호 변경
+    @Override
+    public String updatePw(MemberDTO memberDTO) {
+        // ID로 member 조회
+        Member member = memberRepository.findById(memberDTO.getMemberId()).orElse(null);
+        String msg = null;
+        if(memberDTO.getMemberPw() != null && memberDTO.getMemberId() != null){
+            // 비밀번호 변경
+            member.changePw(passwordEncoder.encode(memberDTO.getMemberPw()));
+            msg = "success";
+        } else{
+            msg = "fail";
+        }
+        return msg;
+    }
 
     // 이메일 찾기 (회원명 + 회원 핸드폰번호)
     @Override
@@ -46,7 +82,7 @@ public class MemberServiceImpl implements MemberService{
         memberRepository.save(member);
     }
 
-    // 이메일 중복 체크
+    // 회원가입시 이메일 중복 체크
     @Override
     public String emailCheck(String memberEmail) {
         Integer count = memberRepository.countByMemberEmail(memberEmail);
@@ -61,7 +97,7 @@ public class MemberServiceImpl implements MemberService{
 
     // 회원 정보 수정
     @Override
-    public void updateMember(Long memberID, MemberDTO memberDTO) {
+    public String updateMember(Long memberID, MemberDTO memberDTO) {
 
         // 회원번호로 회원 조회
         Member member = memberRepository.findById(memberID).get();
@@ -73,8 +109,8 @@ public class MemberServiceImpl implements MemberService{
         if(memberDTO.getMemberBirth() != null) {
             member.changeBirth(memberDTO.getMemberBirth());
         }
-        Character gen = memberDTO.getMemberGender();
-        if(gen != null) {
+        Character gender = memberDTO.getMemberGender();
+        if(gender != null) {
             member.changeGender(memberDTO.getMemberGender());
         }
         if(memberDTO.getMemberLocal() != null) {
@@ -90,6 +126,8 @@ public class MemberServiceImpl implements MemberService{
 
         // 회원정보 수정
         memberRepository.save(member);
+        String msg = "success";
+        return msg;
     }
 
     // 회원 삭제
@@ -104,6 +142,5 @@ public class MemberServiceImpl implements MemberService{
         Optional<Member> member = memberRepository.findById(memberId);
         return member.orElse(null);
     }
-
 
 }

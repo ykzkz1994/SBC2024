@@ -46,14 +46,20 @@ public class MemberController {
 
     // 비밀번호 인증
     @PostMapping("/pwAuth")
-    public void memberPwAuth(){
-
+    public Map<String, String> memberPwAuth(@RequestBody Member member){
+        String msg = memberService.authPw(member);
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", msg);
+        return map;
     }
 
     // 회원정보 수정
     @PutMapping("/{memberID}")
-    public void modifyMember(@PathVariable(name = "memberID") Long memberID, @RequestBody MemberDTO memberDTO){
-        memberService.updateMember(memberID, memberDTO);
+    public Map<String, String> modifyMember(@PathVariable(name = "memberID") Long memberID, @RequestBody MemberDTO memberDTO){
+        String msg = memberService.updateMember(memberID, memberDTO);
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", msg);
+        return map;
    }
 
     // 회원 탈퇴(삭제)
