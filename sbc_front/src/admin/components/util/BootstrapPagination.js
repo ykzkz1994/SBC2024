@@ -19,7 +19,6 @@ const BootstrapPagination = ({ currentPage, totalPages, onPageChange }) => {
                     key={index + 1}
                     active={currentPage === index + 1}
                     onClick={() => handlePageChange(index + 1)}
-                    className={currentPage === index + 1 ? 'active' : ''}
                 >
                     {index + 1}
                 </Pagination.Item>

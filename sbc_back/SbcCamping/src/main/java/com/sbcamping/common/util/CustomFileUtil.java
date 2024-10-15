@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Component
+@Component("commonFileUtil")
 @Log4j2
 @RequiredArgsConstructor
 public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
@@ -58,8 +58,6 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
     // 업로드 파일 보여주기
     public ResponseEntity<Resource> getFile(String fileName) {
         Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
-
-        log.info("리소스 이름 :" + resource.getFilename());
 
         if (!resource.exists()) {
             resource = new FileSystemResource(uploadPath + File.separator + "default.jpg");
