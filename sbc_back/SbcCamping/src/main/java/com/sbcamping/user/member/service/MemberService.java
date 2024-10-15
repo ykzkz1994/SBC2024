@@ -18,5 +18,5 @@ public interface MemberService {
     public String authPw(Long memberId, String memberPw);
     public List<Reservation> getMemberRes(Long memberId);
     public Reservation getResDetail(Long resId);
-    public void cancleRes(Long resId);
+    public void cancelRes(Long resId);
 }

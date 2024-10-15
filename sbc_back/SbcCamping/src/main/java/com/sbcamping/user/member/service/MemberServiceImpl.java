@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
 
     // 예약 상태 변경
     @Override
-    public void cancleRes(Long resId) {
+    public void cancelRes(Long resId) {
         Reservation res = reservationRepository.findById(resId).orElse(null);
         res.setResStatus("예약취소");
         res.setResCancelDate(LocalDate.now());

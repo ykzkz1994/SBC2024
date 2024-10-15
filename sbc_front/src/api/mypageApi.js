@@ -20,8 +20,8 @@ export const getResDetail = async (resId) => {
 }
 
 // 예약 취소 (상태를 예약완료 -> 예약취소로 변경)
-export const cancleRes = async (resId) => {
-    const res = await jwtAxios.put(`${host}/${resId}`);
+export const cancelRes = async (resId) => {
+    const res = await jwtAxios.put(`${host}/${resId}/cancel`);
     return res.data;
 }
 

@@ -33,10 +33,11 @@ public class MemberController {
 
 
     // 예약 상태 변경
-    @PutMapping("/{resID}")
-    public void cancleReservation(@PathVariable Long resID){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/{resID}/cancel")
+    public void cancelReservation(@PathVariable Long resID){
         log.info("에약 상태 변경 메소드 도착");
-        memberService.cancleRes(resID);
+        memberService.cancelRes(resID);
         log.info("예약 상태 변경 메소드 끝");
     }
 

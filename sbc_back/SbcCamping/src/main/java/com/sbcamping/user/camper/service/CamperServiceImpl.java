@@ -37,7 +37,10 @@ public class CamperServiceImpl implements CamperService {
     public Long register(CamperBoardDTO camperBoardDTO) {
         log.info(".........");
 
+
+
         CamperBoard camperBoard = modelMapper.map(camperBoardDTO, CamperBoard.class);
+        log.info(camperBoard.toString());
         CamperBoard savedCamperBoard = camperRepository.save(camperBoard);
 
         return savedCamperBoard.getCBoardID();

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getList, getOne } from "../../api/camperApi"; // getOne API 호출 추가
 import useCustomMove from "../../hooks/useCustomMove";
-import PageComponent from "../common/PageComponent"; // 올바른 경로로 수정
+import PageComponent from "../common/PageComponent";
+import useCustomLogin from "../../hooks/useCustomLogin"; // 올바른 경로로 수정
 
 // 초기 상태 설정
 const initState = {
@@ -19,6 +20,7 @@ const initState = {
 
 const ListComponent = () => {
     const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove(); // moveToAdd 사용
+    const { exceptionHandle } = useCustomLogin()
     const [serverData, setServerData] = useState(initState);
 
     useEffect(() => {
@@ -89,7 +91,7 @@ const ListComponent = () => {
                 {/* 등록 버튼 */}
                 <button
                     className="btn btn-primary"
-                    onClick={() => moveToAdd("/addPage")} // 클릭 시 addPage로 이동
+                    onClick={() => moveToAdd()} // 클릭 시 addPage로 이동
                 >
                     등록
                 </button>

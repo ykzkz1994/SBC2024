@@ -16,7 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CamperBoardDTO {
-    private Long cBoardID; // 필드 이름 변경
+
+    private Long cBoardID;
     private Member member; //회원번호 fk
 
     // 수정가능한 내용
@@ -27,5 +28,5 @@ public class CamperBoardDTO {
      @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate cBoardDate; //캠퍼게시판 게시글 작성일자
     private String cBoardAttachment; //파일 첨부여부(url,링크)
-     MultipartFile file;
+    MultipartFile file;
 }

@@ -1,8 +1,9 @@
 // CamperRouter.js
 import { lazy, Suspense } from "react";
 import { Navigate } from "react-router-dom";
+import Spinner from 'react-bootstrap/Spinner';
 
-const Loading = <div>Loading . . .</div>
+const Loading = <Spinner animation="border" />;
 const List = lazy(() => import("../pages/campers/ListPage"));
 const Read = lazy(() => import("../pages/campers/ReadPage"));
 const Add = lazy(() => import("../pages/campers/AddPage"));

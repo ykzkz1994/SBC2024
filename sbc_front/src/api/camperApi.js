@@ -18,8 +18,12 @@ export const getList = async (pageParam) => {
 };
 
 //추가
-export const postAdd = async (camperObj) => {
-    const res = await axios.post(`${prefix}/`, camperObj);
+export const postAdd = async (formData) => {
+    const header = {
+        header:{'Content-Type': 'multipart/form-data'}
+    }
+    const res = await axios.post(`${prefix}/`, formData, header);
+    console.log(res);
     return res.data;
 };
 

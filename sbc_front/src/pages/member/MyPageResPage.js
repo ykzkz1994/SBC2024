@@ -1,6 +1,6 @@
 import "../../css/mypage.css"
 import {useSelector} from "react-redux";
-import {cancleRes, getReservations} from "../../api/mypageApi";
+import {cancelRes, getReservations} from "../../api/mypageApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import {useEffect, useState} from "react";
 import useCustomMove from "../../hooks/useCustomMove";
@@ -44,8 +44,8 @@ const MyPageResPage = () => {
 
     function handleCancel(resId) {
         try {
-            cancleRes(resId);
-            navigate('/mypage/res')
+            cancelRes(resId);
+            window.location.reload();
         } catch (error) {
             console.log(error);
         }

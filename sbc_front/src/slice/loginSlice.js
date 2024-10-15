@@ -48,7 +48,7 @@ const loginSlice = createSlice({
 
             if(!payload.error){
                 setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
-                console.log('쿠키 저장', getCookie("memberCookie"));
+                console.log('쿠키 저장');
                 state.member.memberEmail = payload.member.memberEmail;
             }
             return state; // 기본 상태 반환

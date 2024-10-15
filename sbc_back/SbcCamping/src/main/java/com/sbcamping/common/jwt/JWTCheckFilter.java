@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +64,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
             response.setContentType("application/json");
-            response.getWriter().write(msg);
+            PrintWriter out = response.getWriter();
+            out.println(msg);
+            out.close();
         }
     }
 
@@ -75,6 +78,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(request.getMethod().equals("OPTIONS")){
             return true;
         }
+
         String path = request.getRequestURI();
         log.info("URL CHECK : {}", path);
 
@@ -88,7 +92,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if(path.startsWith("/api/campers")){
+        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/read")){
             return true;
         }
 

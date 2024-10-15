@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,7 +54,7 @@ public class CamperController {
     }
 
     // 등록
-//    @PreAuthorize("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/")
     public Map<String, Long> register(CamperBoardDTO camperBoardDTO) {
         log.info("register............." + camperBoardDTO);
@@ -65,6 +66,7 @@ public class CamperController {
         Long cBoardId = camperService.register(camperBoardDTO);
         return Map.of("RESULT", cBoardId);
     }
+
 
     // 게시글 삭제
     @DeleteMapping("/{cBoardId}")
