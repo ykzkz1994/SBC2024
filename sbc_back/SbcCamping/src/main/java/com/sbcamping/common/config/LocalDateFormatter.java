@@ -1,4 +1,4 @@
-package com.sbcamping.common.formatter;
+package com.sbcamping.common.config;
 
 import org.springframework.format.Formatter;
 

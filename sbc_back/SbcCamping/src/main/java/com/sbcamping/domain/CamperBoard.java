@@ -45,9 +45,9 @@ public class CamperBoard {
     @Temporal(TemporalType.DATE)
     private LocalDate cBoardDate;       //캠퍼게시판 게시글 작성일자
 
-    @ElementCollection // 이 애노테이션을 추가하여 List<String>을 처리
     @Column(name = "Cboard_Attachment", nullable = true, length = 200)
-    private List<String> cBoardAttachment;    //파일 첨부여부(url,링크)
+    private String cBoardAttachment;    //파일 첨부여부(url,링크)
+
     //현재날짜 입력하려 수정
    @PrePersist
 protected void onCreate() {
@@ -71,7 +71,7 @@ protected void onCreate() {
         this.cBoardContent = content;
     }
     // 첨부파일 수정
-   public void changeAttachment(List<String> attachments) {
-        this.cBoardAttachment = attachments;
+    public void changeAttachment(String attachment) {
+        this.cBoardAttachment = attachment;
     }
 }
