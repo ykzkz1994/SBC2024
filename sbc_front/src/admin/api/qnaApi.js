@@ -15,20 +15,6 @@ export const getList = async (pageParam) => {
     return res.data
 }
 
-// getCommentList : 해당 게시글의 댓글 목록 가져오기
-export const getCommentList = async (qbID) => {
-    try {
-        const res = await axios.get(`${prefix}/comments/list/${qbID}`);
-        const count = res.data ? Object.keys(res.data).length : 0; // 데이터가 있는 경우만 카운트
-        console.log(res.data);
-        console.log(`댓글 갯수 : ${count}`);
-        return res.data;
-    } catch (error) {
-        console.error('댓글 리스트 가져오기 중 오류 발생:', error);
-        return []; // 오류 발생 시 빈 배열 반환
-    }
-};
-
 // searchBoard : 게시글 검색
 export const searchBoard = async (type, keyword, pageParam) => {
     const { page, size } = pageParam;
@@ -72,6 +58,8 @@ export const postAdd = async (qna) => {
     }
 }
 
+
+
 // putOne : 게시글 수정(Modify)
 export const putOne = async (qbID, qna) => {
     const header = {headers:{"Content-Type" : "multipart/form-data"}};
@@ -85,4 +73,35 @@ export const deleteOne = async (qbID) => {
     return res.data;
 }
 
+// postCommentAdd : 댓글 등록
+export const postCommentAdd = async (qbID, qcomment) => {
+    const res = await axios.post(`${prefix}/${qbID}/comments/`, qcomment);
 
+    console.log(res.data);
+    return res.data;
+}
+// 댓글 수정
+export const updateComment = async (qcommentID, qcomment, qbID) => {
+    const res = await axios.put(`${prefix}/${qbID}/comments/${qcommentID}`, qcomment);
+    return res.data;
+};
+
+// 댓글 삭제
+export const deleteComment = async (qcommentID, qbID) => {
+    const res = await axios.delete(`${prefix}/${qbID}/comments/${qcommentID}`)
+    return res.data;
+}
+
+// getCommentList : 해당 게시글의 댓글 목록 가져오기
+export const getCommentList = async (qbID) => {
+    try {
+        const res = await axios.get(`${prefix}/${qbID}/comments/list`);
+        const count = res.data ? Object.keys(res.data).length : 0; // 데이터가 있는 경우만 카운트
+        console.log(res.data);
+        console.log(`댓글 갯수 : ${count}`);
+        return res.data;
+    } catch (error) {
+        console.error('댓글 리스트 가져오기 중 오류 발생:', error);
+        return []; // 오류 발생 시 빈 배열 반환
+    }
+};

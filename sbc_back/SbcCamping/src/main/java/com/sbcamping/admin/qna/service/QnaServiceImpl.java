@@ -3,6 +3,7 @@ package com.sbcamping.admin.qna.service;
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
+import com.sbcamping.admin.qna.dto.QnaCommentReqDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.admin.qna.dto.QnaReqDTO;
 import com.sbcamping.admin.qna.repository.QnaCommentRepository;
@@ -192,25 +193,31 @@ public class QnaServiceImpl implements QnaService {
 
     // 7. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
     @Override
-    public Long registerComment(QnaCommentDTO qnaCommentDTO) {
-        Member member = qnaCommentDTO.getMember();
-        String memberRole = member.getMemberRole();
+    public Long registerComment(QnaCommentReqDTO qnaCommentDTO, Long qbID) {
+        Optional<Member> member = memberRepository.findById(qnaCommentDTO.getMemberID());
+        Optional<QuestionBoard> qb = qnaRepository.findById(qbID);
 
-        QuestionBoard qb = qnaCommentDTO.getQBoard();
+        if (member.isPresent() && qb.isPresent()) {
 
         // 관리자가 작성할 경우 관리자 답변 여부 'Y' 로 변경, 해당 게시글 관리자 답변 여부 'Y'로 변경
-        if (memberRole.equals("ROLE_ADMIN")) {
+        if (member.get().getMemberRole().equals("ROLE_ADMIN")) {
             qnaCommentDTO.setQBoardIsAdmin('Y');
-            qb.changeAsked('Y');
-            qnaRepository.save(qb);   // 이렇게 바로 저장해도 되는건가?!
+            qb.get().changeAsked('Y');
+            qnaRepository.save(qb.get());   // 이렇게 바로 저장해도 되는건가?!
         } else {
             qnaCommentDTO.setQBoardIsAdmin('N');
         }
+            QuestionBoardComment qbcomm = QuestionBoardComment.builder()
+                    .qCommentContent(qnaCommentDTO.getQCommentContent())
+                    .qCommentDate(new Date()).member(member.get()).qBoard(qb.get())
+                    .qBoardIsAdmin(member.get().getMemberRole().equals("ROLE_ADMIN")? 'Y' : 'N').build();
 
-        QuestionBoardComment qbcomm = modelMapper.map(qnaCommentDTO, QuestionBoardComment.class);
-        QuestionBoardComment result = qnaCommentRepository.save(qbcomm);
+            QuestionBoardComment result = qnaCommentRepository.save(qbcomm);
 
-        return result.getQCommentID();
+            return result.getQCommentID();
+        }
+
+       return null;
     }
 
     // 8. 댓글 수정
@@ -219,18 +226,18 @@ public class QnaServiceImpl implements QnaService {
         // 1. read
         Optional<QuestionBoardComment> result = qnaCommentRepository.findById(qnaCommentDTO.getQCommentID());
         QuestionBoardComment qbcomm = result.orElseThrow();
+        log.info(qbcomm.getQCommentContent());
 
-        // 2. change : content, Date
+        // 2. change : content
         String updatedContent = qnaCommentDTO.getQCommentContent();
         if (updatedContent != null) {
             qbcomm.changeContent(updatedContent);
-        } else {
-            qbcomm.changeContent(qbcomm.getQCommentContent());
         }
 
-        Date updatedDate = new Date();
-        qnaCommentDTO.setQCommentDate(updatedDate);
+        // 3. update modified date
+        qbcomm.changeDate(new Date()); // 현재 날짜와 시간으로 설정
 
+        // 4. save the updated comment
         qnaCommentRepository.save(qbcomm);
     }
 
@@ -247,8 +254,18 @@ public class QnaServiceImpl implements QnaService {
 
     // 10. 댓글 삭제
     @Override
-    public void removeComment(Long qbcommID) {
-        qnaRepository.deleteById(qbcommID);
-    }
+    public void removeComment(Long qbcommID, Long qbID) {
+        Optional<QuestionBoard> qb = qnaRepository.findById(qbID);
+        Optional<QuestionBoardComment> qbcomm = qnaCommentRepository.findById(qbcommID);
 
+        if (qbcomm.isPresent() && qb.isPresent()) {
+           if (qbcomm.get().getMember().getMemberRole().equals("ROLE_ADMIN")) {
+               qb.get().changeAsked('N');
+               qnaRepository.save(qb.get());
+           }
+
+         qnaCommentRepository.deleteById(qbcommID);
+
+        }
+    }
 }

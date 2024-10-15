@@ -2,7 +2,6 @@ import useCustomMove from '../../../hooks/useCustomMove';
 import React, {useEffect, useState} from 'react';
 import {getInactiveList, searchMember} from '../../api/A_memberApi';
 import MemberSearchComponent from '../util/MemberSearchComponent';
-import DateFormatter from "../util/DateFormatter";
 import BootstrapPagination from "../util/BootstrapPagination";
 import Table from 'react-bootstrap/Table';
 
@@ -55,6 +54,14 @@ function InactiveListComponent() {
         // 데이터 요청 등 필요한 작업 수행
     };
 
+    const formatDate = (date) => {
+        const yyyy = date.getFullYear();
+        const MM = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const dd = String(date.getDate()).padStart(2, '0');
+
+        return `${yyyy}${MM}${dd}`;
+    };
+
     return (
         <div>
             <div>
@@ -81,7 +88,7 @@ function InactiveListComponent() {
                     <td>{member.memberGender}</td>
                     <td>{member.memberBirth}</td>
                     <td>{member.memberLocal}</td>
-                    <td><DateFormatter dateString={member.memberRegDate}/></td>
+                    <td>{formatDate(new Date(member.memberRegDate))}</td>
                 </tr>
             )}
            </Table>

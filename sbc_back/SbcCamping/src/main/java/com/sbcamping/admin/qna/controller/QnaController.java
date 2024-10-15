@@ -3,15 +3,18 @@ package com.sbcamping.admin.qna.controller;
 import com.sbcamping.admin.common.dto.PageRequestDTO;
 import com.sbcamping.admin.common.dto.PageResponseDTO;
 import com.sbcamping.admin.qna.dto.QnaCommentDTO;
+import com.sbcamping.admin.qna.dto.QnaCommentReqDTO;
 import com.sbcamping.admin.qna.dto.QnaDTO;
 import com.sbcamping.admin.qna.dto.QnaReqDTO;
 import com.sbcamping.admin.qna.service.QnaService;
 import com.sbcamping.common.util.CustomFileUtil;
+import com.sbcamping.domain.QuestionBoardComment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,15 +95,25 @@ public class QnaController {
 
     // 5. 삭제 (Delete)
     @DeleteMapping("/{qbID}")
+    @Transactional
     public Map<String, String> remove(@PathVariable("qbID") Long qbID) {
-        String oldFileName = qnaService.get(qbID).getQBoardAttachment();
-        // 해당 아이디의 댓글 리스트를 받아온 다음 댓글 번호들을 넣어서 서비스에서 댓글 먼저 삭제 후 글 삭제
-        // qnaService.removeComment();
+        try {
+            String oldFileName = qnaService.get(qbID).getQBoardAttachment();
+            List<QnaCommentDTO> commentResult = qnaService.commentlist(qbID);
 
-        qnaService.remove(qbID);
-        fileUtil.deleteFile(oldFileName);
+            for (QnaCommentDTO commentDTO : commentResult) {
+                log.info("Deleting comment ID: " + commentDTO.getQCommentID());
+                qnaService.removeComment(commentDTO.getQCommentID(), commentDTO.getQBoard().getQBoardID());
+            }
 
-        return Map.of("RESULT", "SUCCESS");
+            qnaService.remove(qbID);
+            fileUtil.deleteFile(oldFileName);
+
+            return Map.of("RESULT", "SUCCESS");
+        } catch (Exception e) {
+            log.error("Error during deletion: " + e.getMessage(), e);
+            throw e; // 필요에 따라 적절한 예외를 다시 던질 수 있습니다.
+        }
     }
 
     // 6. 검색
@@ -114,17 +127,17 @@ public class QnaController {
     }
 
     // 1. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
-    @PostMapping("/comments/")
-    public Map<String, Long> register(QnaCommentDTO qnaCommentDTO) {
+    @PostMapping("/{qbID}/comments/")
+    public Map<String, Long> register(@ModelAttribute QnaCommentReqDTO qnaCommentDTO, @PathVariable("qbID") Long qbID) {
 
-        Long qbcommentID = qnaService.registerComment(qnaCommentDTO);
-        return Map.of("RESULT", qbcommentID);
+        Long qbcommID = qnaService.registerComment(qnaCommentDTO, qbID);
+        return Map.of("RESULT", qbcommID);
     }
 
     // 2. 댓글 수정
-    @PutMapping("/comments/{qbcommentID}")
-    public Map<String, String> modify(@PathVariable("qbcommentID") Long qbcommentID, QnaCommentDTO qnaCommentDTO) {
-        qnaCommentDTO.setQCommentID(qbcommentID);
+    @PutMapping("/{qbID}/comments/{qcommentID}")
+    public Map<String, String> modify(@PathVariable("qcommentID") Long qcommentID, @PathVariable("qbID") Long qbID, QnaCommentDTO qnaCommentDTO) {
+        qnaCommentDTO.setQCommentID(qcommentID);
 
         // 수정
         qnaService.modifyComment(qnaCommentDTO);
@@ -133,16 +146,17 @@ public class QnaController {
     }
 
     // 3. 댓글 목록
-    @GetMapping("/comments/list/{qbID}")
+    @GetMapping("/{qbID}/comments/list")
     public List<QnaCommentDTO> commentList(@PathVariable("qbID") Long qbID) {
         return qnaService.commentlist(qbID);
     }
 
     // 4. 댓글 삭제
-   @DeleteMapping("/comments/{qbcommentID}")
-   public Map<String, String> removeComment(@PathVariable("qbcommentID") Long qbcommentID) {
+   @DeleteMapping("/{qbID}/comments/{qcommentID}")
+   @Transactional
+   public Map<String, String> removeComment(@PathVariable("qcommentID") Long qbcommentID,  @PathVariable("qbID") Long qbID) {
 
-       qnaService.removeComment(qbcommentID);
+       qnaService.removeComment(qbcommentID, qbID);
 
        return Map.of("RESULT", "SUCCESS");
    }

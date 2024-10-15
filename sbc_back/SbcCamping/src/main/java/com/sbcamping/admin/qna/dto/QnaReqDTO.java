@@ -22,5 +22,6 @@ public class QnaReqDTO {
     private Long qBoardID;
 
     MultipartFile file; // 등록, 수정 시 실제 파일 데이터가 담기는 객체
+
     private Long memberID; // 회원 : 회원 번호(FK)
 }

@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {deleteOne, getOne} from "../../api/qnaApi";
 import defaultImage from '../../../images/default.jpg';
 import ConfirmModal from "../util/ConfirmModal";
+import CommentComponent from "./CommentComponent";
 
 const initState = {
     qboardID : 0,
@@ -92,6 +93,16 @@ function ReadComponent() {
                 <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{qboard.qboardContent}</p>
             </div>
 
+            <div>
+                <hr/>
+                <label className="block text-gray-700">댓글</label>
+
+                <CommentComponent/>
+
+                {/*<ListCommentComponent/>*/}
+                {/*<hr/>*/}
+                {/*<AddCommentComponent qbID={qboard.qboardID}/>*/}
+            </div>
 
             {/* 목록으로 돌아가기, 수정하기, 삭제하기 버튼 */}
             <div className="text-right space-x-2">
