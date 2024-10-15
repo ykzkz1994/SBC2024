@@ -44,11 +44,11 @@ const loginSlice = createSlice({
         builder.addCase(loginPostAsync.fulfilled, (state, action) => {
             // 로그인 완료
             const payload = action.payload;
-            //console.log('payload 값 확인 : ', payload);
+            // console.log('payload 값 확인 : ', payload);
 
             if(!payload.error){
                 setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
-                console.log('쿠키 저장');
+                console.log('쿠키 저장', getCookie("memberCookie"));
                 state.member.memberEmail = payload.member.memberEmail;
             }
             return state; // 기본 상태 반환

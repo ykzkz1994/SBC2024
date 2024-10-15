@@ -2,6 +2,7 @@ package com.sbcamping.common.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +16,13 @@ import java.util.Map;
 public class APIRefreshController {
 
     // 리프레쉬 토큰 발급 메소드
-    @RequestMapping("/api/auth/refresh")
-    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, @RequestHeader("X-Refresh-Token") String refreshToken) {
+    @GetMapping("/api/auth/refresh")
+    public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader,
+                                       @RequestHeader("X-Refresh-Token") String refreshToken) {
+
+        log.info("Authorization Header: {}", authHeader);
+        log.info("Refresh Token Header: {}", refreshToken);
+
         if(refreshToken == null){
             throw new CustomJWTException("NULL_REFRESH_TOKEN");
         }

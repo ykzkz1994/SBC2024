@@ -6,13 +6,18 @@ const jwtAxios = axios.create();
 
 // Refresh Token
 const refreshJWT = async (accessToken, refreshToken) => {
-    const headers = {
-        "Authorization": `Bearer ${accessToken}`,
-        "X-Refresh-Token": refreshToken
-    };
-    const res = await axios.get(`http://localhost:8080/api/auth/refresh`, {headers});
-    console.log("refreshJWT-------------" + res.data);
-    return res.data;
+    try {
+        const headers = {
+            "Authorization": `Bearer ${accessToken}`,
+            "X-Refresh-Token": refreshToken
+        };
+        const res = await axios.get(`http://localhost:8080/api/auth/refresh`, {headers});
+        console.log("refreshJWT-------------" + res.data);
+        return res.data;
+    }catch (e) {
+        console.log("Error refreshing JWT:", e);
+    }
+
 }
 
 // 요청 전
@@ -49,7 +54,7 @@ const beforeResponse = async (res) => {
     if(data && data.error === "ERROR_ACCESS_TOKEN"){ // 해당 Error인 경우 리프레쉬 토큰으로 한 번 더 호출
         const memberCookieValue = JSON.parse(getCookie("memberCookie"));
 
-        const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
+        const result = await refreshJWT(memberCookieValue.access_token, memberCookieValue.refresh_token);
         console.log("refresh JWT RESULT : ", result);
 
         memberCookieValue.accessToken = result.accessToken;
