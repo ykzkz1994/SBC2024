@@ -10,7 +10,7 @@ import com.sbcamping.user.camper.dto.SearchDTO;
 import java.util.List;
 
 public interface CamperService {
-    void register(String title,String content); //등록
+    Long register(CamperBoardDTO camperBoardDTO); //등록
     CamperBoard get(Long cBoardId); //? 상세보기
     void modify(CamperBoardDTO camperBoardDTO); //수정
     void remove(Long cBoardId); //삭제
