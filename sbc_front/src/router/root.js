@@ -14,7 +14,7 @@ import camperRouter from "../admin/router/camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
 import qnaRouter from "../admin/router/qnaRouter";
 import reviewRouter from "../admin/router/reviewRouter";
-import statsRouter from "../admin/router/StatsRouter";
+import statsRouter from "../admin/router/statsRouter";
 
 const Loading = <Spinner animation="border" />;
 
