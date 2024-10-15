@@ -30,6 +30,7 @@ const MypageRouter = () => {
             element: <Suspense fallback={Loading}><AuthPw/></Suspense>
         },
 
+
     ]
 }
 
