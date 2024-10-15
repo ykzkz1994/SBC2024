@@ -54,6 +54,7 @@ function InactiveListComponent() {
         // 데이터 요청 등 필요한 작업 수행
     };
 
+    // 날짜 포맷팅
     const formatDate = (date) => {
         const yyyy = date.getFullYear();
         const MM = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1

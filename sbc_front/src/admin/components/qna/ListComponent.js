@@ -83,6 +83,15 @@ function ListComponent(props) {
         navigate(`/admin/qnas/read/${qbID}`)
     }
 
+    // 날짜 포맷팅
+    const formatDate = (date) => {
+        const yyyy = date.getFullYear();
+        const MM = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const dd = String(date.getDate()).padStart(2, '0');
+
+        return `${yyyy}${MM}${dd}`;
+    };
+
     return (
         <div>
             <Table bordered hover responsive className="text-sm">
@@ -91,6 +100,7 @@ function ListComponent(props) {
                     <th>번호</th>
                     <th>제목</th>
                     <th>작성자</th>
+                    <th>작성일</th>
                     <th>조회수</th>
                     <th>답변상태</th>
                 </tr>
@@ -114,6 +124,7 @@ function ListComponent(props) {
                         )}
                         <td onClick={()=> handleReadClick(qb.qboardID)}>{qb.qboardTitle} <span style={{fontWeight: 'bold', color:'red'}}>{commentCounts[qb.qboardID] >0 ? `[${commentCounts[qb.qboardID]}]`: ''}</span></td>
                         <td>{qb.member.memberName}</td>
+                        <td>{formatDate(new Date(qb.qboardDate))}</td>
                         <td>{qb.qboardViews}</td>
                         <td>{qb.qboardAsked.trim().toUpperCase() === "Y" ? "미답변" : "답변완료"}</td>
                     </tr>

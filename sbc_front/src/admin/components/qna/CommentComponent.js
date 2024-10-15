@@ -30,7 +30,7 @@ function CommentComponent() {
 
         const formData = new FormData();
         formData.append("qCommentContent", commentContent);
-        formData.append("memberID", "61"); // 임시 멤버 ID
+        formData.append("memberID", "87"); // 임시 멤버 ID
 
         try {
             const response = await postCommentAdd(qbID, formData); // 댓글 추가 API 호출
