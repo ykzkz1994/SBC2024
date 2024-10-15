@@ -34,7 +34,7 @@ function QnaForm() {
         formData.append("qBoardTitle", qna.qBoardTitle);
         formData.append("qBoardContent", qna.qBoardContent);
         formData.append("file", qna.file);
-        formData.append("memberID", 87);
+        formData.append("memberID", 1);
 
         try {
             await postAdd(formData);
