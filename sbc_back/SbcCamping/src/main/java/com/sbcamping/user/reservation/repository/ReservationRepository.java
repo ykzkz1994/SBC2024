@@ -32,4 +32,8 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
         """, nativeQuery = true)
     public List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date")String setDate);
 
+    // memberId를 사용하여 예약 내역 조회 (마이페이지 - 나의 예약내역)
+    @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId")
+    List<Reservation> findByMemberId(@Param("memberId") Long memberId);
+
 }
