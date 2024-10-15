@@ -2,33 +2,13 @@ import {useEffect, useState} from "react";
 import SalesComponent from "../../components/stats/SalesComponent";
 import ResRateComponent from "../../components/stats/ResRateComponent";
 import ResCancelComponent from "../../components/stats/ResCancelComponent";
-import DateSearchComponent from "../../components/stats/DateSearchComponent";
 import {getAllSites} from "../../api/SiteApi";
+import {Tab, Tabs} from "react-bootstrap";
 
-const ReservationSalesPage = () => {
-    const wrapperStyle = {
-        width: '100%',
-        height: '400px',
-        backgroundColor: '#f0f0f0',
-        border: '1px solid #ccc',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    };
+export const SiteSelect = () => {
 
-    const borderStyle = {
-        border : '2px solid #333',
-    }
-
-    const [currentComponent, setCurrentComponent] = useState('sales');
-
-    const handleButtonClick = (component) => {
-        setCurrentComponent(component);
-    }
-
-    // 사이트 전체 정보 목록을 저장하는 변수
-    const [sites, setSites] = useState([]);
+// 사이트 전체 정보 목록을 저장하는 변수
+const [sites, setSites] = useState([]);
 
 // 데이터 불러오는 비동기 함수
     const fetchSites = async () => {
@@ -47,19 +27,12 @@ const ReservationSalesPage = () => {
     }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 호출
 
     return (
-        <>
-            <h1>예약 매출 통계</h1>
-            <nav>
-
-                <button onClick={()=> handleButtonClick('sales')}>매출 현황</button>
-                <button onClick={()=> handleButtonClick('rate')}>예약률 현황</button>
-                <button onClick={()=> handleButtonClick('cancel')}>예약취소 현황</button>
-
-            </nav>
-            <div>
-                <label>
-                    사이트
+        <div>
+            <hr/>
+            <label>
+                사이트
                 <select className="siteName">
+                    <option value={"default"}>전체</option>
                     {/* value: site ID */}
                     {sites.length > 0 ? (
                         sites.map(site => (
@@ -71,13 +44,40 @@ const ReservationSalesPage = () => {
                         <option value="">사이트 데이터가 없습니다.</option>
                     )}
                 </select> </label>
-            <DateSearchComponent/>
-            </div>
-            <div className={"componentWrapper"}>
-                {currentComponent === 'sales' && <SalesComponent/>}
-                {currentComponent === 'rate' && <ResRateComponent/>}
-                {currentComponent === 'cancel' && <ResCancelComponent/>}
-            </div>
+            <hr/>
+        </div>
+    );
+}
+
+
+const ReservationSalesPage = () => {
+
+    return (
+        <>
+            <h1>예약 매출 통계</h1>
+            <nav>
+                <Tabs
+                    defaultActiveKey="sales"
+                    id="uncontrolled-tab-example"
+                    className="mb-3"
+                >
+                    <Tab eventKey="sales" title="매출 현황">
+                        <SiteSelect/>
+                        <SalesComponent/>
+                    </Tab>
+                    <Tab eventKey="rate" title="예약률 현황">
+                        <SiteSelect/>
+                        <ResRateComponent/>
+                    </Tab>
+                    <Tab eventKey="cancel" title="예약취소 현황">
+                        <SiteSelect/>
+                        <ResCancelComponent/>
+                    </Tab>
+                </Tabs>
+
+            </nav>
+
+
         </>
     );
 }

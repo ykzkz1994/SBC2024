@@ -1,3 +1,5 @@
+import DateSearchComponent from "./DateSearchComponent";
+
 const ResCancelComponent = () => {
     const wrapperStyle = {
         width: '100%',
@@ -12,6 +14,8 @@ const ResCancelComponent = () => {
 
     return (
         <>
+            <DateSearchComponent/>
+            <hr/>
             <div className={"graphWrapper"} style={wrapperStyle}>
                 예약취소 graph
             </div>

@@ -1,3 +1,5 @@
+import DateSearchComponent from "./DateSearchComponent";
+
 const ReviewComponent = () => {
     const wrapperStyle = {
         width: '100%',
@@ -12,6 +14,7 @@ const ReviewComponent = () => {
 
     return (
         <>
+            <DateSearchComponent/>
             <div style={wrapperStyle}>
                 <h3>태그별 통계</h3>
                 해당 graph
