@@ -23,8 +23,8 @@ const BasicLayout = ({children}) => {
             <Navbar bg="white" data-bs-theme="light">
                 <Container>
                     <Navbar.Brand href="/" id="logo">
-                        <img src="https://img.icons8.com/?size=100&id=81215&format=png&color=000000" alt="logo"/>Suspension
-                        Bridge Camping
+                        <img src="https://img.icons8.com/?size=80&id=81215&format=png&color=000000" alt="logo"/>
+                        <span>SUSPENSION BRIDGE CAMPING</span>
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">
