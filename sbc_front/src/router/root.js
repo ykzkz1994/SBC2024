@@ -9,7 +9,7 @@ import joinRouter from "./JoinRouter";
 import CamperRouter from "./CamperRouter";
 import {createBrowserRouter} from "react-router-dom";
 import resRouter from "../admin/router/resRouter";
-import memberRouter from "../admin/router/MemberRouter";
+import memberRouter from "../admin/router/memberRouter";
 import camperRouter from "../admin/router/camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
 import qnaRouter from "../admin/router/qnaRouter";
