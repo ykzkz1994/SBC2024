@@ -96,6 +96,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/admin/site")) {
+            return true;
+        }
+
         if(path.startsWith("/admin")){
             return true;
         }
@@ -111,7 +115,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(path.startsWith("/notice")){
             return true;
         }
-
+        //상호 노티스 예외
+        if(path.startsWith("/site")){
+            return true;
+        }
 
 
         return false;

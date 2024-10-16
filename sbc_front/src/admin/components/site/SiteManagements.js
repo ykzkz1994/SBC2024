@@ -2,8 +2,12 @@
 
 import React, {useState, useRef, useEffect} from 'react';
 import Table from 'react-bootstrap/Table';
-import { Button, Modal, Form } from 'react-bootstrap';
+import {Button, Modal, Form} from 'react-bootstrap';
 import {getAllSites, updateSiteData} from "../../api/SiteApi"; // API 모듈에서 함수 가져오기
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaQuestionCircle } from 'react-icons/fa';
+/*import Spinner from 'react-bootstrap/Spinner';*/ //생각보다 사용감이 구림
+
 
 // 최대,최소 허용 인원 수를 상수로 선언
 const maxLimitPeople = 6;
@@ -86,15 +90,15 @@ const SiteManagements = () => {
     // **입력 필드 변경 처리 함수 - 텍스트 필드**
     // 텍스트 기반 입력 필드의 값 변경을 처리합니다.
     const handleTextChange = (e) => {
-        const { name, value } = e.target;
-        setNewSiteValue((prev) => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setNewSiteValue((prev) => ({...prev, [name]: value}));
         setError(''); // 입력 변경 시 에러 메시지를 초기화
     };
 
     // **입력 필드 변경 처리 함수 - 숫자 필드**
     // 숫자 기반 입력 필드의 값 변경을 처리하고 검증합니다.
     const handleNumberChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         const numberValue = Number(value);
 
         // 'maxPeople' 필드의 경우 최대 인원 제한을 검증합니다.
@@ -103,14 +107,14 @@ const SiteManagements = () => {
             return; // 검증 실패 시 함수 종료
         }
 
-        setNewSiteValue((prev) => ({ ...prev, [name]: numberValue }));
+        setNewSiteValue((prev) => ({...prev, [name]: numberValue}));
         setError(''); // 입력 변경 시 에러 메시지를 초기화
     };
 
     // **입력 필드 변경 처리 함수 - 요금 필드**
     // 요금 입력 필드의 값 변경을 처리하고 숫자로 변환합니다.
     const handleRateChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         // 입력된 값에서 쉼표를 제거하여 숫자만 추출
         const numericValue = value.replace(/,/g, '');
@@ -139,7 +143,7 @@ const SiteManagements = () => {
             // 로컬 상태 업데이트
             setSites((prevSites) =>
                 prevSites.map((site) =>
-                    site.siteId === selectedSite.siteId ? { ...site, ...updatedSite } : site
+                    site.siteId === selectedSite.siteId ? {...site, ...updatedSite} : site
                 )
             );
             setSecondModal(false); // 수정 확인 모달 창을 숨김
@@ -163,14 +167,14 @@ const SiteManagements = () => {
             <Table bordered hover responsive className="text-sm">
                 <thead>
                 <tr className="bg-green-200">
-                    <th style={{ minWidth: '80px', maxWidth: '100px' }}>구역 번호</th>
-                    <th style={{ minWidth: '100px', maxWidth: '150px' }}>구역 이름</th>
-                    <th style={{ minWidth: '80px', maxWidth: '120px' }}>예약 제한</th>
-                    <th style={{ minWidth: '80px', maxWidth: '120px' }}>기준 인원</th>
-                    <th style={{ minWidth: '80px', maxWidth: '120px' }}>최대 인원</th>
-                    <th style={{ minWidth: '120px', maxWidth: '160px' }}>평일 요금</th>
-                    <th style={{ minWidth: '120px', maxWidth: '160px' }}>주말 요금</th>
-                    <th style={{ minWidth: '120px', maxWidth: '160px' }}>요금표 설정</th>
+                    <th style={{minWidth: '20px', maxWidth: '100px'}}>구역 번호</th>
+                    <th style={{minWidth: '100px', maxWidth: '150px'}}>구역 이름</th>
+                    <th style={{minWidth: '80px', maxWidth: '120px'}}>예약 제한</th>
+                    <th style={{minWidth: '80px', maxWidth: '120px'}}>기준 인원</th>
+                    <th style={{minWidth: '80px', maxWidth: '120px'}}>최대 인원</th>
+                    <th style={{minWidth: '120px', maxWidth: '160px'}}>평일 요금</th>
+                    <th style={{minWidth: '120px', maxWidth: '160px'}}>주말 요금</th>
+                    <th style={{minWidth: '120px', maxWidth: '160px'}}>요금표 설정</th>
                 </tr>
                 </thead>
                 {/* sites 배열을 순회하여 각 구역의 정보를 테이블에 표시 */}
@@ -184,7 +188,7 @@ const SiteManagements = () => {
                             {/*크기 바챠2 10*/}
                             <td>{site.siteName}</td>
                             {/*크기 챠 1*/}
-                            <td>{site.siteResLimit ===  'Y' ?   '예약 불가능':'예약 가능'}</td>
+                            <td>{site.siteResLimit === 'Y' ? '예약 불가능' : '예약 가능'}</td>
                             {/*크기 넘버 1*/}
                             <td>{site.minPeople}</td>
                             {/*크기 넘버 1*/}
@@ -194,16 +198,24 @@ const SiteManagements = () => {
                             {/*크기 넘버10*/}
                             <td>{site.weekendPay ? site.weekendPay.toLocaleString() : 0}</td>
                             <td>
-                                <Button variant="secondary" onClick={() => handleShowModal(site)}>
+                                <Button
+                                    variant="outline-warning" //호버시 노랑색
+                                    onClick={() => handleShowModal(site)}
+                                    style={{width: '100%', color: 'black'}}//td에 꽉채우기,텍스트 컬러설정
+                                >
                                     수정하기
                                 </Button>
                             </td>
+
                         </tr>
                     ))
                 ) : (
-                    <tr>
-                        <td colSpan="8">Loading...</td>
-                    </tr>
+                  /*  <Spinner animation="border" role="status">
+                        <td className="visually-hidden">Loading...</td>
+                    </Spinner>*/ //생각보다 사용감이 많이 구림
+                    <td>
+                        Loding...
+                    </td>
                 )}
                 </tbody>
             </Table>
@@ -217,8 +229,18 @@ const SiteManagements = () => {
                     {selectedSite && (
                         <div>
                             {/* **구역 이름 입력 필드** */}
-                            <Form.Group className="mb-3">
-                                <Form.Label>구역 이름</Form.Label> {/*바챠2 10*/}
+                            <Form.Group className="mb-3 d-inline">
+                                <Form.Label>구역 이름
+                                    <OverlayTrigger
+                                        placement="right"
+                                        overlay={<Tooltip id="tooltip-siteName">구역 이름을 입력하세요. <div>최대 10자</div></Tooltip>}
+                                    >
+                                        <p className="ms-2 d-inline">
+                                            <FaQuestionCircle style={{cursor: 'pointer', color: '#006000'}}/>
+                                        </p>
+                                    </OverlayTrigger>
+                                </Form.Label> {/*바챠2 10*/}{/*마우스 호버시 툴팁 or 라벨 옆 문구 고민중 */}
+
                                 <Form.Control
                                     type="text"
                                     name="siteName"
@@ -227,6 +249,8 @@ const SiteManagements = () => {
                                     ref={siteNameRef} // 자동 포커스를 위한 참조 설정
                                 />
                             </Form.Group>
+
+                            <br/>
 
                             {/* **예약 제한 라디오 버튼** */}
                             <Form.Group className="mb-3">
@@ -251,7 +275,16 @@ const SiteManagements = () => {
 
                             {/* **기준 인원 입력 필드** */}
                             <Form.Group className="mb-3">
-                                <Form.Label>기준 인원</Form.Label>
+                                <Form.Label>기준 인원
+                                    <OverlayTrigger
+                                        placement="right"
+                                        overlay={<Tooltip id="tooltip-siteName">최대 인원을 초과 할 수 없음</Tooltip>}
+                                    >
+                                        <p className="ms-2 d-inline">
+                                            <FaQuestionCircle style={{cursor: 'pointer', color: '#006000'}}/>
+                                        </p>
+                                    </OverlayTrigger>
+                                </Form.Label>
                                 <Form.Control
                                     type="number"
                                     name="minPeople"
@@ -264,7 +297,16 @@ const SiteManagements = () => {
 
                             {/* **최대 인원 입력 필드** */}
                             <Form.Group className="mb-3">
-                                <Form.Label>최대 인원</Form.Label>
+                                <Form.Label>최대 인원
+                                    <OverlayTrigger
+                                        placement="right"
+                                        overlay={<Tooltip id="tooltip-siteName">{maxLimitPeople}을 초과 할 수 없음</Tooltip>}
+                                    >
+                                        <p className="ms-2 d-inline">
+                                            <FaQuestionCircle style={{cursor: 'pointer', color: '#006000'}}/>
+                                        </p>
+                                    </OverlayTrigger>
+                                </Form.Label>
                                 <Form.Control
                                     type="number"
                                     name="maxPeople"
@@ -304,11 +346,11 @@ const SiteManagements = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     {/* **취소 버튼** */}
-                    <Button variant="secondary" onClick={handleCloseModal}>
+                    <Button variant="outline-primary" onClick={handleCloseModal}>
                         취소
                     </Button>
                     {/* **저장 버튼** */}
-                    <Button variant="primary" onClick={handleSaveChanges}>
+                    <Button variant="outline-primary" onClick={handleSaveChanges}>
                         저장
                     </Button>
                 </Modal.Footer>
@@ -326,11 +368,17 @@ const SiteManagements = () => {
                             {/* 수정 전후의 값들을 비교하여 표시 */}
                             <p><strong>구역 번호:</strong> {selectedSite.siteId}</p>
                             <p><strong>구역 이름:</strong> {selectedSite.siteName} => {newSiteValue.siteName}</p>
-                            <p><strong>예약 제한:</strong> {selectedSite.siteResLimit === 'Y' ?   '예약 불가능':'예약 가능'} => {newSiteValue.siteResLimit === 'Y' ?   '예약 불가능':'예약 가능'}</p>
+                            <p><strong>예약
+                                제한:</strong> {selectedSite.siteResLimit === 'Y' ? '예약 불가능' : '예약 가능'} => {newSiteValue.siteResLimit === 'Y' ? '예약 불가능' : '예약 가능'}
+                            </p>
                             <p><strong>기준 인원:</strong> {selectedSite.minPeople} => {newSiteValue.minPeople}</p>
                             <p><strong>최대 인원:</strong> {selectedSite.maxPeople} => {newSiteValue.maxPeople}</p>
-                            <p><strong>평일 요금:</strong> {selectedSite.weekdayPay ? selectedSite.weekdayPay.toLocaleString() : 0} => {newSiteValue.weekdayPay ? newSiteValue.weekdayPay.toLocaleString() : 0}</p>
-                            <p><strong>주말 요금:</strong> {selectedSite.weekendPay ? selectedSite.weekendPay.toLocaleString() : 0} => {newSiteValue.weekendPay ? newSiteValue.weekendPay.toLocaleString() : 0}</p>
+                            <p><strong>평일
+                                요금:</strong> {selectedSite.weekdayPay ? selectedSite.weekdayPay.toLocaleString() : 0} => {newSiteValue.weekdayPay ? newSiteValue.weekdayPay.toLocaleString() : 0}
+                            </p>
+                            <p><strong>주말
+                                요금:</strong> {selectedSite.weekendPay ? selectedSite.weekendPay.toLocaleString() : 0} => {newSiteValue.weekendPay ? newSiteValue.weekendPay.toLocaleString() : 0}
+                            </p>
                         </div>
                     )}
                 </Modal.Body>
@@ -338,12 +386,12 @@ const SiteManagements = () => {
                 <Modal.Footer>
 
                     {/* **취소 버튼** */}
-                    <Button variant="secondary" onClick={() => setSecondModal(false)}>
+                    <Button variant="outline-secondary" onClick={() => setSecondModal(false)}>
                         취소
                     </Button>
 
                     {/* **최종 수정 버튼** */}
-                    <Button variant="primary" onClick={handleFinalSave}>
+                    <Button variant="outline-primary" onClick={handleFinalSave}>
                         최종 수정
                     </Button>
                 </Modal.Footer>

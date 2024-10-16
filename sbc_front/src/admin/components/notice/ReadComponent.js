@@ -15,6 +15,16 @@ const ReadComponent = () => {
     const [views, setViews] = useState(0); // 조회수
     const [error, setError] = useState(''); // 오류 메시지 상태 관리
 
+    // 날짜형식 변환 함수  이걸로 날짜를 감싸주면 형변환 됨
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}년 ${mm}월 ${dd}일`;
+    };
+
+
     // 공지사항 데이터를 가져오는 함수
     const getNotice = async (id) => {
         try {
@@ -80,7 +90,7 @@ const ReadComponent = () => {
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
                 <h2 className="text-2xl font-bold">공지사항 - #{nid}번</h2> {/* 글 번호 표시 */}
                 <div>
-                    <p className="text-gray-500 mb-1">작성 시간: {createdAt}</p>
+                    <p className="text-gray-500 mb-1">작성 시간: {formatDate(createdAt)}</p>
                     <p className="text-gray-500">조회수: {views}</p> {/* 조회수 표시 */}
                 </div>
             </div>
