@@ -59,9 +59,7 @@ const BasicLayout = ({ children }) => {
             {children}
           </Container>
         </main>
-
       </>
->>>>>>> origin/main
   );
 };
 

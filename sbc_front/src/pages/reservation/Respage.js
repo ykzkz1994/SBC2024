@@ -36,6 +36,7 @@ const Respage = () => {
 
     // 날짜 상태 관리
     const [checkinDate, setCheckinDate] = useState('');
+    const [checkoutDate, setCheckoutDate] = useState('');
 
     // 모달 상태 관리
     const [firstShow, firstSetShow] = useState(false);
@@ -45,6 +46,8 @@ const Respage = () => {
     // check 상태를 동적으로 변경
     const checkRef = useRef();
     const [isChecked, setIsChecked] = useState(false);
+
+    // 입실날짜 퇴실날짜 상태 저장
 
     // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
     useEffect(() => {
@@ -70,6 +73,10 @@ const Respage = () => {
     const handleChangeRes = (e) => {
         const {name, value} = e.target;
 
+        // 날짜를 먼저 임시로 설정
+        let newCheckinDate = checkinDate;
+        let newCheckoutDate = checkoutDate;
+
         const newValue = name === 'resPeople' ? parseInt(value) : value;
 
         // checkinDate와 checkoutDate는 별도로 처리
@@ -84,6 +91,9 @@ const Respage = () => {
                 [name]: newValue,
             }));
         }
+
+
+
     };
 
     // 모달 false true 함수
@@ -103,7 +113,20 @@ const Respage = () => {
 
     // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
-        console.log(res);
+        const checkinDate = new Date(res.checkinDate)
+        const checkOutDate = new Date(res.checkoutDate)
+        
+        console.log(res)
+
+        if (checkinDate > checkOutDate) {
+            firstSetShow(false)
+            alert("퇴실 날짜를 다시 확인해주세요")
+            return;
+        } else if (checkinDate.getTime() === checkOutDate.getTime()) {
+            firstSetShow(false)
+            alert("입실 날짜가 퇴실 날짜와 같을 수 없습니다.")
+            return;
+        }
         resAdd(res)
             .then(result => {
                 firstSetShow(false)
@@ -237,7 +260,11 @@ const Respage = () => {
                         퇴실날짜
                     </Form.Label>
                     <Col sm="10">
-                        <Form.Control type="date" name="checkoutDate" onChange={handleChangeRes}/>
+                        <Form.Control
+                            type="date"
+                            name="checkoutDate"
+                            onChange={handleChangeRes}
+                        />
                     </Col>
                 </Form.Group>
 

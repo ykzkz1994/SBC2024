@@ -30,6 +30,6 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
             from date_range
             where date_seq = to_date(:date, 'YYYY-MM-DD')
         """, nativeQuery = true)
-    public List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date")String setDate);
+    List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date") String setDate);
 
 }
