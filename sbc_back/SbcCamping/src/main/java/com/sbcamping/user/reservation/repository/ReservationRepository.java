@@ -18,6 +18,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
                         checkin_date + (level - 1) as date_seq
                 from reservation
                 where site_id = :siteId
+                AND RES_STATUS = '예약완료'
                 connect by level <= checkout_date - checkin_date + 1
                         AND prior res_id = res_id
                         AND prior dbms_random.value is not null

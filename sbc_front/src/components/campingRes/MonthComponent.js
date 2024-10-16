@@ -9,47 +9,13 @@ import {useSelector} from "react-redux";
 
 const MonthComponent = () => {
 
-    const initState = {
-        0: {
+    const initState = {};
+
+    for (let i = 0; i < 10; i++) {
+        initState[i]  = {
             siteID: 0,
             siteName: ''
-        },
-        1: {
-            siteID: 0,
-            siteName: ''
-        },
-        2: {
-            siteID: 0,
-            siteName: ''
-        },
-        3: {
-            siteID: 0,
-            siteName: ''
-        },
-        4: {
-            siteID: 0,
-            siteName: ''
-        },
-        5: {
-            siteID: 0,
-            siteName: ''
-        },
-        6: {
-            siteID: 0,
-            siteName: ''
-        },
-        7: {
-            siteID: 0,
-            siteName: ''
-        },
-        8: {
-            siteID: 0,
-            siteName: ''
-        },
-        9: {
-            siteID: 0,
-            siteName: ''
-        },
+        }
     }
 
     const [site, setSite] = useState(initState);
@@ -113,8 +79,8 @@ const MonthComponent = () => {
         }
     }, [direction, year, month]);
 
+    // 날짜 비교 : 현재 날짜보다 과거인지 확인
     const isPastDate = (setYear, setMonth, setDay) => {
-        // 날짜 비교 : 현재 날짜보다 과거인지 확인
         if (setYear < currentYear) return true;
         if (setYear === currentYear && setMonth < currentMonth) return true;
         if (setYear === currentYear && setMonth === currentMonth && setDay < currentDay) return true;
@@ -180,6 +146,7 @@ const MonthComponent = () => {
         }
 
         setCalendar(weeks);
+
     }, [year, month]);
 
     return (
@@ -233,12 +200,14 @@ const MonthComponent = () => {
                         {week.map((dayInfo, j) => {
                             const isPast = isPastDate(dayInfo.year, dayInfo.month, dayInfo.day);
 
+                            const currentDate = new Date(year, month - 1, dayInfo.day);
+                            const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
+
                             if (dayInfo.day) {
                                 return (
                                     <td key={j} style={{
                                         backgroundColor: isPast ? "lightgray" : "white"
                                     }}>
-                                        {/* 여기 부분 조건 설정 하면 될듯? */}
                                         <div>
                                             {dayInfo.month > month || dayInfo.year > year
                                                 ? `${dayInfo.month}/${dayInfo.day}`
@@ -261,7 +230,7 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[0].siteId,
-                                                            siteName: site[0].siteName
+                                                            siteName: site[0].siteName,
                                                         }}
                                                     >
                                                         {site[0].siteName}
@@ -279,7 +248,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[1].siteId,
-                                                            siteName: site[1].siteName
+                                                            siteName: site[1].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[1].siteName}
@@ -297,7 +267,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[2].siteId,
-                                                            siteName: site[2].siteName
+                                                            siteName: site[2].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[2].siteName}
@@ -315,7 +286,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[3].siteId,
-                                                            siteName: site[3].siteName
+                                                            siteName: site[3].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[3].siteName}
@@ -333,7 +305,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[4].siteId,
-                                                            siteName: site[4].siteName
+                                                            siteName: site[4].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[4].siteName}
@@ -351,7 +324,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[5].siteId,
-                                                            siteName: site[5].siteName
+                                                            siteName: site[5].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[5].siteName}
@@ -369,7 +343,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[6].siteId,
-                                                            siteName: site[6].siteName
+                                                            siteName: site[6].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[6].siteName}
@@ -387,7 +362,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[7].siteId,
-                                                            siteName: site[7].siteName
+                                                            siteName: site[7].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[7].siteName}
@@ -405,7 +381,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[8].siteId,
-                                                            siteName: site[8].siteName
+                                                            siteName: site[8].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[8].siteName}
@@ -423,7 +400,8 @@ const MonthComponent = () => {
                                                             memberPhone: loginState.member.memberPhone,
                                                             memberEmail: loginState.member.memberEmail,
                                                             siteId: site[9].siteId,
-                                                            siteName: site[9].siteName
+                                                            siteName: site[9].siteName,
+                                                            price: isWeekend ? 80000 : 40000,
                                                         }}
                                                     >
                                                         {site[9].siteName}
@@ -431,8 +409,7 @@ const MonthComponent = () => {
                                                 </>
                                             )}
                                     </td>
-                                )
-                                    ;
+                                );
                             } else {
                                 // 공백일경우
                                 return <td key={j} style={{

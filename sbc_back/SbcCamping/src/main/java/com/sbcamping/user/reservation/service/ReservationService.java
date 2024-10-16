@@ -15,6 +15,6 @@ public interface ReservationService {
     Reservation register(ReservationDTO ReservationDTO);
     List<Site> getSite();
     List<Member> getMember();
-
+    List<Object[]> getResCheck();
 
 }

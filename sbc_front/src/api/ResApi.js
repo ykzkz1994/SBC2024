@@ -18,3 +18,5 @@ export const resAdd = async (resObj) => {
         throw error;
     }
 }
+
+// export const resCheck = async ()

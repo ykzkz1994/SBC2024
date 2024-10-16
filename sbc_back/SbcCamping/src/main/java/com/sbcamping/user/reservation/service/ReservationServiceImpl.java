@@ -5,7 +5,9 @@ import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.domain.Site;
 import com.sbcamping.user.member.repository.MemberRepository;
+import com.sbcamping.user.reservation.dto.ResCheckDTO;
 import com.sbcamping.user.reservation.dto.ReservationDTO;
+import com.sbcamping.user.reservation.dto.SiteDTO;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -96,6 +98,18 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Member> getMember() {
 
         return memberRepository.findAll();
+    }
+
+    @Override
+    public List<Object[]> getResCheck() {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        Long siteId = reservationDTO.getSite().getSiteId();
+
+        ResCheckDTO resCheckDTO = ResCheckDTO.builder()
+                .date(reservationDTO.getCheckinDate())
+                .build();
+
+        return reservationRepository.getReservations(siteId, String.valueOf(resCheckDTO));
     }
 
 }
