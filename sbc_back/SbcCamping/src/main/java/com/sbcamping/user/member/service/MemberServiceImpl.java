@@ -49,6 +49,7 @@ public class MemberServiceImpl implements MemberService{
         return res;
     }
 
+    // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
         List list = reservationRepository.findByMemberId(memberId);
@@ -64,32 +65,33 @@ public class MemberServiceImpl implements MemberService{
     public String authPw(Long memberId, String memberPw) {
         log.info("memberId : " + memberId + " memberPw : " + memberPw);
         Member memResult = memberRepository.findById(memberId).orElse(null);
-        boolean result = passwordEncoder.matches(memResult.getMemberPw(), memberPw);
+        String password = memResult.getMemberPw();
+        boolean result = passwordEncoder.matches(memberPw, password);
         String msg = null;
         if(result == false || memResult == null) {
             msg = "fail";
-        } else{
+        } else if(result){
             msg = "success";
         }
         return msg;
     }
 
-    // 회원명 + 이메일로 회원 찾기
+    // 회원명 + 이메일로 회원 찾기 (비밀번호 찾기 1)
     @Override
     public Member findMemberByNameAndEmail(Member member) {
         Member memResult = memberRepository.findByMemberNameAndMemberEmail(member.getMemberName(), member.getMemberEmail());
         return memResult;
     }
 
-    // 회원 비밀번호 변경
+    // 회원 비밀번호 변경 (비밀번호 찾기 2)
     @Override
-    public String updatePw(MemberDTO memberDTO) {
+    public String updatePw(Member mem) {
         // ID로 member 조회
-        Member member = memberRepository.findById(memberDTO.getMemberId()).orElse(null);
+        Member member = memberRepository.findById(mem.getMemberID()).orElse(null);
         String msg = null;
-        if(memberDTO.getMemberPw() != null && memberDTO.getMemberId() != null){
+        if(member.getMemberPw() != null && member.getMemberEmail() != null){
             // 비밀번호 변경
-            member.changePw(passwordEncoder.encode(memberDTO.getMemberPw()));
+            member.changePw(passwordEncoder.encode(member.getMemberPw()));
             msg = "success";
         } else{
             msg = "fail";

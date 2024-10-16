@@ -2,9 +2,10 @@ package com.sbcamping.user.member.controller;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.user.member.dto.MemberDTO;
-import com.sbcamping.user.member.service.MemberServiceImpl;
+import com.sbcamping.user.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private MemberServiceImpl memberService;
+    private MemberService memberService;
 
     // 이메일 중복체크 (구조명세서 변경하기)
     @GetMapping("/emailcheck")
@@ -41,24 +42,17 @@ public class LoginController {
     // 일치하는 회원이 있는 경우 modify 문자열을 전송해서 비밀번호 변경할 수 있게 하기
     // 회원정보 front에서도 저장하여 비밀번호 변경 때 회원정보 전송할 수 있게 하기
     @PostMapping("/findpw")
-    public Map<String,String> findMemberByNameAndEmail(@RequestBody Member member){
+    public ResponseEntity<Member> findMemberByNameAndEmail(@RequestBody Member member){
         log.info("--------------비밀번호 찾기 메소드");
         Member memResult = memberService.findMemberByNameAndEmail(member);
-        Map<String,String> map = new HashMap<>();
-        if(memResult != null){
-            map.put("memberID",memResult.getMemberID().toString());
-            map.put("result", "exist");
-        } else {
-            map.put("result", "not_exist");
-        }
-        return map;
+        return ResponseEntity.ok(memResult);
     }
 
     // 비밀번호 변경
-    @PostMapping("/modifypw")
-    public Map<String, String> modifyPw(@RequestBody MemberDTO memberDTO){
-        log.info("----------------비밀번호 변경 메소드");
-        String msg = memberService.updatePw(memberDTO);
+    @PostMapping("/modpw")
+    public Map<String, String> modifyPw(@RequestBody Member member){
+        log.info("----------------비밀번호 변경 메소드", member);
+        String msg = memberService.updatePw(member);
         HashMap<String,String> map = new HashMap<>();
         map.put("msg",msg);
         return map;

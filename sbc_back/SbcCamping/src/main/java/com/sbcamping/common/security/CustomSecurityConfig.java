@@ -43,6 +43,7 @@ public class CustomSecurityConfig {
             form.failureHandler(new APILoginFailHandler());
         });
 
+
         // JWT 체크
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
 

@@ -46,7 +46,6 @@ const FindEmailPage = () => {
 
     // '이메일 찾기' 버튼 눌렀을 때 동작 (핸드폰 번호 유효성 확인)
     const handleSubmit = (e) => {
-        console.log("확인 : ", member);
 
         if(!member.memberName){
             alert('이름을 입력해주세요')
@@ -86,7 +85,7 @@ const FindEmailPage = () => {
                 </>)
                 setModalShow(true)
             } else {
-                console.log('------', action.memberEmail);
+                console.log('동작완료------', action.memberEmail);
                 setEmailResult(action.memberEmail);
                 setModalShow(true)
             }

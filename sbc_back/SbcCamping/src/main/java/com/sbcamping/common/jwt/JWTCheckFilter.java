@@ -83,7 +83,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         log.info("URL CHECK : {}", path);
 
         // api/auth/ 경로의 호출은 체크하지 않음 (로그인할 때는 JWT 토큰이 없는 상태이기에 하는 설정)
-        if(path.startsWith("/api/auth/")){
+        if(path.startsWith("/api/auth")){
             return true;
         }
 
@@ -92,7 +92,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/read")){
+        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/")){
             return true;
         }
 

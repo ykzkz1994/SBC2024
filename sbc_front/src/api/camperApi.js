@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
 //서버 주소
 export const API_SERVER_HOST = 'http://localhost:8080';
 
@@ -22,7 +23,7 @@ export const postAdd = async (formData) => {
     const header = {
         header:{'Content-Type': 'multipart/form-data'}
     }
-    const res = await axios.post(`${prefix}/`, formData, header);
+    const res = await jwtAxios.post(`${prefix}/`, formData, header);
     console.log(res);
     return res.data;
 };
