@@ -60,10 +60,10 @@ const ListComponent = () => {
 
             {/* 공지사항 목록을 보여주는 테이블 */}
             <table className="min-w-full bg-white">
-                <thead>
+                <thead className="bg-gray-400">
                 <tr>
                     {/* 테이블 헤더 */}
-                    <th className="w-1/6 px-4 py-2 border-b-2 border-gray-300 text-left">번호</th>
+                    <th className="w-1/6 px-4 py-2 border-b-2 border-gray-300 text-left">NO</th>
                     <th className="w-1/2 px-4 py-2 border-b-2 border-l border-gray-300 text-left">제목</th>
                     <th className="w-1/6 px-4 py-2 border-b-2 border-l border-gray-300 text-left">작성일</th>
                     <th className="w-1/6 px-4 py-2 border-b-2 border-l border-gray-300 text-left">조회수</th>
