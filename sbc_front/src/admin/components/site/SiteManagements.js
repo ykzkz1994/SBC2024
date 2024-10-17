@@ -151,6 +151,8 @@ const SiteManagements = () => {
             setNewSiteValue({}); // 수정된 값 초기화
             setError(''); // 에러 메시지 초기화
             alert("수정 성공");
+            //비동기식으로 정보를 다시 불러옴
+            await settingSites();
         } catch (error) {
             console.error('수정에 실패했습니다:', error);
             setError('수정에 실패했습니다. 다시 시도해주세요.');

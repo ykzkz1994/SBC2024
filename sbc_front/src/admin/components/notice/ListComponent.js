@@ -51,7 +51,7 @@ const ListComponent = () => {
         }
     };
 
-    //useEffect를 사용하여 컴포넌트를 부를 때 최신데이터를 부르는 함수 근데 왜 안댐?
+    //useEffect를 사용하여 컴포넌트를 부를 때 최신데이터를 부르는 함수
     useEffect(()=>{
         settingNotices();
     },[]);
