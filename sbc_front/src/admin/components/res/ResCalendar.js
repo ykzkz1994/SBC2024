@@ -202,7 +202,7 @@ const ResCalendar = () => {
                             // return resDate.getFullYear() === currentDate.getFullYear() &&
                             //        (resDate.getMonth() + 1) === (currentDate.getMonth() + 1) &&
                             //        resDate.getDate() === day.date;
-                            return reservation.resDate === cellDate;
+                            return reservation.checkinDate === cellDate;
                         })
                         : [];
 
