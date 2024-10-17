@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {Await, useNavigate, useParams} from 'react-router-dom';
-import { getAllNotices,deleteNotice } from '../../api/NoticeApi'; // 공지사항 전체 조회 API 함수 가져오기
+import { getOneNotice,deleteNotice } from '../../api/NoticeApi'; // 공지사항 전체 조회 API 함수 가져오기
 
 const ReadComponent = () => {
     const { nid } = useParams(); // URL에서 공지사항 ID를 가져옴
@@ -24,13 +24,11 @@ const ReadComponent = () => {
         return `${yyyy}년 ${mm}월 ${dd}일`;
     };
 
-
-    // 공지사항 데이터를 가져오는 함수
+// 공지사항 데이터를 가져오는 함수
     const getNotice = async (id) => {
         try {
-            // 모든 공지사항을 가져와 특정 ID의 공지사항만 필터링
-            const notices = await getAllNotices();
-            const notice = notices.find(n => n.nboardId === parseInt(id));
+            // 특정 ID의 공지사항 데이터를 가져오기
+            const notice = await getOneNotice(id);
             if (notice) {
                 setTitle(notice.nboardTitle);
                 setContent(notice.nboardContent);
@@ -44,6 +42,7 @@ const ReadComponent = () => {
             setError('공지글을 불러오는데 실패했습니다. 다시 시도해 주세요.');
         }
     };
+
 
     // 컴포넌트가 마운트될 때 공지사항 데이터를 가져옴
     useEffect(() => {
