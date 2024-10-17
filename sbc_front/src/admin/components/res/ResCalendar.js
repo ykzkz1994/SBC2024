@@ -15,9 +15,12 @@ const ResCalendar = () => {
     // 배열에 요일을 할당 (일월화수목금토 순서로 문자열 배열)
     const week = ['일', '월', '화', '수', '목', '금', '토'];
 
+
+
     // 모달 관련 상태 및 참조
     const [modalOpen, setModalOpen] = useState(false); // 모달창 띄우는 변수 디폴트는 false
     const [selectRes, setSelectRes] = useState(null); // 클릭한 예약 정보를 담을 상태 변수
+
     const modalRef = useRef(null); // 모달 DOM 요소 참조
 
     // 컴포넌트가 처음 렌더링될 때 예약 데이터를 가져옵니다.
@@ -49,6 +52,9 @@ const ResCalendar = () => {
             });
             modalInstance.show();
         }
+
+
+
 
         // 모달이 닫힐 때 상태를 업데이트
         const handleHidden = () => {
@@ -260,17 +266,27 @@ const ResCalendar = () => {
                                 <div>
                                     <p><strong>예약 번호:</strong> {selectRes.resId}</p>
                                     <p><strong>예약자 이름:</strong> {selectRes.resUserName}</p>
-                                    <p><strong>전화번호:</strong> {selectRes.resUserPhone}</p>
-                                    <p><strong>인원수:</strong> {selectRes.resPeople}</p>
+                                    <p><strong>숙박 구역:</strong> {selectRes.site ? selectRes.site.siteName : '없음'}</p>
+                                    <p><strong>전화 번호:</strong> {selectRes.resUserPhone}</p>
+                                    <p><strong>입실 인원:</strong> {selectRes.resPeople}</p>
+                                    <p><strong>예약 날짜:</strong> {selectRes.resDate}</p>
                                     <p><strong>입실 날짜:</strong> {selectRes.checkinDate}</p>
                                     <p><strong>퇴실 날짜:</strong> {selectRes.checkoutDate}</p>
-                                    <p><strong>예약 날짜:</strong> {selectRes.resDate}</p>
+                                    {/* 숙박일수를 계산하여 출력 */}
+                                    <p>
+                                        <strong>숙박 일수:</strong>
+                                        <span className="text-red-600 font-bold">
+                                            {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24))}박&nbsp;
+                                            {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24)) + 1}일
+                                        </span>
+                                    </p>
                                     <p><strong>예약 상태:</strong> {selectRes.resStatus}</p>
                                     <p><strong>결제 금액:</strong> {selectRes.resTotalPay}</p>
-                                    <p><strong>취소 날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : '없음'}</p>
-                                    <p><strong>취소 사유:</strong> {selectRes.resCancelReason ? selectRes.resCancelReason : '없음'}</p>
+                                    <p><strong>취소
+                                        날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : 'N/A'}</p>
+                                    <p><strong>취소
+                                        사유:</strong> {selectRes.resCancelReason ? selectRes.resCancelReason : 'N/A'}</p>
                                     <p><strong>리뷰 작성 여부:</strong> {selectRes.resReview === 'Y' ? '작성 완료' : '미작성'}</p>
-                                    <p><strong>사이트:</strong> {selectRes.site ? selectRes.site.siteName : '없음'}</p>
                                 </div>
                             ) : (//false return시
                                 <p>예약 정보가 없습니다.</p>
