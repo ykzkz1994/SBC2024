@@ -249,6 +249,7 @@ const SiteManagements = () => {
                                     value={newSiteValue.siteName || ''}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                     ref={siteNameRef} // 자동 포커스를 위한 참조 설정
+                                    maxLength={10} // 최대 10글자 제한
                                 />
                             </Form.Group>
 
