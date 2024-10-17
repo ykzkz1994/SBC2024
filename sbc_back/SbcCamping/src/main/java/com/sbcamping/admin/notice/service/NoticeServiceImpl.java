@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,8 +31,8 @@ public class NoticeServiceImpl implements NoticeService{
     public List<NoticeDTO> getAllNotices() {    //게시글 전체목록을 불러오는 메서드
         log.info("공지글 전체 불러오는 메서드 시작");
 
-        // 모든 Site 엔티티를 가져옵니다.
-        List<NoticeBoard> notices = noticeRepository.findAll();
+        // 모든 notice 엔티티를 가져옵니다.내림차순으로(최근글이 상단위치)
+        List<NoticeBoard> notices = noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "nboardId"));
 
         log.info("공지글 전체 불러오는 메서드 끝 ");
         // ModelMapper를 사용하여 NoticeBoard 엔티티를 NoticeDTO로 변환한 후 리스트로 반환합니다.

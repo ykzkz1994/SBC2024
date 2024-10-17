@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class ResServiceImpl implements ResService {
     @Override
     public List<ResDTO> getAllRes() {
         log.info("ResServiceImpl/getAllRes-예약전체 불러오는 메서드 시작 ");
-        // 모든 Res 엔티티를 불러와서 리스트에 저장
-        List<Reservation> res = resRepository.findAll();
+        // 모든 Res 엔티티를 불러와서 리스트에 저장pk를 기준으로 내림차순으로 (그래야 최신예약이 상단에 위치함 )
+        List<Reservation> res = resRepository.findAll(Sort.by(Sort.Direction.DESC, "resId"));
 
         log.info("ResServiceImpl/getAllRes-예앾전체 불러오는 메서드 끝 ");
         // ModelMapper를 사용하여 Res 엔티티를 ResDTO로 변환한 후 리스트로 반환

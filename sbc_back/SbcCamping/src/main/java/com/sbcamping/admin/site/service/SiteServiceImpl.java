@@ -7,7 +7,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class SiteServiceImpl implements SiteService{
     public List<SiteDTO> getAllSites() {    //
         log.info("구역전체 불러오는 메서드 시작");
         // 모든 Site 엔티티를 가져옵니다.
-        List<Site> sites = adminSiteRepository.findAll();
+        List<Site> sites = adminSiteRepository.findAll(Sort.by(Sort.Direction.ASC, "siteId"));
 
         log.info("구역전체 불러오는 메서드 끝 ");
         // ModelMapper를 사용하여 Site 엔티티를 SiteDTO로 변환한 후 리스트로 반환합니다.
