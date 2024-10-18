@@ -249,6 +249,7 @@ const SiteManagements = () => {
                                     value={newSiteValue.siteName || ''}
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                     ref={siteNameRef} // 자동 포커스를 위한 참조 설정
+                                    maxLength={10} // 최대 10글자 제한
                                 />
                             </Form.Group>
 
@@ -262,7 +263,7 @@ const SiteManagements = () => {
                                     label="예약 가능"
                                     name="siteResLimit"
                                     value="N"
-                                    checked={newSiteValue.siteResLimit === 'N'} //디폴트가 N=가능
+                                    checked={newSiteValue.siteResLimit === 'N'} //N=예약가능=예약제한상태가 아니라는 뜻
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                                 <Form.Check
@@ -270,7 +271,7 @@ const SiteManagements = () => {
                                     label="예약 불가능"
                                     name="siteResLimit"
                                     value="Y"
-                                    checked={newSiteValue.siteResLimit === 'Y'} //
+                                    checked={newSiteValue.siteResLimit === 'Y'} ///Y=예약불가=예약제한상태라는 뜻
                                     onChange={handleTextChange} // 값 변경 시 handleTextChange 함수 호출
                                 />
                             </Form.Group>
@@ -292,7 +293,7 @@ const SiteManagements = () => {
                                     name="minPeople"
                                     value={newSiteValue.minPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
-                                    min={1} // 최소값 설정
+                                    min={minLimitPeople} // 최소값 설정
                                     max={maxLimitPeople} // 최대값 설정 위에서 선언해놓은 상수 값은 6
                                 />
                             </Form.Group>
@@ -314,7 +315,7 @@ const SiteManagements = () => {
                                     name="maxPeople"
                                     value={newSiteValue.maxPeople || ''}
                                     onChange={handleNumberChange} // 값 변경 시 handleNumberChange 함수 호출
-                                    min={1} // 최소값 설정
+                                    min={minLimitPeople} // 최소값 설정
                                     max={maxLimitPeople} // 최대값 설정
                                 />
                             </Form.Group>
@@ -327,6 +328,7 @@ const SiteManagements = () => {
                                     name="weekdayRate"
                                     value={newSiteValue.weekdayPay?.toLocaleString() || ''}
                                     onChange={handleRateChange} // 값 변경 시 handleRateChange 함수 호출
+                                    maxLength={13}
                                 />
                             </Form.Group>
 
@@ -338,10 +340,11 @@ const SiteManagements = () => {
                                     name="weekendRate"
                                     value={newSiteValue.weekendPay?.toLocaleString() || ''}
                                     onChange={handleRateChange} // 값 변경 시 handleRateChange 함수 호출
+                                    maxLength={13}
                                 />
                             </Form.Group>
 
-                            {/* **에러 메시지 표시** */}
+                            {/* **조건부 렌더링으로 에러 발생시 메시지 표시** */}
                             {error && <div className="text-danger">{error}</div>}
                         </div>
                     )}

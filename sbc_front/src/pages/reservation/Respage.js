@@ -48,7 +48,6 @@ const Respage = () => {
     const [isChecked, setIsChecked] = useState(false);
 
     // 입실날짜 퇴실날짜 상태 저장
-
     // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
     useEffect(() => {
         if (year && month && day) {
@@ -73,10 +72,6 @@ const Respage = () => {
     const handleChangeRes = (e) => {
         const {name, value} = e.target;
 
-        // 날짜를 먼저 임시로 설정
-        let newCheckinDate = checkinDate;
-        let newCheckoutDate = checkoutDate;
-
         const newValue = name === 'resPeople' ? parseInt(value) : value;
 
         // checkinDate와 checkoutDate는 별도로 처리
@@ -91,9 +86,6 @@ const Respage = () => {
                 [name]: newValue,
             }));
         }
-
-
-
     };
 
     // 모달 false true 함수
@@ -113,20 +105,35 @@ const Respage = () => {
 
     // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
+        const date = new Date();
         const checkinDate = new Date(res.checkinDate)
         const checkOutDate = new Date(res.checkoutDate)
-        
-        console.log(res)
 
-        if (checkinDate > checkOutDate) {
+        date.setHours(0,0,0,0);
+        checkinDate.setHours(0,0,0,0);
+        checkOutDate.setHours(0,0,0,0);
+
+
+        if (date > checkinDate) {
             firstSetShow(false)
-            alert("퇴실 날짜를 다시 확인해주세요")
+            setTimeout(() => {
+                alert("입실 날짜를 다시 확인해주세요")
+            }, 100)
+            return;
+        } else if (checkinDate > checkOutDate) {
+            firstSetShow(false)
+            setTimeout(() => {
+                alert("퇴실 날짜를 다시 확인해주세요")
+            }, 100);
             return;
         } else if (checkinDate.getTime() === checkOutDate.getTime()) {
             firstSetShow(false)
-            alert("입실 날짜가 퇴실 날짜와 같을 수 없습니다.")
+            setTimeout(() => {
+                alert("입실 날짜와 퇴실 날짜가 같을수 없습니다.")
+            }, 100);
             return;
         }
+
         resAdd(res)
             .then(result => {
                 firstSetShow(false)
@@ -139,7 +146,6 @@ const Respage = () => {
                 exceptionHandle(error)
             })
     };
-
 
     const handleCheckChange = () => {
         if (checkRef.current) {
@@ -162,6 +168,54 @@ const Respage = () => {
             }
         }
     };
+
+    // 연박 계산
+    useEffect(() => {
+        const resCheckinDate = new Date(res.checkinDate);
+        const resCheckOutDate = new Date(res.checkoutDate);
+
+        if (isNaN(resCheckinDate.getTime()) || isNaN(resCheckOutDate.getTime())) {
+            setRes((prevState) => ({
+                ...prevState,
+                resTotalPay: 0,
+            }));
+            return;
+        }
+
+        const diffTime = resCheckOutDate - resCheckinDate;
+
+        // 밀리초를 일수로 변환 (1일 = 1000ms * 60s * 60m * 24h)
+        const totalDays = diffTime / (1000 * 60 * 60 * 24);
+
+        // 주말과 평일 수 계산
+        let weekendDays = 0;
+        let weekdays = 0;
+
+        for (let i = 0; i < totalDays; i++) {
+            const currentDate = new Date(resCheckinDate);
+            currentDate.setDate(resCheckinDate.getDate() + i);
+
+            // 주말인지 확인 (0: 일요일, 6: 토요일)
+            if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+                weekendDays++;
+            } else {
+                weekdays++;
+            }
+        }
+
+        // 최종 결제금액 계산
+        const weekendRate = 80000; // 주말 요금
+        const weekdayRate = 40000;  // 평일 요금
+
+        const totalPay = (weekdays * weekdayRate) + (weekendDays * weekendRate);
+
+        // 상태 업데이트
+        setRes((prevState) => ({
+            ...prevState,
+            resTotalPay: totalPay < 0 ? 0 : totalPay // 총 결제금액이 0 이하일 경우 0으로 설정
+        }));
+
+    }, [res.resTotalPay, res.checkinDate, res.checkoutDate])
 
     return (
         <div>
@@ -290,7 +344,11 @@ const Respage = () => {
                         결제금액
                     </Form.Label>
                     <Col sm="10">
-                        <Form.Control type="text" name="resTotalPay" onChange={handleChangeRes}/>
+                        <Form.Control
+                            type="text"
+                            name="resTotalPay"
+                            value={res.resTotalPay}
+                            onChange={handleChangeRes}/>
                     </Col>
                 </Form.Group>
             </Form>

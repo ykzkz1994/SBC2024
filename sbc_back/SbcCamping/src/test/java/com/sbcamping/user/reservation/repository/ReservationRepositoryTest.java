@@ -26,19 +26,4 @@ class ReservationRepositoryTest {
 
     }
 
-    @Test
-    public void getReservation() {
-
-        LocalDate date = LocalDate.now();
-
-        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        List<Object[]> list = reservationRepository.getReservations(1L, formattedDate);
-
-        for (Object[] row : list) {
-            log.info("----------------------------------------------------------------");
-            log.info(Arrays.toString(row));
-        }
-    }
-
 }

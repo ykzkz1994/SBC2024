@@ -15,12 +15,9 @@ const ResCalendar = () => {
     // 배열에 요일을 할당 (일월화수목금토 순서로 문자열 배열)
     const week = ['일', '월', '화', '수', '목', '금', '토'];
 
-
-
     // 모달 관련 상태 및 참조
     const [modalOpen, setModalOpen] = useState(false); // 모달창 띄우는 변수 디폴트는 false
     const [selectRes, setSelectRes] = useState(null); // 클릭한 예약 정보를 담을 상태 변수
-
     const modalRef = useRef(null); // 모달 DOM 요소 참조
 
     // 컴포넌트가 처음 렌더링될 때 예약 데이터를 가져옵니다.
@@ -52,9 +49,6 @@ const ResCalendar = () => {
             });
             modalInstance.show();
         }
-
-
-
 
         // 모달이 닫힐 때 상태를 업데이트
         const handleHidden = () => {
@@ -208,8 +202,11 @@ const ResCalendar = () => {
                             // return resDate.getFullYear() === currentDate.getFullYear() &&
                             //        (resDate.getMonth() + 1) === (currentDate.getMonth() + 1) &&
                             //        resDate.getDate() === day.date;
-                            return reservation.checkinDate === cellDate;
-                        })
+                            return (
+                                new Date(reservation.checkinDate) <= new Date(cellDate) &&
+                                new Date(reservation.checkoutDate) > new Date(cellDate)
+                            );
+                        }).sort((a, b) => a.site.siteId - b.site.siteId) // siteId 기준 오름차순 정렬
                         : [];
 
                     return (
@@ -234,7 +231,7 @@ const ResCalendar = () => {
                                         <div
                                             key={resIndex}
                                             className="text-sm text-red-600 cursor-pointer hover:bg-gray-200 p-1 rounded"
-                                            //클릭시 모달창의 상태를 True로, resvatuion으로 선택한 예약상태갑 변환
+                                            //클릭시 모달창의 상태를 True로, reservation으로 선택한 예약 상태값 변환
                                             onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
                                         >
                                             {/*구역명 출력*/}
@@ -261,8 +258,7 @@ const ResCalendar = () => {
 
                         <div className="modal-body">
                             {/* 예약 정보 표시 */}
-                            {selectRes ? (//삼항연산자 사용해서 예약처리
-
+                            {selectRes ? ( // 삼항연산자 사용해서 예약 처리
                                 <div>
                                     <p><strong>예약 번호:</strong> {selectRes.resId}</p>
                                     <p><strong>예약자 이름:</strong> {selectRes.resUserName}</p>
@@ -282,13 +278,11 @@ const ResCalendar = () => {
                                     </p>
                                     <p><strong>예약 상태:</strong> {selectRes.resStatus}</p>
                                     <p><strong>결제 금액:</strong> {selectRes.resTotalPay}</p>
-                                    <p><strong>취소
-                                        날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : 'N/A'}</p>
-                                    <p><strong>취소
-                                        사유:</strong> {selectRes.resCancelReason ? selectRes.resCancelReason : 'N/A'}</p>
+                                    <p><strong>취소 날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : 'N/A'}</p>
+                                    <p><strong>취소 사유:</strong> {selectRes.resCancelReason ? selectRes.resCancelReason : 'N/A'}</p>
                                     <p><strong>리뷰 작성 여부:</strong> {selectRes.resReview === 'Y' ? '작성 완료' : '미작성'}</p>
                                 </div>
-                            ) : (//false return시
+                            ) : ( // false일 경우 예약 정보가 없음을 표시
                                 <p>예약 정보가 없습니다.</p>
                             )}
                         </div>
