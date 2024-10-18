@@ -80,6 +80,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .site(site)
                 .build();
 
+
         reservationRepository.save(reservation);
 
         return reservation;
@@ -95,6 +96,12 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Member> getMember() {
 
         return memberRepository.findAll();
+    }
+
+    @Override
+    public List<Object[]> getResCheck() {
+
+        return reservationRepository.getReservations();
     }
 
 }

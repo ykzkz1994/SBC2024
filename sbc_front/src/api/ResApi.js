@@ -18,3 +18,12 @@ export const resAdd = async (resObj) => {
         throw error;
     }
 }
+
+export const resCheck = async () => {
+    try {
+        const res = await axios.get(`${prefix}/resList`)
+        return res.data
+    } catch (error) {
+        throw error;
+    }
+}

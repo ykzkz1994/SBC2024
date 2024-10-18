@@ -59,7 +59,6 @@ const BasicLayout = ({ children }) => {
             {children}
           </Container>
         </main>
-
       </>
   );
 };

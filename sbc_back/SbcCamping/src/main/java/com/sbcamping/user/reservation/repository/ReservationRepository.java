@@ -13,24 +13,29 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository <Reservation, Long> {
 
     @Query(value = """
-            with date_range as (
-                select res_id, checkin_date, checkout_date, site_id, 
-                        checkin_date + (level - 1) as date_seq
-                from reservation
-                where site_id = :siteId
-                connect by level <= checkout_date - checkin_date + 1
-                        AND prior res_id = res_id
-                        AND prior dbms_random.value is not null
-            )
-            select checkin_date, checkout_date, date_seq,
+                with date_range as (
+                    select res_id,
+                    TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkin_date_KST,
+                    TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkout_date_KST,
+                    site_id,
+                    FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' + (level - 1) as date_seq
+                    from reservation
+                    where TRUNC(CHECKOUT_DATE) >= TRUNC(sysdate)
+                    AND RES_STATUS = '예약완료'
+                    connect by level <= TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul')
+                                        -
+                                        TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') + 1
+                                        AND prior res_id = res_id
+                                    AND prior dbms_random.value is not null
+                    )
+                    select SITE_ID, checkin_date_KST, checkout_date_KST, date_seq,
                     case
-                        when date_seq < checkout_date then 'true'
-                        else 'false'
-                        END as result
-            from date_range
-            where date_seq = to_date(:date, 'YYYY-MM-DD')
-        """, nativeQuery = true)
-    public List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date")String setDate);
+                    when date_seq < checkout_date_KST then 'true'
+                    else 'false'
+                    END as result
+                    from date_range
+            """, nativeQuery = true)
+    List<Object[]> getReservations();
 
     // memberId를 사용하여 예약 내역 조회 (마이페이지 - 나의 예약내역)
     @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId")
