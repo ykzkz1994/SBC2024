@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe850821-29f6-41de-9966-cd94c42d951b" name="변경" comment="241016 15:57" />
+    <list default="true" id="fe850821-29f6-41de-9966-cd94c42d951b" name="변경" comment="241018 17:14">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/KOSMO/Desktop/241014 프로젝트 병합/SBC2024_lee",
+    "last_opened_file_path": "C:/Users/KOSMO/Desktop/241014 프로젝트 병합(이거)/SBC2024_lee",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -106,6 +109,7 @@
       <workItem from="1728990324376" duration="169000" />
       <workItem from="1729046665010" duration="5000" />
       <workItem from="1729061817571" duration="263000" />
+      <workItem from="1729239228957" duration="154000" />
     </task>
     <task id="LOCAL-00001" summary="241014 18:32">
       <option name="closed" value="true" />
@@ -147,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729061857925</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="241018 17:14">
+      <option name="closed" value="true" />
+      <created>1729239247796</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729239247796</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,7 +184,8 @@
     <MESSAGE value="241015 19:46" />
     <MESSAGE value="241015 20:05" />
     <MESSAGE value="241016 15:57" />
-    <option name="LAST_COMMIT_MESSAGE" value="241016 15:57" />
+    <MESSAGE value="241018 17:14" />
+    <option name="LAST_COMMIT_MESSAGE" value="241018 17:14" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
