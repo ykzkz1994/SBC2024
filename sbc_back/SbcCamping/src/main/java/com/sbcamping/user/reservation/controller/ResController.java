@@ -7,6 +7,7 @@ import com.sbcamping.user.reservation.dto.ReservationDTO;
 import com.sbcamping.user.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,15 @@ public class ResController {
     public List<Member> getMember() {
 
         return service.getMember();
+    }
+
+
+    @GetMapping("/resList")
+    public ResponseEntity<List<Object[]>> getResCheck() {
+
+        List<Object[]> reservations = service.getResCheck();
+
+        return ResponseEntity.ok(reservations);
     }
 
 }

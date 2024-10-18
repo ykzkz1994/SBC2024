@@ -98,4 +98,10 @@ public class ReservationServiceImpl implements ReservationService {
         return memberRepository.findAll();
     }
 
+    @Override
+    public List<Object[]> getResCheck() {
+
+        return reservationRepository.getReservations();
+    }
+
 }

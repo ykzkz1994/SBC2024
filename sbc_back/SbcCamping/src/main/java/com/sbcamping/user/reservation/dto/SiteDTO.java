@@ -6,8 +6,6 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Data
 public class SiteDTO {
 
     private Long siteId;

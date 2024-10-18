@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { getAllRes } from '../../api/ResApi';   //api 임포트
 import Search from './Search'; // Search 컴포넌트 임포트
+import {getPagination} from "item-pagination";
 
 
 const TotalList = () => {
@@ -23,6 +24,17 @@ const TotalList = () => {
     const [selectedColumn, setSelectedColumn] = useState('resId');
 
 
+
+    //현재 페이지 설정 상태변수
+    const [currentPage, setCurrentPage] = useState(1); // 페이지 상태를 1로 초기화
+    const itemsPerPage = 15; // 페이지당 항목 수
+    // 전체 페이지 수 계산
+    const totalPages = Math.ceil(reservations.length / itemsPerPage);
+//현재 페이지 변경 함수
+    const handlePageClick = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     // 데이터 불러오는 비동기 함수
     const settingReservation = async () => {
         try {
@@ -41,7 +53,7 @@ const TotalList = () => {
     }, []);
 
     // 검색어와 선택된 컬럼에 따라 필터링된 예약 데이터 할당
-    const filteredReservations = reservations.filter((reservation) => {
+    const filteredReservations = (reservations).filter((reservation) => {
     
         //검색어가 없다면 true를 반환해서 필터링 되지 않은 데이터를 출력
         if (!searchTerm) return true;
@@ -121,6 +133,36 @@ const TotalList = () => {
                 )}
                 </tbody>
             </Table>
+
+            {/* 페이지네이션 */}
+            <div className="mt-4 text-center">
+                <button
+                    onClick={() => handlePageClick(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                    &lt;
+                </button>
+
+                {[...Array(totalPages).keys()].map((page) => (
+                    <button
+                        key={page + 1}
+                        onClick={() => handlePageClick(page + 1)}
+                        className={`px-4 py-2 mx-1 ${currentPage === page + 1 ? 'bg-blue-700' : 'bg-blue-500'} text-white rounded hover:bg-blue-700`}
+                    >
+                        {page + 1}
+                    </button>
+                ))}
+
+                <button
+                    onClick={() => handlePageClick(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-4 py-2 mx-1 bg-blue-500 text-white rounded hover:bg-blue-700"
+                >
+                    &gt;
+                </button>
+            </div>
+
         </div>
     );
 };
