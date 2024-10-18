@@ -217,7 +217,7 @@ const MemberInfo = () => {
             const action = await modifyMember(members);
             console.log('회원정보수정 결과 : ', action)
             if(action.error) {
-                console.log('회원정보 수정 실패 ', error)
+                console.log('회원정보 수정 실패 ', action.error)
                 alert('회원정보 수정에 실패하였습니다.')
             } else {
                 alert('회원정보가 수정되었습니다.')

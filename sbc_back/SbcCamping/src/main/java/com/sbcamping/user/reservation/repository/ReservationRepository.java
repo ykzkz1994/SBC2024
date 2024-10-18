@@ -15,27 +15,25 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     @Query(value = """
                 with date_range as (
                     select res_id,
-                    TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkin_date_KST,
-                    TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkout_date_KST,
-                    site_id,
-                    FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' + (level - 1) as date_seq
-                    from reservation
-                    where TRUNC(CHECKOUT_DATE) >= TRUNC(sysdate)
-                    AND RES_STATUS = '예약완료'
-                    connect by level <= TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul')
-                                        -
-                                        TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') + 1
-                                        AND prior res_id = res_id
-                                    AND prior dbms_random.value is not null
-                    )
-                    select SITE_ID, checkin_date_KST, checkout_date_KST, date_seq,
-                    case
-
-                        when date_seq < checkout_date then 'true'
-                        else 'false'
-                        END as result
-            from date_range
-            where date_seq = to_date(:date, 'YYYY-MM-DD')
+                        TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkin_date_KST,
+                        TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') AS checkout_date_KST,
+                        site_id,
+                        FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul' + (level - 1) as date_seq
+                        from reservation
+                        where TRUNC(CHECKOUT_DATE) >= TRUNC(sysdate)
+                        AND RES_STATUS = '예약완료'
+                            connect by level <= TRUNC(FROM_TZ(CAST(checkout_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul')
+                                                    -
+                                            TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') + 1
+                                            AND prior res_id = res_id
+                                            AND prior dbms_random.value is not null
+                            )
+                            select SITE_ID, checkin_date_KST, checkout_date_KST, date_seq,
+                            case
+                            when date_seq < checkout_date_KST then 'true'
+                             else 'false'
+                             END as result
+                             from date_range
         """, nativeQuery = true)
     List<Object[]> getReservations();
 

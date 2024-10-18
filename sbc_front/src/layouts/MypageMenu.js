@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 const MypageMenu = () => {
 
-    const isActive = (path) => location.pathname.startsWith(path)
+    const isActive = (path) => window.location.pathname.startsWith(path)
 
     return(
         <>

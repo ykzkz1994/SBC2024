@@ -17,6 +17,7 @@ const MypageWithdrawPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+
     const memberState = {
         memberId : loginState.member.memberId,
         memberPw : '',
@@ -47,7 +48,7 @@ const MypageWithdrawPage = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const isConfirmed = confirm('정말 탈퇴하시겠습니까?');
+        const isConfirmed = window.confirm('정말 탈퇴하시겠습니까?');
         if (isConfirmed) {
             try {
                 const action = await withdraw(member)
