@@ -53,7 +53,7 @@ const TotalList = () => {
     }, []);
 
     // 검색어와 선택된 컬럼에 따라 필터링된 예약 데이터 할당
-    const filteredReservations = getPagination(reservations).filter((reservation) => {
+    const filteredReservations = (reservations).filter((reservation) => {
     
         //검색어가 없다면 true를 반환해서 필터링 되지 않은 데이터를 출력
         if (!searchTerm) return true;
