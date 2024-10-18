@@ -30,12 +30,15 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
                     )
                     select SITE_ID, checkin_date_KST, checkout_date_KST, date_seq,
                     case
-                    when date_seq < checkout_date_KST then 'true'
-                    else 'false'
-                    END as result
-                    from date_range
-            """, nativeQuery = true)
-    List<Object[]> getReservations();
+
+                        when date_seq < checkout_date then 'true'
+                        else 'false'
+                        END as result
+            from date_range
+            where date_seq = to_date(:date, 'YYYY-MM-DD')
+        """, nativeQuery = true)
+    List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date") String setDate);
+
 
     // memberId를 사용하여 예약 내역 조회 (마이페이지 - 나의 예약내역)
     @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId")

@@ -14,4 +14,5 @@ public interface ReservationService {
     List<Member> getMember();
     List<Object[]> getResCheck();
 
+
 }

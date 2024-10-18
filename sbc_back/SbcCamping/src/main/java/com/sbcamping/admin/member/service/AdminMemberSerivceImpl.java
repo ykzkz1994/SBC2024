@@ -102,7 +102,7 @@ public class AdminMemberSerivceImpl implements AdminMemberService {
 
             searchMembers = switch (type) {
                 case "name" -> adminMemberRepository.findByMemberNameContaining(keyword, pageable);
-                case "phone" -> adminMemberRepository.findByMemberPhoneContaining(keyword, pageable);
+                case "phone" -> adminMemberRepository.findByMemberPhoneEndingWith(keyword, pageable);
                 case "email" -> adminMemberRepository.findByMemberEmailContaining(keyword, pageable);
                 default -> null;
             };

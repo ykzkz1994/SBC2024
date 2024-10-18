@@ -42,4 +42,8 @@ public class QuestionBoardComment { // 문의게시판 댓글
     public void changeContent(String content) {
         this.qCommentContent = content;
     }
+
+    public void changeDate(Date date) {
+        this.qCommentDate = date;
+    }
 }

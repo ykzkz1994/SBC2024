@@ -70,8 +70,10 @@ protected void onCreate() {
     public void changeContent(String content) {
         this.cBoardContent = content;
     }
+
     // 첨부파일 수정
     public void changeAttachment(String attachment) {
         this.cBoardAttachment = attachment;
     }
+
 }
