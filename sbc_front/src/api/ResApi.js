@@ -19,4 +19,11 @@ export const resAdd = async (resObj) => {
     }
 }
 
-// export const resCheck = async ()
+export const resCheck = async () => {
+    try {
+        const res = await axios.get(`${prefix}/resList`)
+        return res.data
+    } catch (error) {
+        throw error;
+    }
+}

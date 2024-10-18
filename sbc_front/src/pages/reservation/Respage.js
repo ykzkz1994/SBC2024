@@ -105,10 +105,22 @@ const Respage = () => {
 
     // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
+        const date = new Date();
         const checkinDate = new Date(res.checkinDate)
         const checkOutDate = new Date(res.checkoutDate)
 
-        if (checkinDate > checkOutDate) {
+        date.setHours(0,0,0,0);
+        checkinDate.setHours(0,0,0,0);
+        checkOutDate.setHours(0,0,0,0);
+
+
+        if (date > checkinDate) {
+            firstSetShow(false)
+            setTimeout(() => {
+                alert("입실 날짜를 다시 확인해주세요")
+            }, 100)
+            return;
+        } else if (checkinDate > checkOutDate) {
             firstSetShow(false)
             setTimeout(() => {
                 alert("퇴실 날짜를 다시 확인해주세요")
@@ -134,7 +146,6 @@ const Respage = () => {
                 exceptionHandle(error)
             })
     };
-
 
     const handleCheckChange = () => {
         if (checkRef.current) {

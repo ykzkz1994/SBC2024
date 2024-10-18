@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Table} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "../../pages/reservation/css/RealTimeResPage.css"
-import {getSiteList} from "../../api/ResApi";
+import {getSiteList, resCheck} from "../../api/ResApi";
 import {useSelector} from "react-redux";
 
 // td 태그를 재사용 하고싶은데 어케할까? 흠....
@@ -12,7 +12,7 @@ const MonthComponent = () => {
     const initState = {};
 
     for (let i = 0; i < 10; i++) {
-        initState[i]  = {
+        initState[i] = {
             siteID: 0,
             siteName: ''
         }
@@ -20,6 +20,7 @@ const MonthComponent = () => {
 
     const [site, setSite] = useState(initState);
 
+    const navigate = useNavigate();
     const today = new Date();
 
     // 날짜 비교 변수
@@ -27,6 +28,7 @@ const MonthComponent = () => {
     const currentMonth = today.getMonth() + 1;
     const currentDay = today.getDate();
 
+    const [resCheckData, setResCheckData] = useState([]);
     const [calendar, setCalendar] = useState([])
     const [year, setYear] = useState(currentYear);
     const [month, setMonth] = useState(currentMonth);
@@ -40,44 +42,6 @@ const MonthComponent = () => {
 
     const monthsToAdd = 2;
     const monthSum = (currentMonth + monthsToAdd - 1) % 12 + 1;
-
-    useEffect(() => {
-        getSiteList().then(data => {
-            console.log(data)
-            setSite(data)
-        })
-    }, []);
-
-    const handleClick = (dir) => {
-        setDirection(dir); // 클릭한 방향을 상태에 저장
-    };
-
-    // 다음달 , 이전달 버튼 > year , month 상태 바로 반영
-    useEffect(() => {
-        if (direction) { // direction 이 null 이 아닐 때만 실행
-            let newYear = year;
-            let newMonth = month;
-
-            if (direction === "prev") {
-                newMonth -= 1;
-                if (newMonth < 1) {
-                    newMonth = 12;
-                    newYear -= 1;
-                }
-            } else if (direction === "next") {
-                newMonth += 1;
-                if (newMonth > 12) {
-                    newMonth = 1;
-                    newYear += 1;
-                }
-            }
-
-            setYear(newYear);
-            setMonth(newMonth);
-
-            setDirection(null); // direction 상태 초기화
-        }
-    }, [direction, year, month]);
 
     // 날짜 비교 : 현재 날짜보다 과거인지 확인
     const isPastDate = (setYear, setMonth, setDay) => {
@@ -115,6 +79,46 @@ const MonthComponent = () => {
         return weeks;
     };
 
+    const handleClick = (dir) => {
+        setDirection(dir); // 클릭한 방향을 상태에 저장
+    };
+
+    // 다음달 , 이전달 버튼 > year , month 상태 바로 반영
+    useEffect(() => {
+        if (direction) { // direction 이 null 이 아닐 때만 실행
+            let newYear = year;
+            let newMonth = month;
+
+            if (direction === "prev") {
+                newMonth -= 1;
+                if (newMonth < 1) {
+                    newMonth = 12;
+                    newYear -= 1;
+                }
+            } else if (direction === "next") {
+                newMonth += 1;
+                if (newMonth > 12) {
+                    newMonth = 1;
+                    newYear += 1;
+                }
+            }
+
+            setYear(newYear);
+            setMonth(newMonth);
+
+            setDirection(null); // direction 상태 초기화
+        }
+    }, [direction, year, month]);
+
+    useEffect(() => {
+        getSiteList().then(data => {
+            setSite(data)
+        })
+        resCheck().then(data => {
+            setResCheckData(data);
+        })
+    }, [])
+
     // 다음달 year , month 상태 바로 반영
     useEffect(() => {
         const weeks = generateCalendar(year, month);
@@ -133,7 +137,6 @@ const MonthComponent = () => {
             if (nextMonth > 12) {
                 nextMonth = 1; // 12월을 넘기면 1월로
                 nextYear = nextYear + 1;
-                console.log(nextYear)
             }
 
             // 빈 칸에 다음 달 날짜 채우기
@@ -148,6 +151,7 @@ const MonthComponent = () => {
         setCalendar(weeks);
 
     }, [year, month]);
+
 
     return (
         <div>
@@ -203,6 +207,25 @@ const MonthComponent = () => {
                             const currentDate = new Date(year, month - 1, dayInfo.day);
                             const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
 
+                            const result = resCheckData.map(item => {
+                                const date = new Date(item[3])
+                                return date.toISOString().split('T')[0]
+                            })
+
+                            const filterCheck = (siteId, date) => {
+                                const filterData = resCheckData.filter((item, index) =>
+                                    item[0] === siteId &&
+                                    result[index] === date &&
+                                    item[4] === "true"
+                                )
+
+                                // 조건을 만족하는 경우 true를 반환하고, 만족하지 않으면 false 반환
+                                return filterData.length > 0; // 필터링된 데이터가 있으면 true, 없으면 false
+                            }
+
+                            const date = new Date(dayInfo.year, dayInfo.month - 1, dayInfo.day)
+                            const formattedDate = date.toLocaleDateString('en-CA')
+
                             if (dayInfo.day) {
                                 return (
                                     <td key={j} style={{
@@ -219,197 +242,611 @@ const MonthComponent = () => {
                                                 "예약 불가"
                                             ) : (
                                                 <>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[0].siteId,
-                                                            siteName: site[0].siteName,
-                                                        }}
-                                                    >
-                                                        {site[0].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 0번 */}
+                                                    {filterCheck(site[0].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[0].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[0].siteId,
+                                                                    siteName: site[0].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[0].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[1].siteId,
-                                                            siteName: site[1].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[1].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 1번 */}
+                                                    {filterCheck(site[1].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[1].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[1].siteId,
+                                                                    siteName: site[1].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[1].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[2].siteId,
-                                                            siteName: site[2].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[2].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 2번 */}
+                                                    {filterCheck(site[2].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[2].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[2].siteId,
+                                                                    siteName: site[2].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[2].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[3].siteId,
-                                                            siteName: site[3].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[3].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 3번 */}
+                                                    {filterCheck(site[3].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[3].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[3].siteId,
+                                                                    siteName: site[3].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[3].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[4].siteId,
-                                                            siteName: site[4].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[4].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 4번 */}
+                                                    {filterCheck(site[4].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[4].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[4].siteId,
+                                                                    siteName: site[4].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[4].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[5].siteId,
-                                                            siteName: site[5].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[5].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 5번 */}
+                                                    {filterCheck(site[5].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[5].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[5].siteId,
+                                                                    siteName: site[5].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[5].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[6].siteId,
-                                                            siteName: site[6].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[6].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 6번 */}
+                                                    {filterCheck(site[6].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[6].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[6].siteId,
+                                                                    siteName: site[6].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[6].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[7].siteId,
-                                                            siteName: site[7].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[7].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 7번 */}
+                                                    {filterCheck(site[7].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[7].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[7].siteId,
+                                                                    siteName: site[7].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[7].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[8].siteId,
-                                                            siteName: site[8].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[8].siteName}
-                                                    </Link>
-
+                                                    {/* 사이트 8번 */}
+                                                    {filterCheck(site[8].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[8].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[8].siteId,
+                                                                    siteName: site[8].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[8].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
                                                     <br/>
-                                                    <Link
-                                                        to={`/res/respage`}
-                                                        state={{
-                                                            year: dayInfo.year,
-                                                            month: dayInfo.month,
-                                                            day: dayInfo.day,
-                                                            memberId: loginState.member.memberId,
-                                                            memberName: loginState.member.memberName,
-                                                            memberPhone: loginState.member.memberPhone,
-                                                            memberEmail: loginState.member.memberEmail,
-                                                            siteId: site[9].siteId,
-                                                            siteName: site[9].siteName,
-                                                            price: isWeekend ? 80000 : 40000,
-                                                        }}
-                                                    >
-                                                        {site[9].siteName}
-                                                    </Link>
-                                                </>
-                                            )}
+                                                    {/* 사이트 9번 */}
+                                                    {filterCheck(site[9].siteId, formattedDate) ?
+                                                        <>
+                                                                <span style={{
+                                                                    fontSize: "13px",
+                                                                    fontWeight: "700",
+                                                                    lineHeight: "1",
+                                                                    display: "inline-block",
+                                                                    padding: "4px",
+                                                                    textAlign: "center",
+                                                                    color: "#fff",
+                                                                    borderRadius: "1px",
+                                                                    backgroundColor: "#FC5B62"
+                                                                }}>
+                                                                &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`#`}
+                                                                style={{
+                                                                    pointerEvents: "none",
+                                                                    textDecoration: "none"
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[9].siteName}
+                                                            </Link>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <span style={{
+                                                                fontSize: "13px",
+                                                                fontWeight: "700",
+                                                                lineHeight: "1",
+                                                                display: "inline-block",
+                                                                padding: "4px",
+                                                                textAlign: "center",
+                                                                color: "#fff",
+                                                                borderRadius: "1px",
+                                                                backgroundColor: "#41c842"
+                                                            }}>
+                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                            </span>
+                                                            <Link
+                                                                to={`/res/respage`}
+                                                                state={{
+                                                                    year: dayInfo.year,
+                                                                    month: dayInfo.month,
+                                                                    day: dayInfo.day,
+                                                                    memberId: loginState.member.memberId,
+                                                                    memberName: loginState.member.memberName,
+                                                                    memberPhone: loginState.member.memberPhone,
+                                                                    memberEmail: loginState.member.memberEmail,
+                                                                    siteId: site[9].siteId,
+                                                                    siteName: site[9].siteName,
+                                                                }}
+                                                            >
+                                                                &nbsp;{site[9].siteName}
+                                                            </Link>
+                                                        </>
+                                                    }
+                                                    </>
+                                            )
+                                        }
                                     </td>
-                                );
+                                )
+                                    ;
                             } else {
                                 // 공백일경우
                                 return <td key={j} style={{

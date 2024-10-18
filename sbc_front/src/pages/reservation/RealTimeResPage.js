@@ -5,21 +5,6 @@ import useCustomLogin from "../../hooks/useCustomLogin";
 
 const RealTimeResPage = () => {
 
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth() + 1;
-
-    const [year, setYear] = useState(currentYear);
-    const [month, setMonth] = useState(currentMonth);
-    const [direction, setDirection] = useState(null); // 방향 상태 추가
-
-    const monthsToAdd = 2;
-    const monthSum = (currentMonth + monthsToAdd - 1) % 12 + 1;
-
-    const handleClick = (dir) => {
-        setDirection(dir); // 클릭한 방향을 상태에 저장
-    };
-
     // 로그인 여부 확인
     const {isLogin, moveToLoginReturn} = useCustomLogin()
     if (!isLogin) {
