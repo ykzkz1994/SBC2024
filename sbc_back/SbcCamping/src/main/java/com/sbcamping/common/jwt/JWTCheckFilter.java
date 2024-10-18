@@ -105,17 +105,34 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/admin/site")) {
+            return true;
+        }
+
         if(path.startsWith("/admin")){
             return true;
         }
 
-        if (path.startsWith("/api/res/")) {
+        if(path.startsWith("/admin/qnas")){
+            return true;
+        }
+
+        if(path.startsWith("/admin/site")){
             return true;
         }
 
         if(path.equals("/api/res/siteList")){
             return true;
         }
+        //상호 노티스 예외
+        if(path.startsWith("/notice")){
+            return true;
+        }
+        //상호 노티스 예외
+        if(path.startsWith("/site")){
+            return true;
+        }
+
 
         return false;
     }

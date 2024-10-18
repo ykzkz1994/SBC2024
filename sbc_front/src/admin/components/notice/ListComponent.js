@@ -12,7 +12,14 @@ const ListComponent = () => {
     // 공지사항 전체 정보 목록을 저장하는 변수
     const [notices, setNotices] = useState([]);
 
-
+    // 날짜형식 변환 함수  이걸로 날짜를 감싸주면 형변환 됨
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}년 ${mm}월 ${dd}일`;
+    };
 
 
     // '글쓰기' 버튼 클릭 시 호출되는 함수: 공지 등록 페이지로 이동
@@ -23,7 +30,9 @@ const ListComponent = () => {
     // 제목 클릭 시 상세보기 페이지로 이동하는 함수
     const handleTitleClick = (id) => {
         console.log("상세 페이지로 이동할 ID:", id);
+
         navigate(`/admin/notices/read/${id}`); // 상세보기 페이지 경로로 이동
+
     };
 
     // 입력 검증 시 발생한 에러 메시지를 저장하는 변수
@@ -42,7 +51,7 @@ const ListComponent = () => {
         }
     };
 
-    //useEffect를 사용하여 컴포넌트를 부를 때 최신데이터를 부르는 함수 근데 왜 안댐?
+    //useEffect를 사용하여 컴포넌트를 부를 때 최신데이터를 부르는 함수
     useEffect(()=>{
         settingNotices();
     },[]);
@@ -53,10 +62,10 @@ const ListComponent = () => {
 
             {/* 공지사항 목록을 보여주는 테이블 */}
             <table className="min-w-full bg-white">
-                <thead>
+                <thead className="bg-gray-400">
                 <tr>
                     {/* 테이블 헤더 */}
-                    <th className="w-1/6 px-4 py-2 border-b-2 border-gray-300 text-left">번호</th>
+                    <th className="w-1/6 px-4 py-2 border-b-2 border-gray-300 text-left">NO</th>
                     <th className="w-1/2 px-4 py-2 border-b-2 border-l border-gray-300 text-left">제목</th>
                     <th className="w-1/6 px-4 py-2 border-b-2 border-l border-gray-300 text-left">작성일</th>
                     <th className="w-1/6 px-4 py-2 border-b-2 border-l border-gray-300 text-left">조회수</th>
@@ -73,7 +82,9 @@ const ListComponent = () => {
                         >
                             {notice.nboardTitle}
                         </td>
-                        <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">{notice.nboardDate}</td>
+                        <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">
+                            {formatDate(notice.nboardDate)}
+                        </td>
                         <td className="w-1/6 border-t border-l border-gray-300 px-4 py-2 text-left">{notice.nboardViews}</td>
                     </tr>
                 ))}

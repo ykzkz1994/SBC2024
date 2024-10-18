@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@RestController
+@RestController("userMemberController") //사용자 관련 멤버 컨트롤러
 @RequestMapping("/api/member")
 public class MemberController {
 

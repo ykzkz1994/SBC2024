@@ -80,9 +80,7 @@ public class CamperServiceImpl implements CamperService {
             camperBoard.changeContent(camperBoardDTO.getCBoardContent());
         }
 
-        if (camperBoardDTO.getCBoardAttachment() != null) {
-            camperBoard.changeAttachment(camperBoardDTO.getCBoardAttachment());
-        }
+
 
 
         camperRepository.save(camperBoard);

@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/site") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
+@CrossOrigin(origins = "http://localhost:*") //왜갑자기 안됨
 public class SiteController {
 
     // 불변 인스턴스변수 선언

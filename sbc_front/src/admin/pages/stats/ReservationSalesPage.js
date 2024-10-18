@@ -1,56 +1,42 @@
-import {useEffect, useState} from "react";
+import React, { useState, useEffect } from "react";
 import SalesComponent from "../../components/stats/SalesComponent";
 import ResRateComponent from "../../components/stats/ResRateComponent";
 import ResCancelComponent from "../../components/stats/ResCancelComponent";
-import {getAllSites} from "../../api/SiteApi";
-import {Tab, Tabs} from "react-bootstrap";
+import { Tab, Tabs } from "react-bootstrap";
+import { fetchSalesStats } from "../../api/statsApi"; // API 호출 함수를 import 해야 합니다.
 
-export const SiteSelect = () => {
 
-// 사이트 전체 정보 목록을 저장하는 변수
-const [sites, setSites] = useState([]);
-
-// 데이터 불러오는 비동기 함수
-    const fetchSites = async () => {
+const ReservationSalesPage = () => {
+    const [salesStats, setSalesStats] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [dateType, setDateType] = useState('day');
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [selectedStartDate, setSelectedStartDate] = useState(null);
+    const [selectedEndDate, setSelectedEndDate] = useState(null);
+    
+    const handleSearch = async (searchParams) => {
+        setLoading(true);
         try {
-            //변수 data에 geSiteDataALL의 Responce.data를 할당
-            const data = await getAllSites();
-            //set 생성자(변수)
-            setSites(data);
+            const data = await fetchSalesStats(searchParams);
+            setSalesStats(data);
+            setDateType(searchParams.dateType);
+            setError(null);
         } catch (err) {
-            console.error('사이트 데이터를 불러오는데 실패했습니다:', err);
+            console.error('데이터를 불러오는 데 실패했습니다:', err);
+            setError('데이터를 불러오는 데 실패했습니다.');
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchSites();
-    }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 호출
-
-    return (
-        <div>
-            <hr/>
-            <label>
-                사이트
-                <select className="siteName">
-                    <option value={"default"}>전체</option>
-                    {/* value: site ID */}
-                    {sites.length > 0 ? (
-                        sites.map(site => (
-                            <option key={site.siteId} value={site.siteId}>
-                                {site.siteName}
-                            </option>
-                        ))
-                    ) : (
-                        <option value="">사이트 데이터가 없습니다.</option>
-                    )}
-                </select> </label>
-            <hr/>
-        </div>
-    );
-}
-
-
-const ReservationSalesPage = () => {
+        // 컴포넌트 마운트 시 초기 데이터 로드
+        handleSearch({ dateType: 'day', startDate: new Date().toISOString().split('T')[0] });
+    }, []);
 
     return (
         <>
@@ -62,22 +48,26 @@ const ReservationSalesPage = () => {
                     className="mb-3"
                 >
                     <Tab eventKey="sales" title="매출 현황">
-                        <SiteSelect/>
-                        <SalesComponent/>
+                    <SalesComponent 
+            salesStats={salesStats}
+            loading={loading}
+            error={error}
+            dateType={dateType}
+            selectedStartDate={startDate}
+            selectedEndDate={endDate}
+            selectedYear={selectedYear}
+            selectedMonth={selectedMonth}
+            onSearch={handleSearch}
+        />
                     </Tab>
                     <Tab eventKey="rate" title="예약률 현황">
-                        <SiteSelect/>
-                        <ResRateComponent/>
+                        <ResRateComponent />
                     </Tab>
                     <Tab eventKey="cancel" title="예약취소 현황">
-                        <SiteSelect/>
-                        <ResCancelComponent/>
+                        <ResCancelComponent />
                     </Tab>
                 </Tabs>
-
             </nav>
-
-
         </>
     );
 }
