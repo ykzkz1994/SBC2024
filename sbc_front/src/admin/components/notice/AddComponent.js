@@ -59,6 +59,7 @@ const AddComponent = () => {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="공지사항 제목을 입력하세요"
                         required
+                        maxLength={50}
                     />
                 </div>
                 <div>
@@ -70,6 +71,7 @@ const AddComponent = () => {
                         rows="5"
                         placeholder="공지사항 내용을 입력하세요"
                         required
+                        maxLength={1000}
                     />
                 </div>
                 <div className="text-right space-x-2">

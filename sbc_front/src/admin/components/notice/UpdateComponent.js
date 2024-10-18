@@ -67,6 +67,7 @@ const UpdateComponent = () => {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder={title}
                         required
+                        maxLength={50}
                     />
                 </div>
                 <div>
@@ -78,11 +79,12 @@ const UpdateComponent = () => {
                         rows="5"
                         placeholder={content}
                         required
+                        maxLength={1000}
                     />
                 </div>
                 <div className="text-right">
                     <button
-                        type="submit"
+                        type="submit"/*submit으로 함수처리*/
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                     >
                         수정 완료
