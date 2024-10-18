@@ -3,10 +3,10 @@ import { Navigate } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
 
 const Loading = <Spinner animation="border" />;
-const MypageMemberInfo = lazy(() => import("../pages/member/MypageMemberInfoPage"));
 const MyPageRes = lazy(() => import("../pages/member/MyPageResPage"));
 const MypageResDetail = lazy(() => import("../pages/member/MypageResDetailPage"))
-const AuthPw = lazy(() => import("../pages/member/MypageAuthPwPage"));
+const MypageInfo = lazy(() => import("../pages/member/MypageMyInfoPage"));
+const WithDraw = lazy(() => import("../pages/member/MypageWithdrawPage"))
 
 const MypageRouter = () => {
     return[
@@ -19,18 +19,17 @@ const MypageRouter = () => {
             element : <Suspense fallback={Loading}><MyPageRes/></Suspense>
         },
         {
-            path: "detail",
+            path: "res/detail",
             element: <Suspense fallback={Loading}><MypageResDetail/></Suspense>
         },
         {
             path: "info",
-            element: <Suspense fallback={Loading}><MypageMemberInfo/></Suspense>
+            element: <Suspense fallback={Loading}><MypageInfo/></Suspense>
         },
         {
-            path: "authpw",
-            element: <Suspense fallback={Loading}><AuthPw/></Suspense>
-        },
-
+            path: "withdraw",
+            element: <Suspense fallback={Loading}><WithDraw/></Suspense>
+        }
 
     ]
 }

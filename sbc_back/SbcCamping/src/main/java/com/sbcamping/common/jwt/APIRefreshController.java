@@ -31,13 +31,11 @@ public class APIRefreshController {
         }
 
         String accessToken = authHeader.substring(7);
-        log.info("------------1번" + accessToken);
 
         // Access 토큰이 만료되지 않았다면 PASS, 기존 값 반환
         if(checkExpiredToken(accessToken) == false){
             return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
         }
-        log.info("-----------2번");
 
         // 만료됐다면 Refresh 토큰 검증 후 새로운 토큰 발급
         Map<String, Object> claims = JWTUtil.validateToken(refreshToken);

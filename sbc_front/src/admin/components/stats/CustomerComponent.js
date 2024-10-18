@@ -1,3 +1,5 @@
+import DateSearchComponent from "./DateSearchComponent";
+
 const CustomerComponent = ( )=> {
     const wrapperStyle = {
         width: '100%',
@@ -12,6 +14,7 @@ const CustomerComponent = ( )=> {
 
     return (
         <>
+            <DateSearchComponent/>
             <div className={"genderAge"} style={wrapperStyle}>
                 <h4>성별/연령별 비중</h4>
                 <div>

@@ -26,11 +26,10 @@ const BasicLayout = ({children}) => {
 
     return (
         <>
-            <Navbar bg="white" data-bs-theme="light">
+            <Navbar bg="white" data-bs-theme="light" className="navwrap">
                 <Container>
                     <Navbar.Brand href="/" id="logo">
-                        <img src="https://img.icons8.com/?size=100&id=81215&format=png&color=000000" alt="logo"/>Suspension
-                        Bridge Camping
+                        <img src="https://img.icons8.com/?size=100&id=81215&format=png&color=000000" alt="logo"/>SUSPENSION BRIDGE CAMPING
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">

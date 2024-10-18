@@ -1,19 +1,18 @@
-
+/* 상단 이미지 */
 .imgwrap{
     width: 100%;
+    max-width: 1200px;
     max-height: 420px;
 }
-.quickmenuwrap{
-    margin: auto 0;
-    height: 50px;
-    width: 100%;
-}
+
 #menuImg{
     width: 100%;
     max-height: 420px;
 }
 
+/* 메뉴 버튼 */
 #menubuttonwrap{
+    max-width: 1200px;
     margin: -60px 0;
     display: flex;
     justify-content: space-between;
@@ -29,7 +28,7 @@
     margin-bottom: 70px;
     padding: 20px 0;
     background-color: white;
-    border: 1px solid rgb(168, 168, 168);
+    border: 1px solid lightgrey;
     width: 100%;
     text-decoration: none;
     color: black;
@@ -44,12 +43,8 @@
     color: white;
 }
 
-.menubutton:focus{
-    background-color: #9DC4B5;
-    color: white;
-}
-
 .menubutton.active {
     background-color: #9DC4B5;
     color: white;
 }
+

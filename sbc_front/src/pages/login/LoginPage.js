@@ -19,6 +19,7 @@ const LoginPage = () => {
     }
 
     const handleClickLogin = (e) => {
+        e.preventDefault();
         doLogin(loginParam)
             .then(data => {
                 //console.log('로그인 정보', data);
@@ -27,7 +28,7 @@ const LoginPage = () => {
                 } else{
                     //alert('로그인 성공')
                     if(data.member.memberRole === 'ROLE_ADMIN'){
-                        moveToPath('/api/admin')
+                        moveToPath('/admin')
                     }else{
                         moveToPath('/')
                     }
@@ -43,16 +44,20 @@ const LoginPage = () => {
                 <div>
                     <h3>로그인</h3>
                 </div>
-                <div id="loginbox">
-                    <input type="email" name="email" value={loginParam.email} onChange={handleChange}
-                           placeholder={" 이메일을 입력해주세요"}></input><br></br>
-                    <input type="password" name="pw" value={loginParam.pw} onChange={handleChange}
-                           placeholder={" 비밀번호를 입력해주세요."}></input>
-                    <div>
-                        <button onClick={handleClickLogin} className={"loginbutton_default"}>로그인</button>
-                        <br></br>
-                        <button className={"loginbutton_kakao"}>카카오로그인</button>
-                    </div>
+                <div >
+                    <form id="loginbox">
+                        <input type="email" name="email" value={loginParam.email} onChange={handleChange}
+                               placeholder={" 이메일을 입력해주세요"}></input><br></br>
+                        <input type="password" name="pw" value={loginParam.pw} onChange={handleChange}
+                               placeholder={" 비밀번호를 입력해주세요."}></input>
+                        <div>
+                            <button onClick={handleClickLogin} className={"loginbutton_default"}>로그인</button>
+                            <br></br>
+                            {/*
+                            <button className={"loginbutton_kakao"}>카카오로그인</button>
+                            */}
+                        </div>
+                    </form>
                 </div>
                 <div className={"findwrap"}>
                     <button className={"findbutton"} onClick={() => navigate('/findemail')}>이메일찾기</button>

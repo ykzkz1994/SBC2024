@@ -30,7 +30,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         try {
             String accessToken = authHeaderStr.substring(7);
             Map<String, Object> claims = JWTUtil.validateToken(accessToken); // 토큰 검증
-            log.info("--------JWT Claims : {}", claims);
+            //log.info("--------JWT Claims : {}", claims);
 
             // 사용자 정보 추출 (member 내부의 정보)
             Map<String, Object> memberClaims = (Map<String, Object>) claims.get("member");
@@ -44,14 +44,19 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             // authorities 필드가 List<Map<String, Object>> 형태인 경우 처리
             String memberRole = "";
             List<Map<String, Object>> authorities = (List<Map<String, Object>>) memberClaims.get("authorities");
+            String role = (String) memberClaims.get("memberRole");
             if (authorities != null && !authorities.isEmpty()) {
                 // 첫 번째 권한의 authority 값 추출
                 memberRole = (String) authorities.get(0).get("authority");
-            } else {
+            } else if(role != null){
+                memberRole = role;
+            }
+            else {
                 throw new RuntimeException("권한 정보가 없습니다.");
             }
             Long memberId = (Long) claims.get("memberId");
-            MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender, memberBirth, memberLocal, memberRole, memberId);
+            String memberStatus = (String) claims.get("memberStatus");
+            MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender, memberBirth, memberLocal, memberRole, memberId, memberStatus);
             log.info("memberDTO.GetAuthorities() : {}", memberDTO.getAuthorities());
 
             // 인증 객체 생성(사용자 정보와 권한)

@@ -45,7 +45,7 @@ public class JWTUtil {
                     .setSigningKey(key).build()
                     .parseClaimsJws(token)
                     .getBody(); // 토큰에 포함된 클레임 추출
-            log.info("--------validateToken claim : {}", claim);
+            //log.info("--------validateToken claim : {}", claim);
         } catch (MalformedJwtException e) { // 전달되는 토큰의 값이 유효하지 않을 때 발생
             throw new CustomJWTException("MalFormed");
         } catch (ExpiredJwtException e) { // 유효기간 초과

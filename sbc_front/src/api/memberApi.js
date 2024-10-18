@@ -13,7 +13,7 @@ export const loginPost = async (loginParam) => {
     form.append('password', loginParam.pw)
 
     const result = await axios.post(`${host}/auth/login`, form, header)
-    console.log(result);
+    //console.log(result);
 
     return result.data;
 }

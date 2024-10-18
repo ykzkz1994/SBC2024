@@ -104,7 +104,7 @@ const FindPwModifyPage = () => {
     return(
         <BasicLayout>
             <LoginMenu/>
-            <div>
+            <div style={{marginTop:'20px'}}>
                 <h3>비밀번호 변경</h3>
             </div>
             <div className="modPwWrap">

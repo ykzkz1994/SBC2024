@@ -33,6 +33,7 @@ const FindPwMod = lazy(() => import("../pages/login/FindPwModifyPage"))
 const FIndEmail = lazy(() => import("../pages/login/FindEmailPage"))
 const MyPageIndex = lazy(() => import("../pages/member/MypageIndexPage"))
 const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
+const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
 
 /*
 관리자 페이지
@@ -85,9 +86,9 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><FIndEmail/></Suspense>
     },
     {
-      path: "join",
-      element: <Suspense fallback={Loading}><Join/></Suspense>,
-      children: joinRouter()
+        path: "join",
+        element: <Suspense fallback={Loading}><Join/></Suspense>,
+        children: joinRouter()
     },
     {
         path: "camping",
@@ -103,6 +104,10 @@ const root = createBrowserRouter([
         path: "notice",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
         children: NoticeRouter()
+    },
+    {
+        path: "qna",
+        element: <Suspense fallback={Loading}><QnaIndex/></Suspense>
     },
     {
         path: "mypage",

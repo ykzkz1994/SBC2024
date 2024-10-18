@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("userResController")    //사용자 예약 컨트롤러
 @RequiredArgsConstructor
 @Log4j2
 @RequestMapping("/api/res")
 public class ResController {
+
 
     private final ReservationService service;
 

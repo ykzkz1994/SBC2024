@@ -1,3 +1,6 @@
+import Table from "react-bootstrap/Table";
+import DateSearchComponent from "./DateSearchComponent";
+
 const SalesComponent = () => {
     const wrapperStyle = {
         width: '100%',
@@ -12,12 +15,14 @@ const SalesComponent = () => {
 
     return (
         <>
+            <DateSearchComponent/>
+            <hr/>
             <div className={"graphWrapper"} style={wrapperStyle}>
                 graph
             </div>
-            <h3>목록 (총 00건)</h3>
             <div className={"listWrapper"} style={wrapperStyle}>
-                <table style={{width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc'}}>
+                <Table>
+                    <caption>목록 (총 00건)</caption>
                     <thead>
                     <tr>
                         <th rowSpan={2}>날짜</th>
@@ -54,7 +59,7 @@ const SalesComponent = () => {
                         <td>0원</td>
                     </tr>
                     </tbody>
-                </table>
+                </Table>
             </div>
         </>
     )

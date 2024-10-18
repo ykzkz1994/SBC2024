@@ -30,7 +30,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
             from date_range
             where date_seq = to_date(:date, 'YYYY-MM-DD')
         """, nativeQuery = true)
-    public List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date")String setDate);
+    List<Object[]> getReservations(@Param("siteId") Long siteId, @Param("date") String setDate);
 
     // memberId를 사용하여 예약 내역 조회 (마이페이지 - 나의 예약내역)
     @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId")

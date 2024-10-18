@@ -7,7 +7,7 @@ const JoinIndexPage = () => {
     return(
         <BasicLayout>
             <LoginMenu/>
-            <div>
+            <div style={{marginTop : '30px'}}>
                 <h3>회원가입</h3>
                 <Outlet/>
             </div>

@@ -3,8 +3,12 @@ import Button from 'react-bootstrap/Button';
 import Carousel from 'react-bootstrap/Carousel';
 import '../css/mainPage.css';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import {useNavigate} from "react-router-dom";
 
 const MainPage = () => {
+
+    const navigate = useNavigate();
+
     return(
         <BasicLayout>
 
@@ -31,11 +35,11 @@ const MainPage = () => {
 
             {/* 중간 퀵메뉴*/}
             <ButtonGroup aria-label="Basic example" className='quickmenuwrap'>
-                <Button variant="light">실시간 예약</Button>
-                <Button variant="light">예약 확인</Button>
-                <Button variant="light">이용 요금 안내</Button>
-                <Button variant="light">시설안내도</Button>
-                <Button variant="light">찾아오시는 길</Button>
+                <Button variant="light" onClick={()=>navigate('/res/realtime')}>실시간 예약</Button>
+                <Button variant="light" onClick={()=>navigate('/mypage/res')}>예약 확인</Button>
+                <Button variant="light" onClick={()=>navigate('/res/info')}>이용 요금 안내</Button>
+                <Button variant="light" onClick={()=>navigate('/camping/guide')}>시설안내도</Button>
+                <Button variant="light" onClick={()=>navigate('/camping/how')}>찾아오시는 길</Button>
             </ButtonGroup>
 
             {/* 서스펜션 브릿지 캠핑장 커뮤니티 */}
