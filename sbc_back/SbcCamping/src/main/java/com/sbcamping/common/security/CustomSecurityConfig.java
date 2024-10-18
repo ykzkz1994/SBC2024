@@ -42,6 +42,7 @@ public class CustomSecurityConfig {
             form.failureHandler(new APILoginFailHandler());
         });
 
+
         // JWT 체크
         http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -61,7 +62,7 @@ public class CustomSecurityConfig {
 
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 프론트엔드 주소를 명시적으로 지정
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "X-Refresh-Token", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
 

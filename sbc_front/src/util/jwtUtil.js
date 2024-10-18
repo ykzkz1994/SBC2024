@@ -54,7 +54,7 @@ const beforeResponse = async (res) => {
     if(data && data.error === "ERROR_ACCESS_TOKEN"){ // 해당 Error인 경우 리프레쉬 토큰으로 한 번 더 호출
         const memberCookieValue = JSON.parse(getCookie("memberCookie"));
 
-        const result = await refreshJWT(memberCookieValue.access_token, memberCookieValue.refresh_token);
+        const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
         console.log("refresh JWT RESULT : ", result);
 
         memberCookieValue.accessToken = result.accessToken;

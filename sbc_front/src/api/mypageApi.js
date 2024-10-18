@@ -20,18 +20,50 @@ export const getResDetail = async (resId) => {
 }
 
 // 예약 취소 (상태를 예약완료 -> 예약취소로 변경)
-export const cancleRes = async (resId) => {
-    const res = await jwtAxios.put(`${host}/${resId}`);
-    return res.data;
+export const cancelRes = async (resId, reason) => {
+    console.log('예약 취소 사유 확인 :', reason, 'id : ', resId)
+    const header = {
+        headers:{'Content-Type': 'application/json'}
+    }
+    const res = await jwtAxios.put(`${host}/${resId}/cancel`, {reason}, header);
 }
 
-// 회원정보 수정 - 비밀번호 인증
+// 회원정보 수정 1 - 비밀번호 인증
 export const authPw = async (member) => {
     console.log('back 보내기 전 member : ',member)
     const header = {
         headers:{'Content-Type': 'application/json'}
     }
     const res = await jwtAxios.post(`${host}/pwauth`, member, header);
-    console.log('mypageApi - authPw 결과 : ', res);
+    console.log('pw인증 결과 : ', res);
     return res.data;
+}
+
+// 회원정보 조회
+export const getMember = async (memberId) => {
+    const res = await jwtAxios.get(`${host}/${memberId}`);
+    console.log(res);
+    return res.data;
+}
+
+// 회원정보 수정 2 - 회원 정보 수정
+export const modifyMember = async (member) => {
+    console.log('mypageApi modifyMember :', member)
+    const header = {
+        headers:{'Content-Type': 'application/json'}
+    }
+    const res = await jwtAxios.put(`${host}/mod`, JSON.stringify(member), header);
+    console.log('결과 : ', res);
+    //Cookies.set('memberCookie', JSON.stringify(res.member));
+    return res.data;
+}
+
+// 회원 탈퇴
+export const withdraw = async (member) => {
+    const header = {
+        headers:{'Content-Type': 'application/json'}
+    }
+    const res = await jwtAxios.post(`${host}/withdraw`, member, header);
+    //console.log('탈퇴 결과 : ', res);
+    return res;
 }

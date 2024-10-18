@@ -8,7 +8,8 @@
 #loginbox{
     padding: 30px;
     border: 1px solid grey;
-    margin : 20px auto;
+    border-radius: 10px;
+    margin : 10px auto;
     width: 400px;
 }
 
@@ -49,6 +50,8 @@
     background: #f3c32a;
     cursor: pointer;
 }
+
+/* ~ 찾기 */
 .findwrap{
     max-width: 400px;
     margin: auto;
@@ -65,4 +68,10 @@
 .findbutton:hover{
     color: white;
     background: grey;
+}
+
+/* 비밀번호 변경 */
+.modPwWrap{
+    margin: 30px auto;
+    max-width: 600px;
 }

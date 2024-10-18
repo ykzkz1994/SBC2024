@@ -61,7 +61,6 @@ protected void onCreate() {
     public void changeCategory(String Category) {
         this.cBoardCategory = Category;
     }
-
     //글 제목 수정
     public void changeTitle(String title) {
         this.cBoardTitle = title;

@@ -1,5 +1,7 @@
 package com.sbcamping.user.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -21,9 +23,10 @@ public class MemberDTO extends User {
     private String memberLocal;
     private String memberRole;
     private Long memberId;
+    private String memberStatus;
 
     // 생성자
-    public MemberDTO(String email, String memberPw, String memberName, String memberPhone, char memberGender, String memberBirth, String memberLocal, String memberRole, Long memberId) {
+    public MemberDTO(String email, String memberPw, String memberName, String memberPhone, char memberGender, String memberBirth, String memberLocal, String memberRole, Long memberId, String memberStatus) {
         super(email, memberPw, convertRoleToCollection(memberRole));
         this.memberEmail = email;
         this.memberPw = memberPw;
@@ -34,6 +37,7 @@ public class MemberDTO extends User {
         this.memberLocal = memberLocal;
         this.memberRole = memberRole;
         this.memberId = memberId;
+        this.memberStatus = memberStatus;
     }
 
     // 문자열을 Collection으로 변환하는 메서드
@@ -45,18 +49,18 @@ public class MemberDTO extends User {
 
     // JWT 인증용 클레임(claim)
     // 클레임(claim)은 인증 및 인가 시스템에서 사용자의 신원이나 권한에 대한 정보를 담고 있는 데이터 조각
-    public Map<String, Object> getClaims(){
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("memberEmail", memberEmail);
-        claims.put("memberPw", memberPw);
-        claims.put("memberName", memberName);
-        claims.put("memberPhone", memberPhone);
-        claims.put("memberGender", memberGender);
-        claims.put("memberBirth", memberBirth);
-        claims.put("memberLocal", memberLocal);
-        claims.put("memberRole", memberRole);
-        claims.put("memberId", memberId);
-        return claims;
-    }
+//    public Map<String, Object> getClaims(){
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("memberEmail", memberEmail);
+//        claims.put("memberPw", memberPw);
+//        claims.put("memberName", memberName);
+//        claims.put("memberPhone", memberPhone);
+//        claims.put("memberGender", memberGender);
+//        claims.put("memberBirth", memberBirth);
+//        claims.put("memberLocal", memberLocal);
+//        claims.put("memberRole", memberRole);
+//        claims.put("memberId", memberId);
+//        return claims;
+//    }
 
 }

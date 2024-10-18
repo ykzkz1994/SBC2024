@@ -33,14 +33,10 @@ const MypageResDetailPage = (props) => {
     }
 
     return (
-        <div>
-            <h3>예약 내역</h3>
+        <div style={{marginTop:'20px'}}>
+            <h3>예약 번호 : {res.resId}</h3>
             <div className="resdetailtablewrap">
                 <table>
-                    <tr>
-                        <td>예약번호</td>
-                        <td>{res.resId}</td>
-                    </tr>
                     <tr>
                         <td>구역이름</td>
                         <td>{res.site && res.site.siteName ? res.site.siteName : <span>없음</span>}</td>
@@ -54,8 +50,16 @@ const MypageResDetailPage = (props) => {
                         <td>{res.resUserPhone}</td>
                     </tr>
                     <tr>
+                        <td>예약 상태</td>
+                        <td>{res.resStatus}</td>
+                    </tr>
+                    <tr>
                         <td>예약날짜</td>
-                        <td>{res.resDate}</td>
+                        <td>
+                            {res.resStatus == '예약취소' ?
+                                <span style={{textDecorationLine:'line-through'}}>{res.resDate}</span> : <span>{res.resDate}</span>
+                            }
+                            </td>
                     </tr>
                     <tr>
                         <td>입실날짜</td>

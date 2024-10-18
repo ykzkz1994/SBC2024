@@ -3,7 +3,6 @@ package com.sbcamping.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity

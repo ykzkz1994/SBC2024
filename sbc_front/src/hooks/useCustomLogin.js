@@ -39,6 +39,7 @@ const useCustomLogin = () => {
         console.log("토큰 Exception"+ ex);
         const errorMsg = ex.response.data.error;
         const errorStr = createSearchParams({error:errorMsg}).toString();
+        console.log('게시판 권한 예외 : ', errorStr)
         if(errorStr === 'REQUIRE_LOGIN'){
             alert('회원만 이용가능합니다.');
             //navigate({pathname:'/login', search: errorStr})
@@ -46,7 +47,8 @@ const useCustomLogin = () => {
         }
         if(ex.response.data.error === 'ERROR_ACCESSDENIED'){
             alert('해당 메뉴를 사용할 수 있는 권한이 없습니다.');
-            navigate({pathname:'/login', search: errorStr})
+            console.log('ERROR_ACCESSDENIED', ex)
+            //navigate({pathname:'/login', search: errorStr})
             return
         }
     }

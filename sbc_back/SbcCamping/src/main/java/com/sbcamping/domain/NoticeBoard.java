@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @SequenceGenerator(name = "NOTICE_BOARD_SEQ_GEN", // 시퀀스 제너레이터 이름
-            sequenceName = "NOTICE_BOARD_SEQ", // 시퀀스 이름
-            initialValue = 1, //시작값
-            allocationSize = 1 // 메모리를 통해 할당할 범위 사이즈
+        sequenceName = "NOTICE_BOARD_SEQ", // 시퀀스 이름
+        initialValue = 1, //시작값
+        allocationSize = 1 // 메모리를 통해 할당할 범위 사이즈
 )
 @Table(name = "notice_board") // 실제 DB 테이블 명
 @Getter

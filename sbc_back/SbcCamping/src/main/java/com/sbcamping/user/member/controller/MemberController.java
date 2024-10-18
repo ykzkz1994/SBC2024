@@ -4,9 +4,6 @@ import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.service.MemberService;
-import com.sbcamping.user.member.service.MemberServiceImpl;
-import com.sbcamping.user.reservation.dto.ReservationDTO;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +30,11 @@ public class MemberController {
 
 
     // 예약 상태 변경
-    @PutMapping("/{resID}")
-    public void cancleReservation(@PathVariable Long resID){
-        log.info("에약 상태 변경 메소드 도착");
-        memberService.cancleRes(resID);
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("/{resID}/cancel")
+    public void cancelReservation(@PathVariable Long resID, @RequestBody Map<String,String> reason){
+        log.info("에약 상태 변경 메소드 도착 ID : "+ resID + " 이유 : " + reason);
+        memberService.cancelRes(resID, reason.get("reason"));
         log.info("예약 상태 변경 메소드 끝");
     }
 
@@ -55,43 +53,51 @@ public class MemberController {
         return memberService.getResDetail(resID);
     }
 
-    // 회원개인정보 조회
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/{memberID}")
-    public void GetMemberInfo(@PathVariable(name = "memberID") Long memberID){
-        Member member = memberService.getMember(memberID);
-    }
-
     // 비밀번호 인증 241014 17:09
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/pwauth")
     public Map<String, String> memberPwAuth(@RequestBody Map<String, Object> member){
-        Long memberId = Long.parseLong(member.get("memberId").toString());  // 키 값은 문자열로 사용
+        Long memberId = Long.parseLong(member.get("memberId").toString());
         String memberPw = member.get("memberPw").toString();
-        log.info("비밀번호 인증 : " + memberId, memberPw);
-        Member mem = new Member();
-
+        //log.info("------비밀번호 인증 메소드 : " + memberId, memberPw);
         String msg = memberService.authPw(memberId, memberPw);
         Map<String, String> map = new HashMap<>();
         map.put("msg", msg);
         return map;
     }
 
+    // 회원정보 조회
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/{memberId}")
+    public Map<String, Member> getMember(@PathVariable Long memberId){
+        //log.info("---------회원 조회 메서드 : {}", memberId);
+        Member member = memberService.getMember(memberId);
+        Map<String, Member> map = new HashMap<>();
+        map.put("member", member);
+        return map;
+    }
+
     // 회원정보 수정
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping("/{memberID}")
-    public Map<String, String> modifyMember(@PathVariable(name = "memberID") Long memberID, @RequestBody MemberDTO memberDTO){
-        String msg = memberService.updateMember(memberID, memberDTO);
-        Map<String, String> map = new HashMap<>();
-        map.put("msg", msg);
+    @PutMapping("/mod")
+    public Map<String, Member> modifyMember(@RequestBody Member member){
+        //log.info("---------- 회원정보 수정 : " + member);
+        Member memResult = memberService.updateMember(member);
+        Map<String, Member> map = new HashMap<>();
+        map.put("member", memResult);
         return map;
     }
 
     // 회원 탈퇴(삭제)
     @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/{memberID}")
-    public void deleteMember(@PathVariable(name = "memberID") Long memberID){
-        memberService.deleteMember(memberID);
+    @PostMapping("/withdraw")
+    public Map<String, String> withdraw(@RequestBody Map<String, Object> member){
+        Long memberId = Long.parseLong(member.get("memberId").toString());
+        String memberPw = member.get("memberPw").toString();
+        String result = memberService.withdraw(memberId, memberPw);
+        Map<String, String> map = new HashMap<>();
+        map.put("msg", result); // 회원 상태 바뀌면 success 아니면 fail
+        return map;
     }
 
 

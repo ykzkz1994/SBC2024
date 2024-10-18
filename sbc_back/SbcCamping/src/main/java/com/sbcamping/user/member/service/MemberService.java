@@ -8,15 +8,16 @@ import java.util.List;
 
 public interface MemberService {
     public void addMember(Member member);
-    public String updateMember(Long memberID, MemberDTO member);
+    public Member updateMember(Member member);
     public void deleteMember(Long memberID);
     public Member getMember(Long memberId);
     public String emailCheck(String memberEmail);
     public String findEmail(String memberName, String memberPhone);
     public Member findMemberByNameAndEmail(Member member);
-    public String updatePw(MemberDTO memberDTO);
+    public String updatePw(Member member);
     public String authPw(Long memberId, String memberPw);
     public List<Reservation> getMemberRes(Long memberId);
     public Reservation getResDetail(Long resId);
-    public void cancleRes(Long resId);
+    public void cancelRes(Long resId, String reason);
+    public String withdraw(Long memberId, String memberPw);
 }

@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/res")
 public class ResController {
 
+
     private final ReservationService service;
 
 

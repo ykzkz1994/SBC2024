@@ -207,7 +207,7 @@ const JoinInputPage = () => {
             const selectedLocal = event.target.value;
             setLocal(selectedLocal);
             console.log(selectedLocal);
-            if (selectedLocal === "선택해주세요" || selectedLocal === "") {
+            if (selectedLocal == "선택해주세요" || selectedLocal === "") {
                 setIsLocalValid(false);  // 선택이 잘못되었을 경우
             } else {
                 setIsLocalValid(true);  // 올바른 선택
@@ -240,10 +240,10 @@ const JoinInputPage = () => {
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {/* 이메일 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             이메일
                         </Form.Label>
-                        <Col sm={4}>
+                        <Col sm={5}>
                             <Form.Control type="email"
                                           name="memberEmail"
                                           placeholder="이메일을 입력하세요"
@@ -257,7 +257,7 @@ const JoinInputPage = () => {
 
                         </Col>
                         <Col sm={2}>
-                            <Button variant="success" onClick={handleEmailCheck}>중복체크</Button>
+                            <Button variant="success" onClick={handleEmailCheck} style={{fontSize:'13px'}}>중복체크</Button>
                             <MyVerticallyCenteredModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
@@ -268,10 +268,10 @@ const JoinInputPage = () => {
 
                     {/* 비밀번호 */}
                     <Form.Group as={Row} className="mb-3" >
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         비밀번호
                     </Form.Label>
-                    <Col sm={10}>
+                    <Col sm={7}>
                         <Form.Control type="password"
                                       name="memberPw"
                                       placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
@@ -290,10 +290,10 @@ const JoinInputPage = () => {
 
                     {/* 비밀번호 재확인 */}
                     <Form.Group as={Row} className="mb-3" >
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         비밀번호 확인
                     </Form.Label>
-                    <Col sm={10} id={"pwrebox"}>
+                    <Col sm={7} id={"pwrebox"}>
                         <Form.Control type="password"
                                       placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
                                       required
@@ -311,10 +311,10 @@ const JoinInputPage = () => {
 
                     {/* 이름 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             이름
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberName"
                                           placeholder="이름을 입력하세요"
@@ -331,10 +331,10 @@ const JoinInputPage = () => {
 
                     {/* 핸드폰번호 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             핸드폰 번호
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberPhone"
                                           placeholder="-없이 숫자만 입력해주세요"
@@ -353,10 +353,10 @@ const JoinInputPage = () => {
                     {/* 성별 */}
                     <fieldset>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label as="legend" column sm={2}>
+                            <Form.Label as="legend" column sm={3}>
                                 성별
                             </Form.Label>
-                            <Col sm={10}>
+                            <Col sm={7}>
                                 <Form.Check
                                     inline
                                     type="radio"
@@ -386,10 +386,10 @@ const JoinInputPage = () => {
 
                     {/* 생년월일 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             생년월일
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberBirth"
                                           placeholder="숫자만 입력해주세요 ex. 19990220"
@@ -406,17 +406,17 @@ const JoinInputPage = () => {
 
                     {/* 지역 */}
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             지역
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Select aria-label="local"
                                          name="memberLocal"
                                          required
                                          onChange={handleChangeJoin}
-                                         isInvalid={validated && (local === "" || local === "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
+                                         isInvalid={validated && (local === "" || local == "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
                             >
-                                <option>선택해주세요</option>
+                                <option value="선택해주세요" selected>선택해주세요</option>
                                 <option value="서울">서울</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>
@@ -440,13 +440,10 @@ const JoinInputPage = () => {
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm={{span: 10, offset: 2}} className={"joinbuttonwrap"}>
-                            <Button variant="success" className={"joinButton"} type="submit" onClick={handleSubmit}>회원가입</Button>
-                        </Col>
-                    </Form.Group>
                 </Form>
+                <div className="joinButton">
+                    <Button variant="success" type="submit" onClick={handleSubmit}>회원가입</Button>
+                </div>
             </div>
         </div>
     );
