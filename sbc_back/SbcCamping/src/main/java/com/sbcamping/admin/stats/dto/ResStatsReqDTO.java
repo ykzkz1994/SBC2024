@@ -2,24 +2,22 @@ package com.sbcamping.admin.stats.dto;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Site;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-public class StatsDTO {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResStatsReqDTO {
 
     private String resId; // 예약 번호
 
-    private String resUserName; // 예약자 명
-
-    private String resUserPhone; // 예약자 핸드폰 번호
-
-    private Long resPeople; // 인원수
-
     private Date checkinDate; // 입실 날짜
-
-    private Date checkoutDate; // 퇴실 날짜
 
     private String resDate;// 예약 날짜
 
@@ -31,11 +29,10 @@ public class StatsDTO {
 
     private String resCancelReason; // 취소사유
 
-    private char resReview; // 리뷰 작성 여부
+    private Long memberID;
 
-    private Member member;      // member ID
+    private Long siteID;
 
-    private Site site;          // site ID
-
+    private String siteName;
 
 }
