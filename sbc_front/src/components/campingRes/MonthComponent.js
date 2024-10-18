@@ -205,8 +205,7 @@ const MonthComponent = () => {
                             const isPast = isPastDate(dayInfo.year, dayInfo.month, dayInfo.day);
 
                             const currentDate = new Date(year, month - 1, dayInfo.day);
-                            const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
-
+                            
                             const result = resCheckData.map(item => {
                                 const date = new Date(item[3])
                                 return date.toISOString().split('T')[0]
