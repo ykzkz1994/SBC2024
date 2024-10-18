@@ -1,27 +1,33 @@
 package com.sbcamping.admin.stats.service;
 
+import com.sbcamping.admin.stats.dto.CustomerStatsReqDTO;
 import com.sbcamping.admin.stats.dto.ResCancelResultDTO;
 import com.sbcamping.admin.stats.dto.ResSalesResultDTO;
 import com.sbcamping.admin.stats.dto.ResStatsReqDTO;
+import com.sbcamping.admin.stats.repository.ReviewStatsRepository;
 import com.sbcamping.admin.stats.repository.StatsRepository;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.domain.Review;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class StatsServiceImpl implements StatsService {
+public class ResSalesStatsServiceImpl implements ResSalesStatsService {
 
     @Autowired
-    private final StatsRepository statsRepository;
+    private final StatsRepository statsRepository; // reservation -> member
 
     // 1-1 매출 현황 : 금액 가져오기, 예약 건수
     @Override
@@ -239,6 +245,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
 }
+
 
 
 

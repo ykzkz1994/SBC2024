@@ -1,7 +1,6 @@
 package com.sbcamping.admin.stats.controller;
 
-import com.sbcamping.admin.stats.dto.ResStatsReqDTO;
-import com.sbcamping.admin.stats.service.StatsService;
+import com.sbcamping.admin.stats.service.ResSalesStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -13,13 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +22,7 @@ import java.util.Map;
 public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, 사이트별 조회
 
     @Autowired
-    private final StatsService statsService;
+    private final ResSalesStatsService service;
 
     // 1-1 매출 현황 : 금액 가져오기, 예약 건수
     @GetMapping("/sales")
@@ -56,7 +50,7 @@ public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, �
                 return ResponseEntity.badRequest().body("Invalid date type");
         }
 
-        return ResponseEntity.ok(statsService.sales(start, end, siteId, dateType));
+        return ResponseEntity.ok(service.sales(start, end, siteId, dateType));
     }
 
     // 1-2 예약률 현황
@@ -64,7 +58,7 @@ public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, �
     public ResponseEntity<?> rate(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                   @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                                   @RequestParam(value = "site", required = false) Long siteID) {
-        return ResponseEntity.ok(statsService.rate(startDate, endDate, siteID));
+        return ResponseEntity.ok(service.rate(startDate, endDate, siteID));
 
         // 일일 예약률 = (예약된 사이트 수 / 전체 사이트 수) * 100
         // 기간별 예약률 = (기간 내 예약된 사이트-일 수 / (전체 사이트 수 * 기간의 일 수)) * 100
@@ -87,7 +81,7 @@ public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, �
             LocalDate start = parseDate(startDate, dateType);
             LocalDate end = (endDate != null && !endDate.trim().isEmpty()) ? parseDate(endDate, dateType) : null;
 
-            return ResponseEntity.ok(statsService.cancel(start, end, siteId, dateType));
+            return ResponseEntity.ok(service.cancel(start, end, siteId, dateType));
         } catch (Exception e) {
             log.error("Error processing cancel stats request", e);
             return ResponseEntity.badRequest().body("Error processing request: " + e.getMessage());

@@ -21,7 +21,6 @@ public class ResSalesResultDTO {
     private int completedCount;          // 이용완료 건수
 
     private Long siteID;
-    private String siteName;
 
     public ResSalesResultDTO(LocalDate date) {
         this.resDate = date.toString();

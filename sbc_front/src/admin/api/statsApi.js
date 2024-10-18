@@ -28,3 +28,34 @@ export const fetchCancelStats = async (params) => {
         throw error;
     }
 }
+
+// 고객 리뷰 현황 : 태그별 리뷰 건수
+export const fetchReviewStats = async (params) => {
+    try {
+        const response = await axios.get(`${prefix}/customer/reviews`, { params });
+        return response.data;
+    } catch (error) {
+        console.error('API request error:', error.response?.data || error.message);
+        throw error;
+    }
+}
+
+// 고객 현황 : 성별, 연령대, 지역별 통계
+export const fetchCustomerStats = async (startDate, endDate, dateType, siteId = null) => {
+    try {
+        const params = new URLSearchParams({
+            startDate,
+            endDate,
+            dateType,
+            ...(siteId && { siteId })
+        });
+        
+        console.log('Sending request with params:', params.toString()); // 디버깅용 로그
+
+        const response = await axios.get(`${prefix}/customer/all`, { params });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching customer stats:', error);
+        throw error;
+    }
+};

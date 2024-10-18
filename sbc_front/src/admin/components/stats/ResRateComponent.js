@@ -1,4 +1,4 @@
-import DateSearchComponent from "./DateSearchComponent";
+import SearchComponent from "./SearchComponent";
 
 const ResRateComponent = () => {
     const wrapperStyle = {
@@ -14,7 +14,7 @@ const ResRateComponent = () => {
 
     return (
         <>
-            <DateSearchComponent/>
+            <SearchComponent/>
             <hr/>
             <div className={"graphWrapper"} style={wrapperStyle} >
                 예약률 graph
