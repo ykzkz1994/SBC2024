@@ -823,8 +823,8 @@ const MonthComponent = () => {
                                                                 &nbsp;&nbsp;예&nbsp;&nbsp;
                                                             </span>
                                                             <Link
-                                                                to={`/res/respage`}
-                                                                state={{
+                                                                    to={`/res/respage`}
+                                                                    state={{
                                                                     year: dayInfo.year,
                                                                     month: dayInfo.month,
                                                                     day: dayInfo.day,

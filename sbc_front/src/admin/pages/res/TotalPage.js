@@ -1,10 +1,11 @@
 // src/admin/pages/res/TotalPage.js
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CancelList from '../../components/res/CancelList';
 import ResList from '../../components/res/ResList';
 import TotalList from '../../components/res/TotalList';
+import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 권한 검증을 위해
 
 
 
@@ -13,10 +14,23 @@ const TotalPage = () => {
     const [nowComponent, setNowComponent] = useState('TotalList');  //
     const [searchTerm, setSearchTerm] = useState(''); // search기능의 검생어를 정장해놓음 변수
 
-    //리액트에서 지원하는 이동함수
-    const navigate = useNavigate();
+
     //리액트 에서 지원하는 현재url의 정보를 가져오는 함수의 값을 변수에 할당하여 현재 무슨 페이지에 있는지 판별 할 수 있음
     const location = useLocation();
+
+
+
+        // Redux 스토어에서 loginSlice 접근
+        const loginState = useSelector((state) => state.loginSlice);
+        const navigate = useNavigate();
+
+        useEffect(() => {
+            // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
+            // 경우 '/'(기본 메인)경로로
+            if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
+                navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
+            }
+        }, [loginState, navigate]);
 
     // 컴포넌트 렌더링 함수
     //스위치문으로 컴포넌트 갈아끼우기

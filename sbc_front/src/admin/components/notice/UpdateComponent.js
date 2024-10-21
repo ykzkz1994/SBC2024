@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOneNotice, updateNotice } from '../../api/NoticeApi'; // 공지사항 조회 및 업데이트 API 함수 가져오기
+import { getOneNotice, updateNotice } from '../../api/NoticeApi';
+import {useSelector} from "react-redux"; // 공지사항 조회 및 업데이트 API 함수 가져오기
 
 const UpdateComponent = () => {
     const { nid } = useParams(); // URL에서 공지사항 ID(nid)를 가져옴
@@ -9,8 +10,20 @@ const UpdateComponent = () => {
     // 상태 관리: 공지사항 제목,내용  , 에러메세지
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [error, setError] = useState(''); // 오류 메시지 상태 관리
+    const [error, setError] = useState(''); // 오류 메시지 상태 관리`
 
+
+    //현재 로그인중인 사용자의 정보를 받아오는 변수 매핑으로 치고 들어왔을 때 권한을 검증하여 관리자가 아닌경우 메인페이지로 리다이랙트 하기위해
+    const loginState = useSelector((state) => state.loginSlice)
+
+
+    useEffect(() => {
+        // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
+        // 경우 '/'(기본 메인)경로로
+        if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
+            navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
+        }
+    }, [loginState, navigate]);
 
     useEffect(() => {
         const fetchNoticeData = async () => {

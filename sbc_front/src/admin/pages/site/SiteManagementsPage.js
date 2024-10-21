@@ -1,10 +1,28 @@
-// src/admin/pages/site/SiteManagementPage.js
+//구역관리 컴포넌트를 담을 페이지
 
-import React from 'react';
+
 import SiteManagements from "../../components/site/SiteManagements";
 import BasicLayout from "../../layouts/BasicLayout";
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 권한 검증을 위해
+import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 
 const SiteManagementPage = () => {
+    // Redux 스토어에서 loginSlice 접근
+    const loginState = useSelector((state) => state.loginSlice);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
+        // 경우 '/'(기본 메인)경로로
+        if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
+            navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
+        }
+    }, [loginState, navigate]);
+
+
+
+
     return (
         <BasicLayout>
             {/*메뉴도 필요 없을 듯 <SiteMenu/>*/}

@@ -4,11 +4,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import {getAllNotices} from "../../api/NoticeApi"; // API 모듈에서 함수 가져오기
 import { useNavigate } from 'react-router-dom';
 import {getPagination} from "item-pagination";
+import {useSelector} from "react-redux";    //서버 사이드 렌더링에서 사용하기위해 권한정보를 받아오는
 
 
 const ListComponent = () => {
     // useNavigate 훅을 사용하여 페이지 이동에 필요한 함수 생성
     const navigate = useNavigate();
+
+    //현재 로그인중인 사용자의 정보를 받아오는 변수
+    const loginState = useSelector((state) => state.loginSlice)
 
     // 공지사항 전체 정보 목록을 저장하는 변수
     const [notices, setNotices] = useState([]);
@@ -133,17 +137,20 @@ const ListComponent = () => {
                     &gt;
                 </button>
             </div>
-            {/* 글쓰기 버튼 */}
-            <div className="mt-4 text-right">
-                <button
-                    onClick={handleAddClick} // 글쓰기 버튼 클릭 시 호출되는 함수
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-                >
-                    공지 쓰기
-                </button>
-            </div>
+            {/* 글쓰기 버튼 - 관리자 권한일 때만 표시 */}
+            {loginState.member?.memberRole === 'admin' && (
+                <div className="mt-4 text-right">
+                    <button
+                        onClick={handleAddClick}
+                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                    >
+                        공지 쓰기
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
+
 
 export default ListComponent;
