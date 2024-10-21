@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe850821-29f6-41de-9966-cd94c42d951b" name="변경" comment="241018 17:14">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sbc_front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sbc_front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,12 +25,12 @@
     &quot;assignee&quot;: &quot;jinlee94&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/jinlee94/SBC2024_lee.git&quot;,
-    &quot;accountId&quot;: &quot;c4c2958b-496f-465c-8122-19b57adac5f1&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/vanjooda/SBC2024.git",
+    "accountId": "c4c2958b-496f-465c-8122-19b57adac5f1"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -45,7 +45,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/KOSMO/Desktop/241014 프로젝트 병합(이거)/SBC2024_lee",
+    "last_opened_file_path": "C:/Users/KOSMO/Desktop/241018 통합/SBC2024/sbc_front",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -110,6 +110,7 @@
       <workItem from="1729046665010" duration="5000" />
       <workItem from="1729061817571" duration="263000" />
       <workItem from="1729239228957" duration="154000" />
+      <workItem from="1729470656818" duration="25000" />
     </task>
     <task id="LOCAL-00001" summary="241014 18:32">
       <option name="closed" value="true" />
