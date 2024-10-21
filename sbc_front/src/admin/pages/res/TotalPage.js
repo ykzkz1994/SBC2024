@@ -24,13 +24,17 @@ const TotalPage = () => {
         const loginState = useSelector((state) => state.loginSlice);
         const navigate = useNavigate();
 
-        useEffect(() => {
-            // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
-            // 경우 '/'(기본 메인)경로로
-            if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
-                navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
-            }
-        }, [loginState, navigate]);
+    useEffect(() => {
+        // 현재 로그인한.유저의?.권한이 !== 관리자
+        // 경우 '/'(기본 메인)경로로
+        console.log('isAuthenticated 상태:', loginState.isAuthenticated);
+        console.log('로그인 상태:', loginState);
+
+        if (loginState.member?.memberRole !== 'ROLE_ADMIN') {
+            navigate('/'); // 이동 할 경로
+        }
+    }, [loginState, navigate]);
+
 
     // 컴포넌트 렌더링 함수
     //스위치문으로 컴포넌트 갈아끼우기

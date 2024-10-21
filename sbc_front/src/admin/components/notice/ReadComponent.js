@@ -1,7 +1,7 @@
 // src/admin/components/notice/ReadComponent.js
 
 import React, { useState, useEffect } from 'react';
-import {Await, useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 // 공지사항 전체 조회 API 함수 가져오기
 import { getOneNotice,deleteNotice } from '../../api/NoticeApi';
 import {useSelector} from "react-redux";    //로그인정보 가져오기

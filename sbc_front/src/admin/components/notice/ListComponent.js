@@ -1,6 +1,6 @@
 
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {getAllNotices} from "../../api/NoticeApi"; // API 모듈에서 함수 가져오기
 import { useNavigate } from 'react-router-dom';
 import {getPagination} from "item-pagination";

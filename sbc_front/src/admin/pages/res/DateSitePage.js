@@ -5,25 +5,25 @@ import { useNavigate, useLocation } from "react-router-dom"; // useNavigate는 �
 import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 권한 검증을 위해
 
 const DateSitePage = () => {
-    const [currentComponent, setCurrentComponent] = useState('DateSitePage'); // 현재 컴포넌트 상태 관리
     // Redux 스토어에서 loginSlice 접근
     const loginState = useSelector((state) => state.loginSlice);
     const navigate = useNavigate(); // 경로 이동 훅
     const location = useLocation(); // 현재 경로정보를 얻기훅 =>네비게이션 백그라운드 색상때문에
 
     useEffect(() => {
-        // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
+        // 현재 로그인한.유저의?.권한이 !== 관리자
         // 경우 '/'(기본 메인)경로로
-        if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
-            navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
+        console.log('isAuthenticated 상태:', loginState.isAuthenticated);
+        console.log('로그인 상태:', loginState);
+
+        if (loginState.member?.memberRole !== 'ROLE_ADMIN') {
+            navigate('/'); // 이동 할 경로
         }
     }, [loginState, navigate]);
 
+
     // 디버깅 확인용 로그
     console.log("DateSitePage 로드 됐다!!!!");
-
-    // 현재경로의 네비버튼 비활성화할 조건을 확인하는 함수
-    const isCurrentPage = (path) => location.pathname === path;
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
