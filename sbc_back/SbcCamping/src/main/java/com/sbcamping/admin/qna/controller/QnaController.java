@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +35,7 @@ public class QnaController {
     private final CustomFileUtil fileUtil;
 
     // 1. 목록(list)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public PageResponseDTO<QnaDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("list.............." + pageRequestDTO);
