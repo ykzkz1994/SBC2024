@@ -75,4 +75,7 @@ protected void onCreate() {
         this.cBoardAttachment = attachment;
     }
 
+    public void changeViews(long views) {
+        this.cBoardViews = views;
+    }
 }
