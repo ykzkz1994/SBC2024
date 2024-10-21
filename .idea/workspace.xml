@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe850821-29f6-41de-9966-cd94c42d951b" name="변경" comment="241018 17:14">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/domain/CamperBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/domain/CamperBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/domain/CamperBoardComment.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/domain/CamperBoardComment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/controller/CamperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/controller/CamperController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/controller/formatter/LocalDateFormatter.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/controller/formatter/LocalDateFormatter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/CamperBoardDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/CamperBoardDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/PageRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/PageRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/PageResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/PageResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/SearchDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/dto/SearchDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/repository/CamperRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/repository/CamperRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/service/CamperService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/service/CamperService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/service/CamperServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_back/SbcCamping/src/main/java/com/sbcamping/user/camper/service/CamperServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/api/camperApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/api/camperApi.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/components/campers/AddComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/components/campers/AddComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/components/campers/ListComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/components/campers/ListComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/components/campers/ModifyComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/components/campers/ModifyComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/components/campers/ReadComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/components/campers/ReadComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sbc_front/src/pages/campers/CamperIndexPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/sbc_front/src/pages/campers/CamperIndexPage.js" afterDir="false" />
-    </list>
+    <list default="true" id="fe850821-29f6-41de-9966-cd94c42d951b" name="변경" comment="241018 17:14" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,12 +22,12 @@
     &quot;assignee&quot;: &quot;jinlee94&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/seongpyo0606/SBC2024.git&quot;,
-    &quot;accountId&quot;: &quot;d7522a01-2fec-495c-932b-8006d823e03f&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/vanjooda/SBC2024.git",
+    "accountId": "4cc61962-9bda-4c18-a8a5-3f0d52abd614"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -56,22 +37,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/workspace/SBC2024",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/workspace/SBC2024&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -215,6 +196,7 @@
       <workItem from="1729468872727" duration="106000" />
       <workItem from="1729468985693" duration="241000" />
       <workItem from="1729470070629" duration="18000" />
+      <workItem from="1729475804433" duration="86000" />
     </task>
     <task id="LOCAL-00001" summary="241014 18:32">
       <option name="closed" value="true" />
