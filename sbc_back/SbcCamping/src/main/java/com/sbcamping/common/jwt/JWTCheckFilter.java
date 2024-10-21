@@ -27,6 +27,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("------------------------JWT 체크 필터");
         String authHeaderStr = request.getHeader("Authorization");
+        if (authHeaderStr == null) {
+            log.info("-------요청이 jwtAxios인지 확인해보세요");
+        }
         try {
             String accessToken = authHeaderStr.substring(7);
             Map<String, Object> claims = JWTUtil.validateToken(accessToken); // 토큰 검증
@@ -93,7 +96,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         // 회원가입 경로 예외
-        if(path.equals("/api/member/")){
+        if(path.equals("/api/member/") || path.equals("/api/member/kakao/")){
             return true;
         }
 
@@ -106,18 +109,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         if (path.startsWith("/admin/site")) {
-            return true;
-        }
-
-        if(path.startsWith("/admin")){
-            return true;
-        }
-
-        if(path.startsWith("/admin/qnas")){
-            return true;
-        }
-
-        if(path.startsWith("/admin/site")){
             return true;
         }
 

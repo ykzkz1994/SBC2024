@@ -1,4 +1,5 @@
 import axios from "axios"
+import jwtAxios from "../../util/jwtUtil";
 
 // 서버 주소
 export const API_SERVER_HOST = 'http://localhost:8080'
@@ -8,7 +9,7 @@ const prefix = `${API_SERVER_HOST}/admin/qnas`
 // getList : 페이지 처리 및 전체 게시글 목록 가져오기
 export const getList = async (pageParam) => {
     const {page,size} = pageParam
-    const res = await axios.get(`${prefix}/list`, {params: {page:page, size:size}})
+    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
 
     console.log(res.data)
 
