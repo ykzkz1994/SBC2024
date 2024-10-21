@@ -125,7 +125,7 @@ const ReadComponent = () => {
                 </button>
 
                 {/* 글 수정 버튼 - 관리자 권한일 때만 표시 */}
-                {loginState.member?.memberRole === 'admin' && (
+                {loginState.member?.memberRole === 'ROLE_ADMIN' && (
                     <button
                         onClick={() => handleUpdateClick(nid)}
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
@@ -136,7 +136,7 @@ const ReadComponent = () => {
 
 
                 {/* 글 삭제 버튼 - 관리자 권한일 때만 표시 */}
-                {loginState.member?.memberRole === 'admin' && (
+                {loginState.member?.memberRole === 'ROLE_ADMIN' && (
                     <button
                         onClick={() => handleDeleteClick(nid)}
                         className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"

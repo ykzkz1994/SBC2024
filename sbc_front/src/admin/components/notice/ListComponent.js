@@ -138,7 +138,7 @@ const ListComponent = () => {
                 </button>
             </div>
             {/* 글쓰기 버튼 - 관리자 권한일 때만 표시 */}
-            {loginState.member?.memberRole === 'admin' && (
+            {loginState.member?.memberRole === 'ROLE_ADMIN' && (
                 <div className="mt-4 text-right">
                     <button
                         onClick={handleAddClick}
