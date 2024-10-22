@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 */6 * * ?") // 1시간마다 함수 호출
+    @Scheduled(cron = "0 0 */6 * * ?") // 6시간마다 함수 호출
     public void resStatusCheck() {
 
         // 현재 날짜 구하기

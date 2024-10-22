@@ -242,7 +242,7 @@ const MonthComponent = () => {
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <span className="resSucceed">
+                                                                    <span className="resSuccess">
                                                                 &nbsp;&nbsp;예&nbsp;&nbsp;
                                                             </span>
                                                                     <Link

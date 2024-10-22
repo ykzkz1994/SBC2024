@@ -25,14 +25,32 @@ const Respage = () => {
         checkoutDate: '',
         resTotalPay: 0,
     }
-
+    // 예약데이터 추가하는 상태 관리
     const [res, setRes] = useState({...initState});
+
+    // 예약 데이터 이동하는 상태 관리
+    const [resData, setResData] = useState({...initState})
+    // 예약 번호 저장하는 상태 관리
+    const [resNumber, setResNumber] = useState('')
+
     const location = useLocation();
     const navigate = useNavigate();
     const {exceptionHandle} = useCustomLogin()
 
     // location에서 받은 값들
-    const {year, month, day, siteName, siteId, memberId, memberName, memberPhone, memberEmail, weekDayPay, weekEndPay} = location.state || {};
+    const {
+        year,
+        month,
+        day,
+        siteName,
+        siteId,
+        memberId,
+        memberName,
+        memberPhone,
+        memberEmail,
+        weekDayPay,
+        weekEndPay
+    } = location.state || {};
 
     // 내가 예약한 날짜에 예약이 있는지 확인하는 상태
     const [resCheckData, setResCheckData] = useState([])
@@ -48,6 +66,34 @@ const Respage = () => {
     // check 상태를 동적으로 변경
     const checkRef = useRef();
     const [isChecked, setIsChecked] = useState(false);
+
+    // 모달 false true 함수
+    const firstShowClose = () => firstSetShow(false);
+    const firstHandleShow = () => firstSetShow(true);
+
+    const secondShowClose = () => firstSetShow(false);
+    const thirdShowClose = () => thirdSetShow(false);
+
+
+    // 예약 완료 페이지로 이동
+    const handleSucceed = () => {
+        // 모달을 닫고 navigate 호출
+        secondShowClose();
+        navigate('/res/CheckPage', {
+            state: {
+                resData: resData,
+                siteName: siteName,
+                resNumber: resNumber,
+            }
+        })
+        setResNumber('')
+        setResData({...initState})
+    }
+
+    // 취소 버튼 클릭시 전페이지로 이동하는 함수
+    const handleCancel = () => {
+        navigate(-1);
+    }
 
     const handleChangeRes = (e) => {
         const {name, value} = e.target;
@@ -68,19 +114,6 @@ const Respage = () => {
         }
     };
 
-    // 모달 false true 함수
-    const firstShowClose = () => firstSetShow(false);
-    const firstHandleShow = () => firstSetShow(true);
-
-    const secondShowClose = () => firstSetShow(false);
-    const thirdShowClose = () => thirdSetShow(false);
-
-
-    // 취소 버튼 클릭시 전페이지로 이동하는 함수
-    const handleCancel = () => {
-        navigate(-1);
-    }
-
     // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
         const date = new Date();
@@ -88,9 +121,9 @@ const Respage = () => {
         const checkOutDate = new Date(res.checkoutDate)
         const resCheck = resFilter(res.site.siteId, res.checkinDate)
 
-        date.setHours(0,0,0,0);
-        checkinDate.setHours(0,0,0,0);
-        checkOutDate.setHours(0,0,0,0);
+        date.setHours(0, 0, 0, 0);
+        checkinDate.setHours(0, 0, 0, 0);
+        checkOutDate.setHours(0, 0, 0, 0);
 
         if (date > checkinDate) {
             firstSetShow(false)
@@ -122,11 +155,10 @@ const Respage = () => {
             .then(result => {
                 firstSetShow(false)
                 secondSetShow(true);
+                setResData(res);
+                setResNumber(result);
                 setRes({...initState});
-                // 데이터 저장후 다른페이지로 이동
-                navigate("/res/CheckPage",{
-                    state: { reservationData: result}
-                })
+
             })
             .catch(error => {
                 firstSetShow(false)
@@ -255,17 +287,13 @@ const Respage = () => {
     return (
         <div>
             <h3>예약페이지</h3>
-            <Form
-                style={{
-                    marginLeft: "10px",
-                }}
-            >
+            <Form className="mainForm">
                 <Form.Group as={Row} className="mb-3" controlId="siteName">
                     <Form.Label column sm="2">
                         구역이름
                     </Form.Label>
                     <Col sm="10">
-                        <Form.Control type="text" defaultValue={siteName} readOnly={true} onChange={handleChangeRes}/>
+                        <Form.Control type="text" value={siteName} readOnly={true} onChange={handleChangeRes}/>
                     </Col>
                 </Form.Group>
 
@@ -281,9 +309,7 @@ const Respage = () => {
                             aria-label="option 1"
                             label={"회원명이 예약자랑 같습니까?"}
                             id="check"
-                            style={{
-                                paddingTop: "5px",
-                            }}
+                            className="check"
                             onChange={handleCheckChange}
                         />
                     </Col>
@@ -391,9 +417,11 @@ const Respage = () => {
             <div style={{
                 display: "flex", alignItems: "center", justifyContent: "center"
             }}>
+                {/* firstHandleShow */}
                 <Button variant="success" onClick={firstHandleShow}
-                        style={{marginBottom: "15px", marginRight: "10px", width: "80px"}}>확인</Button>
-                <Button variant="success" onClick={handleCancel} style={{marginBottom: "15px", width: "80px"}}>취소</Button>
+                        className="success">확인</Button>
+                <Button variant="success" onClick={handleCancel}
+                        className="cancel">취소</Button>
             </div>
 
             <Modal
@@ -432,7 +460,7 @@ const Respage = () => {
                     바랍니다!
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={secondShowClose}>
+                    <Button variant="primary" onClick={handleSucceed}>
                         확인
                     </Button>
                 </Modal.Footer>
