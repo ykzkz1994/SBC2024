@@ -26,7 +26,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
                                         -
                                         TRUNC(FROM_TZ(CAST(checkin_date AS TIMESTAMP), 'UTC') AT TIME ZONE 'Asia/Seoul') + 1
                                         AND prior res_id = res_id
-                                    AND prior dbms_random.value is not null
+                                        AND prior dbms_random.value is not null
                     )
                     select SITE_ID, checkin_date_KST, checkout_date_KST, date_seq,
                     case
@@ -36,5 +36,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
                     from date_range
             """, nativeQuery = true)
     List<Object[]> getReservations();
+
+    List<Reservation> findByResStatus(String resStatus);
 
 }
