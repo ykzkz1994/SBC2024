@@ -257,8 +257,8 @@ const MonthComponent = () => {
                                                                             memberEmail: loginState.member.memberEmail,
                                                                             siteId: site.siteId,
                                                                             siteName: site.siteName,
-                                                                            weekDayPay: site.siteWeekdayPay, // 평일요금
-                                                                            weekEndPay: site.siteWeekendPay, // 주말요금
+                                                                            weekDayPay: site.weekdayPay, // 평일요금
+                                                                            weekEndPay: site.weekendPay, // 주말요금
                                                                         }}
                                                                     >
                                                                         &nbsp;{site.siteName}
