@@ -5,8 +5,10 @@ import ListComponent from '../../components/notice/ListComponent';
 const ListPage = () => {
     return (
         <div>
-            <h1>공지사항 게시판</h1>
-            <ListComponent />
+            <a href={"/admin/notices/list"} style={{textDecoration: 'none', color: 'black'}}>
+                <h1>공지사항 게시판</h1>
+            </a>
+            <ListComponent/>
         </div>
     );
 };

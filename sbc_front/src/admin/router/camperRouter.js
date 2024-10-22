@@ -1,14 +1,17 @@
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { Navigate } from "react-router-dom";
+import Spinner from 'react-bootstrap/Spinner';
 
-const Loading = <div>Loading . . .</div>
+const Loading = <Spinner animation="border"/>
+
 
 const camperRouter = () => {
     return[
         {
-            path: "*",
-            element : <Navigate replace to="notice"/>
-        },
+            path: "",
+            element : <Navigate replace to="list"/>
+        }
+
     ]
 }
 

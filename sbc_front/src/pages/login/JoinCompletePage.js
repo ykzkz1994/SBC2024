@@ -18,12 +18,12 @@ const JoinCompletePage = () =>{
                 <ListGroup.Item>정보입력</ListGroup.Item>
                 <ListGroup.Item><b>가입완료</b></ListGroup.Item>
             </ListGroup>
-            <div style={{textAlign:"center", padding:"50px", border:'1px solid #bbbbbb', marginTop:'10px' }}>
-                회원가입이 완료되었습니다.<br></br>
-                Suspension Bridge 캠핑장 회원이 되신 것을 환영합니다.<br></br>
+            <div className="comwrap">
+                <h4>회원가입이 완료되었습니다.</h4>
+                서스펜션 브릿지 캠핑장 회원이 되신 것을 환영합니다.<br></br>
                 실시간 예약과 커뮤니티 게시판을 이용하실 수 있습니다.
             </div>
-            <div style={{textAlign:"center", margin:"50px"}}>
+            <div className="buttonwrap">
                 <Button variant="success" onClick={handleButtonClick}>로그인</Button>
             </div>
         </div>

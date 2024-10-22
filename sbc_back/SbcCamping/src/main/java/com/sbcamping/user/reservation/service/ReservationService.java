@@ -16,4 +16,5 @@ public interface ReservationService {
     List<Object[]> getResCheck();
     void resStatusCheck();
 
+
 }

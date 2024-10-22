@@ -3,7 +3,6 @@ package com.sbcamping.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -41,5 +40,9 @@ public class QuestionBoardComment { // 문의게시판 댓글
     // 댓글 수정 시 수정 가능한 항목
     public void changeContent(String content) {
         this.qCommentContent = content;
+    }
+
+    public void changeDate(Date date) {
+        this.qCommentDate = date;
     }
 }

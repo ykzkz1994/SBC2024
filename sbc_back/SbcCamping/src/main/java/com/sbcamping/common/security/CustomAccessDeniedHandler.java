@@ -9,6 +9,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
@@ -21,6 +22,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         response.setContentType("application/json");
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().print(jsonStr);
+        PrintWriter out = response.getWriter();
+        out.println(jsonStr);
+        out.close();
     }
 }

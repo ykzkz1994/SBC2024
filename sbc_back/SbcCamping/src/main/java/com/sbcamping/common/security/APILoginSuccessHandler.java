@@ -30,9 +30,9 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, Object> claims = new HashMap<>();
         claims.put("member", memberDTO);  // memberDTO 객체 자체를 claims에 추가
         String accessToken = JWTUtil.generateToken(claims, 10); // 20분 유효
-        String refreshToken = JWTUtil.generateToken(claims, 60 * 24); // 24시간
-        claims.put("access_token", accessToken);
-        claims.put("refresh_token", refreshToken);
+        String refreshToken = JWTUtil.generateToken(claims, 60 * 12); // 24시간
+        claims.put("accessToken", accessToken);
+        claims.put("refreshToken", refreshToken);
 
         // 멤버정보 JSON 으로 반환
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();

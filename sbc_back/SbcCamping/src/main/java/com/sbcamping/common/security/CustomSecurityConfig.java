@@ -28,8 +28,7 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("===================security Config=======================");
 
-        http.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
-
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         // 세션 비활성화
         http.sessionManagement(sessionConfig ->
                 sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -61,8 +60,9 @@ public class CustomSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 프론트엔드 주소를 명시적으로 지정
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "X-Refresh-Token", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

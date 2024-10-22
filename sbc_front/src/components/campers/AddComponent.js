@@ -1,99 +1,65 @@
 import { useState, useEffect } from "react";
-import { postAdd, getMemberById } from "../../api/camperApi"; // 회원 정보를 가져오는 API 추가
+import { postAdd } from "../../api/camperApi"; // 회원 정보를 가져오는 API 제거
 import useCustomMove from "../../hooks/useCustomMove";
-
-// 초기 상태 설정
-const initState = {
-    member: {
-        memberId: '', // 회원번호
-        memberName: '', // 회원 이름 (로그인 또는 회원 번호 입력 시 변경됨)
-    },
-    cboardCategory: '',
-    cboardTitle: '',
-    cboardContent: '',
-    cboardDate: '',
-    cboardViews: 0,
-    cboardAttachments: [],
-    cboardId: '', // 고정된 ID
-};
+import {useSelector} from "react-redux";
 
 const AddComponent = () => {
-    const [todo, setTodo] = useState({ ...initState });
+    const loginState = useSelector((state) => state.loginSlice)
 
-    useEffect(() => {
-        const currentDate = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식
-        setTodo((prev) => ({ ...prev, cboardDate: currentDate }));
-    }, []);
+    // 초기 상태 설정
+    const initState = {
+        member: {
+            memberId: loginState.member.memberId
+        },
+        cBoardCategory: '',
+        cBoardTitle: '',
+        cBoardContent: '',
+        cBoardDate: new Date().toISOString().split('T')[0],
+        file: null
+    }
+
+    const [cboard, setCboard] = useState({ ...initState });
+    //
+    // useEffect(() => {
+    //     const currentDate = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식
+    //     setCboard((prev) => ({ ...prev, cBoardDate: currentDate }));
+    // }, []);
 
     const { moveToList } = useCustomMove();
 
+    // 파일 첨부하면 저장하는 메소드
     const handleFileChange = (e) => {
-        const files = Array.from(e.target.files); // 선택한 파일들
-        if (files.length > 2) {
-            alert("첨부파일은 최대 2개까지 선택할 수 있습니다.");
-            return;
-        }
-        setTodo((prev) => ({
-            ...prev,
-            cboardAttachments: files // 파일 배열 업데이트
-        }));
-    };
-
-    const handleChangeTodo = async (e) => {
-        const { name, value } = e.target;
-
-        if (name === "memberId") {
-            // memberId 업데이트
-            setTodo((prev) => ({
+        const fileParam = e.target.files[0]; // 선택한 파일 하나만 가져옴
+        if (fileParam) {
+            setCboard((prev) => ({
                 ...prev,
-                member: {
-                    ...prev.member,
-                    memberId: value,
-                },
+                file: fileParam // 단일 파일 업데이트
             }));
-
-            // memberId가 입력되면 해당 회원의 이름을 가져옴
-            if (value) {
-                try {
-                    const memberData = await getMemberById(value);
-                    if (memberData) {
-                        setTodo((prev) => ({
-                            ...prev,
-                            member: {
-                                ...prev.member,
-                                memberName: memberData.memberName, // 가져온 회원 이름 설정
-                            },
-                        }));
-                    } else {
-                        setTodo((prev) => ({
-                            ...prev,
-                            member: {
-                                ...prev.member,
-                                memberName: "작성자가 없습니다.", // 회원 정보를 못 찾았을 때
-                            },
-                        }));
-                    }
-                } catch (error) {
-                    console.error("회원 이름을 가져오는 중 오류:", error);
-                }
-            }
-        } else {
-            setTodo((prev) => ({ ...prev, [name]: value }));
         }
     };
 
-    const handleClickAdd = () => {
-        const camperObj = {
-            memberId: todo.member.memberId,
-            cboardCategory: todo.cboardCategory,
-            cboardTitle: todo.cboardTitle,
-            cboardContent: todo.cboardContent,
-        };
+    // input 입력시 저장 메소드
+    const handleChangeTodo = (e) => {
+        const { name, value } = e.target;
+        setCboard((prev) => ({ ...prev, [name]: value }));
+    };
 
-        postAdd(camperObj)
+    // 등록 버튼 눌렀을 때 메소드
+    const handleClickAdd = async () => {
+        const formData = new FormData();
+        formData.append("cBoardTitle", cboard.cBoardTitle);
+        formData.append("cBoardCategory", cboard.cBoardCategory);
+        formData.append("cBoardContent", cboard.cBoardContent);
+        formData.append("cBoardDate", cboard.cBoardDate);
+        formData.append("member", cboard.member.memberId);
+        if(cboard.file != null){
+            formData.append("file", cboard.file)
+        }
+        console.log('보내기 전 데이터 : ', formData)
+        await postAdd(formData) // 첨부파일을 추가
             .then(result => {
-                console.log("서버 응답:", result);
-                moveToList(); // 추가 완료 후 리스트 페이지로 이동
+                console.log("등록 서버 응답:", result);
+                moveToList(); // 등록 완료 후 campers/list 페이지로 이동
             })
             .catch(e => {
                 console.error("API 호출 오류:", e);
@@ -103,33 +69,17 @@ const AddComponent = () => {
     return (
         <div className="border border-primary mt-4 p-4">
             <div className="mb-3">
-                {/* 수동으로 memberId 입력 */}
-                <div className="row mb-2">
-                    <label className="col-sm-2 col-form-label">회원 번호</label>
-                    <div className="col-sm-10">
-                        <input
-                            className="form-control"
-                            name="memberId"
-                            type="text"
-                            value={todo.member.memberId}
-                            onChange={handleChangeTodo}
-                            placeholder="회원번호를 입력하세요"
-                        />
-                    </div>
-                </div>
-
-
                 {/* 나머지 필드들 */}
                 <div className="row mb-2">
                     <label className="col-sm-2 col-form-label">카테고리</label>
                     <div className="col-sm-10">
                         <select
                             className="form-select"
-                            name="cboardCategory"
-                            value={todo.cboardCategory}
+                            name="cBoardCategory"
+                            value={cboard.cBoardCategory}
                             onChange={handleChangeTodo}
                         >
-                            <option value="">카테고리를 선택하세요</option>
+                            <option>카테고리를 선택하세요</option>
                             <option value="잡담">잡담</option>
                             <option value="정보">정보</option>
                         </select>
@@ -143,9 +93,9 @@ const AddComponent = () => {
                     <div className="col-sm-10">
                         <input
                             className="form-control"
-                            name="cboardTitle"
+                            name="cBoardTitle"
                             type="text"
-                            value={todo.cboardTitle}
+                            value={cboard.cBoardTitle}
                             onChange={handleChangeTodo}
                         />
                     </div>
@@ -158,9 +108,8 @@ const AddComponent = () => {
                         <input
                             type="file"
                             className="form-control"
-                            name="cboardAttachments"
+                            name="cBoardAttachment"
                             onChange={handleFileChange}
-                            multiple
                         />
                     </div>
                 </div>
@@ -171,8 +120,8 @@ const AddComponent = () => {
                     <div className="col-sm-10">
                         <textarea
                             className="form-control"
-                            name="cboardContent"
-                            value={todo.cboardContent}
+                            name="cBoardContent"
+                            value={cboard.cBoardContent}
                             onChange={handleChangeTodo}
                             rows="4"
                         />
@@ -186,7 +135,7 @@ const AddComponent = () => {
                     className="btn btn-primary"
                     onClick={handleClickAdd}
                 >
-                    추가
+                    등록
                 </button>
             </div>
         </div>

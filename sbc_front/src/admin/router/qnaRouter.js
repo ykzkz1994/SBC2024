@@ -3,10 +3,10 @@ import { Navigate } from "react-router-dom";
 import Spinner from 'react-bootstrap/Spinner';
 
 const Loading = <Spinner animation="border"/>
-const QnaList = lazy(()=> import("../pages/qna/ListPage"))
-const QnaRead = lazy(()=> import("../pages/qna/ReadPage"))
-const QnaAdd = lazy(() => import("../pages/qna/AddPage"))
-const QnaModify = lazy(()=>import("../pages/qna/ModifyPage"))
+const QnaList = lazy(()=> import("../components/qna/ListComponent"))
+const QnaRead = lazy(()=> import("../components/qna/ReadComponent"))
+const QnaAdd = lazy(() => import("../components/qna/AddComponent"))
+const QnaModify = lazy(()=>import("../components/qna/ModifyComponent"))
 
 const qnaRouter = () => {
     return[

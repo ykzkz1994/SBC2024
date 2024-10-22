@@ -23,7 +23,7 @@ public class StatsDTO {
 
     private String resDate;// 예약 날짜
 
-    private String resStatus = "예약완료"; // 예약 상태
+    private String resStatus; // 예약 상태
 
     private Long resTotalPay; // 결제금액
 
@@ -31,7 +31,7 @@ public class StatsDTO {
 
     private String resCancelReason; // 취소사유
 
-    private char resReview = 'N'; // 리뷰 작성 여부
+    private char resReview; // 리뷰 작성 여부
 
     private Member member;      // member ID
 

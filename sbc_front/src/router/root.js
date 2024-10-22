@@ -14,7 +14,7 @@ import camperRouter from "../admin/router/camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
 import qnaRouter from "../admin/router/qnaRouter";
 import reviewRouter from "../admin/router/reviewRouter";
-import statsRouter from "../admin/router/StatsRouter";
+import statsRouter from "../admin/router/statsRouter";
 
 const Loading = <Spinner animation="border" />;
 
@@ -26,12 +26,15 @@ const Main = lazy(() => import("../pages/MainPage"))
 const Campingindex = lazy(() => import("../pages/campinginfo/CampingIndexPage"))
 const ResIndex = lazy(() => import("../pages/reservation/ResIndexPage"))
 const NoticeIndex = lazy(() => import("../pages/community/NoticeIndexPage"))
-const Login = lazy(() => import("../pages/common/LoginPage"))
-const Join = lazy(() => import("../pages/member/JoinIndexPage"))
-const FindPw = lazy(() => import("../pages/member/FindPwPage"))
-const FIndEmail = lazy(() => import("../pages/member/FindEmailPage"))
+const Login = lazy(() => import("../pages/login/LoginPage"))
+const KakaoRedirect = lazy(() => import("../pages/login/KakaoRedirectPage"))
+const Join = lazy(() => import("../pages/login/JoinIndexPage"))
+const FindPw = lazy(() => import("../pages/login/FindPwPage"))
+const FindPwMod = lazy(() => import("../pages/login/FindPwModifyPage"))
+const FIndEmail = lazy(() => import("../pages/login/FindEmailPage"))
 const MyPageIndex = lazy(() => import("../pages/member/MypageIndexPage"))
 const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
+const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
 
 /*
 관리자 페이지
@@ -72,17 +75,25 @@ const root = createBrowserRouter([
         element: <Navigate replace to="/"/>
     },
     {
+        path:"login/kakao",
+        element:<Suspense fallback={Loading}><KakaoRedirect/></Suspense>
+    },
+    {
         path: "findpw",
         element: <Suspense fallback={Loading}><FindPw/></Suspense>
+    },
+    {
+        path: "findpw/mod",
+        element: <Suspense fallback={Loading}><FindPwMod/></Suspense>
     },
     {
         path: "findemail",
         element: <Suspense fallback={Loading}><FIndEmail/></Suspense>
     },
     {
-      path: "join",
-      element: <Suspense fallback={Loading}><Join/></Suspense>,
-      children: joinRouter()
+        path: "join",
+        element: <Suspense fallback={Loading}><Join/></Suspense>,
+        children: joinRouter()
     },
     {
         path: "camping",
@@ -98,6 +109,10 @@ const root = createBrowserRouter([
         path: "notice",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
         children: NoticeRouter()
+    },
+    {
+        path: "qna",
+        element: <Suspense fallback={Loading}><QnaIndex/></Suspense>
     },
     {
         path: "mypage",

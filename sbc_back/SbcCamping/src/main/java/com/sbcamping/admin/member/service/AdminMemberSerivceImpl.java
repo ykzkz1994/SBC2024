@@ -29,7 +29,7 @@ public class AdminMemberSerivceImpl implements AdminMemberService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    private final AdminMemberRepository memberRepository;
+    private final AdminMemberRepository adminMemberRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -46,7 +46,7 @@ public class AdminMemberSerivceImpl implements AdminMemberService {
             }
         }
 
-        Page<Member> members = memberRepository.findAll(pageable);
+        Page<Member> members = adminMemberRepository.findAll(pageable);
 
         long totalCount = members.getTotalElements();
 
@@ -74,7 +74,7 @@ public class AdminMemberSerivceImpl implements AdminMemberService {
             }
         }
 
-        Page<Member> members = memberRepository.selectInactive(pageable);
+        Page<Member> members = adminMemberRepository.selectInactive(pageable);
 
         long totalCount = members.getTotalElements();
 
@@ -101,15 +101,15 @@ public class AdminMemberSerivceImpl implements AdminMemberService {
             }
 
             searchMembers = switch (type) {
-                case "name" -> memberRepository.findByMemberNameContaining(keyword, pageable);
-                case "phone" -> memberRepository.findByMemberPhoneContaining(keyword, pageable);
-                case "email" -> memberRepository.findByMemberEmailContaining(keyword, pageable);
+                case "name" -> adminMemberRepository.findByMemberNameContaining(keyword, pageable);
+                case "phone" -> adminMemberRepository.findByMemberPhoneEndingWith(keyword, pageable);
+                case "email" -> adminMemberRepository.findByMemberEmailContaining(keyword, pageable);
                 default -> null;
             };
 
         } else {
             pageable = PageRequest.of(requestDTO.getPage()-1, requestDTO.getSize(), Sort.by("memberID").ascending());
-            searchMembers = memberRepository.findAll(pageable);
+            searchMembers = adminMemberRepository.findAll(pageable);
         }
 
         long totalCount = searchMembers.getTotalElements();
