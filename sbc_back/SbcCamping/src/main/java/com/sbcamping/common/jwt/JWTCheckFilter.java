@@ -112,10 +112,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if(path.equals("/api/res/siteList")){
-            return true;
-        }
-
         //상호 노티스 예외
         if(path.startsWith("/notice")){
             return true;
