@@ -1,8 +1,12 @@
 // src/admin/components/notice/ReadComponent.js
 
 import React, { useState, useEffect } from 'react';
-import {Await, useNavigate, useParams} from 'react-router-dom';
-import { getOneNotice,deleteNotice } from '../../api/NoticeApi'; // 공지사항 전체 조회 API 함수 가져오기
+import { useNavigate, useParams} from 'react-router-dom';
+// 공지사항 전체 조회 API 함수 가져오기
+import { getOneNotice,deleteNotice } from '../../api/NoticeApi';
+import {useSelector} from "react-redux";    //로그인정보 가져오기
+
+
 
 const ReadComponent = () => {
     const { nid } = useParams(); // URL에서 공지사항 ID를 가져옴
@@ -14,6 +18,9 @@ const ReadComponent = () => {
     const [createdAt, setCreatedAt] = useState(null); // 작성 시간
     const [views, setViews] = useState(0); // 조회수
     const [error, setError] = useState(''); // 오류 메시지 상태 관리
+
+    //현재 로그인중인 사용자의 정보를 받아오는 변수
+    const loginState = useSelector((state) => state.loginSlice)
 
     // 날짜형식 변환 함수  이걸로 날짜를 감싸주면 형변환 됨
     const formatDate = (dateString) => {
@@ -116,18 +123,29 @@ const ReadComponent = () => {
                 >
                     목록으로
                 </button>
-                <button
-                    onClick={()=>handleUpdateClick(nid)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    수정하기
-                </button>
-                <button
-                    onClick={()=>handleDeleteClick(nid)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                >
-                    삭제하기
-                </button>
+
+                {/* 글 수정 버튼 - 관리자 권한일 때만 표시 */}
+                {loginState.member?.memberRole === 'ROLE_ADMIN' && (
+                    <button
+                        onClick={() => handleUpdateClick(nid)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    >
+                        수정하기
+                    </button>
+                )}
+
+
+                {/* 글 삭제 버튼 - 관리자 권한일 때만 표시 */}
+                {loginState.member?.memberRole === 'ROLE_ADMIN' && (
+                    <button
+                        onClick={() => handleDeleteClick(nid)}
+                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                    >
+                        삭제하기
+                    </button>
+                )}
+
+
             </div>
         </div>
     );

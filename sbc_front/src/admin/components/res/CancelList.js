@@ -1,72 +1,117 @@
+// src/components/CancelList.js
+
 import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Search from '../res/Search'; // 검색 컴포넌트 경로
 import { getAllRes } from '../../api/ResApi'; // 실제 데이터를 가져오기 위한 API 함수 임포트
-import {getPagination} from "item-pagination";
+import { getPagination } from "item-pagination"; // 페이지네이션 함수 임포트
 
 const CancelList = () => {
-    // 예약 데이터를 저장하는 변수
+    // 예약 데이터를 저장하는 상태 변수
     const [reservations, setReservations] = useState([]);
 
-    // 에러 문구 세팅 변수
+    // 에러 메시지를 저장하는 상태 변수
     const [error, setError] = useState('');
 
-    // 검색어 상태 변수
+    // 검색어를 저장하는 상태 변수
     const [searchTerm, setSearchTerm] = useState('');
 
-    // 선택된 컬럼 상태 변수, 셀렉값의 기본은 예약번호
+    // 선택된 검색 컬럼을 저장하는 상태 변수, 기본값은 예약 번호
     const [selectedColumn, setSelectedColumn] = useState('resId');
 
-    //현재 페이지 설정 상태변수
-    const [currentPage, setCurrentPage] = useState(1); // 페이지 상태를 1로 초기화
+    // 현재 페이지를 저장하는 상태 변수, 기본값은 1
+    const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15; // 페이지당 항목 수
-    // 전체 페이지 수 계산
-    const totalPages = Math.ceil(reservations.length / itemsPerPage);
-//현재 페이지 변경 함수
-    const handlePageClick = (pageNumber) => {
-        setCurrentPage(pageNumber);
+
+
+    //정렬기능 구현을 위한 상태변수
+    const [sortColumn, setSortColumn] = useState(reservations.resId);
+    const [sortOrder, setSortOrder] = useState('desc'); // 디폴트는 내림차순 글 번호가 디폴트라 내림차순으로 해야 최신이 위로 올라옴
+
+
+    const handleSort = (column) => {
+        if (sortColumn === column) {
+            // 이미 선택된 컬럼이면 정렬 순서만 변경
+            setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+        } else {
+            // 새로운 컬럼 선택 시 오름차순으로 시작
+            setSortColumn(column);
+            setSortOrder('desc');
+        }
     };
 
     // 데이터 불러오는 비동기 함수
     const settingReservation = async () => {
         try {
             const data = await getAllRes(); // API 호출하여 데이터 가져오기
-            setReservations(data);
+            setReservations(data); // 상태에 데이터 저장
         } catch (err) {
             console.error('예약 취소 데이터를 불러오는데 실패했습니다:', err);
             setError('예약 취소 데이터를 불러오는데 실패했습니다.');
         }
     };
 
-    // 컴포넌트 마운트 시 데이터 불러오기
+    // 컴포넌트가 마운트될 때 예약 데이터 불러오기
     useEffect(() => {
         settingReservation();
     }, []);
 
-
-    // 검색어와 선택된 컬럼에 따라 필터링된 예약 데이터 할당
-    const filteredReservations = getPagination(reservations).filter((reservation) => {
-
+    // 검색어와 선택된 컬럼에 따라 예약 데이터를 필터링
+    const filteredReservations = reservations.filter((reservation) => {
         // resStatus가 "예약취소"가 아닌 경우 제외
         if (reservation.resStatus !== "예약취소") return false;
 
-        //검색어가 없다면 true를 반환해서 필터링 되지 않은 데이터를 출력
+        // 검색어가 없으면 모든 데이터 표시
         if (!searchTerm) return true;
 
-        // 선택된 컬럼의 값을 문자열로 변환하고 소문자로 변경하여 대소문자를 구분하지 않도록 함
-        //밸류를 문자열로 바꾼후 LowerCase를 적용시킴
+        // 선택된 컬럼의 값을 소문자로 변환
         const value = reservation[selectedColumn]?.toString().toLowerCase();
 
-        // 검색어를 소문자로 변환하고, 해당 값에 검색어가 포함되어 있는지 확인
-        // value.includes(searchTerm을 소문자로 변경한 값) - 포함된 것만 반환
+        // 검색어를 소문자로 변환하고 포함 여부 확인
         return value?.includes(searchTerm.toLowerCase());
-
-
     });
+
+
+    const sortedReservations = [...filteredReservations].sort((a, b) => {
+        if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
+
+        const valueA = a[sortColumn];
+        const valueB = b[sortColumn];
+
+        if (typeof valueA === 'string') {
+            return sortOrder === 'asc'
+                ? valueA.localeCompare(valueB)
+                : valueB.localeCompare(valueA);
+        } else {
+            return sortOrder === 'asc'
+                ? valueA - valueB
+                : valueB - valueA;
+        }
+    });
+
+    // 전체 페이지 수를 계산하는 변수, 필터링된 데이터 기준
+    const totalPages = Math.ceil(sortedReservations.length / itemsPerPage);
+
+    // 페이지 번호를 클릭할 때 호출되는 함수
+    const handlePageClick = (pageNumber) => {
+        // 페이지 번호가 유효한지 확인
+        if (pageNumber < 1) pageNumber = 1;
+        else if (pageNumber > totalPages) pageNumber = totalPages;
+
+        setCurrentPage(pageNumber);
+    };
+
+    // 페이지네이션된 데이터 가져오기
+    const paginatedReservations = getPagination(sortedReservations, itemsPerPage, currentPage);
+
+    // 검색어나 선택된 컬럼이 변경되면 현재 페이지를 1로 리셋
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedColumn]);
 
     return (
         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
-            {/* **페이지 제목** */}
+            {/* 페이지 제목 */}
             <h2 className="text-2xl font-bold mb-4">예약 취소 리스트</h2>
 
             {/* 서치 컴포넌트(자식) */}
@@ -77,28 +122,32 @@ const CancelList = () => {
                 setSelectedColumn={setSelectedColumn}
             />
 
-            {/* **에러 메시지 표시** */}
+            {/* 에러 메시지 표시 */}
             {error && <div className="text-danger mb-4">{error}</div>}
 
-            {/* **예약 정보 테이블** */}
+            {/* 예약 취소 정보 테이블 */}
             <Table bordered hover responsive className="text-sm">
                 <thead>
-                <tr>
-                    <th className="text-center">예약번호</th>
-                    <th className="text-center">예약한 날짜</th>
-                    <th className="text-center">예약 구역 이름</th>
-                    <th className="text-center">회원 이름</th>
-                    <th className="text-center">회원 전화번호</th>
-                    <th className="text-center">이용자명</th>
-                    <th className="text-center">이용자 전화번호</th>
-                    <th className="text-center">취소 날짜</th>
-                    <th className="text-right">환불금액</th>
+                <tr className="bg-blue-200">
+
+
+                    <th onClick={() => handleSort('resId')}>예약번호</th>
+                    <th onClick={() => handleSort('resDate')}>예약 일자</th>
+                    <th onClick={() => handleSort('siteName')}>구역 이름</th>
+                    <th onClick={() => handleSort('memberName')}>회원 이름</th>
+                    <th onClick={() => handleSort('memberPhone')}>회원 전화번호</th>
+                    <th onClick={() => handleSort('resUserName')}>이용자 성함</th>
+                    <th onClick={() => handleSort('resUserPhone')}>이용자 전화번호</th>
+                    <th onClick={() => handleSort('resCancelDate')}>취소 날짜</th>
+                    <th onClick={() => handleSort('resCancelReason')}>취소 사유</th>
+                    <th onClick={() => handleSort('resTotalPay')}>환불금액</th>
+
                 </tr>
                 </thead>
 
                 <tbody>
-                {filteredReservations.length > 0 ? (
-                    filteredReservations.map((reservation) => (
+                {paginatedReservations.length > 0 ? (
+                    paginatedReservations.map((reservation) => (
                         <tr key={reservation.resId}>
                             <td className="text-center">{reservation.resId}</td>
                             <td className="text-center">{reservation.resDate}</td>
@@ -108,12 +157,14 @@ const CancelList = () => {
                             <td className="text-left">{reservation.resUserName}</td>
                             <td className="text-center">{reservation.resUserPhone}</td>
                             <td className="text-center">{reservation.resCancelDate}</td>
-                            <td className="text-right">{reservation.resTotalPay}</td>
+                            <td className="text-center">{reservation.resCancelReason || 'N/A'}</td>
+                            <td className="text-right">{reservation.resTotalPay} 원</td>
                         </tr>
                     ))
                 ) : (
+                    // 데이터가 없을 경우 메시지 표시, colSpan을 정확하게 설정
                     <tr>
-                        <td colSpan="9" className="text-center">예약 데이터가 없습니다.</td>
+                        <td colSpan="10" className="text-center">예약 데이터가 없습니다.</td>
                     </tr>
                 )}
                 </tbody>
@@ -121,6 +172,7 @@ const CancelList = () => {
 
             {/* 페이지네이션 */}
             <div className="mt-4 text-center">
+                {/* 이전 페이지 버튼 */}
                 <button
                     onClick={() => handlePageClick(currentPage - 1)}
                     disabled={currentPage === 1}
@@ -129,6 +181,7 @@ const CancelList = () => {
                     &lt;
                 </button>
 
+                {/* 페이지 번호 버튼 */}
                 {[...Array(totalPages).keys()].map((page) => (
                     <button
                         key={page + 1}
@@ -139,6 +192,7 @@ const CancelList = () => {
                     </button>
                 ))}
 
+                {/* 다음 페이지 버튼 */}
                 <button
                     onClick={() => handlePageClick(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -147,10 +201,9 @@ const CancelList = () => {
                     &gt;
                 </button>
             </div>
-
         </div>
-
     );
 };
 
+// **컴포넌트 내보내기**
 export default CancelList;
