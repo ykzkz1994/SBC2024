@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import "./css/Respage.css";
 import {useLocation, useNavigate} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react";
-import {resAdd} from "../../api/ResApi";
+import {resAdd, resCheck} from "../../api/ResApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from "react-bootstrap/Modal";
 
@@ -25,18 +25,38 @@ const Respage = () => {
         checkoutDate: '',
         resTotalPay: 0,
     }
-
+    // 예약데이터 추가하는 상태 관리
     const [res, setRes] = useState({...initState});
+
+    // 예약 데이터 이동하는 상태 관리
+    const [resData, setResData] = useState({...initState})
+    // 예약 번호 저장하는 상태 관리
+    const [resNumber, setResNumber] = useState('')
+
     const location = useLocation();
     const navigate = useNavigate();
     const {exceptionHandle} = useCustomLogin()
 
     // location에서 받은 값들
-    const {year, month, day, siteName, siteId, memberId, memberName, memberPhone, memberEmail} = location.state || {};
+    const {
+        year,
+        month,
+        day,
+        siteName,
+        siteId,
+        memberId,
+        memberName,
+        memberPhone,
+        memberEmail,
+        weekDayPay,
+        weekEndPay
+    } = location.state || {};
+
+    // 내가 예약한 날짜에 예약이 있는지 확인하는 상태
+    const [resCheckData, setResCheckData] = useState([])
 
     // 날짜 상태 관리
     const [checkinDate, setCheckinDate] = useState('');
-    const [checkoutDate, setCheckoutDate] = useState('');
 
     // 모달 상태 관리
     const [firstShow, firstSetShow] = useState(false);
@@ -47,27 +67,33 @@ const Respage = () => {
     const checkRef = useRef();
     const [isChecked, setIsChecked] = useState(false);
 
-    // 입실날짜 퇴실날짜 상태 저장
-    // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
-    useEffect(() => {
-        if (year && month && day) {
-            const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
-            setCheckinDate(formattedDate);
+    // 모달 false true 함수
+    const firstShowClose = () => firstSetShow(false);
+    const firstHandleShow = () => firstSetShow(true);
 
-            setRes((prevState) => ({
-                ...prevState, // 기존 상태 객체의 모든 속성을 복사합니다.
-                member: {
-                    ...prevState.member, // member의 기존 속성을 모두 복사한 후 해당하는 필드만 새값으로 덮어쓴다.
-                    memberId: memberId || 0,
-                },
-                site: {
-                    ...prevState.site,
-                    siteId: siteId || 0,
-                },
-                checkinDate: formattedDate,
-            }));
-        }
-    }, [year, month, day, memberId, siteId, checkinDate]);
+    const secondShowClose = () => firstSetShow(false);
+    const thirdShowClose = () => thirdSetShow(false);
+
+
+    // 예약 완료 페이지로 이동
+    const handleSucceed = () => {
+        // 모달을 닫고 navigate 호출
+        secondShowClose();
+        navigate('/res/CheckPage', {
+            state: {
+                resData: resData,
+                siteName: siteName,
+                resNumber: resNumber,
+            }
+        })
+        setResNumber('')
+        setResData({...initState})
+    }
+
+    // 취소 버튼 클릭시 전페이지로 이동하는 함수
+    const handleCancel = () => {
+        navigate(-1);
+    }
 
     const handleChangeRes = (e) => {
         const {name, value} = e.target;
@@ -88,31 +114,16 @@ const Respage = () => {
         }
     };
 
-    // 모달 false true 함수
-    const firstShowClose = () => firstSetShow(false);
-    const firstHandleShow = () => firstSetShow(true);
-
-    const secondShowClose = () => firstSetShow(false);
-    const thirdShowClose = () => thirdSetShow(false);
-
-
-    // 취소 버튼 클릭시 전페이지로 이동하는 함수
-    const handleCancel = () => {
-        navigate(-1);
-    }
-
-    // 예약 완료시 예약확인페이지로 이동함수
-
     // 모달 상태 변경 / 데이터 추가
     const handleClickAdd = async () => {
         const date = new Date();
         const checkinDate = new Date(res.checkinDate)
         const checkOutDate = new Date(res.checkoutDate)
+        const resCheck = resFilter(res.site.siteId, res.checkinDate)
 
-        date.setHours(0,0,0,0);
-        checkinDate.setHours(0,0,0,0);
-        checkOutDate.setHours(0,0,0,0);
-
+        date.setHours(0, 0, 0, 0);
+        checkinDate.setHours(0, 0, 0, 0);
+        checkOutDate.setHours(0, 0, 0, 0);
 
         if (date > checkinDate) {
             firstSetShow(false)
@@ -132,13 +143,22 @@ const Respage = () => {
                 alert("입실 날짜와 퇴실 날짜가 같을수 없습니다.")
             }, 100);
             return;
+        } else if (!resCheck) {
+            firstSetShow(false)
+            setTimeout(() => {
+                alert("예약 하실려는 날짜에 예약이 이미 존재합니다.")
+            }, 100);
+            return;
         }
 
         resAdd(res)
             .then(result => {
                 firstSetShow(false)
                 secondSetShow(true);
+                setResData(res);
+                setResNumber(result);
                 setRes({...initState});
+
             })
             .catch(error => {
                 firstSetShow(false)
@@ -167,7 +187,47 @@ const Respage = () => {
                 }))
             }
         }
+    }
+
+    const resFilter = (siteId, checkinDate) => {
+        // 체크인 및 체크아웃 날짜를 Date 객체로 변환
+        const checkin = new Date(checkinDate);
+
+        // 체크인과 체크아웃 사이의 각 날짜에 대해 예약 가능 여부를 확인
+        // 현재 날짜가 예약된 날짜인지 확인
+        const isReserved = resCheckData.filter((item) =>
+            item[0] === siteId &&
+            new Date(item[3]).toDateString() === checkin.toDateString() &&
+            item[4] === "true"
+        )
+        if (isReserved.length > 0) {
+            return false;
+        }
+        return true;
     };
+
+
+    // 입실날짜 퇴실날짜 상태 저장
+    // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
+    useEffect(() => {
+        if (year && month && day) {
+            const formattedDate = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+            setCheckinDate(formattedDate);
+
+            setRes((prevState) => ({
+                ...prevState, // 기존 상태 객체의 모든 속성을 복사합니다.
+                member: {
+                    ...prevState.member, // member의 기존 속성을 모두 복사한 후 해당하는 필드만 새값으로 덮어쓴다.
+                    memberId: memberId || 0,
+                },
+                site: {
+                    ...prevState.site,
+                    siteId: siteId || 0,
+                },
+                checkinDate: formattedDate,
+            }));
+        }
+    }, [year, month, day, memberId, siteId]);
 
     // 연박 계산
     useEffect(() => {
@@ -204,8 +264,8 @@ const Respage = () => {
         }
 
         // 최종 결제금액 계산
-        const weekendRate = 80000; // 주말 요금
-        const weekdayRate = 40000;  // 평일 요금
+        const weekendRate = weekEndPay; // 주말 요금
+        const weekdayRate = weekDayPay;  // 평일 요금
 
         const totalPay = (weekdays * weekdayRate) + (weekendDays * weekendRate);
 
@@ -217,20 +277,23 @@ const Respage = () => {
 
     }, [res.resTotalPay, res.checkinDate, res.checkoutDate])
 
+    // 내가 예약하는 날짜에 예약이 있으면 예약 못하게 막기
+    useEffect(() => {
+        resCheck().then(data => {
+            setResCheckData(data);
+        })
+    }, [])
+
     return (
         <div>
             <h3>예약페이지</h3>
-            <Form
-                style={{
-                    marginLeft: "10px",
-                }}
-            >
+            <Form className="mainForm">
                 <Form.Group as={Row} className="mb-3" controlId="siteName">
                     <Form.Label column sm="2">
                         구역이름
                     </Form.Label>
                     <Col sm="10">
-                        <Form.Control type="text" defaultValue={siteName} readOnly={true} onChange={handleChangeRes}/>
+                        <Form.Control type="text" value={siteName} readOnly={true} onChange={handleChangeRes}/>
                     </Col>
                 </Form.Group>
 
@@ -246,9 +309,7 @@ const Respage = () => {
                             aria-label="option 1"
                             label={"회원명이 예약자랑 같습니까?"}
                             id="check"
-                            style={{
-                                paddingTop: "5px",
-                            }}
+                            className="check"
                             onChange={handleCheckChange}
                         />
                     </Col>
@@ -303,7 +364,7 @@ const Respage = () => {
                         <Form.Control
                             type="date"
                             name="checkinDate"
-                            defaultValue={checkinDate}
+                            value={res.checkinDate}
                             onChange={handleChangeRes}
                         />
                     </Col>
@@ -356,9 +417,11 @@ const Respage = () => {
             <div style={{
                 display: "flex", alignItems: "center", justifyContent: "center"
             }}>
+                {/* firstHandleShow */}
                 <Button variant="success" onClick={firstHandleShow}
-                        style={{marginBottom: "15px", marginRight: "10px", width: "80px"}}>확인</Button>
-                <Button variant="success" onClick={handleCancel} style={{marginBottom: "15px", width: "80px"}}>취소</Button>
+                        className="success">확인</Button>
+                <Button variant="success" onClick={handleCancel}
+                        className="cancel">취소</Button>
             </div>
 
 
@@ -398,7 +461,7 @@ const Respage = () => {
                     바랍니다!
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleCancel}>
+                    <Button variant="primary" onClick={handleSucceed}>
                         확인
                     </Button>
                 </Modal.Footer>

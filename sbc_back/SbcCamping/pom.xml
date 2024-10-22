@@ -115,6 +115,14 @@
             <version>0.11.5</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.1.11</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
