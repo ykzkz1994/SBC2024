@@ -48,6 +48,11 @@ const useCustomMove = () => {
             search: queryDefault
         })
     }
-    return {moveToList, moveToModify, moveToRead, page, size, refresh}
+
+    const moveToAdd = () => {
+        navigate('/campers/add')
+    }
+
+    return {moveToList, moveToModify, moveToRead, moveToAdd, page, size, refresh}
 }
 export default useCustomMove

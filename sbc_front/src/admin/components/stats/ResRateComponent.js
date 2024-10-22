@@ -1,3 +1,5 @@
+import SearchComponent from "./SearchComponent";
+
 const ResRateComponent = () => {
     const wrapperStyle = {
         width: '100%',
@@ -12,6 +14,8 @@ const ResRateComponent = () => {
 
     return (
         <>
+            <SearchComponent/>
+            <hr/>
             <div className={"graphWrapper"} style={wrapperStyle} >
                 예약률 graph
             </div>

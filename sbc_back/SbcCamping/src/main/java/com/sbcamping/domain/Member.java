@@ -93,4 +93,6 @@ public class Member {
         this.memberPhone = newPhone;
     }
 
+    public void changeStatus(String newStatus) { this.memberStatus = newStatus; }
+
 }

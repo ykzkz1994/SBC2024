@@ -16,8 +16,4 @@ public interface QnaCommentRepository extends JpaRepository<QuestionBoardComment
     @Query("select q from QuestionBoardComment q where q.qBoard.qBoardID= :qbID order by q.qCommentDate asc")
     List<QuestionBoardComment> orderedList(@Param("qbID") Long qbID);
 
-    // 댓글 갯수 카운트
-//    @Query("SELECT COUNT(c) FROM QuestionBoardComment c WHERE c.qBoard.qBoardID = :qBoardID")
-//    Long countByQboardID(@Param("qboardID")Long qBoardID);
-
 }

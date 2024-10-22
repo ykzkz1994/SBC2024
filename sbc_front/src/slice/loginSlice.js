@@ -43,14 +43,20 @@ const loginSlice = createSlice({
     extraReducers : (builder) => {
         builder.addCase(loginPostAsync.fulfilled, (state, action) => {
             // 로그인 완료
-            console.log('fulfilled', action.payload);
             const payload = action.payload;
+            console.log('payload 값 확인 : ', payload);
 
             if(!payload.error){
-                setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
-                console.log('쿠키 저장');
-                state.member.memberEmail = payload.member.memberEmail;
+                if(payload.member.memberStatus === 'OFF'){
+                    //removeCookie("memberCookie")
+                    alert('탈퇴한 회원입니다.')
+                } else{
+                    setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
+                    console.log('쿠키 저장');
+                    state.member.memberEmail = payload.member.memberEmail;
+                }
             }
+
             return state; // 기본 상태 반환
         })
             .addCase(loginPostAsync.pending, (state, action) => {

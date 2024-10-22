@@ -43,7 +43,8 @@ public class CustomUserDetailService implements UserDetailsService {
                 member.getMemberBirth(),
                 member.getMemberLocal(),
                 member.getMemberRole(),
-                member.getMemberID()
+                member.getMemberID(),
+                member.getMemberStatus()
         );
 
         log.info(memberDTO.toString());

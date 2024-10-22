@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -27,7 +28,7 @@ public class AdminMemberDTO {
 
     private String memberLocal; // 회원 지역
 
-    private Date memberRegDate; // 회원 등록일
+    private LocalDate memberRegDate; // 회원 등록일
 
     private String memberStatus; // 회원 상태 (휴면 off)
 

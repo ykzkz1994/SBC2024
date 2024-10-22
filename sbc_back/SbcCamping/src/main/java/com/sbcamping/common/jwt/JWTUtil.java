@@ -43,14 +43,15 @@ public class JWTUtil {
             // 파싱 및 검증 실패시 에러
             claim = Jwts.parserBuilder()
                     .setSigningKey(key).build()
-                    .parseClaimsJws(token) // JWT 검증하고 유효한 서명인지 확인
+                    .parseClaimsJws(token)
                     .getBody(); // 토큰에 포함된 클레임 추출
+            //log.info("--------validateToken claim : {}", claim);
         } catch (MalformedJwtException e) { // 전달되는 토큰의 값이 유효하지 않을 때 발생
-            throw new CustomJWTException("MalFormed 예외");
+            throw new CustomJWTException("MalFormed");
         } catch (ExpiredJwtException e) { // 유효기간 초과
-            throw new CustomJWTException("Expired 예외");
+            throw new CustomJWTException("Expired");
         } catch (InvalidClaimException e) { // 클레임이 유효하지 않음
-            throw new CustomJWTException("Invalid 예외");
+            throw new CustomJWTException("Invalid");
         } catch (JwtException e){
             throw new CustomJWTException("JWT 사용자 정의 예외");
         } catch (Exception e) {

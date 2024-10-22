@@ -3,14 +3,22 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import {useEffect, useState} from "react";
-import {emailCheck, joinPost} from "../../api/memberApi";
+import {emailCheck, joinKakaoPost, joinPost} from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from 'react-bootstrap/Modal';
 import "../../css/join.css";
 import ListGroup from "react-bootstrap/ListGroup";
+import {useLocation} from "react-router-dom";
 
 
 const JoinInputPage = () => {
+
+    // ------카카오 최초 로그인인 경우 ----------파라미터 가져오기 (memberEmail)
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const getkakaoEmail = queryParams.get('memberEmail');
+    const [kakaoEmail, setKakaoEmail] = useState(getkakaoEmail);
+
     // 부트스트랩 변수
     const [validated, setValidated] = useState(false);
     const [modalShow, setModalShow] = useState(false);
@@ -29,10 +37,11 @@ const JoinInputPage = () => {
     const [isPwdMatch, setIsPwdMatch] = useState(true);
     // 이메일 중복체크용 변수
     const [emailCheckResult, setEmailCheckResult] = useState("");
+    const [isEmailValid, setIsEmailValid] = useState(false);
 
     const [members, setMembers] = useState(
         {
-            memberEmail : '',
+            memberEmail : kakaoEmail || '',
             memberPw : '',
             memberName : '',
             memberPhone : '',
@@ -73,9 +82,10 @@ const JoinInputPage = () => {
             event.preventDefault();
         }
 
-        if(emailCheckResult===''){
+        if(emailCheckResult === "" || !isEmailValid){
             alert('이메일 중복체크를 해주세요.')
             event.preventDefault();
+            return
         }
 
         // 부트스트랩 동작
@@ -83,11 +93,31 @@ const JoinInputPage = () => {
             event.stopPropagation();
         } else{
             // 유효성 검사를 통과했으면 API 요청
-            handleClickJoin(members)
+            if(!kakaoEmail){
+                handleClickJoin(members)
+            } else if(kakaoEmail){
+                handleClickKakaoJoin(members)
+            }
         }
         setValidated(true);
     };
 
+    // 카카오 회원가입 Submit 동작
+    const handleClickKakaoJoin = async (members) => {
+        try {
+            console.log(members)
+            const action = joinKakaoPost(members);
+            console.log(action)
+            if(action.error){
+                console.log('회원가입 실패')
+                alert('회원가입 실패')
+            } else{
+                moveToPath('/join/welcome')
+            }
+        } catch (error){
+            console.log('서버 요청 실패 : ', error)
+        }
+    }
 
     // 유효성 검사를 모두 통과하면 회원가입 Submit 동작
     const handleClickJoin = async (members) => {
@@ -96,7 +126,7 @@ const JoinInputPage = () => {
             console.log(action)
             if(action.error) {
                 console.log('회원가입 실패')
-                alert('회원 가입 실패')
+                alert('회원가입 실패')
             } else {
                 // 성공하면 가입 완료 페이지로 이동
                 moveToPath('/join/welcome')
@@ -137,13 +167,16 @@ const JoinInputPage = () => {
 
             if(action.msg === 'enable'){
                 setEmailCheckResult('사용 가능한 이메일입니다.');
+                setIsEmailValid(true)
             } else if (action.msg === 'disable' || email === ''){
                 setEmailCheckResult(<>
                     사용 <span style={{ color: 'red'}}>불가능</span>한 이메일입니다.
                 </>);
                 emailElement[0].value = '';
+                setIsEmailValid(false)
             } else{
                 setEmailCheckResult('이메일 중복 체크 중 오류가 발생했습니다.')
+                setIsEmailValid(false)
             }
         } catch (error) {
             setEmailCheckResult('이메일 중복 체크 중 오류가 발생했습니다.')
@@ -207,7 +240,7 @@ const JoinInputPage = () => {
             const selectedLocal = event.target.value;
             setLocal(selectedLocal);
             console.log(selectedLocal);
-            if (selectedLocal === "선택해주세요" || selectedLocal === "") {
+            if (selectedLocal == "선택해주세요" || selectedLocal === "") {
                 setIsLocalValid(false);  // 선택이 잘못되었을 경우
             } else {
                 setIsLocalValid(true);  // 올바른 선택
@@ -240,16 +273,17 @@ const JoinInputPage = () => {
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {/* 이메일 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             이메일
                         </Form.Label>
-                        <Col sm={4}>
+                        <Col sm={5}>
                             <Form.Control type="email"
                                           name="memberEmail"
                                           placeholder="이메일을 입력하세요"
                                           required
                                           maxLength={50}
                                           onChange={handleChangeJoin}
+                                          value={kakaoEmail ? kakaoEmail : ''}
                             />
                             <Form.Control.Feedback type="invalid">
                                 이메일을 확인해주세요.
@@ -257,7 +291,7 @@ const JoinInputPage = () => {
 
                         </Col>
                         <Col sm={2}>
-                            <Button variant="success" onClick={handleEmailCheck}>중복체크</Button>
+                            <Button variant="success" onClick={handleEmailCheck} style={{fontSize:'13px'}}>중복체크</Button>
                             <MyVerticallyCenteredModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
@@ -267,54 +301,58 @@ const JoinInputPage = () => {
                     </Form.Group>
 
                     {/* 비밀번호 */}
+                    { !kakaoEmail && (
+                        <>
                     <Form.Group as={Row} className="mb-3" >
-                    <Form.Label column sm={2}>
-                        비밀번호
-                    </Form.Label>
-                    <Col sm={10}>
-                        <Form.Control type="password"
-                                      name="memberPw"
-                                      placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                      required
-                                      id={"password"}
-                                      minLength={10}
-                                      pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                      onChange={handleChangeJoin}
-                                      isInvalid={!isPwdValid}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            비밀번호를 확인해주세요.
-                        </Form.Control.Feedback>
-                    </Col>
+                        <Form.Label column sm={3}>
+                            비밀번호
+                        </Form.Label>
+                        <Col sm={7}>
+                            <Form.Control type="password"
+                                          name="memberPw"
+                                          placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
+                                          required
+                                          id={"password"}
+                                          minLength={10}
+                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                          onChange={handleChangeJoin}
+                                          isInvalid={!isPwdValid}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                비밀번호를 확인해주세요.
+                            </Form.Control.Feedback>
+                        </Col>
                     </Form.Group>
 
                     {/* 비밀번호 재확인 */}
                     <Form.Group as={Row} className="mb-3" >
-                    <Form.Label column sm={2}>
-                        비밀번호 확인
-                    </Form.Label>
-                    <Col sm={10} id={"pwrebox"}>
-                        <Form.Control type="password"
-                                      placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                      required
-                                      id={"password_re"}
-                                      minLength={10}
-                                      pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                      onChange={handleConfirmPwd}
-                                      isInvalid={!isPwdMatch}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            비밀번호가 일치하지 않습니다.
-                        </Form.Control.Feedback>
-                    </Col>
+                        <Form.Label column sm={3}>
+                            비밀번호 확인
+                        </Form.Label>
+                        <Col sm={7} id={"pwrebox"}>
+                            <Form.Control type="password"
+                                          placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
+                                          required
+                                          id={"password_re"}
+                                          minLength={10}
+                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                          onChange={handleConfirmPwd}
+                                          isInvalid={!isPwdMatch}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                비밀번호가 일치하지 않습니다.
+                            </Form.Control.Feedback>
+                        </Col>
                     </Form.Group>
+                        </>
+                    )}
 
                     {/* 이름 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             이름
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberName"
                                           placeholder="이름을 입력하세요"
@@ -331,10 +369,10 @@ const JoinInputPage = () => {
 
                     {/* 핸드폰번호 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             핸드폰 번호
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberPhone"
                                           placeholder="-없이 숫자만 입력해주세요"
@@ -353,11 +391,12 @@ const JoinInputPage = () => {
                     {/* 성별 */}
                     <fieldset>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label as="legend" column sm={2}>
+                            <Form.Label as="legend" column sm={3}>
                                 성별
                             </Form.Label>
-                            <Col sm={10}>
+                            <Col sm={7}>
                                 <Form.Check
+                                    inline
                                     type="radio"
                                     label="남"
                                     name="memberGender"
@@ -366,6 +405,7 @@ const JoinInputPage = () => {
                                     onChange={handleChangeJoin}
                                 />
                                 <Form.Check
+                                    inline
                                     type="radio"
                                     label="여"
                                     name="memberGender"
@@ -384,10 +424,10 @@ const JoinInputPage = () => {
 
                     {/* 생년월일 */}
                     <Form.Group as={Row} className="mb-3" >
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             생년월일
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Control type="text"
                                           name="memberBirth"
                                           placeholder="숫자만 입력해주세요 ex. 19990220"
@@ -404,17 +444,17 @@ const JoinInputPage = () => {
 
                     {/* 지역 */}
                     <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
+                        <Form.Label column sm={3}>
                             지역
                         </Form.Label>
-                        <Col sm={10}>
+                        <Col sm={7}>
                             <Form.Select aria-label="local"
                                          name="memberLocal"
                                          required
                                          onChange={handleChangeJoin}
-                                         isInvalid={validated && (local === "" || local === "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
+                                         isInvalid={validated && (local === "" || local == "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
                             >
-                                <option>선택해주세요</option>
+                                <option value="선택해주세요" selected>선택해주세요</option>
                                 <option value="서울">서울</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>
@@ -438,13 +478,10 @@ const JoinInputPage = () => {
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm={{span: 10, offset: 2}} className={"joinbuttonwrap"}>
-                            <Button variant="success" className={"joinButton"} type="submit" onClick={handleSubmit}>회원가입</Button>
-                        </Col>
-                    </Form.Group>
                 </Form>
+                <div className="joinButton">
+                    <Button variant="success" type="submit" onClick={handleSubmit}>회원가입</Button>
+                </div>
             </div>
         </div>
     );

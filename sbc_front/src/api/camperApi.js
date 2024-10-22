@@ -1,8 +1,9 @@
 import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
 //서버 주소
 export const API_SERVER_HOST = 'http://localhost:8080';
 
-const prefix = `${API_SERVER_HOST}/api/campers`;
+export const prefix = `${API_SERVER_HOST}/api/campers`;
 
 //상세페이지
 export const getOne = async (cBoardId) => {
@@ -18,8 +19,12 @@ export const getList = async (pageParam) => {
 };
 
 //추가
-export const postAdd = async (camperObj) => {
-    const res = await axios.post(`${prefix}/`, camperObj);
+export const postAdd = async (formData) => {
+    const header = {
+        header:{'Content-Type': 'multipart/form-data'}
+    }
+    const res = await jwtAxios.post(`${prefix}/`, formData, header);
+    console.log(res);
     return res.data;
 };
 

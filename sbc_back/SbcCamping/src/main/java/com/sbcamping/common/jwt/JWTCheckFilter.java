@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -25,27 +27,43 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("------------------------JWT 체크 필터");
         String authHeaderStr = request.getHeader("Authorization");
+        if (authHeaderStr == null) {
+            log.info("-------요청이 jwtAxios인지 확인해보세요");
+        }
         try {
             String accessToken = authHeaderStr.substring(7);
             Map<String, Object> claims = JWTUtil.validateToken(accessToken); // 토큰 검증
-            log.info("JWT Claims : {}", claims);
+            //log.info("--------JWT Claims : {}", claims);
 
-            // 사용자 정보
-            String email = (String) claims.get("email");
-            String pw = (String) claims.get("pw");
-            String name = (String) claims.get("name");
-            String phone = (String) claims.get("phone");
-            char gender = (char) claims.get("gender");
-            String birth = (String) claims.get("birth");
-            String local = (String) claims.get("local");
-            String memberRole = (String) claims.get("memberRole");
+            // 사용자 정보 추출 (member 내부의 정보)
+            Map<String, Object> memberClaims = (Map<String, Object>) claims.get("member");
+            String memberEmail = (String) memberClaims.get("memberEmail");
+            String memberPw = (String) memberClaims.get("memberPw");
+            String memberName = (String) memberClaims.get("memberName");
+            String memberPhone = (String) memberClaims.get("memberPhone");
+            char memberGender = memberClaims.get("memberGender").toString().charAt(0);
+            String memberBirth = (String) memberClaims.get("memberBirth");
+            String memberLocal = (String) memberClaims.get("memberLocal");
+            // authorities 필드가 List<Map<String, Object>> 형태인 경우 처리
+            String memberRole = "";
+            List<Map<String, Object>> authorities = (List<Map<String, Object>>) memberClaims.get("authorities");
+            String role = (String) memberClaims.get("memberRole");
+            if (authorities != null && !authorities.isEmpty()) {
+                // 첫 번째 권한의 authority 값 추출
+                memberRole = (String) authorities.get(0).get("authority");
+            } else if(role != null){
+                memberRole = role;
+            }
+            else {
+                throw new RuntimeException("권한 정보가 없습니다.");
+            }
             Long memberId = (Long) claims.get("memberId");
-            MemberDTO memberDTO = new MemberDTO(email, pw, name, phone, gender, birth, local, memberRole, memberId);
-            log.info("memberDTO.getMemberEmail : {}", memberDTO.getMemberEmail());
+            String memberStatus = (String) claims.get("memberStatus");
+            MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender, memberBirth, memberLocal, memberRole, memberId, memberStatus);
+            log.info("memberDTO.GetAuthorities() : {}", memberDTO.getAuthorities());
 
-            // ◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆ getAuthorities() 동작 확인하세요
             // 인증 객체 생성(사용자 정보와 권한)
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO, pw, memberDTO.getAuthorities());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberDTO, memberPw, memberDTO.getAuthorities());
             // 사용자의 인증 상태 저장 (인증 완료)
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
@@ -54,7 +72,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
             response.setContentType("application/json");
-            response.getWriter().write(msg);
+            PrintWriter out = response.getWriter();
+            out.println(msg);
+            out.close();
         }
     }
 
@@ -66,24 +86,21 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(request.getMethod().equals("OPTIONS")){
             return true;
         }
+
         String path = request.getRequestURI();
         log.info("URL CHECK : {}", path);
 
         // api/auth/ 경로의 호출은 체크하지 않음 (로그인할 때는 JWT 토큰이 없는 상태이기에 하는 설정)
-        if(path.startsWith("/api/auth/")){
+        if(path.startsWith("/api/auth")){
             return true;
         }
 
         // 회원가입 경로 예외
-        if(path.equals("/api/member/")){
+        if(path.equals("/api/member/") || path.equals("/api/member/kakao/")){
             return true;
         }
 
-        if(path.startsWith("/api/campers")){
-            return true;
-        }
-
-        if(path.startsWith("/admin")){
+        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/view")){
             return true;
         }
 
@@ -91,13 +108,25 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/admin/site")) {
+            return true;
+        }
+
         if(path.equals("/api/res/siteList")){
             return true;
         }
 
-        // 이미지 조회 경로는 체크하지 않음
-        // ◆◆◆◆◆◆◆◆◆이미지 경로는 다른 분들꺼 보고 추가 수정◆◆◆◆◆◆◆◆◆◆◆◆◆
-        if (path.startsWith("/api/cboard") || path.startsWith("/api/qboard/")){
+        //상호 노티스 예외
+        if(path.startsWith("/notice")){
+            return true;
+        }
+        //상호 노티스 예외
+        if(path.startsWith("/site")){
+            return true;
+        }
+
+        // 이미지 요청의 경우 필터를 적용하지 않음
+        if (path.startsWith("/admin/qnas/view")) {
             return true;
         }
 
