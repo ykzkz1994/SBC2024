@@ -42,17 +42,16 @@ public class Site {
 
     @Column(name = "Site_Min_People", nullable = false, columnDefinition = "NUMBER(1,0)") // 최소인원
     @Builder.Default
-    private Long siteMinPeople = 4L;
+    private Long minPeople = 4L;
 
     @Column(name = "Site_Max_People", nullable = false, columnDefinition = "NUMBER(1,0)") // 최대인원
     @Builder.Default
-    private Long siteMaxPeople = 6L;
+    private Long maxPeople = 6L;
 
-    //
+
     public void changeSiteName(String Name) {
         this.siteName = Name;
     }
-
 
     public void changeIsAvailable(char IsAvailable) {
         this.siteIsavailable = IsAvailable;
@@ -69,11 +68,11 @@ public class Site {
     }
 
     public void changeMinPeople(Long MinPeople) {
-        this.siteMinPeople = MinPeople;
+        this.minPeople = MinPeople;
     }
 
     public void changeMaxPeople(Long MaxPeople) {
-        this.siteMaxPeople = MaxPeople;
+        this.maxPeople = MaxPeople;
     }
 
 
