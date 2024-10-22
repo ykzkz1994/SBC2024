@@ -11,6 +11,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,6 +24,7 @@ import java.util.List;
 @Transactional
 @Log4j2
 @RequiredArgsConstructor
+@EnableScheduling // 스케줄링 활성화
 public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
@@ -104,4 +108,24 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.getReservations();
     }
 
+    @Override
+    @Scheduled(cron = "0 0 */6 * * ?") // 6시간마다 함수 호출
+    public void resStatusCheck() {
+
+        // 현재 날짜 구하기
+        LocalDate now = LocalDate.now();
+
+        // RES_STATUS가 예약완료인 예약들 가져오기
+        List<Reservation> reservations = reservationRepository.findByResStatus("예약완료");
+
+        reservations.forEach(reservation ->  {
+            // checkout_Date가 하루 지났는지 확인
+            if (reservation.getCheckoutDate().isBefore(now.minusDays(1))) {
+                // RES_STATUS를 사용완료로 변경
+                reservation.setResStatus("사용완료");
+                reservationRepository.save(reservation);
+                log.info("예약 ID {} 상태가 '사용완료'로 변경되었습니다", reservation.getResId());
+            }
+        });
+    }
 }

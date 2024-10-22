@@ -5,6 +5,7 @@ const Loading = <div>Loading . . .</div>
 const ResGuidePage = lazy(() => import("../pages/reservation/ResGuidePage"))
 const RealTimeResPage = lazy(() => import("../pages/reservation/RealTimeResPage"))
 const Respage = lazy(() => import("../pages/reservation/Respage"))
+const ResCheckPage = lazy(() => import("../pages/reservation/ResCheckPage"))
 
 const ResRouter = () => {
     return[
@@ -23,6 +24,10 @@ const ResRouter = () => {
         {
             path:"respage",
             element : <Suspense fallback={Loading}><Respage/></Suspense>
+        },
+        {
+            path:"CheckPage",
+            element: <Suspense fallback={Loading}><ResCheckPage/></Suspense>
         }
     ]
 }
