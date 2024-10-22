@@ -23,6 +23,22 @@ const ResList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15; // 페이지당 항목 수
 
+    //정렬기능 구현을 위한 상태변수
+    const [sortColumn, setSortColumn] = useState(reservations.resId);
+    const [sortOrder, setSortOrder] = useState('desc'); // 디폴트는 내림차순 글 번호가 디폴트라 내림차순으로 해야 최신이 위로 올라옴
+
+
+    const handleSort = (column) => {
+        if (sortColumn === column) {
+            // 이미 선택된 컬럼이면 정렬 순서만 변경
+            setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+        } else {
+            // 새로운 컬럼 선택 시 오름차순으로 시작
+            setSortColumn(column);
+            setSortOrder('desc');
+        }
+    };
+
     // 데이터 불러오는 비동기 함수
     const settingReservation = async () => {
         try {
@@ -40,7 +56,7 @@ const ResList = () => {
         settingReservation();
     }, []);
 
-    // 검색어와 선택된 컬럼에 따라 예약 데이터를 필터링
+    // 전체 데이터를 검색어와 선택된 컬럼에 따라 예약 데이터를 필터링
     const filteredReservations = reservations.filter((reservation) => {
         // resStatus가 "예약완료"가 아닌 경우 제외
         if (reservation.resStatus !== "예약완료") return false;
@@ -55,8 +71,27 @@ const ResList = () => {
         return value?.includes(searchTerm.toLowerCase());
     });
 
-    // 전체 페이지 수를 계산하는 변수, 필터링된 데이터 기준
-    const totalPages = Math.ceil(filteredReservations.length / itemsPerPage);
+    const sortedReservations = [...filteredReservations].sort((a, b) => {
+        if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
+
+        const valueA = a[sortColumn];
+        const valueB = b[sortColumn];
+
+        if (typeof valueA === 'string') {
+            return sortOrder === 'asc'
+                ? valueA.localeCompare(valueB)
+                : valueB.localeCompare(valueA);
+        } else {
+            return sortOrder === 'asc'
+                ? valueA - valueB
+                : valueB - valueA;
+        }
+    });
+
+
+
+    // 데이터를 전체 페이지 수를 계산하는 변수, 필터링된 데이터 기준
+    const totalPages = Math.ceil(sortedReservations.length / itemsPerPage);
 
     // 페이지 번호를 클릭할 때 호출되는 함수
     const handlePageClick = (pageNumber) => {
@@ -67,13 +102,15 @@ const ResList = () => {
         setCurrentPage(pageNumber);
     };
 
-    // 페이지네이션된 데이터 가져오기
-    const paginatedReservations = getPagination(filteredReservations, itemsPerPage, currentPage);
+    // 정렬된 된 데이터를 전체수로나눔 페이지네이션된 데이터 가져오기
+    const paginatedReservations = getPagination(sortedReservations, itemsPerPage, currentPage);
 
     // 검색어나 선택된 컬럼이 변경되면 현재 페이지를 1로 리셋
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm, selectedColumn]);
+
+
 
     return (
         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -94,22 +131,22 @@ const ResList = () => {
             {/* 예약 정보 테이블 */}
             <Table bordered hover responsive className="text-sm">
                 <thead>
-                <tr className="bg-blue-200">
-                    <th>예약 번호</th>
-                    <th>예약자 이름</th>
-                    <th>예약자 전화번호</th>
-                    <th>인원수</th>
-                    <th>입실 날짜</th>
-                    <th>퇴실 날짜</th>
-                    <th>예약 날짜</th>
-                    <th>총 결제 금액</th>
-                    <th>회원 ID</th>
-                    <th>구역 ID</th>
+                <tr className="bg-blue-200"> {/*표 머리에 클릭시 정렬기능 달아줌 추후에 시각적 표시도 할거임*/}
+                    <th onClick={() => handleSort('resId')}>예약 번호</th>
+                    <th onClick={() => handleSort('resUserName')}>예약자 이름</th>
+                    <th onClick={() => handleSort('resUserPhone')}>예약자 전화번호</th>
+                    <th onClick={() => handleSort('resPeople')}>인원수</th>
+                    <th onClick={() => handleSort('checkinDate')}>입실 날짜</th>
+                    <th onClick={() => handleSort('checkoutDate')}>퇴실 날짜</th>
+                    <th onClick={() => handleSort('resDate')}>예약 날짜</th>
+                    <th onClick={() => handleSort('resTotalPay')}>총 결제 금액</th>
+                    <th onClick={() => handleSort('member.memberName')}>회원 ID</th>
+                    <th onClick={() => handleSort('site.siteName')}>구역 ID</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {paginatedReservations.length > 0 ? ( // 필터링된 데이터를 페이지네이션된 데이터로 출력
+                {paginatedReservations.length > 0 ? ( // 필터링,페이지네이션 데이터를 map함수로 순환출력
                     paginatedReservations.map(reservation => (
                         <tr key={reservation.resId}>
                             <td>{reservation.resId}</td>
