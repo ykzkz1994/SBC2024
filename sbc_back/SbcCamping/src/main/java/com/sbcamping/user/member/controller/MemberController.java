@@ -35,7 +35,6 @@ public class MemberController {
         memberService.kakaoAddMember(member);
     }
 
-
     // 예약 상태 변경
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/{resID}/cancel")

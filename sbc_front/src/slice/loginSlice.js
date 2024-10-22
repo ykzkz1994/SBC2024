@@ -34,6 +34,14 @@ const loginSlice = createSlice({
     name: 'loginSlice',
     initialState : loadMemberCookie() || initState, // 쿠키가 없으면 초기값 사용
     reducers : {
+        login: (state, action) => {
+          console.log("소셜 로그인 : ", action.payload);
+          const payload = action.payload;
+          setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
+          console.log('getCookie : ', getCookie("memberCookie"));
+          state.member.memberEmail = payload.member.memberEmail;
+          return state
+        },
         logout : (state, action) => {
             removeCookie("memberCookie") // 쿠키 삭제
             state.member.memberEmail = '';

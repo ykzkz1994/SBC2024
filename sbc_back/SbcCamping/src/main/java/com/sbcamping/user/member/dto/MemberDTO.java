@@ -49,18 +49,20 @@ public class MemberDTO extends User {
 
     // JWT 인증용 클레임(claim)
     // 클레임(claim)은 인증 및 인가 시스템에서 사용자의 신원이나 권한에 대한 정보를 담고 있는 데이터 조각
-//    public Map<String, Object> getClaims(){
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("memberEmail", memberEmail);
-//        claims.put("memberPw", memberPw);
-//        claims.put("memberName", memberName);
-//        claims.put("memberPhone", memberPhone);
-//        claims.put("memberGender", memberGender);
-//        claims.put("memberBirth", memberBirth);
-//        claims.put("memberLocal", memberLocal);
-//        claims.put("memberRole", memberRole);
-//        claims.put("memberId", memberId);
-//        return claims;
-//    }
+    public Map<String, Object> getClaims(){
+        Map<String, Object> claims = new HashMap<>();
+        //MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender,memberBirth, memberLocal, memberRole, memberId, memberStatus);
+        //claims.put("member", memberDTO);
+        claims.put("memberEmail", memberEmail);
+        claims.put("memberPw", memberPw);
+        claims.put("memberName", memberName);
+        claims.put("memberPhone", memberPhone);
+        claims.put("memberGender", memberGender);
+        claims.put("memberBirth", memberBirth);
+        claims.put("memberLocal", memberLocal);
+        claims.put("memberRole", memberRole);
+        claims.put("memberId", memberId);
+        return claims;
+    }
 
 }

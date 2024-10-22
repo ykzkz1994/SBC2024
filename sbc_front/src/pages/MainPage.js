@@ -4,10 +4,15 @@ import Carousel from 'react-bootstrap/Carousel';
 import '../css/mainPage.css';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import loginSlice from "../slice/loginSlice";
+import {useSelector} from "react-redux";
 
 const MainPage = () => {
 
     const navigate = useNavigate();
+    const loginState = useSelector((state) => state.loginSlice)
+    console.log('loginState : ', loginState)
 
     return(
         <BasicLayout>

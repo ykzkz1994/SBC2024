@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getOne, deleteOne, getMemberById, prefix } from "../../api/camperApi";  // API 함수 가져오기
 import useCustomMove from "../../hooks/useCustomMove";
+import {useSelector} from "react-redux";
 
 const initState = {
     member: {
@@ -17,6 +18,9 @@ const initState = {
 };
 
 const ReadComponent = ({ cBoardId }) => {
+    const loginState = useSelector((state) => state.loginSlice)
+    const loginId = loginState.member.memberId;
+    const [writenId, setWritenId] = useState('');
     const [camper, setCamper] = useState(initState);  // 게시글 데이터 상태
     const [loading, setLoading] = useState(true);  // 로딩 상태
     const { moveToList, moveToModify } = useCustomMove();  // 페이지 이동 훅
@@ -32,6 +36,8 @@ const ReadComponent = ({ cBoardId }) => {
                     // 작성자 정보를 가져오기 위해 memberId를 사용
                     if (data.memberId) {
                         const memberData = await getMemberById(data.memberId);
+                        setWritenId(data.memberId)
+                        console.log("id", loginId + "," + writenId)
                         setCamper(prevCamper => ({
                             ...prevCamper,
                             member: memberData
@@ -144,20 +150,25 @@ const ReadComponent = ({ cBoardId }) => {
                     >
                         목록으로
                     </button>
-                    <button
-                        type="button"
-                        className="btn btn-warning me-2"
-                        onClick={() => moveToModify(cBoardId)}
-                    >
-                        수정
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={handleDelete}
-                    >
-                        삭제
-                    </button>
+                    {/* 로그인한 회원번호와 글쓴이 회원번호가 일치하는 경우 수정,삭제 버튼 표시 */}
+                    {loginId == writenId && (
+                        <>
+                            <button
+                                type="button"
+                                className="btn btn-warning me-2"
+                                onClick={() => moveToModify(cBoardId)}
+                            >
+                                수정
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleDelete}
+                            >
+                                삭제
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

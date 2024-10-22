@@ -29,7 +29,7 @@ export const getkakaoLoginLink = () => {
     return `${auth_code_path}?client_id=${rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
 }
 
-// 카카오 토큰 가져오기
+// 카카오 서버에 요청하여 토큰 가져오기
 export const getKakaoAccessToken = async (authCode) => {
     const header = {
         headers :{
@@ -44,10 +44,10 @@ export const getKakaoAccessToken = async (authCode) => {
     }
     const res = await axios.post(access_token_url, params, header)
     const accessToken = res.data.access_token
-    return accessToken
+    return accessToken // 이걸 자바 API 컨트롤러에서 사용
 }
 
-// 카카오 - 자바API 서버 호출
+// 카카오 - 자바 API 서버 호출
 export const getMemberWithAccessToken = async (accessToken) => {
     const res = await axios.get(`${host}/auth/kakao?accessToken=${accessToken}`)
     return res.data

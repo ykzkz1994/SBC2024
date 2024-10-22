@@ -24,7 +24,7 @@ const refreshJWT = async (accessToken, refreshToken) => {
 const beforeRequest = (config) => {
     console.log("■ before request")
     const memberInfo = JSON.parse(getCookie("memberCookie"));
-
+    console.log(memberInfo)
     if(!memberInfo){
         console.log("Member Coookie NOT FOUND")
         return Promise.reject({
@@ -35,6 +35,7 @@ const beforeRequest = (config) => {
     }
     const { accessToken } = memberInfo;
     config.headers.Authorization = `Bearer ${accessToken}`;
+
     return config;
 }
 
@@ -55,7 +56,7 @@ const beforeResponse = async (res) => {
         const memberCookieValue = JSON.parse(getCookie("memberCookie"));
 
         const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken);
-        console.log("refresh JWT RESULT : ", result);
+        //console.log("refresh JWT RESULT : ", result);
 
         memberCookieValue.accessToken = result.accessToken;
         memberCookieValue.refreshToken = result.refreshToken;
@@ -63,7 +64,7 @@ const beforeResponse = async (res) => {
         setCookie("memberCookie", JSON.stringify(memberCookieValue), 1);
 
         // 갱신한 토큰으로 다시 시도
-        console.log('재시도');
+        console.log('토큰 갱신 후 재시도');
         const originalRequest = res.config;
         originalRequest.headers.Authorization = `Bearer ${result.accessToken}`;
         return await axios(originalRequest);

@@ -76,7 +76,7 @@ const PasswordAuth = ({onSuccess}) => {
                     <Col sm="7">
                         <Form.Control plaintext
                                       readOnly
-                                      Value={loginState.member.memberEmail}
+                                      value={loginState.member.memberEmail}
                                       style={{paddingLeft:'8px'}}
                         />
                     </Col>
@@ -121,7 +121,8 @@ const MemberInfo = () => {
     const navigate = useNavigate();
 
     const loginState = useSelector((state) => state.loginSlice)
-    const loginMemberId = loginState.member.memberId;
+    const loginMemberId = loginState.member.memberId? loginState.member.memberId : loginState.member.memberID
+    console.log("ID : ", loginMemberId);
 
     // 부트스트랩 변수
     const [validated, setValidated] = useState(false);
@@ -138,14 +139,14 @@ const MemberInfo = () => {
             memberBirth: '',
             memberLocal: '',
             memberRole: '',
-            memberID: loginMemberId,
+            memberID: loginMemberId
         })
 
     useEffect(() => {
         getMember(loginMemberId).then((data) => {
             console.log('member 조회 결과 : ', data);
             setMembers({
-                memberEmail: data.member.memberEmail,
+                memberEmail: data.member.memberEmail || loginState.kakaoEmail,
                 memberName: data.member.memberName,
                 memberPhone: data.member.memberPhone,
                 memberGender: data.member.memberGender,
@@ -317,7 +318,7 @@ const MemberInfo = () => {
                         <Col sm={7}>
                             <Form.Control type="email"
                                           name="memberEmail"
-                                          value={members.memberEmail}
+                                          value={members.memberEmail || loginState.kakaoEmail}
                                           disabled
                             />
                         </Col>
@@ -400,7 +401,7 @@ const MemberInfo = () => {
                                           maxLength={11}
                                           pattern={/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/}
                                           onChange={handleChangeMod}
-                                          InValid={!isPhoneValid}
+                                          Invalid={!isPhoneValid}
                             />
                             <Form.Control.Feedback type="invalid">
                                 번호를 다시 확인해주세요.
@@ -518,11 +519,19 @@ const MemberInfo = () => {
 
 
 const MemberInfoPage = () => {
+    const loginState = useSelector((state) => state.loginSlice)
+    useEffect(() => {
+        if(loginState.kakaoEmail){
+            handleAuthSuccess()
+        }
+    })
     const [showMemberInfo, setShowMemberInfo] = useState(false);
 
     const handleAuthSuccess = () => {
         setShowMemberInfo(true); // 비밀번호 인증 성공 시 회원정보 컴포넌트 표시
     };
+
+
 
     return (
         <div>

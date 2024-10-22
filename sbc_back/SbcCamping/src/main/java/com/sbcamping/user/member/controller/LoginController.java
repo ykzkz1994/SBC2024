@@ -1,8 +1,8 @@
 package com.sbcamping.user.member.controller;
 
+import com.sbcamping.common.jwt.JWTUtil;
 import com.sbcamping.domain.Member;
 import com.sbcamping.user.member.dto.MemberDTO;
-import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -20,17 +19,25 @@ public class LoginController {
 
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private MemberRepository memberRepository;
 
-    // 카카오
+    // 카카오 로그인 동작
     @GetMapping("/kakao")
-    public String[] getMemberFromKakao(String accessToken){
-        Map<String, String> result = memberService.getKakaoMember(accessToken);
-        String res = result.get("result");
-        String memberEmail = result.get("memberEmail"); // 기존 회원일 경우 존재하는 값
-        String kakaoEmail = result.get("kakaoEmail");
-        return new String[] { res, kakaoEmail, memberEmail };
+    public ResponseEntity<Map<String,Object>> getMemberFromKakao(String accessToken){
+        log.info("-----------------카카오 로그인 동작");
+        MemberDTO memberDTO = memberService.getKakaoMember(accessToken);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("member", memberDTO);
+        if(memberDTO != null){
+            String jwtAccessToken = JWTUtil.generateToken(claims, 10);
+            String jwtRefreshToken = JWTUtil.generateToken(claims, 60*12);
+            claims.put("accessToken", jwtAccessToken);
+            claims.put("refreshToken", jwtRefreshToken);
+            claims.put("kakaoEmail", memberDTO.getMemberEmail());
+            claims.put("res", "success");
+        } else {
+            claims.put("res", "fail");
+        }
+        return ResponseEntity.ok(claims);
     }
 
     // 이메일 중복체크 (구조명세서 변경하기)

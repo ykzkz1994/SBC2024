@@ -16,7 +16,7 @@ const JoinInputPage = () => {
     // ------카카오 최초 로그인인 경우 ----------파라미터 가져오기 (memberEmail)
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const getkakaoEmail = queryParams.get('memberEmail');
+    const getkakaoEmail = queryParams.get("kakaoEmail");
     const [kakaoEmail, setKakaoEmail] = useState(getkakaoEmail);
 
     // 부트스트랩 변수
@@ -82,6 +82,7 @@ const JoinInputPage = () => {
             event.preventDefault();
         }
 
+        // 이메일 중복체크 여부
         if(emailCheckResult === "" || !isEmailValid){
             alert('이메일 중복체크를 해주세요.')
             event.preventDefault();
@@ -284,6 +285,7 @@ const JoinInputPage = () => {
                                           maxLength={50}
                                           onChange={handleChangeJoin}
                                           value={kakaoEmail ? kakaoEmail : ''}
+                                          disabled={kakaoEmail ? true : false}
                             />
                             <Form.Control.Feedback type="invalid">
                                 이메일을 확인해주세요.

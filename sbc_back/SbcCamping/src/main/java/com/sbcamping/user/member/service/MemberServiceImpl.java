@@ -2,6 +2,7 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
@@ -37,23 +38,24 @@ public class MemberServiceImpl implements MemberService{
 
     // 카카오 이메일 가져오는 메소드
     @Override
-    public Map<String, String> getKakaoMember(String accessToken) {
+    public MemberDTO getKakaoMember(String accessToken) {
         String email = getEmailFromKakaoAceessToken(accessToken);
         log.info("----------kakao email : " + email);
-        String result = "none";
         Member member = memberRepository.findByMemberEmail(email);
-        Map<String, String> map = new LinkedHashMap<>();
-        if (member == null) {
-            result = "fail";
-            map.put("result", result);
-            map.put("kakaoEmail", email);
-        } else{
-            result = "success";
-            String memberEmail = member.getMemberEmail();
-            map.put("member", memberEmail);
-            map.put("memberEmail", memberEmail);
-        }
-        return map;
+        MemberDTO memberDTO = new MemberDTO(
+                member.getMemberEmail(),
+                member.getMemberPw(),
+                member.getMemberName(),
+                member.getMemberPhone(),
+                member.getMemberGender(),
+                member.getMemberBirth(),
+                member.getMemberLocal(),
+                member.getMemberRole(),
+                member.getMemberID(),
+                member.getMemberStatus()
+        );
+
+        return memberDTO;
     }
 
     // 카카오 로그인 액세스 토큰
@@ -79,6 +81,28 @@ public class MemberServiceImpl implements MemberService{
         return kakaoAccount.get("email");
     }
 
+    // 카카오 회원 등록
+    @Override
+    public void kakaoAddMember(Member member) {
+        String tempPw = makeTempPassword();
+        member.changePw(passwordEncoder.encode(tempPw));
+        Member mem = memberRepository.save(member);
+        if(mem != null) {
+            Long memID = mem.getMemberID();
+            log.info("memID : " + memID);
+        }
+    }
+
+    // 카카오 임시 회원번호(카카오는 비밀번호 알 수 없음)
+    private String makeTempPassword(){
+        StringBuffer buffer = new StringBuffer();
+        for(int i = 0; i < 10; i++){
+            buffer.append((char)((int)(Math.random()*55)+65));
+        }
+        return buffer.toString();
+    }
+
+    // 회원 비활동 처리(탈퇴)
     @Override
     public String withdraw(Long memberId, String memberPw) {
         log.info("------- withdraw memberId : " + memberId + " memberPw : " + memberPw.substring(7));
@@ -178,7 +202,8 @@ public class MemberServiceImpl implements MemberService{
         String msg = null;
         if(member.getMemberPw() != null && member.getMemberEmail() != null){
             // 비밀번호 변경
-            member.changePw(passwordEncoder.encode(member.getMemberPw()));
+            member.changePw(passwordEncoder.encode(mem.getMemberPw()));
+            memberRepository.save(member);
             msg = "success";
         } else{
             msg = "fail";
@@ -200,26 +225,7 @@ public class MemberServiceImpl implements MemberService{
         return email;
     }
 
-    // 카카오 회원 등록
-    @Override
-    public void kakaoAddMember(Member member) {
-        String tempPw = makeTempPassword();
-        member.changePw(passwordEncoder.encode(tempPw));
-        Member mem = memberRepository.save(member);
-        if(mem != null) {
-            Long memID = mem.getMemberID();
-            log.info("memID : " + memID);
-        }
-    }
 
-    // 카카오 임시 회원번호(카카오는 비밀번호 알 수 없음)
-    private String makeTempPassword(){
-        StringBuffer buffer = new StringBuffer();
-        for(int i = 0; i < 10; i++){
-            buffer.append((char)((int)(Math.random()*55)+65));
-        }
-        return buffer.toString();
-    }
 
     // 회원 등록
     @Override
