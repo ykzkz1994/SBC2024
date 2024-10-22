@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 });
 
 // 모든 공지사항 데이터를 가져오는 함수
-export const getAllNotices = async () => {
+    export const getAllNotices = async () => {
     try {
         const response = await axiosInstance.get('/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
         console.log(response.data);  //디버깅용임 데이터가 왜 안넘어와
