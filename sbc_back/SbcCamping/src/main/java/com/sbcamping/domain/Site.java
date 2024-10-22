@@ -34,11 +34,11 @@ public class Site {
 
     @Column(name = "Site_Weekend_Pay", nullable = false, columnDefinition = "NUMBER(10,0)") // 주말가격
     @Builder.Default    //값이 정해져 있기 떄문에 사용
-    private Long siteWeekendPay = 80000L;
+    private Long weekendPay = 80000L;
 
     @Column(name = "Site_Weekday_Pay", nullable = false, columnDefinition = "NUMBER(10,0)") // 평일가격
     @Builder.Default
-    private Long siteWeekdayPay = 40000L;
+    private Long weekdayPay = 40000L;
 
     @Column(name = "Site_Min_People", nullable = false, columnDefinition = "NUMBER(1,0)") // 최소인원
     @Builder.Default
@@ -62,12 +62,10 @@ public class Site {
         this.siteResLimit = ResLimit;
     }
 
-    public void changeWeekendPay(Long WeekendPay) {
-        this.siteWeekendPay = WeekendPay;
-    }
+    public void changeWeekendPay(Long WeekendPay) {this.weekendPay = WeekendPay; }
 
     public void changeWeekdayPay(Long WeekdayPay) {
-        this.siteWeekdayPay = WeekdayPay;
+        this.weekdayPay = WeekdayPay;
     }
 
     public void changeMinPeople(Long MinPeople) {
@@ -79,5 +77,4 @@ public class Site {
     }
 
 
-    
 }
