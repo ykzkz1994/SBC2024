@@ -35,7 +35,6 @@ public class NoticeController {
     }
 
     //공지글 생성 post입력 방식 메서드
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")//권한검증-관리자
     public ResponseEntity<Void> createNotice(@RequestBody @Validated NoticeDTO noticeDTO) {
