@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 */6 * * ?") // 6시간마다 함수 호출
+    @Scheduled(fixedDelay = 21600000) // 6시간마다 함수 호출
     public void resStatusCheck() {
 
         // 현재 날짜 구하기
@@ -119,8 +119,14 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservations = reservationRepository.findByResStatus("예약완료");
 
         reservations.forEach(reservation ->  {
-            // checkout_Date가 하루 지났는지 확인
-            if (reservation.getCheckoutDate().isBefore(now.minusDays(1))) {
+            // checkout_Date가 하루 이전이거나 같은날인지
+            // 현재날짜가 2024-10-23 이고 checkoutDate가 2024-10-22 일경우
+            // 10-22 이전 까지는 true 반환해 사용완료로 바뀐다.
+            // isBefore 10-21 까지 true
+            // isEqual 10-22 true
+            if (reservation.getCheckoutDate().isBefore(now.minusDays(1))
+                    ||
+                    reservation.getCheckoutDate().isEqual(now.minusDays(1))) {
                 // RES_STATUS를 사용완료로 변경
                 reservation.setResStatus("사용완료");
                 reservationRepository.save(reservation);

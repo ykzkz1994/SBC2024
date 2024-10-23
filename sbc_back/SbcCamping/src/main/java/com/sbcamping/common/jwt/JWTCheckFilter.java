@@ -113,16 +113,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         //상호 노티스 예외
-        if(path.startsWith("/notice")){
+        if(path.startsWith("/admin/notices")){
             return true;
         }
         //상호 노티스 예외
         if(path.startsWith("/site")){
-            return true;
-        }
-
-        // 이미지 요청의 경우 필터를 적용하지 않음
-        if (path.startsWith("/admin/qnas/view")) {
             return true;
         }
 

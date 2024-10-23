@@ -103,7 +103,6 @@ const MonthComponent = () => {
 
     useEffect(() => {
         getSiteList().then(data => {
-            console.log(data)
             setSite(data)
         })
         resCheck().then(data => {
