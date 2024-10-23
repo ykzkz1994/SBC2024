@@ -25,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+//@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 @RequestMapping("/admin/qnas")
 public class QnaController {
 
@@ -35,7 +35,7 @@ public class QnaController {
     private final CustomFileUtil fileUtil;
 
     // 1. 목록(list)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/list")
     public PageResponseDTO<QnaDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("list.............." + pageRequestDTO);
@@ -164,6 +164,4 @@ public class QnaController {
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
         return fileUtil.getFile(fileName);
     }
-
-
 }

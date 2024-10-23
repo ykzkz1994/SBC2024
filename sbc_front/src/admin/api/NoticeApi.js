@@ -1,4 +1,5 @@
-import axios from "axios"; /* 백엔드와 통신하기 위해 import */
+import axios from "axios";
+import jwtAxios from "../../util/jwtUtil"; /* 백엔드와 통신하기 위해 import */
 
 /* 공지사항 관리 모듈의 API */
 
@@ -54,10 +55,11 @@ export const getOneNotice = async (id) => {
     }
 };
 
+
 // 공지사항 데이터를 생성하는 함수
 export const createNotice = async (noticeData) => {
     try {
-        await axiosInstance.post('/add', noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
+        await jwtAxios.post(`${noticeHost}/add`, noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
         console.log("공지사항 생성 성공:", noticeData);
     } catch (error) {
         console.error("공지사항 생성 중 오류 발생, createNotice 함수:", error);

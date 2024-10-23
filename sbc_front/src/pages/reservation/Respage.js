@@ -11,6 +11,8 @@ import Modal from "react-bootstrap/Modal";
 
 const Respage = () => {
 
+
+
     const initState = {
         member: {
             memberId: 0,
@@ -51,8 +53,6 @@ const Respage = () => {
         weekDayPay,
         weekEndPay,
     } = location.state || {};
-
-    console.log(location)
 
     // 내가 예약한 날짜에 예약이 있는지 확인하는 상태
     const [resCheckData, setResCheckData] = useState([])
@@ -121,7 +121,7 @@ const Respage = () => {
         const date = new Date();
         const checkinDate = new Date(res.checkinDate)
         const checkOutDate = new Date(res.checkoutDate)
-        const resCheck = resFilter(res.site.siteId, res.checkinDate)
+        const resCheck = resFilter(res.site.siteId, res.checkinDate, res.checkoutDate)
 
         date.setHours(0, 0, 0, 0);
         checkinDate.setHours(0, 0, 0, 0);
@@ -151,6 +151,12 @@ const Respage = () => {
                 alert("예약 하실려는 날짜에 예약이 이미 존재합니다.")
             }, 100);
             return;
+        } else if (res.resPeople === 0) {
+            firstSetShow(false)
+            setTimeout(() => {
+                alert("입실 인원수를 선택해주세요.")
+            }, 100)
+            return;
         }
 
         resAdd(res)
@@ -158,6 +164,7 @@ const Respage = () => {
                 firstSetShow(false)
                 secondSetShow(true);
                 setResData(res);
+
                 setResNumber(result);
                 setRes({...initState});
 
@@ -165,7 +172,6 @@ const Respage = () => {
             .catch(error => {
                 firstSetShow(false)
                 thirdSetShow(true)
-                exceptionHandle(error)
             })
     };
 
@@ -190,16 +196,18 @@ const Respage = () => {
             }
         }
     }
-
-    const resFilter = (siteId, checkinDate) => {
+    
+    const resFilter = (siteId, checkinDate, checkoutDate) => {
         // 체크인 및 체크아웃 날짜를 Date 객체로 변환
         const checkin = new Date(checkinDate);
+        const checkout = new Date(checkoutDate)
 
         // 체크인과 체크아웃 사이의 각 날짜에 대해 예약 가능 여부를 확인
         // 현재 날짜가 예약된 날짜인지 확인
         const isReserved = resCheckData.filter((item) =>
             item[0] === siteId &&
-            new Date(item[3]).toDateString() === checkin.toDateString() &&
+            // checkin 2024-10-24 // checkout 2024-10-26 // date seq 24 true 25 true 26 false
+            (new Date(item[3]) >= new Date(checkin)) && (new Date(item[3]) <= checkout)  &&
             item[4] === "true"
         )
         if (isReserved.length > 0) {
@@ -207,7 +215,6 @@ const Respage = () => {
         }
         return true;
     };
-
 
     // 입실날짜 퇴실날짜 상태 저장
     // location의 값을 상태에 반영하는 useEffect 이렇게 하면 되는데 다른 방법으로도 해보기
@@ -282,9 +289,16 @@ const Respage = () => {
     // 내가 예약하는 날짜에 예약이 있으면 예약 못하게 막기
     useEffect(() => {
         resCheck().then(data => {
+            console.log(data)
             setResCheckData(data);
         })
     }, [])
+
+    // 로그인 여부 확인
+    const {isLogin, moveToLoginReturn} = useCustomLogin()
+    if (!isLogin) {
+        return moveToLoginReturn()
+    }
 
     return (
         <div>
@@ -391,7 +405,7 @@ const Respage = () => {
                     </Form.Label>
                     <Col sm="10">
                         <Form.Select name="resPeople" onChange={handleChangeRes} aria-label="입실 인원수">
-                            <option value="">입실인원수를 선택해주세요</option>
+                            <option>입실인원수를 선택해주세요</option>
                             <option value="1">1명</option>
                             <option value="2">2명</option>
                             <option value="3">3명</option>

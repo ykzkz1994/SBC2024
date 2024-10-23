@@ -6,6 +6,7 @@ import com.sbcamping.admin.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,8 @@ public class NoticeController {
         return new ResponseEntity<>(notices, HttpStatus.OK);
     }
 
-    //공지글 생성 post입력 방식 메서드 
+    //공지글 생성 post입력 방식 메서드
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<Void> createNotice(@RequestBody @Validated NoticeDTO noticeDTO) {
         noticeService.createNotice(noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
