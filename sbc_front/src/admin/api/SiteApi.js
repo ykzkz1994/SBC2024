@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import jwtAxios from "../../util/jwtUtil";
 /*백엔드와 통신하기위해 import*/
 

@@ -1,6 +1,6 @@
 
 import jwtAxios from "../../util/jwtUtil";
-import {resHost} from "./ResApi"; /* 백엔드와 통신하기 위해 import */
+
 
 /* 공지사항 관리 모듈의 API */
 

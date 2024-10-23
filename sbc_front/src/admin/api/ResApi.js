@@ -1,4 +1,4 @@
-import axios from "axios";/*백엔드와 통신하기위해 import*/
+
 import jwtAxios from "../../util/jwtUtil"; //쿠키값 가진 axios객체 호출
 
 //예약관리 모듈의 기능을 모아둔 APi
