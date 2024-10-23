@@ -7,6 +7,7 @@ import com.sbcamping.admin.res.service.ResService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController("adminResController")   //관리자 예약컨트롤러
 @RequestMapping("/admin/res") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
+@PreAuthorize("hasRole('ADMIN')")//권한검증-관리자
 public class ResController {
 
     private final ResService resService;

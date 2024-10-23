@@ -5,6 +5,7 @@ import com.sbcamping.admin.site.service.SiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,21 +16,23 @@ import java.util.List;
 @RequestMapping("/admin/site") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
 @CrossOrigin(origins = "http://localhost:*") //왜갑자기 안됨
+@PreAuthorize("hasRole('ADMIN')")//권한검증 -관리자
 public class SiteController {
 
     // 불변 인스턴스변수 선언
     private final SiteService siteService;
+
 
     @GetMapping // 전체 사이트 목록을 가져오는 GET 요청을 처리합니다.
     public ResponseEntity<List<SiteDTO>> getAllSites() {
         // 서비스의 getAllSites 메서드를 호출하여 모든 사이트 정보를 가져옵니다.
         List<SiteDTO> sites = siteService.getAllSites();
 
-
-
         // 상태 코드 200 (OK)와 함께 사이트 목록을 응답 본문으로 반환하는 코드 아마 요청이 문제없이 처리 됐다고 알리는 코드인듯
         return new ResponseEntity<>(sites, HttpStatus.OK);
     }
+
+
 
     @PutMapping("/{id}") // HTTP PUT 요청을 처리하며, URL 경로의 {id} 부분을 변수로 받습니다.
     public ResponseEntity<Void> updateSite(
