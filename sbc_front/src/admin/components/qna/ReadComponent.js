@@ -5,6 +5,7 @@ import defaultImage from '../../../images/default.jpg';
 import ConfirmModal from "../util/ConfirmModal";
 import CommentComponent from "./CommentComponent";
 import {prefix} from "../../../api/camperApi";
+import {useSelector} from "react-redux";
 
 const initState = {
     qboardID : 0,
@@ -21,18 +22,24 @@ function ReadComponent() {
    const navigate = useNavigate()
    const [qboard, setQboard] = useState(initState);
    const [imageLoadError, setImageLoadError] = useState(false);
+    const loginState = useSelector((state) => state.loginSlice)
 
     useEffect(() => {
         getOne(qbID).then(data => {
             console.log("사진", data.qboardAttachment);
             setQboard(data)
+            console.log("ID : ", loginState.member.memberId, "Role : ", loginState.member.memberRole)
         });
     }, [qbID]);
 
 
     // 수정하기 버튼 클릭 시 호출되는 함수
     const handleModifyClick = (qbID) => {
-        navigate(`/admin/qnas/modify/${qbID}`); // 수정 페이지로 이동
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/qnas/modify/${qbID}`);
+        } else {
+            navigate(`/qna/modify/${qbID}`);
+        }
     };
 
     // 삭제하기 버튼 클릭 시 호출되는 함수
@@ -48,7 +55,11 @@ function ReadComponent() {
         try {
             await deleteOne(currentID);
             console.log(`${currentID}번 삭제되었습니다.`);
-            navigate('/admin/qnas/list');
+            if (loginState.member.memberRole === "ROLE_ADMIN") {
+                navigate('/admin/qnas/list');
+            } else {
+                navigate("/qna/list");
+            }
         } catch (error) {
             alert("삭제 실패: " + error.message);
             console.error("삭제 중 오류 발생:", error);
@@ -57,10 +68,15 @@ function ReadComponent() {
         }
     };
 
-
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate('/admin/qnas/list'); // 공지사항 목록 페이지로 이동
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/qnas/list');
+        } else {
+            navigate("/qna/list");
+        }
+        console.log("이거 왜 안보임?")
+        console.log("ID:", qboard.qboardID);
     };
 
     return (
@@ -80,11 +96,16 @@ function ReadComponent() {
 
                 <div className="mb-8">
             {qboard.qboardAttachment && qboard.qboardAttachment.trim() !== "" && !imageLoadError ? (
-                    <div className="text-gray-700 bg-gray-100 p-4 rounded-lg">
+                    <div className="text-gray-700 flex justify-center">
                         <img
                             src={`${prefix}/view/${qboard.qboardAttachment}`}
                             alt="게시물 첨부 이미지"
                             className="rounded-lg"
+                            style={{
+                                width: '100%', // 원하는 비율에 맞게 설정
+                                maxWidth: '500px', // 최대 너비 설정
+                                height: 'auto', // 비율을 유지하며 높이 자동 조정
+                            }}
                             onError={(e) => {
                                 e.target.onerror = null; // 무한 루프 방지
                                 setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
@@ -92,7 +113,7 @@ function ReadComponent() {
                         />
                     </div>
             ) : (
-                 <p className="text-gray-500">첨부된 이미지가 없습니다.</p>)}
+                 <p className="text-gray-500"></p>)}
                 </div>
 
             <div className="mb-8">
@@ -115,18 +136,43 @@ function ReadComponent() {
                 >
                     목록으로
                 </button>
-                <button
-                    onClick={() => handleModifyClick(qboard.qboardID)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                >
-                    수정하기
-                </button>
-                <button
-                    onClick={() => handleDeleteClick(qboard.qboardID)}
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                >
-                    삭제하기
-                </button>
+
+                    {loginState.member.memberRole === "ROLE_ADMIN" && (
+                        <>
+                            {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
+                            {loginState.member.memberId === qboard.member.memberID && (
+                                <button
+                                    onClick={() => handleModifyClick(qboard.qboardID)}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                                >
+                                    수정하기
+                                </button>
+                            )}
+                            <button
+                                onClick={() => handleDeleteClick(qboard.qboardID)}
+                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                            >
+                                삭제하기
+                            </button>
+                        </>
+                    )}
+
+                    {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === qboard.member.memberID && (
+                        <>
+                            <button
+                                onClick={() => handleModifyClick(qboard.qboardID)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                            >
+                                수정하기
+                            </button>
+                            <button
+                                onClick={() => handleDeleteClick(qboard.qboardID)}
+                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                            >
+                                삭제하기
+                            </button>
+                        </>
+                    )}
             </div>
             <ConfirmModal
                 isOpen={isModalOpen}

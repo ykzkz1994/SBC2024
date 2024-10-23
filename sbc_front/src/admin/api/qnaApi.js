@@ -10,9 +10,6 @@ const prefix = `${API_SERVER_HOST}/admin/qnas`
 export const getList = async (pageParam) => {
     const {page,size} = pageParam
     const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
-
-    console.log(res.data)
-
     return res.data
 }
 
@@ -58,8 +55,6 @@ export const postAdd = async (qna) => {
         throw error; // 에러를 다시 던져서 호출하는 곳에서 처리할 수 있게 합니다.
     }
 }
-
-
 
 // putOne : 게시글 수정(Modify)
 export const putOne = async (qbID, qna) => {

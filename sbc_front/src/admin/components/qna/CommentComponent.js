@@ -34,7 +34,7 @@ function CommentComponent() {
 
         const formData = new FormData();
         formData.append("qCommentContent", commentContent);
-        formData.append("memberID", loginState.member.memberId); // 임시 멤버 ID
+        formData.append("memberID", loginState.member.memberId);
 
         try {
             const response = await postCommentAdd(qbID, formData); // 댓글 추가 API 호출
@@ -118,7 +118,7 @@ function CommentComponent() {
                                 {comment.member.memberRole === "ROLE_ADMIN" ? (
                                     <p className="font-bold text-lg">🛠 관리자</p>
                                 ) : (
-                                    <p className="font-bold text-lg">작성자 : {comment.member.memberName}</p>
+                                    <p className="font-bold text-lg">{comment.member.memberName}</p>
                                 )}
                                 <p className="text-sm text-gray-500">{new Date(comment.qcommentDate).toLocaleString('ko-KR', {
                                     year: 'numeric',
@@ -148,11 +148,28 @@ function CommentComponent() {
                                 <>
                                     <p className="mb-2">{comment.qcommentContent}</p>
                                     <div className="flex justify-end space-x-2">
-                                        <Button
-                                            onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
-                                            className="px-3 py-1">수정</Button>
-                                        <Button onClick={() => handleClickDelete(comment.qcommentID)}
-                                                className="px-3 py-1">삭제</Button>
+                                        {loginState.member.memberRole === "ROLE_ADMIN" && (
+                                            <>
+                                                {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
+                                                {loginState.member.memberId === comment.member.memberID && (
+                                                    <Button
+                                                        onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
+                                                        className="px-3 py-1">수정</Button>
+                                                )}
+                                                <Button onClick={() => handleClickDelete(comment.qcommentID)}
+                                                        className="px-3 py-1 bg-red-600">삭제</Button>
+                                            </>
+                                        )}
+
+                                        {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === comment.member.memberID && (
+                                            <>
+                                                <Button
+                                                    onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
+                                                    className="px-3 py-1">수정</Button>
+                                                <Button onClick={() => handleClickDelete(comment.qcommentID)}
+                                                        className="px-3 py-1">삭제</Button>
+                                            </>
+                                        )}
                                     </div>
                                 </>
                             )}
@@ -171,7 +188,7 @@ function CommentComponent() {
                         placeholder="내용을 입력하세요"
                         required
                     />
-                    <Button onClick={handleClickAdd}>댓글 등록</Button>
+                    <Button onClick={handleClickAdd} className="px-3 py-1">댓글 등록</Button>
                 </div>
                 <hr/>
                 <ConfirmModal

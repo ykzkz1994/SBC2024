@@ -4,17 +4,19 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 function QnaForm() {
+
     const loginState = useSelector((state) => state.loginSlice)
 
-const initState = {
-    qBoardTitle: '',
-    qBoardContent: '',
-    member: {
-        memberId: loginState.member.memberId,
-        memberRole: loginState.member.memberRole,
-    },
-    file: null
-};
+    const initState = {
+        qBoardTitle: '',
+        qBoardContent: '',
+        member: {
+            memberId: loginState.member.memberId,
+            memberRole: loginState.member.memberRole,
+        },
+        file: null
+    };
+
 
     const [qna, setQna] = useState({ ...initState });
     const navigate = useNavigate();
@@ -51,7 +53,11 @@ const initState = {
             await postAdd(formData);
             setQna({ ...initState });
             alert("게시글 등록 완료");
-            navigate('/admin/qnas/list');
+            if (loginState.member.memberRole === "ROLE_ADMIN") {
+                navigate('/admin/qnas/list');
+            } else {
+                navigate("/qna/list");
+            }
         } catch (error) {
             alert(error.message); // 에러 메시지 표시
             console.error("Error uploading:", error);

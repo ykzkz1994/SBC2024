@@ -12,10 +12,11 @@ import resRouter from "../admin/router/resRouter";
 import memberRouter from "../admin/router/memberRouter";
 import camperRouter from "../admin/router/camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
-import qnaRouter from "../admin/router/qnaRouter";
 import reviewRouter from "../admin/router/reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
+import qnaRoutes from "../admin/router/qnaRouter";
 
+const { adminQnaRouter, userQnaRouter } = qnaRoutes;
 const Loading = <Spinner animation="border" />;
 
 /*
@@ -114,7 +115,8 @@ const root = createBrowserRouter([
     },
     {
         path: "qna",
-        element: <Suspense fallback={Loading}><QnaIndex/></Suspense>
+        element: <Suspense fallback={Loading}><QnaIndex/></Suspense>,
+        children: userQnaRouter
     },
     {
         path: "mypage",
@@ -170,7 +172,7 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}qnas/`,
         element: <Suspense fallback={Loading}><A_QnaIndex/></Suspense>,
-        children: qnaRouter()
+        children: adminQnaRouter
     },
     {
         path: `${A_prefix}reviews/`,

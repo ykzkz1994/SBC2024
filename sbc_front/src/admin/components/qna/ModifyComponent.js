@@ -17,6 +17,7 @@ function ModifyComponent(props) {
     const [qna, setQna] = useState(initState);
     const uploadRef = useRef();
     const [showDeleteButton, setShowDeleteButton] = useState(true); // 버튼 표시 상태
+    const [imageLoadError, setImageLoadError] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +27,7 @@ function ModifyComponent(props) {
             setQna({
                 qBoardTitle: data.qboardTitle || '',
                 qBoardContent: data.qboardContent || '',
-                qBoardAttachment: data.qboardAttachment || '',
+                qBoardAttachment: data.qboardAttachment || null,
                 file: null // 파일은 처음에는 null로 설정
             });
 
@@ -122,23 +123,27 @@ function ModifyComponent(props) {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-                <div>
-                    <label className="block text-gray-700">이미지</label>
-                    {showDeleteButton && (
+                    {qna.qBoardAttachment && qna.qBoardAttachment.trim() !== "" && !imageLoadError ? (
                         <div>
-                            <button type="button" onClick={deleteOldImage}>X</button>
-                            <img
-                                src={`${prefix}/view/${qna.qBoardAttachment}`}
-                                alt="게시물 첨부 이미지"
-                                className="rounded-lg"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = defaultImage; // 기본 이미지 경로
-                                }}
-                            /> </div>
-                    )}
+                            <label className="block text-gray-700">이미지</label>
+                            {showDeleteButton && (
+                                <div>
+                                    <button type="button" onClick={deleteOldImage}>X</button>
+                                    <img
+                                        src={`${prefix}/view/s_${qna.qBoardAttachment}`}
+                                        alt="게시물 첨부 이미지"
+                                        className="rounded-lg"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
+                                        }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500"></p>)}
 
-                </div>
                 <div className="text-right space-x-2">
                     <button
                         onClick={handleClickModify}

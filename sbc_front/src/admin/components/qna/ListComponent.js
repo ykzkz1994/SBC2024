@@ -6,7 +6,8 @@ import BoardSearchComponent from "../util/BoardSearchComponent";
 import Table from "react-bootstrap/Table";
 import { Button } from 'react-bootstrap';
 import {useNavigate} from "react-router-dom";
-import fileImage from "../../../images/filehere.png";
+import fileImage from "../../../images/fileAttatchment.png";
+import {useSelector} from "react-redux";
 
 const initState = {
     dtoList: [],
@@ -28,6 +29,7 @@ function ListComponent(props) {
     const [commentCounts, setCommentCounts] = useState({});
     const [searchParams, setSearchParams] = useState({ type: 'name', keyword: '' });
     const navigate = useNavigate();
+    const loginState = useSelector((state) => state.loginSlice)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,11 +70,20 @@ function ListComponent(props) {
     };
 
     const handleAddClick = () => {
-        navigate('/admin/qnas/add');
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/qnas/add');
+        } else {
+            navigate("/qna/add");
+        }
     };
 
     const handleReadClick = (qbID) => {
-        navigate(`/admin/qnas/read/${qbID}`);
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/qnas/read/${qbID}`);
+        } else {
+            navigate(`/qna/read/${qbID}`);
+        }
+
     };
 
     const formatDate = (date) => {
@@ -112,7 +123,15 @@ function ListComponent(props) {
                         ) : (
                             <td>{qb.qboardID}</td>
                         )}
-                        <td onClick={() => handleReadClick(qb.qboardID)}>
+                        <td
+                            onClick={() => handleReadClick(qb.qboardID)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center', // 수직 정렬을 중앙으로
+                                justifyContent: 'flex-start', // 왼쪽 정렬
+                                whiteSpace: 'nowrap' // 텍스트가 줄 바꿈되지 않도록
+                            }}
+                        >
                             {qb.qboardTitle}
                             {qb.qboardAttachment && (
                                 <img
@@ -128,7 +147,8 @@ function ListComponent(props) {
                             )}
                             <span style={{
                                 fontWeight: 'bold',
-                                color: 'red'
+                                color: 'red',
+                                marginLeft: '4px' // 아이콘과 카운트 사이 간격 조정
                             }}>
         {commentCounts[qb.qboardID] > 0 ? `[${commentCounts[qb.qboardID]}]` : ''}
     </span>

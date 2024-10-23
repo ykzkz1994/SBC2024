@@ -8,30 +8,36 @@ const QnaRead = lazy(()=> import("../components/qna/ReadComponent"))
 const QnaAdd = lazy(() => import("../components/qna/AddComponent"))
 const QnaModify = lazy(()=>import("../components/qna/ModifyComponent"))
 
-const qnaRouter = () => {
+const createQnaRouter = (basePath) => {
     return[
         {
             path: "",
-            element : <Navigate replace to="list"/>
+            element : <Navigate replace to={`${basePath}/list`}/>
         },
         {
-            path: "list",
+            path:`${basePath}/list`,
             element : <Suspense fallback={Loading}><QnaList/></Suspense>,
 
         },
         {
-            path: "add",
+            path: `${basePath}/add`,
             element: <Suspense fallback={Loading}><QnaAdd/></Suspense>
         },
         {
-            path: "read/:qbID",
+            path: `${basePath}/read/:qbID`,
             element: <Suspense fallback={Loading}><QnaRead/></Suspense> 
         },
         {
-            path: "modify/:qbID",
+            path: `${basePath}/modify/:qbID`,
             element: <Suspense fallback={Loading}><QnaModify/></Suspense> 
         }
     ]
 }
 
-export default qnaRouter;
+// 관리자 Qna 게시판 라우터
+const adminQnaRouter = createQnaRouter("/admin/qnas");
+
+// 사용자 Qna 게시판 라우터
+const userQnaRouter = createQnaRouter("/qna")
+
+export default {adminQnaRouter, userQnaRouter};

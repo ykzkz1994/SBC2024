@@ -6,6 +6,11 @@ import '../css/common.css';
 import {Link, useNavigate} from 'react-router-dom';
 import {logout} from "../../slice/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
+import logo1 from "../../images/logo/logo1-2.png";
+import logo2 from "../../images/logo/logo2-7.png";
+
+
+
 //{children}속성을 활용하여 컴포넌트 내부에 다른 컴포넌트를 적용시킬 수 있음
 const BasicLayout = ({ children }) => {
 
@@ -31,7 +36,11 @@ const BasicLayout = ({ children }) => {
         {/*부트스트랩 메뉴 컴포넌트*/}
         <Navbar bg="white" data-bs-theme="light">
           <Container>
-            <Navbar.Brand href="/admin" id="logo">LOGO</Navbar.Brand>
+            <img
+                src={logo2}
+                alt="로고"
+                style={{width: '600px', height: 'auto'}} // 원하는 크기로 조정
+            />
             <div id="">
               <Nav className="justify-content-end">
                 <Nav.Link onClick={handleClickLogout}>로그아웃</Nav.Link>

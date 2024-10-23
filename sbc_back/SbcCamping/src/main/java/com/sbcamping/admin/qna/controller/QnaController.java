@@ -35,7 +35,6 @@ public class QnaController {
     private final CustomFileUtil fileUtil;
 
     // 1. 목록(list)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public PageResponseDTO<QnaDTO> list(PageRequestDTO pageRequestDTO) {
         log.info("list.............." + pageRequestDTO);
