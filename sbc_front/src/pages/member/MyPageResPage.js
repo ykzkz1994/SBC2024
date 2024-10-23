@@ -30,18 +30,31 @@ const MyPageResPage = () => {
     const memberId = loginState.member.memberId;
 
     const [reservationId, setReservationId] = useState('');
-    const [otherReason, setOtherReason] = useState('');
 
-    // 부트스트랩 모달창 관련
+    // 예약 상세 페이지로 이동
+    const handleClickResId = (e) => {
+        const resId = e.target.value;
+        navigate(`/mypage/res/detail?resId=${resId}`);
+    };
+
+    /*
+    *
+    * 예약취소
+    *
+    * */
+
+    // 예약취소 모달창 관련
     const [show, setShow] = useState(false);
+    const [otherReason, setOtherReason] = useState('');
     const handleShow = () => setShow(true);
-    // 모달창 닫기
     const handleClose = () => {
         setSelectedReason("")
         setShow(false);
     }
-    //
+    
+    // 취소 사유
     const [selectedReason, setSelectedReason] = useState("");
+
     const handleReasonChange = (e) => {
         const value = e.target.value;
         setSelectedReason(value);
@@ -51,26 +64,10 @@ const MyPageResPage = () => {
         }
         setSelectedReason(e.target.value);
     };
+
     // 기타 사유 입력 시 처리
     const handleOtherReasonChange = (e) => {
         setOtherReason(e.target.value);
-    };
-
-    useEffect(() => {
-        getReservations(memberId).then(data => {
-            setServerData(data);
-            console.log(serverData)
-        }).catch(error => {
-            console.log('오류')
-            exceptionHandle(error);
-        });
-    }, [refresh]);
-
-
-    // 예약 상세 페이지로 이동
-    const handleClickResId = (e) => {
-        const resId = e.target.value;
-        navigate(`/mypage/res/detail?resId=${resId}`);
     };
 
     // 예약 취소 버튼 눌렀을 때 동작
@@ -80,7 +77,6 @@ const MyPageResPage = () => {
         // 모달창 열기
         handleShow()
     }
-
 
     // 예약 취소 동작
     function handleCancel() {
@@ -104,14 +100,65 @@ const MyPageResPage = () => {
             }
         }
     }
+    /*
+    *
+    * 예약 취소 끝
+    *
+    * */
 
+
+    // 예약상태
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+
+    useEffect(() => {
+        getReservations(memberId)
+            .then(data => {
+            setServerData(data);
+            setFilteredData(data);
+            console.log('data :' , serverData)
+        }).catch(error => {
+            console.log('오류')
+            exceptionHandle(error);
+        });
+    }, [refresh]);
+
+
+    // 상태 검색 변경 처리 [예약완료, 예약취소, 사용완료]
+    const handleStatusChange = (event) => {
+        setSelectedStatus(event.target.value);
+    };
+
+
+    // 상태 검색 버튼 클릭 시 필터링 처리
+    const handleStatusSubmit = () => {
+        if (selectedStatus === "") {
+            setFilteredData(serverData); // 상태가 선택되지 않으면 모든 예약 목록
+        } else {
+            setFilteredData(
+                serverData.filter(
+                    (reservation) => reservation.resStatus === selectedStatus
+                )
+            );
+        }
+    };
 
 
     return (
-        <div style={{marginTop:'30px'}}>
+        <div style={{marginTop: '30px'}}>
             <h3>예약 내역</h3>
+            <hr></hr>
+            <div className="confirm_search">
+                <select id="" name="confirm_select" onChange={handleStatusChange}>
+                    <option value=''>상태 선택</option>
+                    <option value="예약완료">예약완료</option>
+                    <option value='예약취소'>예약취소</option>
+                    <option value='사용완료'>사용완료</option>
+                </select>
+                <input className="submit" type="submit" value="검색" onClick={handleStatusSubmit}/>
+            </div>
             <div className="tablewrap">
-                {serverData.length > 0 ? (
+                {filteredData.length > 0 ? (
                     <table>
                         <thead>
                         <tr>
@@ -125,22 +172,43 @@ const MyPageResPage = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {serverData.map((reservation) => (
+                        {filteredData.map((reservation) => (
                             <tr key={reservation.resId}>
-                                <td><button className="resbtn" onClick={handleClickResId} value={reservation.resId}>{reservation.resId}</button></td>
-                                <td>{reservation.resDate}</td>
-                                <td>{reservation.checkinDate}</td>
-                                <td>{reservation.checkoutDate}</td>
-                                <td>{reservation.resTotalPay} 원</td>
+                                <td>
+                                    <button className="resbtn" onClick={handleClickResId}
+                                            value={reservation.resId}>{reservation.resId}</button>
+                                </td>
+                                <td>
+                                    {reservation.resStatus == '예약취소' ?
+                                        <span style={{textDecorationLine:'line-through'}}>{reservation.resDate}</span> : <span>{reservation.resDate}</span>
+                                    }
+                                    </td>
+                                <td>
+                                    {reservation.resStatus == '예약취소' ?
+                                        <span style={{textDecorationLine:'line-through'}}>{reservation.checkinDate}</span> : <span>{reservation.checkinDate}</span>
+                                    }
+                                    </td>
+                                <td>
+                                    {reservation.resStatus == '예약취소' ?
+                                        <span style={{textDecorationLine:'line-through'}}>{reservation.checkoutDate}</span> : <span>{reservation.checkoutDate}</span>
+                                    }
+                                    </td>
+                                <td>
+                                    {reservation.resStatus == '예약취소' ?
+                                        <span style={{textDecorationLine:'line-through'}}>{reservation.resTotalPay} 원</span> : <span>{reservation.resTotalPay} 원</span>
+                                    }
+                                    </td>
                                 <td>{reservation.resStatus}</td>
                                 <td>{reservation.resStatus === '예약완료' && (
-                                    <button onClick={() => handleClickCancel(reservation.resId)} className="canclebtn">예약취소</button>
+                                    <button onClick={() => handleClickCancel(reservation.resId)}
+                                            className="canclebtn">예약취소</button>
                                 )}
                                     {reservation.resStatus === '예약취소' && (
                                         <span>-</span>
                                     )}
                                     {reservation.resStatus === '사용완료' && (
-                                        <button onClick={() => handleReview(reservation.resId)} className="reviewbtn">리뷰작성</button>
+                                        <button onClick={() => handleReview(reservation.resId)}
+                                                className="reviewbtn">리뷰작성</button>
                                     )}</td>
 
                                 {/* 예약 취소 모달창 */}
@@ -239,7 +307,7 @@ const MyPageResPage = () => {
                                         </Form>
                                     </Modal.Body>
                                     <Modal.Footer>
-                                        <Button variant="secondary" onClick={()=> handleCancel(reservation.resId)}>
+                                        <Button variant="secondary" onClick={() => handleCancel(reservation.resId)}>
                                             예약취소
                                         </Button>
                                         <Button variant="primary" onClick={handleClose}>

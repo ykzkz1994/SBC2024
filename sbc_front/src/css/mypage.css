@@ -1,10 +1,12 @@
 /* ----------------- 예약내역 ------------------- */
 /* 테이블 */
 .tablewrap{
+    max-width: 1200px;
     text-align: center;
-    margin: 20px 0px;
+    margin: 0 auto 50px;
 }
 table {
+    min-width: 100%;
     border-collapse: collapse;
     border: 0;
     margin: auto;
@@ -22,8 +24,33 @@ th,
 td {
     border: 1px solid #aaa;
     padding: 0.4rem;
-    min-width: 6rem;
+    min-width: 7rem;
     margin: 0;
+}
+
+/* 상태 검색 */
+.confirm_search {
+    margin: 15px 0px;
+    overflow: hidden;
+    display: flex;
+    justify-content: end;
+}
+
+.confirm_search select {
+    border: 1px solid #ddd;
+    width: 100px;
+    height: 35px;
+    line-height: 35px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.confirm_search input {
+    border: 1px solid #f68b1e;
+    background: #f68b1e;
+    color: #fff;
+    padding: 5px 14px;
+    font-size: 14px;
 }
 
 

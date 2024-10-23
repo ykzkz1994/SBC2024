@@ -33,18 +33,17 @@
     text-decoration: none;
     color: black;
     text-align: center;
-    border-radius: 5px;
     border-collapse: collapse;
     margin-right: -1px;
 }
 
 .menubutton:hover{
-    background-color: #9DC4B5;
+    background-color: #f68b1e;
     color: white;
 }
 
 .menubutton.active {
-    background-color: #9DC4B5;
+    background-color: #f68b1e;
     color: white;
 }
 

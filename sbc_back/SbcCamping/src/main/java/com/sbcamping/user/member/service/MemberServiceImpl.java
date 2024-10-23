@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService{
     // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
-        List list = reservationRepository.findByMemberId(memberId);
+        List list = reservationRepository.findByMemberIdOOrderByResId(memberId);
         log.info("예약내역 : " + list);
         if(list == null){
             list.add("예약내역이 없습니다.");
