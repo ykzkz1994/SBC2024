@@ -196,7 +196,7 @@ const Respage = () => {
             }
         }
     }
-    
+
     const resFilter = (siteId, checkinDate, checkoutDate) => {
         // 체크인 및 체크아웃 날짜를 Date 객체로 변환
         const checkin = new Date(checkinDate);
@@ -289,7 +289,6 @@ const Respage = () => {
     // 내가 예약하는 날짜에 예약이 있으면 예약 못하게 막기
     useEffect(() => {
         resCheck().then(data => {
-            console.log(data)
             setResCheckData(data);
         })
     }, [])
