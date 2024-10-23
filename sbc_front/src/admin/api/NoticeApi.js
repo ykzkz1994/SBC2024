@@ -1,4 +1,6 @@
-import axios from "axios"; /* 백엔드와 통신하기 위해 import */
+
+import jwtAxios from "../../util/jwtUtil";
+import {resHost} from "./ResApi"; /* 백엔드와 통신하기 위해 import */
 
 /* 공지사항 관리 모듈의 API */
 
@@ -8,12 +10,18 @@ const backUrl = "http://localhost:8080"; // 백엔드 기본경로 변수에 할
 // 백엔드 경로와 매핑명을 합쳐서
 export const noticeHost = `${backUrl}/admin/notices`;
 
-// 기본 Axios 인스턴스 설정 (필요 시)
-const axiosInstance = axios.create({
-    baseURL: noticeHost,      // 기본 URL 경로 설정
-    timeout: 10000,           // 타임아웃 설정 (10초)
-    headers: { 'Content-Type': 'application/json' }, // JSON 형식 지정
-});
+
+//유틸에 값 할당
+const transroot =()=>{
+    jwtAxios.defaults.baseURL = noticeHost; //문자열로 재할당
+    jwtAxios.defaults.timeout = 10000; //10초제한
+    return jwtAxios
+}
+
+
+
+// 기본 axiosinstance에 tansroot한 jwtaxios를 할당
+const axiosInstance = transroot();
 
 // 모든 공지사항 데이터를 가져오는 함수
     export const getAllNotices = async () => {

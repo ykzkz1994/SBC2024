@@ -1,4 +1,6 @@
-import axios from "axios";/*백엔드와 통신하기위해 import*/
+import axios from "axios";
+import jwtAxios from "../../util/jwtUtil";
+/*백엔드와 통신하기위해 import*/
 
 //구역관리 모듈의 기늘을 모아둔 APi
 
@@ -8,13 +10,17 @@ const backUrl= "http://localhost:8080";   //백엔드 기본경로 변수에 할
 //백엔드 경로와 매핑명을 합쳐서
 export const siteHost = `${backUrl}/admin/site`
 
-// 기본 Axios 인스턴스 설정 (필요 시)
-const axiosInstance = axios.create({
-    baseURL: siteHost,      //url경로
-    timeout: 10000, // 타임아웃 설정
-    headers: { 'Content-Type': 'application/json' },    //제이슨형식
-});
+//유틸에 값 할당
+const transroot =()=>{
+    jwtAxios.defaults.baseURL = siteHost; //문자열로 재할당
+    jwtAxios.defaults.timeout = 10000; //10초제한
+    return jwtAxios
+}
 
+
+
+// 기본 axiosinstance에 tansroot한 jwtaxios를 할당
+const axiosInstance = transroot();
 // 모든 사이트 데이터를 가져오는 함수
 export const getAllSites = async () => {
     try {
