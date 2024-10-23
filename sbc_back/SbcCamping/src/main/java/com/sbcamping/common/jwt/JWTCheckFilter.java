@@ -33,7 +33,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         try {
             String accessToken = authHeaderStr.substring(7);
             Map<String, Object> claims = JWTUtil.validateToken(accessToken); // 토큰 검증
-            //log.info("--------JWT Claims : {}", claims);
+            log.info("--------JWT Claims : {}", claims);
 
             // 사용자 정보 추출 (member 내부의 정보)
             Map<String, Object> memberClaims = (Map<String, Object>) claims.get("member");
@@ -59,7 +59,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             }
             Long memberId = (Long) claims.get("memberId");
             String memberStatus = (String) claims.get("memberStatus");
+
             MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender, memberBirth, memberLocal, memberRole, memberId, memberStatus);
+
+            if(memberClaims == null){
+                memberEmail = (String) claims.get("memberEmail");
+            }
+
             log.info("memberDTO.GetAuthorities() : {}", memberDTO.getAuthorities());
 
             // 인증 객체 생성(사용자 정보와 권한)

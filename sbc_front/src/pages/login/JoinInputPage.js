@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import {useEffect, useState} from "react";
-import {emailCheck, joinKakaoPost, joinPost} from "../../api/memberApi";
+import {emailCheck, joinPost} from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from 'react-bootstrap/Modal';
 import "../../css/join.css";
@@ -12,12 +12,6 @@ import {useLocation} from "react-router-dom";
 
 
 const JoinInputPage = () => {
-
-    // ------카카오 최초 로그인인 경우 ----------파라미터 가져오기 (memberEmail)
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const getkakaoEmail = queryParams.get('memberEmail');
-    const [kakaoEmail, setKakaoEmail] = useState(getkakaoEmail);
 
     // 부트스트랩 변수
     const [validated, setValidated] = useState(false);
@@ -41,7 +35,7 @@ const JoinInputPage = () => {
 
     const [members, setMembers] = useState(
         {
-            memberEmail : kakaoEmail || '',
+            memberEmail : '',
             memberPw : '',
             memberName : '',
             memberPhone : '',
@@ -82,6 +76,7 @@ const JoinInputPage = () => {
             event.preventDefault();
         }
 
+        // 이메일 중복체크 여부
         if(emailCheckResult === "" || !isEmailValid){
             alert('이메일 중복체크를 해주세요.')
             event.preventDefault();
@@ -93,31 +88,10 @@ const JoinInputPage = () => {
             event.stopPropagation();
         } else{
             // 유효성 검사를 통과했으면 API 요청
-            if(!kakaoEmail){
-                handleClickJoin(members)
-            } else if(kakaoEmail){
-                handleClickKakaoJoin(members)
-            }
+            handleClickJoin(members)
         }
         setValidated(true);
     };
-
-    // 카카오 회원가입 Submit 동작
-    const handleClickKakaoJoin = async (members) => {
-        try {
-            console.log(members)
-            const action = joinKakaoPost(members);
-            console.log(action)
-            if(action.error){
-                console.log('회원가입 실패')
-                alert('회원가입 실패')
-            } else{
-                moveToPath('/join/welcome')
-            }
-        } catch (error){
-            console.log('서버 요청 실패 : ', error)
-        }
-    }
 
     // 유효성 검사를 모두 통과하면 회원가입 Submit 동작
     const handleClickJoin = async (members) => {
@@ -283,7 +257,6 @@ const JoinInputPage = () => {
                                           required
                                           maxLength={50}
                                           onChange={handleChangeJoin}
-                                          value={kakaoEmail ? kakaoEmail : ''}
                             />
                             <Form.Control.Feedback type="invalid">
                                 이메일을 확인해주세요.
@@ -301,8 +274,6 @@ const JoinInputPage = () => {
                     </Form.Group>
 
                     {/* 비밀번호 */}
-                    { !kakaoEmail && (
-                        <>
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
                             비밀번호
@@ -344,8 +315,7 @@ const JoinInputPage = () => {
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
-                        </>
-                    )}
+
 
                     {/* 이름 */}
                     <Form.Group as={Row} className="mb-3" >

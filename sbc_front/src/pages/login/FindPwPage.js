@@ -71,6 +71,7 @@ const FindPwPage = () => {
                            value={member.memberEmail}
                            maxLength={'50'}
                            required
+                           style={{fontSize:"16px"}}
                            onChange={handleChange}
                            placeholder={" 이메일을 입력해주세요."}></input>
                     <div>

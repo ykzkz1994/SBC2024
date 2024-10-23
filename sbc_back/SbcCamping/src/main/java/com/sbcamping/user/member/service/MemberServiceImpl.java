@@ -2,6 +2,7 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
@@ -35,50 +36,7 @@ public class MemberServiceImpl implements MemberService{
 
     private final PasswordEncoder passwordEncoder;
 
-    // 카카오 이메일 가져오는 메소드
-    @Override
-    public Map<String, String> getKakaoMember(String accessToken) {
-        String email = getEmailFromKakaoAceessToken(accessToken);
-        log.info("----------kakao email : " + email);
-        String result = "none";
-        Member member = memberRepository.findByMemberEmail(email);
-        Map<String, String> map = new LinkedHashMap<>();
-        if (member == null) {
-            result = "fail";
-            map.put("result", result);
-            map.put("kakaoEmail", email);
-        } else{
-            result = "success";
-            String memberEmail = member.getMemberEmail();
-            map.put("member", memberEmail);
-            map.put("memberEmail", memberEmail);
-        }
-        return map;
-    }
-
-    // 카카오 로그인 액세스 토큰
-    private String getEmailFromKakaoAceessToken(String accessToken) {
-        String kakaoGetUserURL = "https://kapi.kakao.com/v2/user/me";
-        if(accessToken == null){
-            throw new RuntimeException("KAKAO ACCESS TOKEN IS NULL");
-        }
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        UriComponents uriBuilder = UriComponentsBuilder.fromHttpUrl(kakaoGetUserURL).build();
-
-        ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uriBuilder.toString(), HttpMethod.GET, entity, LinkedHashMap.class);
-        log.info("--------getEmailFromKakaoAccessToken() response : " + response);
-
-        LinkedHashMap<String, LinkedHashMap> bodyMap = response.getBody();
-        LinkedHashMap<String, String> kakaoAccount = bodyMap.get("kakao_account");
-        log.info("kakao Account : " + kakaoAccount);
-        return kakaoAccount.get("email");
-    }
-
+    // 회원 비활동 처리(탈퇴)
     @Override
     public String withdraw(Long memberId, String memberPw) {
         log.info("------- withdraw memberId : " + memberId + " memberPw : " + memberPw.substring(7));
@@ -139,7 +97,7 @@ public class MemberServiceImpl implements MemberService{
     // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
-        List list = reservationRepository.findByMemberId(memberId);
+        List list = reservationRepository.findByMemberIdOOrderByResId(memberId);
         log.info("예약내역 : " + list);
         if(list == null){
             list.add("예약내역이 없습니다.");
@@ -178,7 +136,8 @@ public class MemberServiceImpl implements MemberService{
         String msg = null;
         if(member.getMemberPw() != null && member.getMemberEmail() != null){
             // 비밀번호 변경
-            member.changePw(passwordEncoder.encode(member.getMemberPw()));
+            member.changePw(passwordEncoder.encode(mem.getMemberPw()));
+            memberRepository.save(member);
             msg = "success";
         } else{
             msg = "fail";
@@ -200,26 +159,7 @@ public class MemberServiceImpl implements MemberService{
         return email;
     }
 
-    // 카카오 회원 등록
-    @Override
-    public void kakaoAddMember(Member member) {
-        String tempPw = makeTempPassword();
-        member.changePw(passwordEncoder.encode(tempPw));
-        Member mem = memberRepository.save(member);
-        if(mem != null) {
-            Long memID = mem.getMemberID();
-            log.info("memID : " + memID);
-        }
-    }
 
-    // 카카오 임시 회원번호(카카오는 비밀번호 알 수 없음)
-    private String makeTempPassword(){
-        StringBuffer buffer = new StringBuffer();
-        for(int i = 0; i < 10; i++){
-            buffer.append((char)((int)(Math.random()*55)+65));
-        }
-        return buffer.toString();
-    }
 
     // 회원 등록
     @Override
