@@ -1,8 +1,9 @@
-
+import axios from "axios";
 import jwtAxios from "../../util/jwtUtil";
 
 
 /* 공지사항 관리 모듈의 API */
+
 
 // 백엔드의 기본 경로를 상수로 할당
 const backUrl = "http://localhost:8080"; // 백엔드 기본경로 변수에 할당
@@ -26,7 +27,7 @@ const axiosInstance = transroot();
 // 모든 공지사항 데이터를 가져오는 함수
     export const getAllNotices = async () => {
     try {
-        const response = await axiosInstance.get('/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
+        const response = await axios.get('http://localhost:8080/admin/notices/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
         console.log(response.data);  //디버깅용임 데이터가 왜 안넘어와
         // 필요한 경우 데이터 가공이나 필터링을 여기서 수행
         return response.data; // 모든 공지사항 데이터 반환
