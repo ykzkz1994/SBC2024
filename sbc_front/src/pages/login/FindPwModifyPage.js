@@ -104,64 +104,64 @@ const FindPwModifyPage = () => {
     return(
         <BasicLayout>
             <LoginMenu/>
-            <div style={{marginTop:'20px'}}>
-                <h3>비밀번호 변경</h3>
-            </div>
-            <div className="modPwWrap">
-                {/* 비밀번호 */}
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
-                            비밀번호
-                        </Form.Label>
-                        <Col sm={7}>
-                            <Form.Control type="password"
-                                          name="memberPw"
-                                          placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                          required
-                                          id={"password"}
-                                          minLength={10}
-                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                          onChange={handleChange}
-                                          isInvalid={!isPwdValid}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                비밀번호를 확인해주세요.
-                            </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+            <div id="loginwrap">
+                <div>
+                    <h3>비밀번호 변경</h3>
+                </div>
+                <div className="modPwWrap">
+                    {/* 비밀번호 */}
+                    <Form noValidate validated={validated} onSubmit={handleSubmit} id="loginbox">
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={3} >
+                                비밀번호
+                            </Form.Label>
+                            <Col sm={9}>
+                                <Form.Control type="password"
+                                              name="memberPw"
+                                              placeholder="영문소문자,숫자,특수문자 포함 10-15자"
+                                              style={{fontSize:'13px'}}
+                                              required
+                                              id={"password"}
+                                              minLength={10}
+                                              pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                              onChange={handleChange}
+                                              isInvalid={!isPwdValid}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    비밀번호를 확인해주세요.
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
 
-                    {/* 비밀번호 재확인 */}
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={2}>
-                            재확인
-                        </Form.Label>
-                        <Col sm={7} id={"pwrebox"}>
-                            <Form.Control type="password"
-                                          placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                          required
-                                          id={"password_re"}
-                                          minLength={10}
-                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                          onChange={handleConfirmPwd}
-                                          isInvalid={!isPwdMatch}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                비밀번호가 일치하지 않습니다.
-                            </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+                        {/* 비밀번호 재확인 */}
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={3}>
+                                재확인
+                            </Form.Label>
+                            <Col sm={9} id={"pwrebox"}>
+                                <Form.Control type="password"
+                                              placeholder="영문소문자,숫자,특수문자 포함 10-15자"
+                                              style={{fontSize:'13px'}}
+                                              required
+                                              id={"password_re"}
+                                              minLength={10}
+                                              pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                              onChange={handleConfirmPwd}
+                                              isInvalid={!isPwdMatch}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    비밀번호가 일치하지 않습니다.
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm={{span: 10, offset: 2}} className={"joinbuttonwrap"}>
-                            <Button variant="success" className="loginbutton_default" type="submit" onClick={handleSubmit}>비밀번호
-                                변경</Button>
-                        </Col>
-                    </Form.Group>
-                </Form>
+                        <Button variant="success" className="loginbutton_default" type="submit"
+                                onClick={handleSubmit}>비밀번호 변경</Button>
+                    </Form>
+                </div>
             </div>
         </BasicLayout>
-    )
+)
 
 }
 
