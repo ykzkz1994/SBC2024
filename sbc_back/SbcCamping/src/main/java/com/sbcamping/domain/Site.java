@@ -76,7 +76,5 @@ public class Site {
     public void changeMaxPeople(Long MaxPeople) {
         this.maxPeople = MaxPeople;
     }
-
-
-
+    
 }
