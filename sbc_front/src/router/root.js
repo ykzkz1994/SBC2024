@@ -40,6 +40,8 @@ const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
 관리자 페이지
 */
 
+// 404 오류 페이지
+const NotFound = lazy(() => import("../admin/pages/NotFound.js"))
 // 관리자 메인
 const A_Main = lazy(() => import("../admin/pages/MainPage"))
 //구역관리페이지
@@ -148,7 +150,7 @@ const root = createBrowserRouter([
     },
     { // 기타 모든 경로에 대한 404 페이지
         path: "*",
-        element: <div>404 페이지를 찾을 수 없습니다.</div>
+        element: <Suspense fallback={Loading}><NotFound/></Suspense>,
     },
     {
         path: `${A_prefix}member/`,

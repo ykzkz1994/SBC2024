@@ -1,10 +1,13 @@
 // src/admin/components/notice/AddComponent.js
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 권한 검증을 위해
 import {createNotice} from "../../api/NoticeApi"; // API 모듈에서 함수 가져오기 -공지사항 생성 함수
 
 const AddComponent = () => {
+    // Redux 스토어에서 loginSlice 접근
+    const loginState = useSelector((state) => state.loginSlice);
     const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
     // 상태 관리: 공지사항 제목과 내용
@@ -13,6 +16,14 @@ const AddComponent = () => {
 
     // 공지글 작성시 실패문구를 저장
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
+        // 경우 '/'(기본 메인)경로로
+        if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
+            navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
+        }
+    }, [loginState, navigate]);
 
     // 공지사항을 추가하는 함수
     const addNotice = (e) => {

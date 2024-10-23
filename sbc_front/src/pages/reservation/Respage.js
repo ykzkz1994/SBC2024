@@ -49,8 +49,10 @@ const Respage = () => {
         memberPhone,
         memberEmail,
         weekDayPay,
-        weekEndPay
+        weekEndPay,
     } = location.state || {};
+
+    console.log(location)
 
     // 내가 예약한 날짜에 예약이 있는지 확인하는 상태
     const [resCheckData, setResCheckData] = useState([])

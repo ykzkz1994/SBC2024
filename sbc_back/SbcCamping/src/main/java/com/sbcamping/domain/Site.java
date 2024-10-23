@@ -61,7 +61,9 @@ public class Site {
         this.siteResLimit = ResLimit;
     }
 
-    public void changeWeekendPay(Long WeekendPay) {this.weekendPay = WeekendPay; }
+    public void changeWeekendPay(Long WeekendPay) {
+        this.weekendPay = WeekendPay;
+    }
 
     public void changeWeekdayPay(Long WeekdayPay) {
         this.weekdayPay = WeekdayPay;
@@ -76,4 +78,5 @@ public class Site {
     }
 
 
+    
 }

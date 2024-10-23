@@ -96,11 +96,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         // 회원가입 경로 예외
-        if(path.equals("/api/member/") || path.equals("/api/member/kakao/")){
+        if(path.equals("/api/member/")){
             return true;
         }
 
-        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/view")){
+        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/")){
             return true;
         }
 
@@ -109,10 +109,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         if (path.startsWith("/admin/site")) {
-            return true;
-        }
-
-        if(path.equals("/api/res/siteList")){
             return true;
         }
 
