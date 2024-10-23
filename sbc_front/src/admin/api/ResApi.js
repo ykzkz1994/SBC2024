@@ -11,7 +11,7 @@ export const resHost = `${backUrl}/admin/res`
 // 기본 Axios 인스턴스 설정
 const axiosInstance = axios.create({
     baseURL: resHost,      //url경로
-    timeout: 10000,     // 타임아웃 설정
+    timeout: 10000,     // 타임아웃 설정=>10.000초가 지나도록 요청이 해결되지않으면 에러발생
     headers: { 'Content-Type': 'application/json' },    //제이슨형식
 });
 
