@@ -21,6 +21,4 @@ public interface MemberService {
     public Reservation getResDetail(Long resId);
     public void cancelRes(Long resId, String reason);
     public String withdraw(Long memberId, String memberPw);
-    public MemberDTO getKakaoMember(String accessToken);
-    public void kakaoAddMember(Member member);
 }

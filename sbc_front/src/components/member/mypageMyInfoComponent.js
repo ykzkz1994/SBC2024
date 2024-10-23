@@ -146,7 +146,7 @@ const MemberInfo = () => {
         getMember(loginMemberId).then((data) => {
             console.log('member 조회 결과 : ', data);
             setMembers({
-                memberEmail: data.member.memberEmail || loginState.kakaoEmail,
+                memberEmail: data.member.memberEmail,
                 memberName: data.member.memberName,
                 memberPhone: data.member.memberPhone,
                 memberGender: data.member.memberGender,
@@ -318,7 +318,7 @@ const MemberInfo = () => {
                         <Col sm={7}>
                             <Form.Control type="email"
                                           name="memberEmail"
-                                          value={members.memberEmail || loginState.kakaoEmail}
+                                          value={members.memberEmail}
                                           disabled
                             />
                         </Col>
@@ -520,11 +520,7 @@ const MemberInfo = () => {
 
 const MemberInfoPage = () => {
     const loginState = useSelector((state) => state.loginSlice)
-    useEffect(() => {
-        if(loginState.kakaoEmail){
-            handleAuthSuccess()
-        }
-    })
+    console.log('loginState :' , loginState)
     const [showMemberInfo, setShowMemberInfo] = useState(false);
 
     const handleAuthSuccess = () => {

@@ -20,26 +20,6 @@ public class LoginController {
     @Autowired
     private MemberService memberService;
 
-    // 카카오 로그인 동작
-    @GetMapping("/kakao")
-    public ResponseEntity<Map<String,Object>> getMemberFromKakao(String accessToken){
-        log.info("-----------------카카오 로그인 동작");
-        MemberDTO memberDTO = memberService.getKakaoMember(accessToken);
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("member", memberDTO);
-        if(memberDTO != null){
-            String jwtAccessToken = JWTUtil.generateToken(claims, 10);
-            String jwtRefreshToken = JWTUtil.generateToken(claims, 60*12);
-            claims.put("accessToken", jwtAccessToken);
-            claims.put("refreshToken", jwtRefreshToken);
-            claims.put("kakaoEmail", memberDTO.getMemberEmail());
-            claims.put("res", "success");
-        } else {
-            claims.put("res", "fail");
-        }
-        return ResponseEntity.ok(claims);
-    }
-
     // 이메일 중복체크 (구조명세서 변경하기)
     @GetMapping("/emailcheck")
     public Map<String,String> emailCheck(@RequestParam String email){

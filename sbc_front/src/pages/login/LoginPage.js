@@ -12,8 +12,6 @@ const LoginPage = () => {
     const { doLogin, moveToPath } = useCustomLogin()
     const navigate = useNavigate();
 
-    const link = getkakaoLoginLink()
-
     const handleChange = (e) => {
         loginParam[e.target.name] = e.target.value;
         setLoginParams({...loginParam});
@@ -54,9 +52,6 @@ const LoginPage = () => {
                         <div className="btn-box">
                             <button onClick={handleClickLogin} className={"loginbutton_default"}>로그인</button>
                             <br></br>
-                            <div className="loginbutton_kakao">
-                                <Link to={link}>카카오 로그인</Link>
-                            </div>
                         </div>
                     </form>
                 </div>
