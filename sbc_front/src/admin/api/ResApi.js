@@ -1,4 +1,5 @@
-import axios from "axios";/*백엔드와 통신하기위해 import*/
+
+import jwtAxios from "../../util/jwtUtil"; //쿠키값 가진 axios객체 호출
 
 //예약관리 모듈의 기능을 모아둔 APi
 
@@ -8,12 +9,17 @@ const backUrl= "http://localhost:8080";   //백엔드 기본경로 변수에 할
 //백엔드 경로와 매핑명을 합쳐서
 export const resHost = `${backUrl}/admin/res`
 
-// 기본 Axios 인스턴스 설정
-const axiosInstance = axios.create({
-    baseURL: resHost,      //url경로
-    timeout: 10000,     // 타임아웃 설정
-    headers: { 'Content-Type': 'application/json' },    //제이슨형식
-});
+//유틸에 값 할당
+const transroot =()=>{
+    jwtAxios.defaults.baseURL = resHost; //문자열로 재할당
+    jwtAxios.defaults.timeout = 10000; //10초제한
+    return jwtAxios
+}
+
+
+
+// 기본 axiosinstance에 tansroot한 jwtaxios를 할당
+    const axiosInstance = transroot();
 
 // 예약 데이터 전체를 가져오는 함수
 export const getAllRes = async () => {

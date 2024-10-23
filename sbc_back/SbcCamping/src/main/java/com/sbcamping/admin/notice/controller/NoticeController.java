@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/notices") // 기본 URL 경로 설정
 @RequiredArgsConstructor // 의존성 주입을 위한 생성자 자동 생성
+
 public class NoticeController {
 
     //불변 인스턴스변수 선언
@@ -36,6 +37,7 @@ public class NoticeController {
     //공지글 생성 post입력 방식 메서드
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")//권한검증-관리자
     public ResponseEntity<Void> createNotice(@RequestBody @Validated NoticeDTO noticeDTO) {
         noticeService.createNotice(noticeDTO.getNboardTitle(), noticeDTO.getNboardContent());
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -50,6 +52,7 @@ public class NoticeController {
 
     //공지글 번호를 매개변수로 받아서 put방식으로 id에 해당하는 필드값을 수정한다
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")//권한검증-관리자
     public ResponseEntity<String> updateNotice(
             @PathVariable("id") Long noticeId,
             @RequestBody @Validated NoticeDTO noticeDTO) {
@@ -68,6 +71,7 @@ public class NoticeController {
 
     //공지글 번호를 매개변수로 받아서 id에 해당하는 로우를 삭제한다
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")//권한검증-관리자
     public ResponseEntity<Void> deleteNotice(@PathVariable("id") Long noticeId) {
         noticeService.deleteNotice(noticeId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
