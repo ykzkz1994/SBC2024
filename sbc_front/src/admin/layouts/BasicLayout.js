@@ -8,6 +8,7 @@ import {logout} from "../../slice/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
 import logo1 from "../../images/logo/logo1-2.png";
 import logo2 from "../../images/logo/logo2-7.png";
+import React from "react";
 
 
 
@@ -45,6 +46,7 @@ const BasicLayout = ({ children }) => {
             <div id="">
               <Nav className="justify-content-end">
                 <Nav.Link onClick={handleClickLogout}>로그아웃</Nav.Link>
+                <Nav.Link href="/" >사용자페이지로</Nav.Link>
               </Nav>
               <Nav className="justify-content-end">
                 <NavDropdown href="/admin/site" title="구역 관리">

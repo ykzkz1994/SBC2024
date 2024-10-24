@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
+import ResCalendar from "../components/res/ResCalendar";
 
 const MainPage = () => {
     const loginState = useSelector((state) => state.loginSlice);
@@ -39,21 +40,23 @@ const MainPage = () => {
     // 관리자 권한이 있을 때, 여기에 실제 관리자 페이지 내용을 렌더링
     return (
         <>
-        <BasicLayout>
-            {/* 메인컨텐츠 */}
-            <div id='communitywrap' className='m-5'>
-                <div id='guidebox' className='p-2'>
-                    <div id='guidewrap' className='m-1'>
-                        캘린더 예약 현황
+            {/*로고랑 컴포넌트 사이에 여백을 조금 넣을까 했는데 그리드셀에 내용 들어가면 밑으로 달력이 길어져서 너무 페이지가 길어질 것 같아요*/}
+            <BasicLayout>
+                {/* 메인컨텐츠 */}
+                <div id='communitywrap' className='m-100 border-0'>
+                    <div id='guidebox' className='p-20000 border-0'>
+                        <div id='guidewrap' className='m-600 border-4 h-100 round-10 shadow-cyan-50'>
+                            <ResCalendar/>
+                        </div>
+                    </div>
+                    <div id='guidebox' className='p-2 border-0'>
+                        <div id='guidewrap' className='m-1 border-0'>
+                            매출 통계 여기에 넣으시면 됩니다
+                        </div>
                     </div>
                 </div>
-                <div id='guidebox' className='p-2'>
-                    <div id='guidewrap' className='m-1'>
-                        매출 통계
-                    </div>
-                </div>
-            </div>
-        </BasicLayout>
+
+            </BasicLayout>
         </>
     );
 };
