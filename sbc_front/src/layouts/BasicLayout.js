@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../slice/loginSlice";
 import {useNavigate} from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import logo from "../images/logo/logo2-7.png";
 
 const BasicLayout = ({children}) => {
@@ -33,14 +33,27 @@ const BasicLayout = ({children}) => {
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">
+
                             {!loginState.member.memberEmail ?
                                 <Nav.Link href="/login">로그인</Nav.Link> : <Nav.Link href="/logout" onClick={handleClickLogout}>로그아웃</Nav.Link>
                             }
+
+                             {/* 관리자가 아닌 경우에만 회원가입, 마이페이지, 사이트맵 표시 */}
+                            {loginState.member?.memberRole !== 'ROLE_ADMIN' && (
+                                /*중괄호안에 삼항연산자 바로 넣으면 오류나서 반태그추가*/
+                            <>
                             {!loginState.member.memberEmail ?
                                 <Nav.Link href="/join">회원가입</Nav.Link> : <Nav.Link href="/mypage">마이페이지</Nav.Link>
                             }
-
                             <Nav.Link href="#pricing">사이트맵</Nav.Link>
+                             </>
+                             )}
+
+
+                            {/* 조건부 렌더링사용 권한 관리자 때만 관리자페이지로 이동텍스트 나이 나오게*/}
+                             {loginState.member?.memberRole === 'ROLE_ADMIN' && (
+                              <Nav.Link href="/admin" /*className="text-blue-500"*/>관리자페이지</Nav.Link>
+                             )}
                         </Nav>
                         <Nav className="justify-content-end">
                             <NavDropdown title="캠핑장안내">

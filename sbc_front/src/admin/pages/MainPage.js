@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
+import ResCalendar from "../components/res/ResCalendar";
 import useCustomLogin from "../../hooks/useCustomLogin";
 
 const MainPage = () => {
@@ -42,33 +43,37 @@ const MainPage = () => {
         }
     }, [isLogin, loginState, navigate]);
 
+    // 로딩 중이거나 관리자 권한이 없는 경우 메시지 출력
     if (isLoading) {
         return (
             <Container className="d-flex flex-column justify-content-center align-items-center vh-100" style={{ fontSize: '1.5rem', height: '100vh' }}>
                 <Spinner animation="border" role="status" className="mb-3" />
-                <div>관리자 권한이 필요한 페이지입니다. 로그인 화면으로 이동합니다.</div>
-                <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
+                <div>관리자 권한 확인 중...</div>
             </Container>
         );
     }
 
+    // 관리자 권한이 있을 때, 여기에 실제 관리자 페이지 내용을 렌더링
     return (
-        <BasicLayout>
-            <div id='communitywrap' className='m-5'>
-                <h2>관리자 페이지</h2>
-                <pre>{JSON.stringify(debugInfo, null, 2)}</pre>
-                <div id='guidebox' className='p-2'>
-                    <div id='guidewrap' className='m-1'>
-                        캘린더 예약 현황
+        <>
+            {/*로고랑 컴포넌트 사이에 여백을 조금 넣을까 했는데 그리드셀에 내용 들어가면 밑으로 달력이 길어져서 너무 페이지가 길어질 것 같아요*/}
+            <BasicLayout>
+                {/* 메인컨텐츠 */}
+                <div id='communitywrap' className='m-100 border-0'>
+                    <div id='calendarbox' className='p-2 border-0'>
+                        <div id='calendarwrap' className='m-600 border-4 h-100 round-1 shadow-sky-700 '>
+                            <ResCalendar/>
+                        </div>
+                    </div>
+                    <div id='guidebox' className='p-2 border-0'>
+                        <div id='guidewrap' className='m-1 border-0'>
+                            매출 통계 여기에 넣으시면 됩니다
+                        </div>
                     </div>
                 </div>
-                <div id='guidebox' className='p-2'>
-                    <div id='guidewrap' className='m-1'>
-                        매출 통계
-                    </div>
-                </div>
-            </div>
-        </BasicLayout>
+
+            </BasicLayout>
+        </>
     );
 };
 

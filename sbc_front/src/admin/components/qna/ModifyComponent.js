@@ -3,6 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getOne, putOne } from "../../api/qnaApi";
 import defaultImage from "../../../images/default.jpg";
 import {prefix} from "../../../api/camperApi";
+//현재 로그인중인 유저 정보가져오기
+import {useSelector} from "react-redux";
+
+
+
 
 const initState = {
     qBoardTitle: '',
@@ -19,6 +24,11 @@ function ModifyComponent(props) {
     const [showDeleteButton, setShowDeleteButton] = useState(true); // 버튼 표시 상태
     const [imageLoadError, setImageLoadError] = useState(false);
 
+        //현재 로그인중인 사용자의 정보를 받아오는 변수 매핑으로 치고 들어왔을 때 권한을 검증하여 관리자가 아닌경우 메인페이지로 리다이랙트 하기위해
+    const loginState = useSelector((state) => state.loginSlice)
+
+
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await getOne(qbID);
@@ -31,9 +41,19 @@ function ModifyComponent(props) {
                 file: null // 파일은 처음에는 null로 설정
             });
 
+                /*현재로그인중인 유저와 글 작성자의 id를 대조하여 일치하지 않을경우 리스트로 리스트로 리다이렉션 시킨다*/
+    if(qbID.member?.memberId !== loginState.member.memberId){
+        navigate('/admin/qnas/list')
+    }
+
         };
         fetchData();
     }, [qbID]);
+
+
+
+
+
 
     const handleChangeQna = (e) => {
         const { name, value } = e.target;

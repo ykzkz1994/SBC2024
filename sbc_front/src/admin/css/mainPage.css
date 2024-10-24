@@ -58,13 +58,13 @@ align-items: center;
 
 #guidebox{
     min-width: 650px;
-    border: 1px solid green;
+    border: 5px mediumseagreen;
     align-content: center;
 }
 
 #guidewrap{
     height: 130px;
-    border: 1px solid blue;
+    border: 1px mediumaquamarine;
     margin-bottom: 20px;
 }
 

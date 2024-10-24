@@ -7,6 +7,9 @@ import {Link, useNavigate} from 'react-router-dom';
 import {logout} from "../../slice/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
 import logo from "../../images/logo/logo2-7.png";
+import React from "react";
+
+
 
 //{children}속성을 활용하여 컴포넌트 내부에 다른 컴포넌트를 적용시킬 수 있음
 const BasicLayout = ({ children }) => {
@@ -43,6 +46,7 @@ const BasicLayout = ({ children }) => {
             <div id="">
               <Nav className="justify-content-end">
                 <Nav.Link onClick={handleClickLogout}>로그아웃</Nav.Link>
+                 <Nav.Link href="/" >사용자페이지로</Nav.Link>
               </Nav>
               <Nav className="justify-content-end">
                 <NavDropdown href="/admin/site" title="구역 관리">

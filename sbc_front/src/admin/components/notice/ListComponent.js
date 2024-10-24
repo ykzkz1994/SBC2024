@@ -137,7 +137,7 @@ const ListComponent = () => {
                     &gt;
                 </button>
             </div>
-            {/* 글쓰기 버튼 - 관리자 권한일 때만 표시 */}
+            {/* 관리자 때문조건부 렌더링 - 글쓰기 버튼*/}
             {loginState.member?.memberRole === 'ROLE_ADMIN' && (
                 <div className="mt-4 text-right">
                     <button
