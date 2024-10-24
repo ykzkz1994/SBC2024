@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import "./css/Respage.css";
 import "./css/ResCheckPage.css"
@@ -23,6 +23,54 @@ const ResCheckPage = () => {
     }
 
     const formattedNumber = formatPhoneNumber(resData.resUserPhone)
+
+    /*
+    *
+    * 결제 테스트 시작
+    *
+    * */
+    function onClickPayment() {
+
+        /* 1. 가맹점 식별하기 */
+        const { IMP } = window;
+        IMP.init('imp34501875');
+
+        /* 2. 결제 데이터 정의하기 */
+        const data = {
+            pg: 'kakaopay.TC0ONETIME',                           // PG사
+            pay_method: 'EASY_PAY',                           // 결제수단
+            merchant_uid: `mid_${new Date().getTime()}`,   // 주문번호
+            amount: 1,                                 // 결제금액
+            name: 'SBCAMPING 결제 테스트',                  // 주문명
+            buyer_name: '홍길동',                           // 구매자 이름
+            buyer_tel: '01012341234',                     // 구매자 전화번호
+            buyer_email: 'example@example',               // 구매자 이메일
+        };
+
+        /* 4. 결제 창 호출하기 */
+        IMP.request_pay(data, callback);
+    }
+
+    /* 3. 콜백 함수 정의하기 */
+    function callback(response) {
+        const {
+            success,
+            merchant_uid,
+            error_msg,
+        } = response;
+
+        if (success) {
+            alert('결제가 완료되었습니다');
+            navigate('/mypage/res')
+        } else {
+            alert(`결제 실패: ${error_msg}`);
+        }
+    }
+    /*
+    *
+    * 결제 테스트 끝
+    *
+    * */
 
     return (
         <div className="mainDiv">
@@ -104,7 +152,7 @@ const ResCheckPage = () => {
                 <div style={{
                     display: "flex", alignItems: "center", justifyContent: "center"
                 }}>
-                    <Button variant="success" className="checkSuccess" onClick={handleSuccess}>확인</Button>
+                    <Button variant="warning" className="checkSuccess" onClick={onClickPayment}>카카오 결제하기</Button>
                 </div>
             </div>
         </div>

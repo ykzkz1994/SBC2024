@@ -7,7 +7,12 @@
 .navwrap{
     max-width: 1200px;
     margin: 0 auto;
+    font-size: 0.9rem;
 }
+.dropdown-box > div > div{
+    font-size: 0.9rem;
+}
+
 #logo{
     display: flex;
     align-items: center;

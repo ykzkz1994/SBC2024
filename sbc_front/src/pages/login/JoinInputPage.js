@@ -72,6 +72,10 @@ const JoinInputPage = () => {
             valid = false;
             event.preventDefault();
         }
+        if(!isPhoneValid){
+            valid = false;
+            event.preventDefault();
+        }
 
         // 이름
         if(isNameValid === false){
@@ -354,12 +358,13 @@ const JoinInputPage = () => {
                                           required
                                           id={"password"}
                                           minLength={10}
+                                          maxLength={15}
                                           pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
                                           onChange={handleChangeJoin}
                                           isInvalid={!isPwdValid}
                             />
                             <Form.Control.Feedback type="invalid">
-                                비밀번호를 확인해주세요. (영문 대문자 불가능)
+                                비밀번호를 확인해주세요.
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
@@ -375,6 +380,7 @@ const JoinInputPage = () => {
                                           required
                                           id={"password_re"}
                                           minLength={10}
+                                          maxLength={15}
                                           pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
                                           onChange={handleConfirmPwd}
                                           isInvalid={!isPwdMatch}

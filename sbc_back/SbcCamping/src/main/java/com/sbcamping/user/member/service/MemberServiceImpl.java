@@ -119,6 +119,11 @@ public class MemberServiceImpl implements MemberService {
         // ID로 member 조회
         Member member = memberRepository.findById(mem.getMemberID()).orElse(null);
         String msg;
+        log.info("회원 상태 : {}", member.getMemberStatus());
+        if(member.getMemberStatus().equals("OFF")){
+            msg = "fail";
+            return msg;
+        }
         if (Objects.requireNonNull(member).getMemberPw() != null && member.getMemberEmail() != null) {
             // 비밀번호 변경
             member.changePw(passwordEncoder.encode(mem.getMemberPw()));

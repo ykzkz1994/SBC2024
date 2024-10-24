@@ -40,12 +40,11 @@ const BasicLayout = ({children}) => {
                             {!loginState.member.memberEmail ?
                                 <Nav.Link href="/join">회원가입</Nav.Link> : <Nav.Link href="/mypage">마이페이지</Nav.Link>
                             }
-
-                            <Nav.Link href="#pricing">사이트맵</Nav.Link>
+                            <Nav.Link href="/sitemap">사이트맵</Nav.Link>
                         </Nav>
-                        <Nav className="justify-content-end">
+                        <Nav className="justify-content-end dropdown-box">
                             <NavDropdown title="캠핑장안내">
-                                <NavDropdown.Item href="/camping/intro">캠핑장소개</NavDropdown.Item>
+                                <NavDropdown.Item href="/camping/intro" >캠핑장소개</NavDropdown.Item>
                                 <NavDropdown.Item href="/camping/guide">시설안내도</NavDropdown.Item>
                                 <NavDropdown.Item href="/camping/how">찾아오시는 길</NavDropdown.Item>
                             </NavDropdown>

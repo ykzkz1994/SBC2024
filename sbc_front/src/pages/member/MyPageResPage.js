@@ -2,7 +2,7 @@ import "../../css/mypage.css"
 import {useSelector} from "react-redux";
 import {cancelRes, getReservations} from "../../api/mypageApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import useCustomMove from "../../hooks/useCustomMove";
 import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -39,7 +39,7 @@ const MyPageResPage = () => {
 
     /*
     *
-    * 예약취소
+    * 예약취소 시작
     *
     * */
 
