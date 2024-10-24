@@ -6,7 +6,6 @@ import '../css/common.css';
 import {Link, useNavigate} from 'react-router-dom';
 import {logout} from "../../slice/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
-import logo1 from "../../images/logo/logo1-2.png";
 import logo2 from "../../images/logo/logo2-7.png";
 import React from "react";
 
@@ -22,7 +21,6 @@ const BasicLayout = ({ children }) => {
   }
 
   const navigate = useNavigate();
-  const loginState = useSelector(state => state.loginSlice);
   const dispatch = useDispatch();
 
   const handleClickLogout = () => {

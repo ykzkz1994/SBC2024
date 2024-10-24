@@ -8,7 +8,7 @@ import {logout} from "../slice/loginSlice";
 import {useNavigate} from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import React, { useState } from 'react';
-import logo1 from "../images/logo/logo1-2.png";
+
 import logo2 from "../images/logo/logo2-7.png";
 
 const BasicLayout = ({children}) => {
