@@ -55,20 +55,7 @@ public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, �
         return ResponseEntity.ok(service.sales(start, end, siteId, dateType));
     }
 
-    // 1-2 예약률 현황
-    @GetMapping("/rate")
-    public ResponseEntity<?> rate(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                  @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                  @RequestParam(value = "site", required = false) Long siteID) {
-        return ResponseEntity.ok(service.rate(startDate, endDate, siteID));
-
-        // 일일 예약률 = (예약된 사이트 수 / 전체 사이트 수) * 100
-        // 기간별 예약률 = (기간 내 예약된 사이트-일 수 / (전체 사이트 수 * 기간의 일 수)) * 100
-
-
-    }
-
-    // 1-3 예약 취소 현황 : 예약 상태, (취소 건수, 취소 금액)
+    // 1-2 예약 취소 현황 : 예약 상태, (취소 건수, 취소 금액)
     @GetMapping("/cancel")
     public ResponseEntity<?> getCancelledSalesStats(
             @RequestParam String dateType,

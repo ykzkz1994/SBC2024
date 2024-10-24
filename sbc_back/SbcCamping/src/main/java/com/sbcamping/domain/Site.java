@@ -50,8 +50,6 @@ public class Site {
         this.siteName = Name;
     }
 
-
-
     public void changeResLimit(char ResLimit) {
         this.siteResLimit = ResLimit;
     }

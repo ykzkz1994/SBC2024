@@ -21,8 +21,6 @@ public class NoticeController {
     //불변 인스턴스변수 선언
     private final NoticeService noticeService;
 
-
-
     // 모든 공지글 목록을 가져오는 GET 요청 방식 처리 메서드
     @GetMapping("/list")
     public ResponseEntity<List<NoticeDTO>> getAllNotices() {

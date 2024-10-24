@@ -39,7 +39,8 @@ const BasicLayout = ({ children }) => {
             <img
                 src={logo2}
                 alt="로고"
-                style={{width: '600px', height: 'auto'}} // 원하는 크기로 조정
+                style={{width: '600px', height: 'auto'}}
+                onClick={() => navigate("/admin")}// 원하는 크기로 조정
             />
             <div id="">
               <Nav className="justify-content-end">
