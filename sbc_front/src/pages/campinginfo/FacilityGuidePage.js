@@ -50,7 +50,7 @@ const FacilityGuidePage = () => {
                     <img
                         src={require('../../images/FacilityGuide.jpg')}
                         alt="캠핑장 안내도"
-                        style={{ width: '1200px', height: '563px' }}
+                        style={{ width: '900px', height: '563px', margin:'auto' }}
                         className="img-fluid mb-4"
                     />
                     <hr />

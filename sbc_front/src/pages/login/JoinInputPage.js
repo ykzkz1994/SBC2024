@@ -320,10 +320,10 @@ const JoinInputPage = () => {
                     {/* 이메일 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            이메일
+                            이메일<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={5}>
-                            <Form.Control type="email"
+                        <Form.Control type="email"
                                           name="memberEmail"
                                           placeholder="이메일을 입력하세요"
                                           required
@@ -349,10 +349,10 @@ const JoinInputPage = () => {
                     {/* 비밀번호 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            비밀번호
+                            비밀번호<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="password"
+                        <Form.Control type="password"
                                           name="memberPw"
                                           placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
                                           required
@@ -372,10 +372,10 @@ const JoinInputPage = () => {
                     {/* 비밀번호 재확인 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            비밀번호 확인
+                            비밀번호 확인<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7} id={"pwrebox"}>
-                            <Form.Control type="password"
+                        <Form.Control type="password"
                                           placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
                                           required
                                           id={"password_re"}
@@ -395,10 +395,10 @@ const JoinInputPage = () => {
                     {/* 이름 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            이름
+                            이름<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="text"
+                        <Form.Control type="text"
                                           name="memberName"
                                           placeholder="이름을 입력하세요"
                                           required
@@ -417,10 +417,10 @@ const JoinInputPage = () => {
                     {/* 핸드폰번호 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            핸드폰 번호
+                            핸드폰 번호<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="text"
+                        <Form.Control type="text"
                                           name="memberPhone"
                                           placeholder="-없이 숫자만 입력해주세요"
                                           required
@@ -438,10 +438,10 @@ const JoinInputPage = () => {
                     <fieldset>
                         <Form.Group as={Row} className="mb-3">
                             <Form.Label as="legend" column sm={3}>
-                                성별
+                                성별<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                             </Form.Label>
                             <Col sm={7}>
-                                <Form.Check
+                            <Form.Check
                                     inline
                                     type="radio"
                                     label="남"
@@ -471,10 +471,10 @@ const JoinInputPage = () => {
                     {/* 생년월일 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={3}>
-                            생년월일
+                            생년월일<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="text"
+                        <Form.Control type="text"
                                           name="memberBirth"
                                           placeholder="숫자만 입력해주세요 ex. 19990220"
                                           minLength={8}
@@ -493,10 +493,10 @@ const JoinInputPage = () => {
                     {/* 지역 */}
                     <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm={3}>
-                            지역
+                            지역<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Select aria-label="local"
+                        <Form.Select aria-label="local"
                                          name="memberLocal"
                                          required
                                          onChange={handleChangeJoin}

@@ -18,7 +18,7 @@ const IntroductionPage = () => {
                         src={image1} // 임포트한 이미지 사용
                         alt="캠핑장"
                         className="img-fluid w-100"
-                        style={{ maxHeight: '500px', objectFit: 'cover', margin:'20px 0px 50px' }} // 크기 조정
+                        style={{ maxWidth:'900px', objectFit: 'cover', margin:'20px auto 50px' }} // 크기 조정
                     />
                 </Col>
             </Row>
