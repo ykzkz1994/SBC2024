@@ -24,7 +24,6 @@ public class CustomerStatsReqDTO {
 
     private String memberLocal; // 회원 지역
 
-    private String resId; // 예약 번호
     private Long siteId;  // 구역 번호
 
     private LocalDate date;

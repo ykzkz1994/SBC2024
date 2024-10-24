@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import SalesComponent from "../../components/stats/SalesComponent";
-import ResRateComponent from "../../components/stats/ResRateComponent";
 import ResCancelComponent from "../../components/stats/ResCancelComponent";
 import { Tab, Tabs } from "react-bootstrap";
 import { fetchSalesStats } from "../../api/statsApi"; // API 호출 함수를 import 해야 합니다.
@@ -60,9 +59,6 @@ const ReservationSalesPage = () => {
             selectedMonth={selectedMonth}
             onSearch={handleSearch}
         />
-                    </Tab>
-                    <Tab eventKey="rate" title="예약률 현황">
-                        <ResRateComponent />
                     </Tab>
                     <Tab eventKey="cancel" title="예약취소 현황">
                         <ResCancelComponent />

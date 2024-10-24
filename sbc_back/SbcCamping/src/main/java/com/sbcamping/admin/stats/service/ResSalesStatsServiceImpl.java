@@ -1,25 +1,18 @@
 package com.sbcamping.admin.stats.service;
 
-import com.sbcamping.admin.stats.dto.CustomerStatsReqDTO;
 import com.sbcamping.admin.stats.dto.ResCancelResultDTO;
 import com.sbcamping.admin.stats.dto.ResSalesResultDTO;
-import com.sbcamping.admin.stats.dto.ResStatsReqDTO;
-import com.sbcamping.admin.stats.repository.ReviewStatsRepository;
 import com.sbcamping.admin.stats.repository.StatsRepository;
 import com.sbcamping.domain.Reservation;
-import com.sbcamping.domain.Review;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -134,12 +127,6 @@ public class ResSalesStatsServiceImpl implements ResSalesStatsService {
             default:
                 throw new IllegalArgumentException("Invalid date type: " + dateType);
         }
-    }
-
-    // 1-2 예약률 현황
-    @Override
-    public List<ResStatsReqDTO> rate(LocalDate startDate, LocalDate endDate, Long siteID) {
-        return List.of();
     }
 
     // 1-3 예약 취소 현황 : 예약 상태, (취소 건수, 취소 금액)
