@@ -8,8 +8,7 @@ import {logout} from "../slice/loginSlice";
 import {useNavigate} from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import { useState } from 'react';
-import logo1 from "../images/logo/logo1-2.png";
-import logo2 from "../images/logo/logo2-7.png";
+import logo from "../images/logo/logo2-7.png";
 
 const BasicLayout = ({children}) => {
 
@@ -30,7 +29,7 @@ const BasicLayout = ({children}) => {
             <Navbar bg="white" data-bs-theme="light" className="navwrap">
                 <Container>
                     <Navbar.Brand href="/" id="logo">
-                        <img src={logo2} style={{width: '600px', height: 'auto'}} alt="logo"/>
+                        <img src={logo} style={{width: '600px', height: 'auto'}} alt="logo"/>
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">
