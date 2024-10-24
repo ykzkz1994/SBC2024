@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import {useEffect, useState} from "react";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import "../../css/join.css";
+import "../../css/login.css";
 import {getMember, modifyMember} from "../../api/mypageApi";
 import {useNavigate} from "react-router-dom";
 
@@ -34,7 +35,7 @@ const PasswordAuth = ({onSuccess}) => {
         }));
 
         // 비밀번호 유효성 검사
-        if (name === 'memberPw') {
+        if (name === "memberPw") {
             setPwd(event.target.value);
             const regExp = /^(?=.*[a-z])((?=.*\d)|(?=.*\W)).{10,15}$/;
             if (regExp.test(event.target.value)) {
@@ -64,75 +65,70 @@ const PasswordAuth = ({onSuccess}) => {
     }
 
     return(
-        <div>
-            <div style={{marginTop:'20px'}}>
+        <div id="loginwrap">
+            <div>
                 <h3>회원 인증</h3>
             </div>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                    <Form.Label column sm="2">
-                        이메일
-                    </Form.Label>
-                    <Col sm="7">
-                        <Form.Control plaintext
-                                      readOnly
-                                      value={loginState.member.memberEmail}
-                                      style={{paddingLeft:'8px'}}
-                        />
-                    </Col>
-                </Form.Group>
+            <div  className="modPwWrap">
+                <Form noValidate validated={validated} onSubmit={handleSubmit} id="loginbox">
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                        <Form.Label column sm="3">
+                            이메일
+                        </Form.Label>
+                        <Col sm="8">
+                            <Form.Control plaintext
+                                          readOnly
+                                          value={loginState.member.memberEmail}
+                                          style={{paddingLeft:'8px'}}
+                            />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group as={Row} className="mb-3" >
-                    <Form.Label column sm={2}>
-                        비밀번호
-                    </Form.Label>
-                    <Col sm={10}>
-                        <Form.Control type="password"
-                                      name="memberPw"
-                                      placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                      required
-                                      id={"password"}
-                                      minLength={10}
-                                      pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                      onChange={handleChangePw}
-                                      isInvalid={!isPwdValid}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            비밀번호를 확인해주세요.
-                        </Form.Control.Feedback>
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm={{span: 10, offset: 2}} className={"joinbuttonwrap"}>
-                        <Button variant="success" className={"joinButton"} type="submit" onClick={handleSubmit}>회원정보 수정</Button>
-                    </Col>
-                </Form.Group>
-            </Form>
+                    <Form.Group as={Row} className="mb-3" >
+                        <Form.Label column sm={3}>
+                            비밀번호
+                        </Form.Label>
+                        <Col sm={9}>
+                            <Form.Control type="password"
+                                          name="memberPw"
+                                          placeholder="영소문자, 숫자, 특수문자 포함 10-15자"
+                                          style={{fontSize:'13px'}}
+                                          required
+                                          id={"password"}
+                                          minLength={10}
+                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                          onChange={handleChangePw}
+                                          isInvalid={!isPwdValid}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                비밀번호를 확인해주세요.
+                            </Form.Control.Feedback>
+                        </Col>
+                    </Form.Group>
+                    <Button variant="success" className="loginbutton_default" type="submit" onClick={handleSubmit}>회원정보 수정</Button>
+                </Form>
+            </div>
         </div>
     )
 }
-
-
 
 
 {/* 회원정보 수정 컴포넌트*/}
 const MemberInfo = () => {
 
     const navigate = useNavigate();
+    const {moveToPath} = useCustomLogin()
 
     const loginState = useSelector((state) => state.loginSlice)
     const loginMemberId = loginState.member.memberId? loginState.member.memberId : loginState.member.memberID
-    console.log("ID : ", loginMemberId);
 
     // 부트스트랩 변수
     const [validated, setValidated] = useState(false);
 
-    const {moveToPath} = useCustomLogin()
-
     const [members, setMembers] = useState(
         {
             memberEmail: '',
-            memberPw: 'none',
+            memberPw: '',
             memberName: '',
             memberPhone: '',
             memberGender: '',
@@ -155,12 +151,18 @@ const MemberInfo = () => {
                 memberRole: data.member.memberRole,
                 memberID: data.member.memberId || loginMemberId,
             });
-
             setGender(data.member.memberGender);
             setLocal(data.member.memberLocal);
         })
     }, [loginMemberId]);
 
+    // 이름 유효성 검사용 변수
+    const [isNameValid, setIsNameValid] = useState(true);
+    // 생년월일 유효성 검사용 변수
+    const [isMemBirthValid, setIsMemBirthValid] = useState(true);
+    // 핸드폰 번호 유효성 검사용 변수
+    const [phone, setPhone] = useState(members.memberPhone);
+    const [isPhoneValid, setIsPhoneValid] = useState(true);
     // 성별 유효성 검사용 변수
     const [gender, setGender] = useState(members.memberGender);
     const [isGenderValid, setIsGenderValid] = useState(true);
@@ -168,57 +170,82 @@ const MemberInfo = () => {
     const [local, setLocal] = useState(members.memberLocal);
     const [isLocalValid, setIsLocalValid] = useState(true);
     // 비밀번호 검사용 변수
-    const [pwd, setPwd] = useState('');
+    const [pwd, setPwd] = useState("");
     const [isPwdValid, setIsPwdValid] = useState(true);
     const [isPwdMatch, setIsPwdMatch] = useState(true);
-    // 핸드폰 번호 유효성 검사용 변수
-    const [phone, setPhone] = useState(members.memberPhone);
-    const [isPhoneValid, setIsPhoneValid] = useState(true);
-
 
 
     // 회원정보 수정 버튼 눌렀을 때 동작
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         event.preventDefault();
+        setValidated(true)
 
         let valid = true; // 유효성 검사 결과를 추적할 변수
 
-        // 핸드폰 번호
-        if(isPhoneValid == false ){
-            alert('핸드폰 번호를 확인해주세요')
+        console.log('memberpw : ', members.memberPw)
+
+        if(!members.memberPw) {
+            setIsPwdValid(true);
+            setIsPwdMatch(true);
+        }
+
+        // 이름
+        if(isNameValid === false){
             valid = false;
             event.preventDefault()
         }
 
-        // 지역 선택 여부
-        if (!local || local === "선택해주세요"){
-            setIsLocalValid(false);
+        // 핸드폰 번호
+        if(isPhoneValid == false ){
+            valid = false;
+            event.preventDefault()
+        }
+
+        // 라디오 버튼 선택 여부
+        if (!gender) {
+            setIsGenderValid(false);
             valid = false;
             event.preventDefault();
-        } else{
-            setIsLocalValid(true);
+        } else {
+            setIsGenderValid(true);
+        }
+
+        // 생년월일
+        if(!isMemBirthValid){
+            valid = false;
+            event.preventDefault();
+        }
+
+        // 지역 선택 여부
+        if (local === ""){
+            valid = false;
+            setIsLocalValid(false);
+            event.preventDefault();
         }
 
         // 부트스트랩 동작
         if (form.checkValidity() === false || !valid) {
             event.stopPropagation();
         } else{
-            // 유효성 검사를 통과했으면 API 요청
-            handleClickModify(members)
+            const confirm = window.confirm('수정하시겠습니까?')
+            if(confirm){
+                // 유효성 검사를 통과했으면 API 요청
+                handleClickModify(members)
+            }
         }
         setValidated(true);
     };
 
 
-    // 유효성 검사를 모두 통과하면 회원가입 Submit 동작
+    // 유효성 검사를 모두 통과하면 API 수정 요청
     const handleClickModify = async (members) => {
         try {
-            console.log('회원정보 수정 보내기 전 :' , members)
+            //console.log('회원정보 수정 보내기 전 :' , members)
             const action = await modifyMember(members);
-            console.log('회원정보수정 결과 : ', action)
+            //console.log('회원정보수정 결과 : ', action)
             if(action.error) {
-                console.log('회원정보 수정 실패 ', action.error)
+                //console.log('회원정보 수정 실패 ', action.error)
                 alert('회원정보 수정에 실패하였습니다.')
             } else {
                 alert('회원정보가 수정되었습니다.')
@@ -239,20 +266,29 @@ const MemberInfo = () => {
             [name]: value,
         }));
 
-
         // 비밀번호 유효성 검사
         if (name === 'memberPw') {
             const newPassword = event.target.value;
-
-            // 비밀번호 유효성 검사
             const regExp = /^(?=.*[a-z])((?=.*\d)|(?=.*\W)).{10,15}$/;
             if (regExp.test(newPassword)) {
                 setPwd(newPassword);
                 setIsPwdValid(true);
-            } else {
+            }   else {
                 setIsPwdValid(false);
             }
 
+        }
+
+        // 이름 값 검사
+        if(name === 'memberName'){
+            const name = event.target.value;
+            name.trim()
+            const regExp = /^[가-힣]{2,10}$/;
+            if(regExp.test(name)){
+                setIsNameValid(true)
+            } else{
+                setIsNameValid(false);
+            }
         }
 
         // 핸드폰 번호 검사
@@ -260,10 +296,21 @@ const MemberInfo = () => {
             const phoneNumber = event.target.value;
             const regExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
             if(regExp.test(phoneNumber)){
-                setPhone(phoneNumber)
                 setIsPhoneValid(true);
             } else{
                 setIsPhoneValid(false);
+            }
+        }
+
+        // 생년월일 검사
+        if (name === 'memberBirth'){
+            const birth = event.target.value;
+            console.log(birth)
+            const regExp = /^[0-9]{8}$/;
+            if(regExp.test(birth) && birth.length == 8){
+                setIsMemBirthValid(true)
+            }else{
+                setIsMemBirthValid(false)
             }
         }
 
@@ -275,12 +322,13 @@ const MemberInfo = () => {
 
         // 지역 값 선택 검사
         if(name === 'memberLocal'){
-            const selectedLocal = event.target.value;
-            setLocal(selectedLocal);
-            if (selectedLocal === "선택해주세요" || selectedLocal === "") {
-                setIsLocalValid(false);  // 선택이 잘못되었을 경우
+            const selectedlocal = event.target.value;
+            if (selectedlocal === "") {
+                setIsLocalValid(false);
+                setValidated(false);
             } else {
-                setIsLocalValid(true);  // 올바른 선택
+                setLocal(selectedlocal)
+                setIsLocalValid(true);
             }
         }
 
@@ -290,10 +338,6 @@ const MemberInfo = () => {
     /* 비밀번호 일치 재확인 */
     const handleConfirmPwd = (event) => {
         const confirmPwd = event.target.value;
-        if(confirmPwd == ''){
-            setIsPwdMatch(true);
-            return
-        }
         setIsPwdMatch(confirmPwd === pwd);
         if(pwd !== confirmPwd){
             setIsPwdMatch(false);
@@ -308,6 +352,7 @@ const MemberInfo = () => {
             <div style={{marginTop:'20px'}}>
                 <h3>회원정보 수정</h3>
             </div>
+            <hr></hr>
             <div className={"modmemwrap"}>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     {/* 이메일 */}
@@ -337,14 +382,16 @@ const MemberInfo = () => {
                                           required
                                           id={"password"}
                                           minLength={10}
-                                          pattern={/^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$/}
+                                          pattern="^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"
                                           onChange={handleChangeMod}
-                                          //isInvalid={!isPwdValid}
+                                          isInvalid={!isPwdValid}
                             />
                             <div style={{fontSize:'13px'}}>비밀번호를 <span style={{color:'red'}}>변경</span>하고 싶은 경우에만 입력해주세요</div>
-                            {/*<Form.Control.Feedback type="invalid">*/}
-                            {/*    비밀번호를 확인해주세요.*/}
-                            {/*</Form.Control.Feedback>*/}
+                            {/*
+                            <Form.Control.Feedback type="invalid">
+                                비밀번호를 확인해주세요.
+                            </Form.Control.Feedback>
+                            */}
                         </Col>
                     </Form.Group>
 
@@ -359,20 +406,25 @@ const MemberInfo = () => {
                                           required
                                           id={"password_re"}
                                           minLength={10}
-                                          pattern={/^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$/}
+                                          pattern="^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"
                                           onChange={handleConfirmPwd}
-                                          //isInvalid={!isPwdMatch}
+                                          isInvalid={!isPwdMatch}
                             />
-                            {/*<Form.Control.Feedback type="invalid">*/}
-                            {/*    비밀번호가 일치하지 않습니다.*/}
-                            {/*</Form.Control.Feedback>*/}
+                            <div style={{fontSize: '13px'}}>비밀번호를 <span style={{color: 'red'}}>변경</span>하고 싶은 경우에만
+                                입력해주세요
+                            </div>
+                            {/*
+                            <Form.Control.Feedback type="invalid">
+                                비밀번호가 일치하지 않습니다.
+                            </Form.Control.Feedback>
+                            */}
                         </Col>
                     </Form.Group>
 
                     {/* 이름 */}
-                    <Form.Group as={Row} className="mb-3" >
+                    <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm={2}>
-                            이름
+                            이름<span style={{color:'green', fontWeight:'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
                             <Form.Control type="text"
@@ -383,6 +435,7 @@ const MemberInfo = () => {
                                           minLength={2}
                                           maxLength={10}
                                           onChange={handleChangeMod}
+                                          isInvalid={!isNameValid}
                             />
                         </Col>
                     </Form.Group>
@@ -390,16 +443,16 @@ const MemberInfo = () => {
                     {/* 핸드폰번호 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={2}>
-                            핸드폰 번호
+                            핸드폰 번호<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="text"
+                        <Form.Control type="text"
                                           name="memberPhone"
                                           value={members.memberPhone}
                                           required
-                                          minLength={11}
+                                          minLength={10}
                                           maxLength={11}
-                                          pattern={/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/}
+                                          pattern="^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$"
                                           onChange={handleChangeMod}
                                           Invalid={!isPhoneValid}
                             />
@@ -413,10 +466,10 @@ const MemberInfo = () => {
                     <fieldset>
                         <Form.Group as={Row} className="mb-3">
                             <Form.Label as="legend" column sm={2}>
-                                성별
+                                성별<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                             </Form.Label>
                             <Col sm={7}>
-                                <Form.Check
+                            <Form.Check
                                     inline
                                     type="radio"
                                     label="남"
@@ -436,8 +489,6 @@ const MemberInfo = () => {
                                     checked={members.memberGender === 'W'}
                                     onChange={handleChangeMod}
                                 />
-
-
                                 {!isGenderValid && (
                                     <div id="genderbox" style={{ color: "#dc3545", fontSize:"15px" }}>
                                         성별을 선택해주세요
@@ -450,10 +501,10 @@ const MemberInfo = () => {
                     {/* 생년월일 */}
                     <Form.Group as={Row} className="mb-3" >
                         <Form.Label column sm={2}>
-                            생년월일
+                            생년월일<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Control type="text"
+                        <Form.Control type="text"
                                           name="memberBirth"
                                           value={members.memberBirth}
                                           placeholder="숫자만 입력해주세요 ex. 19990220"
@@ -461,6 +512,7 @@ const MemberInfo = () => {
                                           maxLength={8}
                                           required
                                           onChange={handleChangeMod}
+                                          isInvalid={!isMemBirthValid}
                             />
                             <Form.Control.Feedback type="invalid">
                                 생년월일을 다시 확인해주세요. (8자리 숫자)
@@ -471,17 +523,16 @@ const MemberInfo = () => {
                     {/* 지역 */}
                     <Form.Group as={Row} className="mb-3">
                         <Form.Label column sm={2}>
-                            지역
+                            지역<span style={{color: 'green', fontWeight: 'bold'}}>*</span>
                         </Form.Label>
                         <Col sm={7}>
-                            <Form.Select aria-label="local"
+                        <Form.Select aria-label="local"
                                          name="memberLocal"
                                          value={members.memberLocal}
                                          required
                                          onChange={handleChangeMod}
-                                         isInvalid={validated && (local === "" || local === "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
-                            >
-                                <option>선택해주세요</option>
+                                         isInvalid={!isLocalValid}                            >
+                                <option value="">선택해주세요</option>
                                 <option value="서울">서울</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>

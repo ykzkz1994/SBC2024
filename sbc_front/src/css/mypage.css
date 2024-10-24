@@ -5,7 +5,7 @@
     text-align: center;
     margin: 0 auto 50px;
 }
-table {
+.tablewrap table {
     min-width: 100%;
     border-collapse: collapse;
     border: 0;
@@ -79,6 +79,10 @@ td {
 .resdetailtablewrap{
     text-align: center;
     margin: 20px 0px;
+}
+.resdetailtablewrap table{
+    min-width: 400px;
+    margin : auto
 }
 .resdetailtablewrap td:nth-child(1){
     background: #eee;

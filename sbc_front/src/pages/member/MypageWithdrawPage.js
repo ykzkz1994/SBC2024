@@ -92,7 +92,7 @@ const MypageWithdrawPage = () => {
                             <Form.Label column sm={2}>
                                 비밀번호
                             </Form.Label>
-                            <Col sm={10}>
+                            <Col sm={6}>
                                 <Form.Control type="password"
                                               name="memberPw"
                                               placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
@@ -108,7 +108,7 @@ const MypageWithdrawPage = () => {
                                 </Form.Control.Feedback>
                             </Col>
                         </Form.Group>
-                        <div className="mb-3">현재 예약정보가 있을 경우 탈퇴할 수 없습니다.</div>
+                        <div className="mb-3">*현재 예약정보가 있을 경우 탈퇴할 수 없습니다.</div>
                         <Button type="submit" variant="success">회원 탈퇴</Button>
                     </Form>
                 </div>

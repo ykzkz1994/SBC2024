@@ -24,7 +24,7 @@ import java.time.YearMonth;
 public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, 사이트별 조회
 
     @Autowired
-    private final ResSalesStatsService service;
+    private ResSalesStatsService service;
 
     // 1-1 매출 현황 : 금액 가져오기, 예약 건수
     @GetMapping("/sales")

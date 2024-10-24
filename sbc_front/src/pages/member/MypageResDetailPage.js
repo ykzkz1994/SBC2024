@@ -35,6 +35,7 @@ const MypageResDetailPage = (props) => {
     return (
         <div style={{marginTop:'20px'}}>
             <h3>예약 번호 : {res.resId}</h3>
+            <hr></hr>
             <div className="resdetailtablewrap">
                 <table>
                     <tr>

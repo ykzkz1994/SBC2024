@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ResSalesStatsServiceImpl implements ResSalesStatsService {
 
     @Autowired
-    private final StatsRepository statsRepository; // reservation -> member
+    private StatsRepository statsRepository; // reservation -> member
 
     // 1-1 매출 현황 : 금액 가져오기, 예약 건수
     @Override

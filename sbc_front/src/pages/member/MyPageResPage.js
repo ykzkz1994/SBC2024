@@ -301,7 +301,8 @@ const MyPageResPage = () => {
                                                               name="reason"
                                                               value={otherReason}  // 입력한 기타 사유 값 유지
                                                               onChange={handleOtherReasonChange}
-                                                              placeholder="기타 사유를 입력하세요"
+                                                              placeholder="기타 사유를 입력하세요 (최대100자)"
+                                                              maxLength={100}
                                                 />
                                             </Form.Group>
                                         </Form>

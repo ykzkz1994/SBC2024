@@ -2,13 +2,12 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {emailCheck, joinPost} from "../../api/memberApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import Modal from 'react-bootstrap/Modal';
 import "../../css/join.css";
 import ListGroup from "react-bootstrap/ListGroup";
-import {useLocation} from "react-router-dom";
 
 
 const JoinInputPage = () => {
@@ -19,6 +18,12 @@ const JoinInputPage = () => {
 
     const {moveToPath} = useCustomLogin()
 
+    // 이름 유효성 검사용 변수
+    const [isNameValid, setIsNameValid] = useState(true);
+    // 생년월일 유효성 검사용 변수
+    const [isMemBirthValid, setIsMemBirthValid] = useState(true);
+    // 휴대폰번호 유효성 검사용 변수
+    const [isPhoneValid, setIsPhoneValid] = useState(true);
     // 성별 유효성 검사용 변수
     const [gender, setGender] = useState("");
     const [isGenderValid, setIsGenderValid] = useState(true);
@@ -31,7 +36,7 @@ const JoinInputPage = () => {
     const [isPwdMatch, setIsPwdMatch] = useState(true);
     // 이메일 중복체크용 변수
     const [emailCheckResult, setEmailCheckResult] = useState("");
-    const [isEmailValid, setIsEmailValid] = useState(false);
+    const [isEmailValid, setIsEmailValid] = useState(true);
 
     const [members, setMembers] = useState(
         {
@@ -51,46 +56,64 @@ const JoinInputPage = () => {
         const form = event.currentTarget;
         event.preventDefault();
         setValidated(true)
+        console.log('local : ', local);
 
-        let valid = true; // 유효성 검사 결과를 추적할 변수
+        let valid = true;
+
+        // 이메일 중복체크 여부
+        if(emailCheckResult === "" || !isEmailValid){
+            alert('이메일 중복체크를 해주세요.')
+            valid = false;
+            event.preventDefault();
+        }
+
+        // 비밀번호 재확인
+        if (!isPwdMatch){
+            valid = false;
+            event.preventDefault();
+        }
+
+        // 이름
+        if(isNameValid === false){
+            valid = false;
+            event.preventDefault()
+        }
+
+        // 핸드폰 번호
+        if(isPhoneValid === false ){
+            valid = false;
+            event.preventDefault()
+        }
 
         // 라디오 버튼 선택 여부
         if (!gender) {
             setIsGenderValid(false);
+            valid = false;
             event.preventDefault();
         } else {
             setIsGenderValid(true);
         }
 
-        // 지역 선택 여부
-        if (!local || local === "선택해주세요"){
-            setIsLocalValid(false);
+        // 생년월일
+        if(!isMemBirthValid){
             valid = false;
             event.preventDefault();
-        } else{
-            setIsLocalValid(true);
         }
 
-        // 비밀번호 재확인
-        if (!isPwdMatch){
+        // 지역 선택 여부
+        if (local === ""){
+            valid = false;
+            setIsLocalValid(false);
             event.preventDefault();
-        }
-
-        // 이메일 중복체크 여부
-        if(emailCheckResult === "" || !isEmailValid){
-            alert('이메일 중복체크를 해주세요.')
-            event.preventDefault();
-            return
         }
 
         // 부트스트랩 동작
-        if (form.checkValidity() === false || !valid) {
+        if (form.checkValidity() === false || valid === false) {
             event.stopPropagation();
         } else{
             // 유효성 검사를 통과했으면 API 요청
             handleClickJoin(members)
         }
-        setValidated(true);
     };
 
     // 유효성 검사를 모두 통과하면 회원가입 Submit 동작
@@ -110,34 +133,37 @@ const JoinInputPage = () => {
         }
     }
 
+    /*
+    * 
+    * 이메일 중복체크
+    * 
+    * */
     // 이메일 중복체크 메소드
-    const handleEmailCheck = async () =>{
+    const handleEmailCheck = async (e) =>{
         const emailElement = document.getElementsByName("memberEmail");
         const email = emailElement[0].value;
+        console.log('1', email)
         
         // 이메일 유효성 검사 (간단한 정규 표현식 사용)
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         // 이메일 값이 비었거나 형식이 맞지 않으면 메시지 출력
-        if (!email || !emailRegex.test(email)) {
+        if (!emailRegex.test(email)) {
             // 이메일 값 초기화
             emailElement[0].value = '';
             // 사용 불가능한 이메일 메시지 설정
-            setEmailCheckResult(
-                <>
-                    사용 <span style={{ color: 'red' }}>불가능</span>한 이메일입니다.
-                </>
-            );
+            alert('이메일 형식을 확인해주세요')
             // 모달 표시
-            setModalShow(true);
-            return;  // 유효하지 않으면 서버 요청 없이 함수 종료
+            e.preventDefault()
         }
-        
+
+        console.log('2', email)
         // 이메일이 유효한 경우(이메일 형식인 경우) 중복체크
         try {
             // api 서버 호출
             const action = await emailCheck(email);
             setModalShow(true)
+            console.log('3', email)
 
             if(action.msg === 'enable'){
                 setEmailCheckResult('사용 가능한 이메일입니다.');
@@ -182,6 +208,11 @@ const JoinInputPage = () => {
             </Modal>
         );
     }
+    /*
+    * 
+    * 이메일 중복체크 끝
+    * 
+    * */
 
     // 폼에서 데이터가 입력되었을 때마다 members 상태를 업데이트하는 함수
     const handleChangeJoin = (event) => {
@@ -191,6 +222,8 @@ const JoinInputPage = () => {
             ...prevParams,
             [name]: value,
         }));
+
+        console.log(local);
 
         // 비밀번호 유효성 검사
         if(name === 'memberPw'){
@@ -203,6 +236,41 @@ const JoinInputPage = () => {
             }
         }
 
+        // 이름 값 검사
+        if(name === 'memberName'){
+            const name = event.target.value;
+            name.trim()
+            const regExp = /^[가-힣]{2,10}$/;
+            if(regExp.test(name)){
+                setIsNameValid(true)
+            } else{
+                setIsNameValid(false);
+            }
+        }
+
+        // 핸드폰 번호 검사
+        if (name === 'memberPhone'){
+            const phoneNumber = event.target.value;
+            const regExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+            if(regExp.test(phoneNumber)){
+                setIsPhoneValid(true);
+            } else{
+                setIsPhoneValid(false);
+            }
+        }
+
+        // 생년월일 검사
+        if (name === 'memberBirth'){
+            const birth = event.target.value;
+            console.log(birth)
+            const regExp = /^[0-9]{8}$/;
+            if(regExp.test(birth) && birth.length == 8){
+                setIsMemBirthValid(true)
+            }else{
+                setIsMemBirthValid(false)
+            }
+        }
+
         // 성별 값 선택 검사
         if(name === 'memberGender'){
             setGender(event.target.value);
@@ -211,13 +279,13 @@ const JoinInputPage = () => {
 
         // 지역 값 선택 검사
         if(name === 'memberLocal'){
-            const selectedLocal = event.target.value;
-            setLocal(selectedLocal);
-            console.log(selectedLocal);
-            if (selectedLocal == "선택해주세요" || selectedLocal === "") {
-                setIsLocalValid(false);  // 선택이 잘못되었을 경우
+            const selectedlocal = event.target.value;
+            if (selectedlocal === "") {
+                setIsLocalValid(false);
+                setValidated(false);
             } else {
-                setIsLocalValid(true);  // 올바른 선택
+                setLocal(selectedlocal)
+                setIsLocalValid(true);
             }
         }
 
@@ -257,9 +325,10 @@ const JoinInputPage = () => {
                                           required
                                           maxLength={50}
                                           onChange={handleChangeJoin}
+                                          isInvalid={!isEmailValid}
                             />
                             <Form.Control.Feedback type="invalid">
-                                이메일을 확인해주세요.
+                                이메일 형식 확인 또는 이메일 중복체크를 해주세요
                             </Form.Control.Feedback>
 
                         </Col>
@@ -290,7 +359,7 @@ const JoinInputPage = () => {
                                           isInvalid={!isPwdValid}
                             />
                             <Form.Control.Feedback type="invalid">
-                                비밀번호를 확인해주세요.
+                                비밀번호를 확인해주세요. (영문 대문자 불가능)
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
@@ -329,10 +398,12 @@ const JoinInputPage = () => {
                                           required
                                           minLength={2}
                                           maxLength={10}
+                                          pattern="^[가-힣]{2,10}$"
                                           onChange={handleChangeJoin}
+                                          isInvalid={!isNameValid}
                             />
                             <Form.Control.Feedback type="invalid">
-                                이름을 다시 확인해주세요.
+                                이름을 확인해주세요.
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
@@ -347,13 +418,12 @@ const JoinInputPage = () => {
                                           name="memberPhone"
                                           placeholder="-없이 숫자만 입력해주세요"
                                           required
-                                          minLength={11}
+                                          minLength={10}
                                           maxLength={11}
-                                          pattern={"^[\\d]*$"}
-                                          onChange={handleChangeJoin}
+                                          pattern="^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$"                                          onChange={handleChangeJoin}
                             />
                             <Form.Control.Feedback type="invalid">
-                                번호를 다시 확인해주세요.
+                                핸드폰 번호를 확인해주세요.
                             </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
@@ -404,7 +474,9 @@ const JoinInputPage = () => {
                                           minLength={8}
                                           maxLength={8}
                                           required
+                                          pattern="^[0-9]{8}$"
                                           onChange={handleChangeJoin}
+                                          isInvalid={!isMemBirthValid}
                             />
                             <Form.Control.Feedback type="invalid">
                                 생년월일을 다시 확인해주세요. (8자리 숫자)
@@ -422,9 +494,9 @@ const JoinInputPage = () => {
                                          name="memberLocal"
                                          required
                                          onChange={handleChangeJoin}
-                                         isInvalid={validated && (local === "" || local == "선택해주세요")} // 제출 후 잘못된 선택 시 invalid 처리
+                                         isInvalid={!isLocalValid}
                             >
-                                <option value="선택해주세요" selected>선택해주세요</option>
+                                <option value="">선택해주세요</option>
                                 <option value="서울">서울</option>
                                 <option value="부산">부산</option>
                                 <option value="대구">대구</option>
