@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @Builder
@@ -14,13 +16,32 @@ import java.time.LocalDate;
 public class ResSalesResultDTO {
 
     private String resDate;             // 예약 날짜
-    private LocalDate checkinDate;      // 체크인 날짜
-    private double scheduledAmount;      // 이용예정 금액
-    private int scheduledCount;          // 이용예정 건수
-    private double completedAmount;      // 이용완료 금액
-    private int completedCount;          // 이용완료 건수
-
+    private LocalDate checkinDate;
+    private double scheduledAmount;
+    private int scheduledCount;
+    private double completedAmount;
+    private int completedCount;
     private Long siteID;
+
+    private Map<Long, SiteSalesInfo> siteSalesMap = new HashMap<>();
+
+    public void addScheduledSale(Long siteId, double amount) {
+        scheduledCount++;
+        scheduledAmount += amount;
+        addSiteSale(siteId, amount, true);
+    }
+
+    public void addCompletedSale(Long siteId, double amount) {
+        completedCount++;
+        completedAmount += amount;
+        addSiteSale(siteId, amount, false);
+    }
+
+    public void addSiteSale(Long siteId, double amount, boolean isScheduled) {
+        SiteSalesInfo siteSalesInfo = siteSalesMap.getOrDefault(siteId, new SiteSalesInfo());
+        siteSalesInfo.addSales(amount);
+        siteSalesMap.put(siteId, siteSalesInfo);
+    }
 
     public ResSalesResultDTO(LocalDate date) {
         this.resDate = date.toString();

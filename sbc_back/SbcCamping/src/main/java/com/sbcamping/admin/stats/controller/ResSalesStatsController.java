@@ -1,10 +1,11 @@
 package com.sbcamping.admin.stats.controller;
 
+import com.sbcamping.admin.stats.dto.CancelStatsResponseDTO;
+import com.sbcamping.admin.stats.dto.SalesStatsResponseDTO;
 import com.sbcamping.admin.stats.service.ResSalesStatsService;
+import com.sbcamping.domain.Reservation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,90 +16,64 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Log4j2
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin/stats/reservation-sales")
-public class ResSalesStatsController { // 1. 예약 매출 통계 : 기간별, 사이트별 조회
+public class ResSalesStatsController {
 
-    @Autowired
     private final ResSalesStatsService service;
 
-    // 1-1 매출 현황 : 금액 가져오기, 예약 건수
     @GetMapping("/sales")
-    public ResponseEntity<?> getSalesStats(
+    public ResponseEntity<SalesStatsResponseDTO> getSalesStats(
             @RequestParam String dateType,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long siteId
     ) {
-        LocalDate start = startDate;
-        LocalDate end;
+        log.info("Fetching sales stats: dateType={}, startDate={}, endDate={}, siteId={}", dateType, startDate, endDate, siteId);
 
-        switch (dateType) {
-            case "day":
-                end = endDate != null ? endDate : start;
-                break;
-            case "month":
-                YearMonth yearMonth = YearMonth.from(start);
-                end = yearMonth.atEndOfMonth();
-                break;
-            case "year":
-                end = start.withMonth(12).withDayOfMonth(31);
-                break;
-            default:
-                return ResponseEntity.badRequest().body("Invalid date type");
+        LocalDate end = determineEndDate(dateType, startDate, endDate);
+        if (end == null) {
+            return ResponseEntity.badRequest().body(null); // Bad request 처리
         }
 
-        return ResponseEntity.ok(service.sales(start, end, siteId, dateType));
+        SalesStatsResponseDTO response = service.sales(dateType, startDate, end, siteId);
+        log.info("Fetched sales stats: response={}", response);
+        return ResponseEntity.ok(response); // DTO 사용
     }
 
-    // 1-2 예약 취소 현황 : 예약 상태, (취소 건수, 취소 금액)
     @GetMapping("/cancel")
-    public ResponseEntity<?> getCancelledSalesStats(
+    public ResponseEntity<CancelStatsResponseDTO> getCancelledSalesStats(
             @RequestParam String dateType,
-            @RequestParam String startDate,
-            @RequestParam(required = false) String endDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long siteId
     ) {
-        log.info("Received request for cancel stats: dateType={}, startDate={}, endDate={}, siteId={}",
-                dateType, startDate, endDate, siteId);
+        log.info("Fetching sales stats: dateType={}, startDate={}, endDate={}, siteId={}", dateType, startDate, endDate, siteId);
 
-        try {
-            LocalDate start = parseDate(startDate, dateType);
-            LocalDate end = (endDate != null && !endDate.trim().isEmpty()) ? parseDate(endDate, dateType) : null;
-
-            return ResponseEntity.ok(service.cancel(start, end, siteId, dateType));
-        } catch (Exception e) {
-            log.error("Error processing cancel stats request", e);
-            return ResponseEntity.badRequest().body("Error processing request: " + e.getMessage());
+        LocalDate end = determineEndDate(dateType, startDate, endDate);
+        if (end == null) {
+            return ResponseEntity.badRequest().body(null); // Bad request 처리
         }
+        CancelStatsResponseDTO response = service.cancel(dateType, startDate, end, siteId); // 서비스 호출
+        return ResponseEntity.ok(response); // DTO 사용
     }
 
-    private LocalDate parseDate(String date, String dateType) {
-        if (date == null || date.trim().isEmpty()) {
-            throw new IllegalArgumentException("Date string cannot be null or empty");
-        }
-
-        switch (dateType.toLowerCase()) {
+    private LocalDate determineEndDate(String dateType, LocalDate startDate, LocalDate endDate) {
+        switch (dateType) {
             case "day":
-                return LocalDate.parse(date);
+                return endDate != null ? endDate : startDate;
             case "month":
-                if (date.length() == 7) { // Format: yyyy-MM
-                    return YearMonth.parse(date).atDay(1);
-                } else {
-                    return LocalDate.parse(date);
-                }
+                return YearMonth.from(startDate).atEndOfMonth();
             case "year":
-                if (date.length() == 4) { // Format: yyyy
-                    return LocalDate.of(Integer.parseInt(date), 1, 1);
-                } else {
-                    return LocalDate.parse(date);
-                }
+                return startDate.withMonth(12).withDayOfMonth(31);
             default:
-                throw new IllegalArgumentException("Invalid date type: " + dateType);
+                return null;
         }
     }
+
 }
