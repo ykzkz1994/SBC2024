@@ -60,8 +60,8 @@ const MainPage = () => {
             <BasicLayout>
                 {/* 메인컨텐츠 */}
                 <div id='communitywrap' className='m-100 border-0'>
-                    <div id='guidebox' className='p-20000 border-0'>
-                        <div id='guidewrap' className='m-600 border-4 h-100 round-10 shadow-cyan-50'>
+                    <div id='calendarbox' className='p-2 border-0'>
+                        <div id='calendarwrap' className='m-600 border-4 h-100 round-1 shadow-sky-700 '>
                             <ResCalendar/>
                         </div>
                     </div>
