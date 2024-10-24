@@ -111,70 +111,80 @@ function CommentComponent() {
             {/* 댓글 목록 렌더링 */}
             <div>
                 {serverData.length > 0 ? (
-                    serverData.map(comment => (
-                        <div key={comment.qcommentID}
-                             className="text-gray-700 p-3 m-5 border border-gray-300 rounded-lg relative">
-                            <div className="flex justify-between items-center mb-2">
-                                {comment.member.memberRole === "ROLE_ADMIN" ? (
-                                    <p className="font-bold text-lg">🛠 관리자</p>
+                    serverData
+                        .sort((a, b) => {
+                            // 관리자 댓글을 먼저 배치
+                            if (a.member.memberRole === "ROLE_ADMIN" && b.member.memberRole !== "ROLE_ADMIN") {
+                                return -1; // a가 먼저 오도록
+                            }
+                            if (a.member.memberRole !== "ROLE_ADMIN" && b.member.memberRole === "ROLE_ADMIN") {
+                                return 1; // b가 먼저 오도록
+                            }
+                            return 0; // 같은 역할일 경우 정렬하지 않음
+                        })
+                        .map(comment => (
+                            <div key={comment.qcommentID}
+                                 className="text-gray-700 p-3 m-5 border border-gray-300 rounded-lg relative">
+                                <div className="flex justify-between items-center mb-2">
+                                    {comment.member.memberRole === "ROLE_ADMIN" ? (
+                                        <p className="font-bold text-lg">🛠 관리자</p>
+                                    ) : (
+                                        <p className="font-bold text-lg">{comment.member.memberName}</p>
+                                    )}
+                                    <p className="text-sm text-gray-500">{new Date(comment.qcommentDate).toLocaleString('ko-KR', {
+                                        year: 'numeric',
+                                        month: '2-digit',
+                                        day: '2-digit',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                        hour12: false,
+                                    })}</p>
+                                </div>
+                                {editingCommentId === comment.qcommentID ? (
+                                    <form onSubmit={handleSubmitEdit} className="mt-2">
+                                        <input
+                                            type="text"
+                                            value={editingCommentContent}
+                                            onChange={handleEditChange}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                        <div className="flex justify-end mt-2 space-x-2">
+                                            <Button type="submit" className="px-3 py-1">수정 완료</Button>
+                                            <Button type="button" onClick={() => setEditingCommentId(null)}
+                                                    className="px-3 py-1">취소</Button>
+                                        </div>
+                                    </form>
                                 ) : (
-                                    <p className="font-bold text-lg">{comment.member.memberName}</p>
-                                )}
-                                <p className="text-sm text-gray-500">{new Date(comment.qcommentDate).toLocaleString('ko-KR', {
-                                    year: 'numeric',
-                                    month: '2-digit',
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    second: '2-digit',
-                                    hour12: false,
-                                })}</p>
-                            </div>
-                            {editingCommentId === comment.qcommentID ? (
-                                <form onSubmit={handleSubmitEdit} className="mt-2">
-                                    <input
-                                        type="text"
-                                        value={editingCommentContent}
-                                        onChange={handleEditChange}
-                                        className="w-full p-2 border rounded"
-                                    />
-                                    <div className="flex justify-end mt-2 space-x-2">
-                                        <Button type="submit" className="px-3 py-1">수정 완료</Button>
-                                        <Button type="button" onClick={() => setEditingCommentId(null)}
-                                                className="px-3 py-1">취소</Button>
-                                    </div>
-                                </form>
-                            ) : (
-                                <>
-                                    <p className="mb-2">{comment.qcommentContent}</p>
-                                    <div className="flex justify-end space-x-2">
-                                        {loginState.member.memberRole === "ROLE_ADMIN" && (
-                                            <>
-                                                {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
-                                                {loginState.member.memberId === comment.member.memberID && (
+                                    <>
+                                        <p className="mb-2">{comment.qcommentContent}</p>
+                                        <div className="flex justify-end space-x-2">
+                                            {loginState.member.memberRole === "ROLE_ADMIN" && (
+                                                <>
+                                                    {loginState.member.memberId === comment.member.memberID && (
+                                                        <Button
+                                                            onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
+                                                            className="px-3 py-1">수정</Button>
+                                                    )}
+                                                    <Button onClick={() => handleClickDelete(comment.qcommentID)}
+                                                            className="px-3 py-1 bg-red-600">삭제</Button>
+                                                </>
+                                            )}
+
+                                            {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === comment.member.memberID && (
+                                                <>
                                                     <Button
                                                         onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
                                                         className="px-3 py-1">수정</Button>
-                                                )}
-                                                <Button onClick={() => handleClickDelete(comment.qcommentID)}
-                                                        className="px-3 py-1 bg-red-600">삭제</Button>
-                                            </>
-                                        )}
-
-                                        {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === comment.member.memberID && (
-                                            <>
-                                                <Button
-                                                    onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
-                                                    className="px-3 py-1">수정</Button>
-                                                <Button onClick={() => handleClickDelete(comment.qcommentID)}
-                                                        className="px-3 py-1">삭제</Button>
-                                            </>
-                                        )}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    ))
+                                                    <Button onClick={() => handleClickDelete(comment.qcommentID)}
+                                                            className="px-3 py-1">삭제</Button>
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        ))
                 ) : (
                     <p>댓글이 없습니다.</p>
                 )}

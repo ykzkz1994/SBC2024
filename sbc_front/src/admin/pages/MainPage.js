@@ -1,31 +1,47 @@
 import BasicLayout from '../layouts/BasicLayout';
 import '../css/mainPage.css';
-import useCustomLogin from "../../hooks/useCustomLogin";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 import ResCalendar from "../components/res/ResCalendar";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 const MainPage = () => {
     const loginState = useSelector((state) => state.loginSlice);
     const { isLogin } = useCustomLogin();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
+    const [debugInfo, setDebugInfo] = useState({});
 
     useEffect(() => {
-        // 로그인 상태와 권한을 체크
-        if (isLogin && loginState.member.memberRole === "ROLE_ADMIN") {
-            setIsLoading(false);
-        } else {
-            const timer = setTimeout(() => {
-                navigate('/'); // React Router로 리디렉션
-            }, 1500); // 1.5초 후 리디렉션
+        console.log("Current login state:", loginState);
+        console.log("Is logged in:", isLogin);
 
-            return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
+        setDebugInfo({
+            isLogin,
+            memberRole: loginState.member?.memberRole,
+            loginStateDetails: JSON.stringify(loginState, null, 2)
+        });
+
+        if (isLogin) {
+            if (loginState.member?.memberRole === "ROLE_ADMIN") {
+                setIsLoading(false);
+                console.log("Admin access granted");
+            } else {
+                console.log("Redirecting to home: Not an admin");
+                navigate('/');
+            }
+        } else {
+            console.log("Not logged in, redirecting to login page");
+            const timer = setTimeout(() => {
+                navigate('/login');
+            }, 1500);
+
+            return () => clearTimeout(timer);
         }
-    }, [isLogin, loginState.member.memberRole, navigate]);
+    }, [isLogin, loginState, navigate]);
 
     // 로딩 중이거나 관리자 권한이 없는 경우 메시지 출력
     if (isLoading) {

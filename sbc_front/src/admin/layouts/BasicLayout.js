@@ -21,6 +21,7 @@ const BasicLayout = ({ children }) => {
   }
 
   const navigate = useNavigate();
+  const loginState = useSelector(state => state.loginSlice);
   const dispatch = useDispatch();
 
   const handleClickLogout = () => {
@@ -36,15 +37,15 @@ const BasicLayout = ({ children }) => {
         <Navbar bg="white" data-bs-theme="light">
           <Container>
             <img
-                src={logo2}
+                src={logo}
                 alt="로고"
                 style={{width: '600px', height: 'auto'}}
-                onClick={() => navigate("/admin")}// 원하는 크기로 조정
+                onClick={() => navigate("/admin")}
+                className="cursor-pointer"// 원하는 크기로 조정
             />
             <div id="">
               <Nav className="justify-content-end">
                 <Nav.Link onClick={handleClickLogout}>로그아웃</Nav.Link>
-                <Nav.Link href="/" >사용자페이지로</Nav.Link>
               </Nav>
               <Nav className="justify-content-end">
                 <NavDropdown href="/admin/site" title="구역 관리">

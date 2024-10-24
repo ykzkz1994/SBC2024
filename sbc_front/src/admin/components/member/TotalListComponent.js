@@ -82,21 +82,27 @@ function TotalListComponent(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {serverData.dtoList
-                    .filter(member => member.memberRole !== 'ROLE_ADMIN') // 'ROLE_ADMIN'이 아닌 경우만 필터링
-                    .map(member => (
-                        <tr key={member.memberID}>
-                            <td>{member.memberID}</td>
-                            <td>{member.memberEmail}</td>
-                            <td>{member.memberName}</td>
-                            <td>{member.memberPhone}</td>
-                            <td>{member.memberGender}</td>
-                            <td>{member.memberBirth}</td>
-                            <td>{member.memberLocal}</td>
-                            <td>{formatDate(new Date(member.memberRegDate))}</td>
-                            <td style={{ color: 'red' }}>{member.memberStatus.trim().toUpperCase() === "ON" ? '' : '휴면'}</td>
-                        </tr>
-                    ))}
+                {serverData.dtoList.length === 0 ? ( // 데이터가 없을 경우 메시지 표시
+                    <tr>
+                        <td colSpan="9" className="text-center">조회된 데이터가 없습니다.</td>
+                    </tr>
+                ) : (
+                    serverData.dtoList
+                        .filter(member => member.memberRole !== 'ROLE_ADMIN') // 'ROLE_ADMIN'이 아닌 경우만 필터링
+                        .map(member => (
+                            <tr key={member.memberID}>
+                                <td>{member.memberID}</td>
+                                <td>{member.memberEmail}</td>
+                                <td>{member.memberName}</td>
+                                <td>{member.memberPhone}</td>
+                                <td>{member.memberGender}</td>
+                                <td>{member.memberBirth}</td>
+                                <td>{member.memberLocal}</td>
+                                <td>{formatDate(new Date(member.memberRegDate))}</td>
+                                <td style={{ color: 'red' }}>{member.memberStatus.trim().toUpperCase() === "ON" ? '' : '휴면'}</td>
+                            </tr>
+                        ))
+                )}
                 </tbody>
             </Table>
             <BootstrapPagination
