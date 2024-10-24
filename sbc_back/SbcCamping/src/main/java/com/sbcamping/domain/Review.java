@@ -62,6 +62,10 @@ public class Review {
     private char rtag_View = 'N'; // 풍경 태그
 
     @ManyToOne
+    @JoinColumn(name = "RES_ID", referencedColumnName = "RES_ID")
+    private Reservation review;
+
+    @ManyToOne
     @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
     private Member member;
 
