@@ -59,11 +59,6 @@ useEffect(() => {
     }
 }, [qbID, loginState]);
 
-
-
-
-
-
     const handleChangeQna = (e) => {
         const { name, value } = e.target;
         setQna(prev => ({

@@ -90,4 +90,37 @@ public class ReviewController {
             throw e;
         }
     }
+
+    // 7. 수정
+    @PutMapping("/modify/{reviewId}")
+    public Map<String, String> modify(@PathVariable Long reviewId, ReviewReqDTO reviewDTO) {
+        log.info("modify...........", reviewId);
+
+        ReviewDTO oldReviewDTO = service.get(reviewId);
+        if (oldReviewDTO == null) {
+            throw new EntityNotFoundException("게시글을 찾을수가 없엉");
+        }
+
+        log.info("게시글 수정 전:", oldReviewDTO);
+        reviewDTO.setReviewID(reviewId);
+
+        if (reviewDTO.getFile() != null) {
+            MultipartFile file = reviewDTO.getFile();
+            String newUploadedFileName = fileUtil.saveFile(file);
+            reviewDTO.setReviewAttachment(newUploadedFileName);
+
+            String oldUploadedFileName = oldReviewDTO.getReviewAttachment();
+            if (oldUploadedFileName != null) {
+                try {
+                    fileUtil.deleteFile(oldUploadedFileName);
+                    log.info("삭제완료", oldUploadedFileName);
+                } catch (Exception e) {
+                    log.error("파일 삭제 중 오류 발생:", oldUploadedFileName, e);
+                }
+            }
+        }
+
+        service.modify(reviewDTO);
+        return Map.of("RESULT", "SUCCESS");
+    }
 }

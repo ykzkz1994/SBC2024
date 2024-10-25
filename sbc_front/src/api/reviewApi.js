@@ -67,3 +67,10 @@ export const deleteOne = async (reviewId) => {
     const res = await axios.delete(`${prefix}/delete/${reviewId}`)
     return res.data
 }
+
+// 게시글 수정
+export const PutOne = async (reviewID, review) => {
+    const header = {headers: {"Content-Type" : "multipart/form-data"}};
+    const res = await axios.put(`${prefix}/modify/${reviewID}`, review, header)
+    return res.data
+}

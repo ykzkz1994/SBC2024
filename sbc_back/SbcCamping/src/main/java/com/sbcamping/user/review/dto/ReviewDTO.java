@@ -20,7 +20,7 @@ public class ReviewDTO {
 
     private Member member; // 멤버
 
-    private Reservation res; // 예약
+    private Reservation review; // 예약
 
     private String reviewTitle; // 리뷰 제목
 
