@@ -58,15 +58,20 @@ const TotalList = () => {
         settingReservation();
     }, []);
 
-    // 검색어와 선택된 컬럼에 따라 필터링된 예약 데이터 할당
-    const filteredReservations = reservations.filter((reservation) => {
 
-        //검색어가 없다면 true를 반환해서 필터링 되지 않은 데이터를 출력
-        if (!searchTerm) return true;
+const filteredReservations = reservations.filter((reservation) => {
+    if (!searchTerm) return true;
 
-        const value = reservation[selectedColumn]?.toString().toLowerCase();
-        return value?.includes(searchTerm.toLowerCase());
-    });
+    // 필드가 중첩된 경우 객체 내부의 값을 선택
+    const value = selectedColumn.includes('member')//삼항연산자
+        ? reservation.member?.[selectedColumn.split('.')[1]]
+        : selectedColumn.includes('site')
+            ? reservation.site?.[selectedColumn.split('.')[1]]
+            : reservation[selectedColumn];
+
+    return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
+});
+
 
     const sortedReservations = [...filteredReservations].sort((a, b) => {
     if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
@@ -120,6 +125,18 @@ const TotalList = () => {
         setCurrentPage(1);
     }, [searchTerm, selectedColumn]);//검색어나 설정 컬럼이 바뀔 경우
 
+
+
+    // 정렬 아이콘을 렌더링하는 함수
+const renderSortIcon = (column) => {
+    if (sortColumn !== column) return null; // 현재 정렬 컬럼이 아닐 경우 아이콘 표시 안함
+    if (sortOrder === 'asc') {
+        return <i className="bi bi-arrow-up ms-2"></i>; // 오름차순 아이콘
+    } else {
+        return <i className="bi bi-arrow-down ms-2"></i>; // 내림차순 아이콘
+    }
+};
+
     return (
         <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
             {/* 페이지 제목 */}
@@ -131,6 +148,7 @@ const TotalList = () => {
                 setSearchTerm={setSearchTerm}
                 selectedColumn={selectedColumn}
                 setSelectedColumn={setSelectedColumn}
+
             />
 
             {/* 에러 메시지 표시 */}
@@ -140,18 +158,18 @@ const TotalList = () => {
             <Table bordered hover responsive className="text-sm">
                 <thead>
                 <tr className="bg-blue-200">
-                    <th onClick={() => handleSort('resId')}>예약 번호</th>
-                    <th onClick={() => handleSort('resUserName')}>예약자 이름</th>
-                    <th onClick={() => handleSort('resUserPhone')}>예약자 전화번호</th>
-                    <th onClick={() => handleSort('resPeople')}>인원수</th>
-                    <th onClick={() => handleSort('checkinDate')}>입실 날짜</th>
-                    <th onClick={() => handleSort('checkoutDate')}>퇴실 날짜</th>
-                    <th onClick={() => handleSort('resDate')}>예약 날짜</th>
-                    <th onClick={() => handleSort('resTotalPay')}>총 결제 금액</th>
-                    <th onClick={() => handleSort('resCancelDate')}>취소 날짜</th>
-                    <th onClick={() => handleSort('resCancelReason')}>취소 사유</th>
-                    <th onClick={() => handleSort('memberName')}>회원 이름</th>
-                    <th onClick={() => handleSort('siteName')}>구역 이름</th>
+                    <th onClick={() => handleSort('resId')} style={{cursor: 'pointer'}}>예약 번호{renderSortIcon('resId')}</th>
+                    <th onClick={() => handleSort('resUserName')} style={{cursor: 'pointer'}}>예약자 이름{renderSortIcon('resUserName')}</th>
+                    <th onClick={() => handleSort('resUserPhone')} style={{cursor: 'pointer'}}>예약자 전화번호{renderSortIcon('resUserPhone')}</th>
+                    <th onClick={() => handleSort('resPeople')} style={{cursor: 'pointer'}}>인원수{renderSortIcon('resPeople')}</th>
+                    <th onClick={() => handleSort('checkinDate')} style={{cursor: 'pointer'}}>입실 날짜{renderSortIcon('checkinDate')}</th>
+                    <th onClick={() => handleSort('checkoutDate')} style={{cursor: 'pointer'}}>퇴실 날짜{renderSortIcon('checkoutDate')}</th>
+                    <th onClick={() => handleSort('resDate')} style={{cursor: 'pointer'}}>예약 날짜{renderSortIcon('resDate')}</th>
+                    <th onClick={() => handleSort('resTotalPay')} style={{cursor: 'pointer'}}>총 결제 금액{renderSortIcon('resTotalPay')}</th>
+                    <th onClick={() => handleSort('resCancelDate')} style={{cursor: 'pointer'}}>취소 날짜{renderSortIcon('resCancelDate')}</th>
+                    <th onClick={() => handleSort('resCancelReason')} style={{cursor: 'pointer'}}>취소 사유{renderSortIcon('resCancelReason')}</th>
+                    <th onClick={() => handleSort('memberName')} style={{cursor: 'pointer'}}>회원 이름{renderSortIcon('memberName')}</th>
+                    <th onClick={() => handleSort('siteName')} style={{cursor: 'pointer'}}>구역 이름{renderSortIcon('siteName')}</th>
 
                 </tr>
                 </thead>
