@@ -1,5 +1,6 @@
 import '../css/menu.css';
 import {Link, useLocation} from "react-router-dom"
+import camp from '../images/camping-area.jpg'
 
 const CampingMenu = () => {
     const location = useLocation();
@@ -9,7 +10,7 @@ const CampingMenu = () => {
     return(
         <>        
         <div className='imgwrap'>
-            <img src="https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" id="menuImg"></img>
+            <img src={camp} id="menuImg"></img>
         </div>
         <div id='menubuttonwrap'>
           <Link to={'/camping/intro'} className={`menubutton ${isActive('/camping/intro') ? 'active' : ''}`}>캠핑장 소개</Link>

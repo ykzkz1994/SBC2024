@@ -3,6 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getOne, putOne } from "../../api/qnaApi";
 import defaultImage from "../../../images/default.jpg";
 import {prefix} from "../../../api/camperApi";
+//현재 로그인중인 유저 정보가져오기
+import {useSelector} from "react-redux";
+
+
+
+
 
 const initState = {
     qBoardTitle: '',
@@ -19,21 +25,44 @@ function ModifyComponent(props) {
     const [showDeleteButton, setShowDeleteButton] = useState(true); // 버튼 표시 상태
     const [imageLoadError, setImageLoadError] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
+        //현재 로그인중인 사용자의 정보를 받아오는 변수 매핑으로 치고 들어왔을 때 권한을 검증하여 관리자가 아닌경우 메인페이지로 리다이랙트 하기위해
+    const loginState = useSelector((state) => state.loginSlice)
+
+
+useEffect(() => {
+    const fetchData = async () => {
+        try {
             const data = await getOne(qbID);
             console.log(data);
+
             // 데이터 구조 확인 후 상태 설정
             setQna({
                 qBoardTitle: data.qboardTitle || '',
                 qBoardContent: data.qboardContent || '',
                 qBoardAttachment: data.qboardAttachment || null,
-                file: null // 파일은 처음에는 null로 설정
+                file: null
             });
 
-        };
+            // 현재 로그인 중인 유저와 글 작성자의 ID를 비교
+            if (data.member?.memberId && loginState.member?.memberId) {
+                if (data.member.memberId !== loginState.member.memberId) {
+                    navigate('/admin/qnas/list');
+                }
+            }
+        } catch (error) {
+            console.error("Failed to fetch qna data:", error);
+            navigate('/admin/qnas/list'); // 데이터 가져오기 실패 시에도 리다이렉트
+        }
+    };
+    if (loginState && loginState.member) {
         fetchData();
-    }, [qbID]);
+    }
+}, [qbID, loginState]);
+
+
+
+
+
 
     const handleChangeQna = (e) => {
         const { name, value } = e.target;

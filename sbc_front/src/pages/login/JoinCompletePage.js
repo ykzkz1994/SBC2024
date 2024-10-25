@@ -20,7 +20,7 @@ const JoinCompletePage = () =>{
             </ListGroup>
             <div className="comwrap">
                 <h4>회원가입이 완료되었습니다.</h4>
-                서스펜션 브릿지 캠핑장 회원이 되신 것을 환영합니다.<br></br>
+                Suspension Bridge 캠핑장 회원이 되신 것을 환영합니다.<br></br>
                 실시간 예약과 커뮤니티 게시판을 이용하실 수 있습니다.
             </div>
             <div className="buttonwrap">

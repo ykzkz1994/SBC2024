@@ -2,33 +2,24 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
-import com.sbcamping.user.member.dto.MemberDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional
 @Slf4j
 @AllArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
@@ -39,39 +30,37 @@ public class MemberServiceImpl implements MemberService{
     // 회원 비활동 처리(탈퇴)
     @Override
     public String withdraw(Long memberId, String memberPw) {
-        log.info("------- withdraw memberId : " + memberId + " memberPw : " + memberPw.substring(7));
+        log.info("------- withdraw memberId : {} memberPw : {}", memberId, memberPw.substring(7));
         Member member = memberRepository.findById(memberId).orElse(null);
-        String password = member.getMemberPw();
+        String password = Objects.requireNonNull(member).getMemberPw();
         boolean result = passwordEncoder.matches(memberPw, password);
-        String msg = null;
+        String msg;
 
-        // member를 찾을 수 없거나 비밀번호가 일치하지 않으면 fail
-        if(result == false || member == null) {
+        // member 를 찾을 수 없거나 비밀번호가 일치하지 않으면 fail
+        if (!result) {
             msg = "fail";
             return msg;
         }
 
         // 비밀번호가 일치하는 경우
-        if (result) {
-            List<Reservation> resList = reservationRepository.findByMemberId(memberId);
-            LocalDate today = LocalDate.now();
-            // 예약정보가 "예약완료"인 경우(예약취소는 제외)
-            for(int i=0; i<resList.size(); i++) {
-                Reservation reservation = resList.get(i);
-                String status = reservation.getResStatus();
-                if(status == "예약완료"){
-                    LocalDate checkoutDate = reservation.getCheckoutDate();
-                    // 퇴실일 날짜가 오늘보다 이후 날짜면 탈퇴 불가능
-                    if(checkoutDate.isAfter(today)) {
-                        msg = "fail";
-                        return msg;
-                    }
+        List<Reservation> resList = reservationRepository.findByMemberId(memberId);
+        LocalDate today = LocalDate.now();
+        // 예약정보가 "예약완료"인 경우(예약취소는 제외)
+        for (Reservation reservation : resList) {
+            String status = reservation.getResStatus();
+            if (status.equals("예약완료")) {
+                LocalDate checkoutDate = reservation.getCheckoutDate();
+                // 퇴실일 날짜가 오늘보다 이후 날짜면 탈퇴 불가능
+                if (checkoutDate.isAfter(today)) {
+                    msg = "fail";
+                    return msg;
                 }
             }
-            member.changeStatus("OFF");
-            memberRepository.save(member);
-            msg = "success";
         }
+        member.changeStatus("OFF");
+        memberRepository.save(member);
+        msg = "success";
+
         return msg;
     }
 
@@ -79,7 +68,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void cancelRes(Long resId, String reason) {
         Reservation res = reservationRepository.findById(resId).orElse(null);
-        res.setResStatus("예약취소");
+        Objects.requireNonNull(res).setResStatus("예약취소");
         res.setResCancelDate(LocalDate.now());
         // 예약 취소 사유도 추가
         res.setResCancelReason(reason);
@@ -90,32 +79,29 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Reservation getResDetail(Long resId) {
         Reservation res = reservationRepository.findById(resId).orElse(null);
-        log.info("res : " + res);
+        log.info("res : {}", res);
         return res;
     }
 
     // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
-        List list = reservationRepository.findByMemberIdOOrderByResId(memberId);
-        log.info("예약내역 : " + list);
-        if(list == null){
-            list.add("예약내역이 없습니다.");
-        }
+        List<Reservation> list = reservationRepository.findByMemberIdOOrderByResId(memberId);
+        log.info("예약내역 : {}", list);
         return list;
     }
 
     // 비밀번호 인증 (회원정보수정 들어갈 때 사용)
     @Override
     public String authPw(Long memberId, String memberPw) {
-        log.info("memberId : " + memberId + " memberPw : " + memberPw);
+        log.info("memberId : {} memberPw : {}", memberId, memberPw);
         Member member = memberRepository.findById(memberId).orElse(null);
-        String password = member.getMemberPw();
+        String password = Objects.requireNonNull(member).getMemberPw();
         boolean result = passwordEncoder.matches(memberPw, password);
-        String msg = null;
-        if(result == false || member == null) {
+        String msg;
+        if (!result) {
             msg = "fail";
-        } else if(result){
+        } else {
             msg = "success";
         }
         return msg;
@@ -124,8 +110,7 @@ public class MemberServiceImpl implements MemberService{
     // 회원명 + 이메일로 회원 찾기 (비밀번호 찾기 1)
     @Override
     public Member findMemberByNameAndEmail(Member member) {
-        Member memResult = memberRepository.findByMemberNameAndMemberEmail(member.getMemberName(), member.getMemberEmail());
-        return memResult;
+        return memberRepository.findByMemberNameAndMemberEmail(member.getMemberName(), member.getMemberEmail());
     }
 
     // 회원 비밀번호 변경 (비밀번호 찾기 2)
@@ -133,13 +118,18 @@ public class MemberServiceImpl implements MemberService{
     public String updatePw(Member mem) {
         // ID로 member 조회
         Member member = memberRepository.findById(mem.getMemberID()).orElse(null);
-        String msg = null;
-        if(member.getMemberPw() != null && member.getMemberEmail() != null){
+        String msg;
+        log.info("회원 상태 : {}", member.getMemberStatus());
+        if(member.getMemberStatus().equals("OFF")){
+            msg = "fail";
+            return msg;
+        }
+        if (Objects.requireNonNull(member).getMemberPw() != null && member.getMemberEmail() != null) {
             // 비밀번호 변경
             member.changePw(passwordEncoder.encode(mem.getMemberPw()));
             memberRepository.save(member);
             msg = "success";
-        } else{
+        } else {
             msg = "fail";
         }
         return msg;
@@ -149,16 +139,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public String findEmail(String memberName, String memberPhone) {
         Member member = memberRepository.findByMemberNameAndMemberPhone(memberName, memberPhone);
-        log.info("이메일찾기 : " + member.toString());
-        String email;
-        if(member == null) {
-            email = "이메일을 찾을 수 없습니다.";
-        } else{
-            email = member.getMemberEmail();
-        }
-        return email;
+        log.info("이메일찾기 : {}", member.toString());
+        return member.getMemberEmail();
     }
-
 
 
     // 회원 등록
@@ -173,10 +156,10 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public String emailCheck(String memberEmail) {
         Integer count = memberRepository.countByMemberEmail(memberEmail);
-        String msg = "";
-        if(count == 0){
+        String msg;
+        if (count == 0) {
             msg = "enable";
-        } else{
+        } else {
             msg = "disable";
         }
         return msg;
@@ -190,35 +173,35 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberRepository.findById(newMember.getMemberID()).get();
 
         // 수정할 값이 있으면 수정
-        if(newMember.getMemberPhone() != null && (!newMember.getMemberPhone().equals(member.getMemberPhone()))) {
+        if (newMember.getMemberPhone() != null && (!newMember.getMemberPhone().equals(member.getMemberPhone()))) {
             member.changePhone(newMember.getMemberPhone());
             log.info("핸드폰 번호 수정");
         }
-        if(newMember.getMemberBirth() != null && (!newMember.getMemberBirth().equals(member.getMemberBirth()))) {
+        if (newMember.getMemberBirth() != null && (!newMember.getMemberBirth().equals(member.getMemberBirth()))) {
             member.changeBirth(newMember.getMemberBirth());
             log.info("생년월일 수정");
         }
         Character gender = newMember.getMemberGender();
-        if(gender != null && (!gender.equals(member.getMemberGender()))) {
+        if ((!gender.equals(member.getMemberGender()))) {
             member.changeGender(newMember.getMemberGender());
             log.info("성별 수정");
         }
-        if(newMember.getMemberLocal() != null && (!newMember.getMemberLocal().equals(member.getMemberLocal()))) {
+        if (newMember.getMemberLocal() != null && (!newMember.getMemberLocal().equals(member.getMemberLocal()))) {
             member.changeLocal(newMember.getMemberLocal());
             log.info("지역 수정");
         }
-        if(newMember.getMemberName() != null && (!newMember.getMemberName().equals(member.getMemberName()))) {
+        if (newMember.getMemberName() != null && (!newMember.getMemberName().equals(member.getMemberName()))) {
             member.changeName(newMember.getMemberName());
             log.info("이름 수정");
         }
-        if(newMember.getMemberPw() != null && newMember.getMemberPw() != "none" && (!passwordEncoder.matches(newMember.getMemberPw(), member.getMemberPw()))) {
+        log.info("mem pw :{}", newMember.getMemberPw());
+        if (newMember.getMemberPw() != null && (!newMember.getMemberPw().equals("none")) && (!passwordEncoder.matches(newMember.getMemberPw(), member.getMemberPw()))) {
             member.changePw(passwordEncoder.encode(newMember.getMemberPw()));
             log.info("비밀번호 수정");
         }
 
         // 회원정보 수정
-        Member memResult = memberRepository.save(member);
-        return memResult;
+        return memberRepository.save(member);
     }
 
     // 회원 삭제

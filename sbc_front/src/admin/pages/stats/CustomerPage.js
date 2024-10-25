@@ -1,10 +1,8 @@
 import CustomerComponent from "../../components/stats/CustomerComponent";
 import ReviewComponent from "../../components/stats/ReviewComponent";
 import {useState} from "react";
-import DateSearchComponent from "../../components/stats/DateSearchComponent";
 import {Tab, Tabs} from "react-bootstrap";
 import SalesComponent from "../../components/stats/SalesComponent";
-import ResRateComponent from "../../components/stats/ResRateComponent";
 import ResCancelComponent from "../../components/stats/ResCancelComponent";
 import {SiteSelect} from "./ReservationSalesPage";
 

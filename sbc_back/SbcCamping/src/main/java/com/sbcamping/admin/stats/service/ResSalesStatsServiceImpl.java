@@ -1,228 +1,276 @@
 package com.sbcamping.admin.stats.service;
 
-import com.sbcamping.admin.stats.dto.CustomerStatsReqDTO;
-import com.sbcamping.admin.stats.dto.ResCancelResultDTO;
-import com.sbcamping.admin.stats.dto.ResSalesResultDTO;
-import com.sbcamping.admin.stats.dto.ResStatsReqDTO;
-import com.sbcamping.admin.stats.repository.ReviewStatsRepository;
+import com.sbcamping.admin.stats.dto.*;
 import com.sbcamping.admin.stats.repository.StatsRepository;
 import com.sbcamping.domain.Reservation;
-import com.sbcamping.domain.Review;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class ResSalesStatsServiceImpl implements ResSalesStatsService {
 
-    @Autowired
-    private final StatsRepository statsRepository; // reservation -> member
+    private final StatsRepository statsRepository;
 
-    // 1-1 매출 현황 : 금액 가져오기, 예약 건수
+    private static final String DAY = "day";
+    private static final String MONTH = "month";
+    private static final String YEAR = "year";
+
     @Override
-    public Map<String, Object> sales(LocalDate startDate, LocalDate endDate, Long siteId, String dateType) {
-        List<Reservation> reservations;
-        if (siteId == null) {
-            reservations = statsRepository.findByDateBetween(startDate, endDate);
-        } else {
-            reservations = statsRepository.findByDateBetweenAndSiteId(startDate, endDate, siteId);
-        }
+    public SalesStatsResponseDTO sales(String dateType, LocalDate startDate, LocalDate endDate, Long siteId) {
+        log.info("Date range: {} to {}", startDate, endDate);
+        log.info("Fetching sales data: dateType={}, startDate={}, endDate={}, siteId={}", dateType, startDate, endDate, siteId);
 
+        List<Reservation> reservations = (siteId == null)
+                ? statsRepository.findByDateBetween(startDate, endDate)
+                : statsRepository.findByDateBetweenAndSiteId(startDate, endDate, siteId);
+
+        log.info("Found {} reservations", reservations.size());
+
+        Map<String, ResSalesResultDTO> salesResultMap = createDateRangeMap(startDate, endDate, dateType);
+        processReservations(reservations, salesResultMap, dateType);
+
+        Map<Long, SiteSalesInfo> siteTotals = calculateSiteTotals(salesResultMap);
+        Map<String, Object> totalStats = createTotalStats(salesResultMap);
+
+        List<ResSalesResultDTO> statsList = new ArrayList<>(salesResultMap.values());
+
+        SalesStatsResponseDTO response = new SalesStatsResponseDTO();
+        response.setStartDate(startDate);
+        response.setEndDate(endDate);
+        response.setSiteId(siteId);
+        response.setDateType(dateType);
+        response.setStatsList(statsList);
+        response.setTotalStats(totalStats);
+        response.setSiteTotals(siteTotals);
+
+        log.info("Created SalesStatsResponseDTO: {}", response);
+
+        return response;
+    }
+
+    private Map<String, ResSalesResultDTO> createDateRangeMap(LocalDate startDate, LocalDate endDate, String dateType) {
         Map<String, ResSalesResultDTO> resultMap = new TreeMap<>();
-        LocalDate today = LocalDate.now();
 
-        // 날짜 범위 생성
-        switch (dateType) {
-            case "day":
-                for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-                    resultMap.put(date.toString(), new ResSalesResultDTO(date));
+        if (dateType.equals(YEAR)) {
+            // 연도별로 각 월에 대한 DTO 생성
+            for (int year = startDate.getYear(); year <= endDate.getYear(); year++) {
+                for (int month = 1; month <= 12; month++) {
+                    String key = String.format("%04d-%02d", year, month); // "YYYY-MM" 형식으로 키 생성
+                    resultMap.put(key, new ResSalesResultDTO(LocalDate.of(year, month, 1))); // 해당 월의 DTO 생성
                 }
-                break;
-            case "month":
-                LocalDate monthStart = startDate.withDayOfMonth(1);
-                LocalDate monthEnd = endDate.withDayOfMonth(endDate.lengthOfMonth());
-                for (LocalDate date = monthStart; !date.isAfter(monthEnd); date = date.plusDays(1)) {
-                    resultMap.put(date.toString(), new ResSalesResultDTO(date));
-                }
-                break;
-            case "year":
-                for (int year = startDate.getYear(); year <= endDate.getYear(); year++) {
-                    for (int month = 1; month <= 12; month++) {
-                        LocalDate date = LocalDate.of(year, month, 1);
-                        resultMap.put(date.format(DateTimeFormatter.ofPattern("yyyy-MM")), new ResSalesResultDTO(date));
-                    }
-                }
-                break;
+            }
+        } else if (dateType.equals(MONTH)) {
+            // 월별로 각 일자에 대한 DTO 생성
+            for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+                String key = date.toString(); // "YYYY-MM-DD" 형식으로 키 생성
+                resultMap.put(key, new ResSalesResultDTO(date)); // 일자별 DTO 생성
+            }
+        } else {
+            // 일자별로 키 생성
+            for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+                String key = getKey(date, dateType);
+                resultMap.put(key, new ResSalesResultDTO(date));
+            }
         }
 
-        // 예약 데이터 처리
+        return resultMap;
+    }
+
+    // 특정 날짜와 날짜 유형에 따라 집계 키를 생성
+    private String getKey(LocalDate date, String dateType) {
+        switch (dateType) {
+            case DAY:
+                return date.toString();
+            case MONTH:
+                return date.toString().substring(0, 7); // "YYYY-MM"
+            case YEAR:
+                return String.valueOf(date.getYear());
+            default:
+                throw new IllegalArgumentException("Invalid date type: " + dateType);
+        }
+    }
+
+    private void processReservations(List<Reservation> reservations, Map<String, ResSalesResultDTO> salesResultMap, String dateType) {
+        LocalDate today = LocalDate.now();
+        log.info("Processing {} reservations", reservations.size());
+
         for (Reservation reservation : reservations) {
             LocalDate resDate = reservation.getResDate();
             double amount = reservation.getResTotalPay();
             boolean isScheduled = reservation.getCheckinDate().isAfter(today);
+            long siteId = reservation.getSite().getSiteId();
 
-            String key = getKey(resDate, dateType);
-            ResSalesResultDTO dto = resultMap.get(key);
-            if (dto == null) continue;
+            log.info("Processing reservation: resDate={}, amount={}, isScheduled={}, siteId={}", resDate, amount, isScheduled, siteId);
+
+            String key;
+            if (dateType.equals(YEAR)) {
+                key = String.format("%04d-%02d", resDate.getYear(), resDate.getMonthValue()); // "YYYY-MM" 형식으로 키 생성
+            } else if (dateType.equals(MONTH)) {
+                key = resDate.toString(); // "YYYY-MM-DD" 형식으로 키 생성
+            } else {
+                key = getKey(resDate, dateType);
+            }
+
+            ResSalesResultDTO dto = salesResultMap.get(key);
+            if (dto == null) {
+                log.warn("No DTO found for key: {}", key);
+                continue;
+            }
 
             if (isScheduled) {
-                dto.setScheduledAmount(dto.getScheduledAmount() + amount);
-                dto.setScheduledCount(dto.getScheduledCount() + 1);
+                dto.addScheduledSale(siteId, amount);
+                log.info("Added scheduled sale: siteId={}, amount={}", siteId, amount);
             } else {
-                dto.setCompletedAmount(dto.getCompletedAmount() + amount);
-                dto.setCompletedCount(dto.getCompletedCount() + 1);
+                dto.addCompletedSale(siteId, amount);
+                log.info("Added completed sale: siteId={}, amount={}", siteId, amount);
+            }
+
+            // DTO에 추가된 후의 상태 로그
+            log.debug("Updated DTO for key {}: scheduledCount={}, completedCount={}, scheduledAmount={}, completedAmount={}",
+                    key, dto.getScheduledCount(), dto.getCompletedCount(), dto.getScheduledAmount(), dto.getCompletedAmount());
+        }
+
+        log.info("Finished processing reservations. ResultMap size: {}", salesResultMap.size());
+    }
+
+    private Map<Long, SiteSalesInfo> calculateSiteTotals(Map<String, ResSalesResultDTO> salesResultMap) {
+        Map<Long, SiteSalesInfo> siteTotals = new HashMap<>();
+
+        for (ResSalesResultDTO dto : salesResultMap.values()) {
+            for (Map.Entry<Long, SiteSalesInfo> entry : dto.getSiteSalesMap().entrySet()) {
+                Long siteId = entry.getKey();
+                SiteSalesInfo siteSalesInfo = entry.getValue();
+
+                siteTotals.putIfAbsent(siteId, new SiteSalesInfo());
+                siteTotals.get(siteId).addSales(siteSalesInfo.getTotalAmount());
             }
         }
 
-        // 총계 계산
+        return siteTotals;
+    }
+
+    private Map<String, Object> createTotalStats(Map<String, ResSalesResultDTO> salesResultMap) {
         int totalCompletedCount = 0;
         double totalCompletedAmount = 0;
         int totalScheduledCount = 0;
         double totalScheduledAmount = 0;
 
-        for (ResSalesResultDTO dto : resultMap.values()) {
+        for (ResSalesResultDTO dto : salesResultMap.values()) {
             totalCompletedCount += dto.getCompletedCount();
             totalCompletedAmount += dto.getCompletedAmount();
             totalScheduledCount += dto.getScheduledCount();
             totalScheduledAmount += dto.getScheduledAmount();
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("stats", new ArrayList<>(resultMap.values()));
-        response.put("totalStats", Map.of(
+        return Map.of(
                 "totalCompletedCount", totalCompletedCount,
                 "totalCompletedAmount", totalCompletedAmount,
                 "totalScheduledCount", totalScheduledCount,
                 "totalScheduledAmount", totalScheduledAmount
-        ));
-
-        return response;
+        );
     }
 
-    private String getKey(LocalDate date, String dateType) {
-        switch (dateType) {
-            case "day":
-            case "month":
-                return date.toString(); // yyyy-MM-dd
-            case "year":
-               //return date.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-                return YearMonth.from(date).toString(); // yyyy-MM
-            default:
-                throw new IllegalArgumentException("Invalid date type: " + dateType);
-        }
-    }
-
-    private LocalDate getKeyDate(LocalDate date, String dateType) {
-        switch (dateType) {
-            case "day":
-                return date;
-            case "month":
-                return date.withDayOfMonth(1);
-            case "year":
-                return date.withMonth(1).withDayOfMonth(1);
-            default:
-                throw new IllegalArgumentException("Invalid date type: " + dateType);
-        }
-    }
-
-    // 1-2 예약률 현황
     @Override
-    public List<ResStatsReqDTO> rate(LocalDate startDate, LocalDate endDate, Long siteID) {
-        return List.of();
-    }
-
-    // 1-3 예약 취소 현황 : 예약 상태, (취소 건수, 취소 금액)
-    @Override
-    public Map<String, Object> cancel(LocalDate startDate, LocalDate endDate, Long siteId, String dateType) {
-        // endDate가 null일 경우 처리
+    public CancelStatsResponseDTO cancel(String dateType, LocalDate startDate, LocalDate endDate, Long siteId) {
         if (endDate == null) {
-            switch (dateType.toLowerCase()) {
-                case "day":
-                    endDate = startDate;
-                    break;
-                case "month":
-                    endDate = YearMonth.from(startDate).atEndOfMonth();
-                    break;
-                case "year":
-                    endDate = startDate.withMonth(12).withDayOfMonth(31);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid date type: " + dateType);
-            }
+            endDate = determineEndDate(startDate, dateType);
         }
 
         log.info("Processed date range: startDate={}, endDate={}", startDate, endDate);
 
-        List<Reservation> cancelledReservations;
-        if (siteId == null) {
-            cancelledReservations = statsRepository.findCancelByDateBetween(startDate, endDate);
-        } else {
-            cancelledReservations = statsRepository.findCancelByDateBetweenAndSiteId(startDate, endDate, siteId);
-        }
+        List<Reservation> cancelledReservations = (siteId == null)
+                ? statsRepository.findCancelByDateBetween(startDate, endDate)
+                : statsRepository.findCancelByDateBetweenAndSiteId(startDate, endDate, siteId);
 
-        log.info("Processing cancel stats: startDate={}, endDate={}, siteId={}, dateType={}",
-                startDate, endDate, siteId, dateType);
         log.info("Found {} cancelled reservations", cancelledReservations.size());
 
+        Map<String, ResCancelResultDTO> cancelResultMap = createCancelDateRangeMap(startDate, endDate, dateType);
+        processCancelledReservations(cancelledReservations, cancelResultMap, dateType);
+
+        return new CancelStatsResponseDTO(new ArrayList<>(cancelResultMap.values()), createCancelTotalStats(cancelResultMap));
+    }
+
+    private LocalDate determineEndDate(LocalDate startDate, String dateType) {
+        switch (dateType.toLowerCase()) {
+            case DAY:
+                return startDate;
+            case MONTH:
+                return YearMonth.from(startDate).atEndOfMonth();
+            case YEAR:
+                return startDate.withMonth(12).withDayOfMonth(31);
+            default:
+                throw new IllegalArgumentException("Invalid date type: " + dateType);
+        }
+    }
+
+    private Map<String, ResCancelResultDTO> createCancelDateRangeMap(LocalDate startDate, LocalDate endDate, String dateType) {
         Map<String, ResCancelResultDTO> resultMap = new TreeMap<>();
 
-        // 날짜 범위 생성
         switch (dateType) {
-            case "day":
-                // 일간 조회: 데이터가 있는 날짜만 포함
-                for (Reservation reservation : cancelledReservations) {
-                    LocalDate cancelDate = reservation.getResCancelDate();
-                    String key = cancelDate.toString(); // yyyy-MM-dd
-                    resultMap.putIfAbsent(key, new ResCancelResultDTO(cancelDate));
-                }
-                break;
-            case "month":
-                // 월간 조회: 해당 월의 모든 날짜 포함
+            case DAY:
                 for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-                    String key = date.toString(); // yyyy-MM-dd
-                    resultMap.put(key, new ResCancelResultDTO(date));
+                    resultMap.put(date.toString(), new ResCancelResultDTO(date));
                 }
                 break;
-            case "year":
-                // 연간 조회: 해당 연도의 모든 월 포함
-                for (YearMonth yearMonth = YearMonth.from(startDate);
-                     !yearMonth.isAfter(YearMonth.from(endDate));
-                     yearMonth = yearMonth.plusMonths(1)) {
-                    String key = yearMonth.toString(); // yyyy-MM
-                    resultMap.put(key, new ResCancelResultDTO(yearMonth.atDay(1)));
+            case MONTH:
+                for (LocalDate date = startDate.withDayOfMonth(1); !date.isAfter(endDate); date = date.plusMonths(1)) {
+                    resultMap.put(date.toString().substring(0, 7), new ResCancelResultDTO(date)); // "YYYY-MM" 형식
                 }
                 break;
+            case YEAR:
+                for (YearMonth yearMonth = YearMonth.from(startDate); !yearMonth.isAfter(YearMonth.from(endDate)); yearMonth = yearMonth.plusMonths(1)) {
+                    resultMap.put(yearMonth.toString(), new ResCancelResultDTO(yearMonth.atDay(1))); // "YYYY-MM" 형식
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid date type: " + dateType);
         }
 
-        // 예약 취소 데이터 처리
+        return resultMap;
+    }
+
+    private void processCancelledReservations(List<Reservation> cancelledReservations, Map<String, ResCancelResultDTO> resultMap, String dateType) {
         for (Reservation reservation : cancelledReservations) {
             LocalDate cancelDate = reservation.getResCancelDate();
+            if (cancelDate == null) {
+                log.warn("Cancel date is null for reservation ID: " + reservation.getResId());
+                continue; // skip if cancel date is null
+            }
             double amount = reservation.getResTotalPay();
+            long siteId = reservation.getSite().getSiteId(); // 사이트 ID 가져오기
 
-            String key = getKey(cancelDate, dateType);
+            log.info("Cancel Date for reservation ID {}: {}", reservation.getResId(), reservation.getResCancelDate());
+
+            String key;
+            if (dateType.equals(YEAR)) {
+                key = cancelDate.toString().substring(0, 7); // "YYYY-MM" 형식
+            } else {
+                key = cancelDate.toString(); // "YYYY-MM-DD" 형식
+            }
+
             ResCancelResultDTO dto = resultMap.get(key);
-            if (dto == null && dateType.equals("day")) {
-                dto = new ResCancelResultDTO(cancelDate);
+            if (dto == null) {
+                dto = new ResCancelResultDTO(dateType.equals(YEAR) ? YearMonth.from(cancelDate).atDay(1) : cancelDate);
+                dto.setSiteId(siteId); // DTO에 사이트 ID 저장
                 resultMap.put(key, dto);
             }
-            if (dto != null) {
-                dto.setCancelCount(dto.getCancelCount() + 1);
-                dto.setCancelAmount(dto.getCancelAmount() + amount);
-            }
-        }
 
-        // 총계 계산
+            // 사이트별로 집계
+            dto.setCancelCount(dto.getCancelCount() + 1);
+            dto.setCancelAmount(dto.getCancelAmount() + amount);
+            dto.addSiteCancel(siteId, amount); // 사이트별 취소액 집계 추가
+        }
+    }
+
+    private Map<String, Object> createCancelTotalStats(Map<String, ResCancelResultDTO> resultMap) {
         int totalCancelCount = 0;
         double totalCancelAmount = 0;
 
@@ -231,21 +279,10 @@ public class ResSalesStatsServiceImpl implements ResSalesStatsService {
             totalCancelAmount += dto.getCancelAmount();
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("stats", new ArrayList<>(resultMap.values()));
-        response.put("totalStats", Map.of(
+        return Map.of(
                 "totalCancelCount", totalCancelCount,
                 "totalCancelAmount", totalCancelAmount
-        ));
-
-        log.info("Processed cancel stats: totalCancelCount={}, totalCancelAmount={}",
-                totalCancelCount, totalCancelAmount);
-
-        return response;
+        );
     }
 
 }
-
-
-
-

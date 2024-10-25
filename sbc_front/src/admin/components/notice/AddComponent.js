@@ -20,7 +20,7 @@ const AddComponent = () => {
     useEffect(() => {
         // 사용자가 인증되지 않았거나 || 현재 로그인한.유저의?.권한이 !== 관리자
         // 경우 '/'(기본 메인)경로로
-        if (!loginState.isAuthenticated || loginState.member?.memberRole !== 'admin') {
+        if (/*!loginState.isAuthenticated ||*/ loginState.member?.memberRole !== 'ROLE_ADMIN') {
             navigate('/'); // 원하는 경로로 변경 가능 (예: 홈 페이지)
         }
     }, [loginState, navigate]);

@@ -15,7 +15,6 @@ import noticeRouter from "../admin/router/noticeRouter";
 import reviewRouter from "../admin/router/reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
-import ReviewRouter from "./ReviewRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
 const Loading = <Spinner animation="border" />;
@@ -31,12 +30,11 @@ const NoticeIndex = lazy(() => import("../pages/community/NoticeIndexPage"))
 const Login = lazy(() => import("../pages/login/LoginPage"))
 const Join = lazy(() => import("../pages/login/JoinIndexPage"))
 const FindPw = lazy(() => import("../pages/login/FindPwPage"))
-const FindPwMod = lazy(() => import("../pages/login/FindPwModifyPage"))
 const FIndEmail = lazy(() => import("../pages/login/FindEmailPage"))
 const MyPageIndex = lazy(() => import("../pages/member/MypageIndexPage"))
 const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
 const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
-const ReviewIndex = lazy(() => import("../pages/review/ReviewIndexPage"))
+const Sitemap = lazy(() => import("../pages/login/SitemapPage"))
 
 /*
 관리자 페이지
@@ -83,10 +81,6 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><FindPw/></Suspense>
     },
     {
-        path: "findpw/mod",
-        element: <Suspense fallback={Loading}><FindPwMod/></Suspense>
-    },
-    {
         path: "findemail",
         element: <Suspense fallback={Loading}><FIndEmail/></Suspense>
     },
@@ -126,9 +120,8 @@ const root = createBrowserRouter([
         children: CamperRouter()
     },
     {
-        path: "review",
-        element: <Suspense fallback={Loading}><ReviewIndex/></Suspense>,
-        children: ReviewRouter()
+        path: "sitemap",
+        element: <Suspense fallback={Loading}><Sitemap/></Suspense>
     },
 
     // 관리자

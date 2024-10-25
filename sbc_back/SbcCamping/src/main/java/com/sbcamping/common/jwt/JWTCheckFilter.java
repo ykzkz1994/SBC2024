@@ -24,11 +24,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
     // 유효한 JWT 토큰인지 확인하는 필터 클래스
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         log.info("------------------------JWT 체크 필터");
         String authHeaderStr = request.getHeader("Authorization");
         if (authHeaderStr == null) {
-            log.info("-------요청이 jwtAxios인지 확인해보세요");
+            log.info("-------요청이 jwtAxios 인지 확인해보세요");
         }
         try {
             String accessToken = authHeaderStr.substring(7);
@@ -45,7 +45,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String memberBirth = (String) memberClaims.get("memberBirth");
             String memberLocal = (String) memberClaims.get("memberLocal");
             // authorities 필드가 List<Map<String, Object>> 형태인 경우 처리
-            String memberRole = "";
+            String memberRole;
             List<Map<String, Object>> authorities = (List<Map<String, Object>>) memberClaims.get("authorities");
             String role = (String) memberClaims.get("memberRole");
             if (authorities != null && !authorities.isEmpty()) {
@@ -61,10 +61,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             String memberStatus = (String) claims.get("memberStatus");
 
             MemberDTO memberDTO = new MemberDTO(memberEmail, memberPw, memberName, memberPhone, memberGender, memberBirth, memberLocal, memberRole, memberId, memberStatus);
-
-            if(memberClaims == null){
-                memberEmail = (String) claims.get("memberEmail");
-            }
 
             log.info("memberDTO.GetAuthorities() : {}", memberDTO.getAuthorities());
 
@@ -88,24 +84,26 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         // preflight 요청은 체크하지 않음
-        // preflight란 CORS상황에서 보안을 확인하기 위해 브라우저가 제공하는 기능
+        // preflight 란 CORS 상황에서 보안을 확인하기 위해 브라우저가 제공하는 기능
         if(request.getMethod().equals("OPTIONS")){
             return true;
         }
 
+        // 경로 체크
         String path = request.getRequestURI();
         log.info("URL CHECK : {}", path);
 
-        // api/auth/ 경로의 호출은 체크하지 않음 (로그인할 때는 JWT 토큰이 없는 상태이기에 하는 설정)
+        // api/auth/ 경로의 호출은 체크하지 않음 (로그인 요청할 때는 JWT 토큰이 없는 상태이기에 하는 설정)
         if(path.startsWith("/api/auth")){
             return true;
         }
 
-        // 회원가입 경로 예외
+        // 회원가입 요청 경로 예외
         if(path.equals("/api/member/")){
             return true;
         }
 
+        // 캠퍼게시판 목록, 상세조회
         if(path.equals("/api/campers/list") || path.startsWith("/api/campers/")){
             return true;
         }

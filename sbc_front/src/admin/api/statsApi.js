@@ -7,15 +7,35 @@ export const API_SERVER_HOST = 'http://localhost:8080'
 const prefix = `${API_SERVER_HOST}/admin/stats`
 
 // 매출 현황 : 금액 가져오기, 예약 건수
-export const fetchSalesStats = async (params) => {
+export const fetchSalesStats = async (startDate, endDate, dateType, siteId) => {
     try {
+        console.log('Received dates:', { startDate, endDate });
+
+        const params = {
+            startDate,
+            endDate,
+            dateType,
+            siteId: siteId || undefined
+        };
+
+        console.log('Request params:', params);
+
         const response = await jwtAxios.get(`${prefix}/reservation-sales/sales`, { params });
-        return response.data;
+
+        console.log('Raw API response:', response.data);
+
+        if (response.data && Array.isArray(response.data.statsList)) {
+            return response.data;
+        } else {
+            console.error('Unexpected response structure:', response.data);
+            throw new Error('Invalid response structure');
+        }
     } catch (error) {
-        console.error('API request error:', error.response?.data || error.message);
+        console.error('API request error:', error);
         throw error;
     }
 };
+
 
 // 예약 취소 현황 : 취소 건수, 취소 금액
 export const fetchCancelStats = async (params) => {

@@ -7,6 +7,7 @@ const MyPageRes = lazy(() => import("../pages/member/MyPageResPage"));
 const MypageResDetail = lazy(() => import("../pages/member/MypageResDetailPage"))
 const MypageInfo = lazy(() => import("../pages/member/MypageMyInfoPage"));
 const WithDraw = lazy(() => import("../pages/member/MypageWithdrawPage"))
+const ModPw = lazy(() => import("../pages/member/MypageModPwPage"));
 
 const MypageRouter = () => {
     return[
@@ -29,6 +30,10 @@ const MypageRouter = () => {
         {
             path: "withdraw",
             element: <Suspense fallback={Loading}><WithDraw/></Suspense>
+        },
+        {
+            path: "modpw",
+            element: <Suspense fallback={Loading}><ModPw/></Suspense>
         }
 
     ]

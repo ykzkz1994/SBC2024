@@ -33,7 +33,8 @@ const SearchComponent = ({ onSearch }) => {
 
     const handleSearch = () => {
         let searchParams = { dateType, startDate, siteId };
-        
+
+        // 날짜 타입에 따른 파라미터 설정
         if (dateType === 'day') {
             searchParams.endDate = endDate;
         } else if (dateType === 'month') {
@@ -45,6 +46,7 @@ const SearchComponent = ({ onSearch }) => {
             searchParams.endDate = `${startDate}-12-31`;
         }
 
+        console.log('Search Params:', searchParams); // 추가: 생성된 파라미터 확인
         onSearch(searchParams);
     };
 
