@@ -9,6 +9,7 @@ import {useSelector} from "react-redux";
 
 
 
+
 const initState = {
     qBoardTitle: '',
     qBoardContent: '',
@@ -28,27 +29,35 @@ function ModifyComponent(props) {
     const loginState = useSelector((state) => state.loginSlice)
 
 
-
-    useEffect(() => {
-        const fetchData = async () => {
+useEffect(() => {
+    const fetchData = async () => {
+        try {
             const data = await getOne(qbID);
             console.log(data);
+
             // 데이터 구조 확인 후 상태 설정
             setQna({
                 qBoardTitle: data.qboardTitle || '',
                 qBoardContent: data.qboardContent || '',
                 qBoardAttachment: data.qboardAttachment || null,
-                file: null // 파일은 처음에는 null로 설정
+                file: null
             });
 
-                /*현재로그인중인 유저와 글 작성자의 id를 대조하여 일치하지 않을경우 리스트로 리스트로 리다이렉션 시킨다*/
-    if(qbID.member?.memberId !== loginState.member.memberId){
-        navigate('/admin/qnas/list')
-    }
-
-        };
+            // 현재 로그인 중인 유저와 글 작성자의 ID를 비교
+            if (data.member?.memberId && loginState.member?.memberId) {
+                if (data.member.memberId !== loginState.member.memberId) {
+                    navigate('/admin/qnas/list');
+                }
+            }
+        } catch (error) {
+            console.error("Failed to fetch qna data:", error);
+            navigate('/admin/qnas/list'); // 데이터 가져오기 실패 시에도 리다이렉트
+        }
+    };
+    if (loginState && loginState.member) {
         fetchData();
-    }, [qbID]);
+    }
+}, [qbID, loginState]);
 
 
 

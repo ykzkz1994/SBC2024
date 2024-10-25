@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 public class CustomerStatsServiceImpl implements CustomerStatsService {
 
     @Autowired
-    private final StatsRepository statsRepository; // reservation -> member
+    private StatsRepository statsRepository; // reservation -> member
 
     @Autowired
-    private final ReviewStatsRepository reviewStatsRepository;  // review
+    private ReviewStatsRepository reviewStatsRepository;  // review
 
     // 해당 기간의 예약 데이터 불러오기
     private List<Reservation> getReservations(LocalDate startDate, LocalDate endDate, Long siteId) {
