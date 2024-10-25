@@ -108,7 +108,7 @@ public class ReviewServiceImpl implements ReviewService {
     // 3. 나의 예약 내역 확인하기
     @Override
     public List<Reservation> reviewCheck(Long memberId) {
-        List list = reservationRepository.findByMemberIdOOrderByResId(memberId);
+        List list = reservationRepository.findByMemberIdOrderByResId(memberId);
         log.info("예약내역 확인중 ==============");
 
         return list;
