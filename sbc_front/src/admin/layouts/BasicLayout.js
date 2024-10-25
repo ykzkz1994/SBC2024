@@ -6,8 +6,8 @@ import '../css/common.css';
 import {Link, useNavigate} from 'react-router-dom';
 import {logout} from "../../slice/loginSlice";
 import {useDispatch, useSelector} from "react-redux";
-import logo1 from "../../images/logo/logo1-2.png";
-import logo2 from "../../images/logo/logo2-7.png";
+import logo from "../../images/logo/logo2-7.png";
+import React from "react";
 
 
 
@@ -37,13 +37,16 @@ const BasicLayout = ({ children }) => {
         <Navbar bg="white" data-bs-theme="light">
           <Container>
             <img
-                src={logo2}
+                src={logo}
                 alt="로고"
-                style={{width: '600px', height: 'auto'}} // 원하는 크기로 조정
+                style={{width: '600px', height: 'auto'}}
+                onClick={() => navigate("/admin")}
+                className="cursor-pointer"// 원하는 크기로 조정
             />
             <div id="">
               <Nav className="justify-content-end">
                 <Nav.Link onClick={handleClickLogout}>로그아웃</Nav.Link>
+                 <Nav.Link href="/" >사용자페이지로</Nav.Link>
               </Nav>
               <Nav className="justify-content-end">
                 <NavDropdown href="/admin/site" title="구역 관리">

@@ -17,12 +17,10 @@ const SalesComponent = ({ salesStats, loading, error, dateType, selectedYear, se
 
     const renderTableContent = () => {
         if (loading) return <tr><td colSpan="7">Loading...</td></tr>;
-        if (error) return <tr><td colSpan="7">Error: {error}</td></tr>;
+        if (error) return <tr><td colSpan="7">Error: {error.message || error}</td></tr>;
         if (!salesStats || !salesStats.stats || salesStats.stats.length === 0) {
             return <tr><td colSpan="7">해당 기간에 데이터가 존재하지 않습니다.</td></tr>;
         }
-
-        const totalStats = salesStats.totalStats || {};
 
         const renderRows = () => {
             if (dateType === 'year') {
@@ -62,28 +60,33 @@ const SalesComponent = ({ salesStats, loading, error, dateType, selectedYear, se
                     );
                 });
             } else if (dateType === 'day') {
-                return salesStats.stats
-                    .filter(stat => stat.completedCount > 0 || stat.scheduledCount > 0 ||
-                        stat.completedAmount > 0 || stat.scheduledAmount > 0)
-                    .map(stat => {
-                        const dateStr = stat.resDate;
-                        return (
-                            <tr key={dateStr}>
-                                <td>{dateStr}</td>
-                                <td>{stat.completedCount + stat.scheduledCount}</td>
-                                <td>{formatCurrency(stat.completedAmount + stat.scheduledAmount)}</td>
-                                <td>{stat.completedCount}</td>
-                                <td>{formatCurrency(stat.completedAmount)}</td>
-                                <td>{stat.scheduledCount}</td>
-                                <td>{formatCurrency(stat.scheduledAmount)}</td>
-                            </tr>
-                        );
-                    });
+                return salesStats.stats.map(stat => {
+                    const dateStr = stat.resDate;
+                    return (
+                        <tr key={dateStr}>
+                            <td>{dateStr}</td>
+                            <td>{stat.completedCount + stat.scheduledCount}</td>
+                            <td>{formatCurrency(stat.completedAmount + stat.scheduledAmount)}</td>
+                            <td>{stat.completedCount}</td>
+                            <td>{formatCurrency(stat.completedAmount)}</td>
+                            <td>{stat.scheduledCount}</td>
+                            <td>{formatCurrency(stat.scheduledAmount)}</td>
+                        </tr>
+                    );
+                });
             }
+        };
+
+        const totalStats = salesStats.totalStats || {
+            totalCompletedCount: 0,
+            totalScheduledCount: 0,
+            totalCompletedAmount: 0,
+            totalScheduledAmount: 0
         };
 
         return (
             <>
+                {renderRows()}
                 <tr style={{ fontWeight: 'bold' }}>
                     <td>합계</td>
                     <td>{totalStats.totalCompletedCount + totalStats.totalScheduledCount}</td>
@@ -93,7 +96,6 @@ const SalesComponent = ({ salesStats, loading, error, dateType, selectedYear, se
                     <td>{totalStats.totalScheduledCount}</td>
                     <td>{formatCurrency(totalStats.totalScheduledAmount)}</td>
                 </tr>
-                {renderRows()}
             </>
         );
     };
@@ -101,13 +103,12 @@ const SalesComponent = ({ salesStats, loading, error, dateType, selectedYear, se
     useEffect(() => {
         const today = new Date();
         const currentYear = today.getFullYear();
-        const currentMonth = today.getMonth() + 1; // getMonth는 0부터 시작하므로 +1
+        const currentMonth = today.getMonth() + 1;
 
-        // 초기 검색 수행
         if (dateType === 'month') {
-            onSearch(currentYear, currentMonth);
+            onSearch(selectedYear || currentYear, selectedMonth || currentMonth);
         }
-    }, [onSearch, dateType]);
+    }, [onSearch, dateType, selectedYear, selectedMonth]);
 
     return (
         <>

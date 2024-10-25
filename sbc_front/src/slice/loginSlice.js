@@ -54,9 +54,9 @@ const loginSlice = createSlice({
                     setCookie("memberCookie", JSON.stringify(payload),1); // 쿠키 1일
                     console.log('쿠키 저장');
                     state.member.memberEmail = payload.member.memberEmail;
+                    state.member.memberRole = payload.member.memberRole;
                 }
             }
-
             return state; // 기본 상태 반환
         })
             .addCase(loginPostAsync.pending, (state, action) => {

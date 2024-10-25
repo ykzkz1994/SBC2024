@@ -93,7 +93,6 @@ export const getCommentList = async (qbID) => {
     try {
         const res = await jwtAxios.get(`${prefix}/${qbID}/comments/list`);
         const count = res.data ? Object.keys(res.data).length : 0; // 데이터가 있는 경우만 카운트
-        console.log(res.data);
         return res.data;
     } catch (error) {
         console.error('댓글 리스트 가져오기 중 오류 발생:', error);

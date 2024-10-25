@@ -8,14 +8,23 @@ const prefix = `${API_SERVER_HOST}/admin/stats`
 
 // 매출 현황 : 금액 가져오기, 예약 건수
 export const fetchSalesStats = async (params) => {
+    console.log('Fetching sales stats with:', params);
+
     try {
         const response = await jwtAxios.get(`${prefix}/reservation-sales/sales`, { params });
+        console.log('API response data:', response.data);
+
+        if (!response.data || !response.data.stats) {
+            throw new Error("Invalid response structure");
+        }
+
         return response.data;
     } catch (error) {
         console.error('API request error:', error.response?.data || error.message);
         throw error;
     }
 };
+
 
 // 예약 취소 현황 : 취소 건수, 취소 금액
 export const fetchCancelStats = async (params) => {
