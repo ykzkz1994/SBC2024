@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReadComponent from '../../components/notice/ReadComponent';
+import NoticeMoveCompornent from "../../components/notice/NoticeMoveCompornent";
 
 
 const ReadPage = () => {
@@ -12,6 +13,7 @@ const ReadPage = () => {
             </a>
             {/*상세페이지 랜더링*/}
             <ReadComponent/>
+{/*            <NoticeMoveCompornent/>나중에 공부해보기*/}
         </div>
     );
 };
