@@ -62,18 +62,11 @@ export const fetchReviewStats = async (params) => {
 }
 
 // 고객 현황 : 성별, 연령대, 지역별 통계
-export const fetchCustomerStats = async (startDate, endDate, dateType, siteId = null) => {
+export const fetchCustomerStats = async (params) => {
     try {
-        const params = new URLSearchParams({
-            startDate,
-            endDate,
-            dateType,
-            ...(siteId && { siteId })
-        });
-        
         console.log('Sending request with params:', params.toString()); // 디버깅용 로그
-
         const response = await jwtAxios.get(`${prefix}/customer/all`, { params });
+        console.log('API Response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching customer stats:', error);
