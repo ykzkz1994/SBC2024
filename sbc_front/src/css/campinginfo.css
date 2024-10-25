@@ -70,3 +70,24 @@
     transform-origin:
         center;
 }
+
+
+/* 예약/요금안내 */
+.res-guide-box{
+    margin-top: 10px;
+    margin-bottom: 50px;
+
+}
+.res-title{
+    padding : 10px
+}
+.res-title h4{
+    font-size: 18px;
+}
+.res-title ul {
+    font-size: 14px;
+    color: #555555;
+}
+.res-title ul li {
+    padding : 4px 3px;
+}

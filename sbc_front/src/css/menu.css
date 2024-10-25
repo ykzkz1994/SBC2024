@@ -39,12 +39,13 @@
 }
 
 .menubutton:hover{
-    background-color: #f68b1e;
+    background-color: darkslategrey;
     color: white;
 }
 
 .menubutton.active {
-    background-color: #f68b1e;
+    background-color: darkslategrey;
     color: white;
 }
 
+/* #f68b1e */

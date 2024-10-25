@@ -2,6 +2,8 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.user.camper.dto.PageRequestDTO;
+import com.sbcamping.user.camper.dto.PageResponseDTO;
 
 import java.util.List;
 

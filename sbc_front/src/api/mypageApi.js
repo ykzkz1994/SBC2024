@@ -15,7 +15,7 @@ export const getReservations = async (memberId) => {
 
 // 예약 내역 (상세) 가져오기
 export const getResDetail = async (resId) => {
-    const res = await jwtAxios.get(`${host}/${resId}`);
+    const res = await jwtAxios.get(`${host}/res/${resId}`);
     return res.data;
 }
 

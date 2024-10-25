@@ -29,7 +29,7 @@ const BasicLayout = ({children}) => {
             <Navbar bg="white" data-bs-theme="light" className="navwrap">
                 <Container>
                     <Navbar.Brand href="/" id="logo">
-                        <img src={logo} style={{width: '600px', height: 'auto'}} alt="logo"/>
+                        <img src={logo} style={{width: '350px', height: 'auto'}} alt="logo"/>
                     </Navbar.Brand>
                     <div id="">
                         <Nav className="justify-content-end">
@@ -46,7 +46,7 @@ const BasicLayout = ({children}) => {
                                 <Nav.Link href="/join">회원가입</Nav.Link> : <Nav.Link href="/mypage">마이페이지</Nav.Link>
                             }
 
-                            <Nav.Link href="#pricing">사이트맵</Nav.Link>
+                            <Nav.Link href="/sitemap">사이트맵</Nav.Link>
                              </>
                              )}
 

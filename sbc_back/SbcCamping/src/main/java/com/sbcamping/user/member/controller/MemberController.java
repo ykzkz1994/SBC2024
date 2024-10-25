@@ -43,7 +43,7 @@ public class MemberController {
 
     // 예약 상세 내역 조회
     @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/{resID}")
+    @GetMapping("/res/{resID}")
     public Reservation getDetailMyRes(@PathVariable(name = "resID") Long resID){
         return memberService.getResDetail(resID);
     }
@@ -52,9 +52,9 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/pwauth")
     public Map<String, String> memberPwAuth(@RequestBody Map<String, Object> member){
-        Long memberId = Long.parseLong(member.get("memberId").toString());
+        Long memberId = Long.parseLong(member.get("memberID").toString());
         String memberPw = member.get("memberPw").toString();
-        //log.info("------비밀번호 인증 메소드 : " + memberId, memberPw);
+        log.info("------비밀번호 인증 메소드 : " + memberId, memberPw);
         String msg = memberService.authPw(memberId, memberPw);
         Map<String, String> map = new HashMap<>();
         map.put("msg", msg);
@@ -65,7 +65,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{memberId}")
     public Map<String, Member> getMember(@PathVariable Long memberId){
-        //log.info("---------회원 조회 메서드 : {}", memberId);
+        log.info("---------회원 조회 메서드 : {}", memberId);
         Member member = memberService.getMember(memberId);
         Map<String, Member> map = new HashMap<>();
         map.put("member", member);

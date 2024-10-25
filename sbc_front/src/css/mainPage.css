@@ -221,9 +221,18 @@ ul.board_list li a p.date_day .big_day {
     border: 1px solid #ddd;
     margin-bottom: -1px;
     box-sizing: border-box;
+    background: url("https://cdn.pixabay.com/photo/2021/03/01/07/00/mountains-6058896_1280.jpg") ;
+    background-size: cover;
 }
 .facility a{
     color: black;
+}
+
+.board_right .call{
+    background: url("https://img.freepik.com/premium-vector/vector-design-customer-service-icon-style_822882-367928.jpg?w=740");
+    background-size: max(170px);
+    background-repeat: no-repeat;
+    background-position: left;
 }
 .board_right> div {
     padding: 30px 25px;
