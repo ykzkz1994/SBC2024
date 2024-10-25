@@ -21,6 +21,7 @@ public class LoginController {
     // 이메일 중복체크
     @GetMapping("/emailcheck")
     public Map<String,String> emailCheck(@RequestParam String email){
+        log.info("-----------------이메일 중복찾기 메소드");
         String msg = memberService.emailCheck(email);
         Map<String,String> map = new HashMap<>();
         map.put("msg",msg);
@@ -39,7 +40,7 @@ public class LoginController {
 
     // 비밀번호 찾기 - 회원 확인 메소드 (회원명 + 회원이메일)
     // 일치하는 회원이 있는 경우 modify 문자열을 전송해서 비밀번호 변경할 수 있게 하기
-    // 회원정보 front에서도 저장하여 비밀번호 변경 때 회원정보 전송할 수 있게 하기
+    // 회원정보 front 에서도 저장하여 비밀번호 변경 때 회원정보 전송할 수 있게 하기
     @PostMapping("/findpw")
     public ResponseEntity<Member> findMemberByNameAndEmail(@RequestBody Member member){
         log.info("--------------비밀번호 찾기 메소드");
@@ -50,7 +51,7 @@ public class LoginController {
     // 비밀번호 변경
     @PostMapping("/modpw")
     public Map<String, String> modifyPw(@RequestBody Member member){
-        log.info("----------------비밀번호 변경 메소드", member);
+        log.info("--------------비밀번호 변경 메소드");
         String msg = memberService.updatePw(member);
         HashMap<String,String> map = new HashMap<>();
         map.put("msg",msg);

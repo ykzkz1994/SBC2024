@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailService implements UserDetailsService {
 
-    // Spring Security
+    // Spring Security 유저 인증
 
     private final MemberRepository memberRepository;
 
@@ -24,11 +24,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
         log.info("=========================================loadUserByUsername 도착");
         log.info("=========================================username: " + username);
-
-//        Optional<Member> memberOptional = memberRepository.findByMemberEmail(username);
-//        Member member = memberOptional.orElseThrow(() ->
-//                new UsernameNotFoundException("Not Found Member : {} " + username)
-//        );
 
         Member member = memberRepository.findByMemberEmail(username);
 
@@ -47,7 +42,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 member.getMemberStatus()
         );
 
-        log.info(memberDTO.toString());
+        //log.info(memberDTO.toString());
 
         return memberDTO;
     }

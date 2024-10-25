@@ -9,13 +9,13 @@ export const getReservations = async (memberId) => {
     const header = {
         headers:{'Content-Type': 'application/json'}
     }
-    const res = await jwtAxios.post(`${host}/memberRes`, JSON.stringify(memberId), header);
+    const res = await jwtAxios.post(`${host}/reslist`, JSON.stringify(memberId), header);
     return res.data;
 }
 
 // 예약 내역 (상세) 가져오기
 export const getResDetail = async (resId) => {
-    const res = await jwtAxios.post(`${host}/${resId}`);
+    const res = await jwtAxios.get(`${host}/${resId}`);
     return res.data;
 }
 

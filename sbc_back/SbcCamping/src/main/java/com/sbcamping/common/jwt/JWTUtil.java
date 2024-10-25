@@ -13,30 +13,29 @@ import java.util.Map;
 public class JWTUtil {
 
     // 암호키
-    private static String key = "975863214575135487893W54631d47912345";
+    private static final String key = "975863214575135487893W54631d47912345";
 
     // 토큰 생성
     public static String generateToken(Map<String, Object> valueMap, int min) {
-        SecretKey key = null;
+        SecretKey key;
         try {
             key = Keys.hmacShaKeyFor(JWTUtil.key.getBytes("UTF-8"));
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
 
-        String jwtStr = Jwts.builder()
+        return Jwts.builder()
                 .setHeader(Map.of("typ", "JWT"))
                 .setClaims(valueMap) // memberDTO
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(min).toInstant()))
                 .signWith(key).compact();
 
-        return jwtStr;
     }
 
     // 토큰 검증
     public static Map<String, Object> validateToken(String token) {
-        Map<String, Object> claim = null;
+        Map<String, Object> claim;
         try {
             // JWT 서명 검증을 위한 비밀 키 생성
             SecretKey key = Keys.hmacShaKeyFor(JWTUtil.key.getBytes("UTF-8"));

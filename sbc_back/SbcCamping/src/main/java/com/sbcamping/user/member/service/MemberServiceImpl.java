@@ -43,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 비밀번호가 일치하는 경우
-        List<Reservation> resList = reservationRepository.findByMemberId(memberId);
+        List<Reservation> resList = reservationRepository.findByMemberIdOrderByResId(memberId);
         LocalDate today = LocalDate.now();
         // 예약정보가 "예약완료"인 경우(예약취소는 제외)
         for (Reservation reservation : resList) {
@@ -68,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void cancelRes(Long resId, String reason) {
         Reservation res = reservationRepository.findById(resId).orElse(null);
-        Objects.requireNonNull(res).setResStatus("예약취소");
+        Objects.requireNonNull(res, "reservation is null").setResStatus("예약취소");
         res.setResCancelDate(LocalDate.now());
         // 예약 취소 사유도 추가
         res.setResCancelReason(reason);
@@ -86,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
     // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
-        List<Reservation> list = reservationRepository.findByMemberIdOOrderByResId(memberId);
+        List<Reservation> list = reservationRepository.findByMemberIdOrderByResId(memberId);
         log.info("예약내역 : {}", list);
         return list;
     }
@@ -119,7 +119,7 @@ public class MemberServiceImpl implements MemberService {
         // ID로 member 조회
         Member member = memberRepository.findById(mem.getMemberID()).orElse(null);
         String msg;
-        log.info("회원 상태 : {}", member.getMemberStatus());
+        log.info("회원 상태 : {}", Objects.requireNonNull(member, "Member is null !!").getMemberStatus());
         if(member.getMemberStatus().equals("OFF")){
             msg = "fail";
             return msg;
@@ -202,12 +202,6 @@ public class MemberServiceImpl implements MemberService {
 
         // 회원정보 수정
         return memberRepository.save(member);
-    }
-
-    // 회원 삭제
-    @Override
-    public void deleteMember(Long memberID) {
-        memberRepository.deleteById(memberID);
     }
 
     // 회원 조회
