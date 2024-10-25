@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Log4j2
 public class ResSalesResultDTO {
 
     private String resDate;             // 예약 날짜
@@ -25,16 +27,20 @@ public class ResSalesResultDTO {
 
     private Map<Long, SiteSalesInfo> siteSalesMap = new HashMap<>();
 
-    public void addScheduledSale(Long siteId, double amount) {
+    public void addScheduledSale(long siteId, double amount) {
+        log.info("Adding scheduled sale: siteId={}, amount={}", siteId, amount);
         scheduledCount++;
         scheduledAmount += amount;
-        addSiteSale(siteId, amount, true);
+        siteSalesMap.computeIfAbsent(siteId, k -> new SiteSalesInfo()).addSales(amount);
+        log.info("After adding scheduled sale: scheduledCount={}, scheduledAmount={}", scheduledCount, scheduledAmount);
     }
 
-    public void addCompletedSale(Long siteId, double amount) {
+    public void addCompletedSale(long siteId, double amount) {
+        log.info("Adding completed sale: siteId={}, amount={}", siteId, amount);
         completedCount++;
         completedAmount += amount;
-        addSiteSale(siteId, amount, false);
+        siteSalesMap.computeIfAbsent(siteId, k -> new SiteSalesInfo()).addSales(amount);
+        log.info("After adding completed sale: completedCount={}, completedAmount={}", completedCount, completedAmount);
     }
 
     public void addSiteSale(Long siteId, double amount, boolean isScheduled) {
