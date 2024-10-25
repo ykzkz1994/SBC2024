@@ -164,7 +164,6 @@ const Respage = () => {
                 firstSetShow(false)
                 secondSetShow(true);
                 setResData(res);
-
                 setResNumber(result);
                 setRes({...initState});
 

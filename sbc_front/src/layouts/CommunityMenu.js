@@ -16,7 +16,7 @@ const CommunityMenu = () => {
           <Link to={'/notice'} className={`menubutton ${isActive('/notice') ? 'active' : ''}`}>공지사항</Link>
           <Link to={'/qna'} className={`menubutton ${isActive('#') ? 'active' : ''}`}>문의게시판</Link>
           <Link to={'/campers'} className={`menubutton ${isActive('/campers') ? 'active' : ''}`}>캠퍼게시판</Link>
-          <Link to={'#'} className={`menubutton ${isActive('#') ? 'active' : ''}`}>리뷰게시판</Link>
+          <Link to={'/review'} className={`menubutton ${isActive('#') ? 'active' : ''}`}>리뷰게시판</Link>
         </div>
         </>
 

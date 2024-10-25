@@ -73,6 +73,7 @@ public class CamperController {
     public void remove(@PathVariable Long cBoardId) {
         camperService.remove(cBoardId);
     }
+
     // 이미지 파일 보여주기
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> viewFileGET(@PathVariable String fileName) {
