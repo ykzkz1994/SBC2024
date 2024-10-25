@@ -27,7 +27,7 @@ import java.util.Map;
 public class CustomerStatsController {
 
     @Autowired
-    private final CustomerStatsService service;
+    private CustomerStatsService service;
 
     // 고객 통계 : 기간별 조회 - 성별 /gender, 연령별 /age, 지역별 / local
     @GetMapping("/all")

@@ -2,7 +2,7 @@ import "../../css/mypage.css"
 import {useSelector} from "react-redux";
 import {cancelRes, getReservations} from "../../api/mypageApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import useCustomMove from "../../hooks/useCustomMove";
 import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
@@ -39,7 +39,7 @@ const MyPageResPage = () => {
 
     /*
     *
-    * 예약취소
+    * 예약취소 시작
     *
     * */
 
@@ -301,7 +301,8 @@ const MyPageResPage = () => {
                                                               name="reason"
                                                               value={otherReason}  // 입력한 기타 사유 값 유지
                                                               onChange={handleOtherReasonChange}
-                                                              placeholder="기타 사유를 입력하세요"
+                                                              placeholder="기타 사유를 입력하세요 (최대100자)"
+                                                              maxLength={100}
                                                 />
                                             </Form.Group>
                                         </Form>

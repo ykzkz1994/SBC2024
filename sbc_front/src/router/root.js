@@ -30,11 +30,11 @@ const NoticeIndex = lazy(() => import("../pages/community/NoticeIndexPage"))
 const Login = lazy(() => import("../pages/login/LoginPage"))
 const Join = lazy(() => import("../pages/login/JoinIndexPage"))
 const FindPw = lazy(() => import("../pages/login/FindPwPage"))
-const FindPwMod = lazy(() => import("../pages/login/FindPwModifyPage"))
 const FIndEmail = lazy(() => import("../pages/login/FindEmailPage"))
 const MyPageIndex = lazy(() => import("../pages/member/MypageIndexPage"))
 const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
 const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
+const Sitemap = lazy(() => import("../pages/login/SitemapPage"))
 
 /*
 관리자 페이지
@@ -81,10 +81,6 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><FindPw/></Suspense>
     },
     {
-        path: "findpw/mod",
-        element: <Suspense fallback={Loading}><FindPwMod/></Suspense>
-    },
-    {
         path: "findemail",
         element: <Suspense fallback={Loading}><FIndEmail/></Suspense>
     },
@@ -122,6 +118,10 @@ const root = createBrowserRouter([
         path: "campers",
         element: <Suspense fallback={Loading}><CamperIndex/></Suspense>,
         children: CamperRouter()
+    },
+    {
+        path: "sitemap",
+        element: <Suspense fallback={Loading}><Sitemap/></Suspense>
     },
 
     // 관리자

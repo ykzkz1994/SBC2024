@@ -45,9 +45,9 @@ const LoginPage = () => {
                 <div >
                     <form id="loginbox">
                         <input type="email" name="email" value={loginParam.email} onChange={handleChange}
-                               placeholder={" 이메일을 입력해주세요"} style={{fontSize:"16px"}}></input><br></br>
+                               placeholder={" 이메일을 입력해주세요"} style={{fontSize:"13px"}}></input><br></br>
                         <input type="password" name="pw" value={loginParam.pw} onChange={handleChange}
-                               placeholder={" 비밀번호를 입력해주세요."} style={{fontSize:"16px"}}></input>
+                               placeholder={" 비밀번호 (영소문자, 숫자, 특수문자 포함 10-15자)"} style={{fontSize:"13px"}}></input>
                         <div className="btn-box">
                             <button onClick={handleClickLogin} className={"loginbutton_default"}>로그인</button>
                             <br></br>

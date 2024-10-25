@@ -25,7 +25,9 @@ import java.util.List;
 @RequestMapping("/admin/stats/reservation-sales")
 public class ResSalesStatsController {
 
+
     private final ResSalesStatsService service;
+
 
     @GetMapping("/sales")
     public ResponseEntity<SalesStatsResponseDTO> getSalesStats(
