@@ -93,6 +93,38 @@ const ReviewReadComponent = () => {
                     <p className="text-gray-500"></p>
                 )}
             </div>
+
+            <div className="mb-8">
+                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{reviewBoard.reviewContent}</p>
+            </div>
+
+
+            {/* 목록으로 돌아가기, 수정하기, 삭제하기 */}
+            <div className="text-right space-x-2">
+                <button
+                    onClick={handleBackToListClick}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                >
+                    목록으로
+                </button>
+                {/* 수정하기 삭제하기 자기 자신만 보이게 하기*/}
+                {loginState.member.memberId === reviewBoard.member.memberId && (
+                    <>
+                        <button
+                            onClick={() => handleModifyClick(reviewBoard.reviewID)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        >
+                            수정하기
+                        </button>
+                        <button
+                            onClick={() => handleDeleteClick(reviewBoard.reviewID)}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                        >
+                            삭제하기
+                        </button>
+                    </>
+                )}
+            </div>
         </div>
 
 
