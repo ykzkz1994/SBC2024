@@ -5,7 +5,7 @@ export const API_SERVER_HOST = "http://localhost:8080";
 
 export const prefix = `${API_SERVER_HOST}/api/campers`;
 
-const memberInfo = JSON.parse(getCookie("memberCookie"));
+const memberInfo = getCookie("memberCookie") != undefined ? JSON.parse(getCookie("memberCookie")) : {};
 const { accessToken, refreshToken } = memberInfo;
 
 const commonHeader = {
@@ -17,7 +17,7 @@ const commonHeader = {
 };
 
 export const getCookieMemberId = () => {
-  return memberInfo.member.memberId;
+  return memberInfo && memberInfo.member ? memberInfo.member.memberId : null;
 }
 
 //상세페이지

@@ -2,9 +2,6 @@ import CustomerComponent from "../../components/stats/CustomerComponent";
 import ReviewComponent from "../../components/stats/ReviewComponent";
 import {useState} from "react";
 import {Tab, Tabs} from "react-bootstrap";
-import SalesComponent from "../../components/stats/SalesComponent";
-import ResCancelComponent from "../../components/stats/ResCancelComponent";
-import {SiteSelect} from "./ReservationSalesPage";
 
 const CustomerPage = () => {
     const [currentComponent, setCurrentComponent] = useState('customer');
