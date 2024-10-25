@@ -1,8 +1,12 @@
 package com.sbcamping.common.util;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -19,12 +23,29 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Component("commonFileUtil")
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
 
     @Value("${com.sbcamping.upload.path}")
     private String uploadPath;
+
+    /**
+     * 프로젝트 실행시 무조건 실행
+     */
+    @PostConstruct
+    public void init() throws IOException {
+
+        Path tempFolderPath = Paths.get(uploadPath);
+        // 디렉토리가 존재하지 않으면 생성하고, 이미 존재하면 아무 작업도 하지 않음
+        Files.createDirectories(tempFolderPath);
+        // 절대 경로로 변환
+        uploadPath = tempFolderPath.toAbsolutePath().toString();
+
+        log.info("******파일 업로드 경로:{}", uploadPath);
+
+    }
+
 
     // 파일 업로드 작업
     public String saveFile(MultipartFile file) throws RuntimeException {
@@ -34,7 +55,10 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
 
         String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path savePath = Paths.get(uploadPath, savedName);
-        String uploadName = null;
+
+
+        if(!uploadPath.isEmpty()){
+            log.info("업로드 경로================================:{}", uploadPath);
 
             try {
                 Files.copy(file.getInputStream(), savePath);
@@ -46,13 +70,16 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
                     Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
                 }
 
-                uploadName = (savePath.toString()).substring(7);
-                log.info("저장될 이름 :" + uploadName);
+
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
 
-        return uploadName;
+            return savedName;
+
+        }
+
+       return null;
     }
 
     // 업로드 파일 보여주기
@@ -67,7 +94,7 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         log.info("요청된 파일 리소스: {}", resource);
 
         if (!resource.exists() || !resource.isReadable()) {
-        log.warn("파일을 찾을 수 없거나 읽을 수 없습니다: {}", fileName);
+            log.warn("파일을 찾을 수 없거나 읽을 수 없습니다: {}", fileName);
             return ResponseEntity.notFound().build();
         }
 
@@ -91,21 +118,20 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         if (fileName == null) {
             return;
         }
-            String thumbnailFileName = "s_" + fileName;
-            Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
-            log.info(thumbnailPath.toString());
-            Path filePath = Paths.get(uploadPath, fileName);
-            log.info(filePath.toString());
-            try {
+        String thumbnailFileName = "s_" + fileName;
+        Path thumbnailPath = Paths.get(uploadPath, thumbnailFileName);
+        log.info(thumbnailPath.toString());
+        Path filePath = Paths.get(uploadPath, fileName);
+        log.info(filePath.toString());
+        try {
 
-                Files.deleteIfExists(filePath);
-                log.info("원본 파일 삭제");
-                Files.deleteIfExists(thumbnailPath);
-                log.info("썸네일 파일 삭제");
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
+            Files.deleteIfExists(filePath);
+            log.info("원본 파일 삭제");
+            Files.deleteIfExists(thumbnailPath);
+            log.info("썸네일 파일 삭제");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
     }
 }
-
