@@ -33,6 +33,7 @@ const CancelList = () => {
         if (sortColumn === column) {
             // 이미 선택된 컬럼이면 정렬 순서만 변경
             setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
+
         } else {
             // 새로운 컬럼 선택 시 오름차순으로 시작
             setSortColumn(column);
@@ -71,23 +72,28 @@ const CancelList = () => {
         return value?.includes(searchTerm.toLowerCase());
     });
 
+const sortedReservations = [...filteredReservations].sort((a, b) => {
+    if (!sortColumn) return 0;// 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
 
-    const sortedReservations = [...filteredReservations].sort((a, b) => {
-        if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
+    let valueA = a[sortColumn];
+    let valueB = b[sortColumn];
 
-        const valueA = a[sortColumn];
-        const valueB = b[sortColumn];
+    // siteName에 대한 예외 처리
+    if (sortColumn === 'siteName') {
+        valueA = a.site.siteName;
+        valueB = b.site.siteName;
+    }
 
-        if (typeof valueA === 'string') {
-            return sortOrder === 'asc'
-                ? valueA.localeCompare(valueB)
-                : valueB.localeCompare(valueA);
-        } else {
-            return sortOrder === 'asc'
-                ? valueA - valueB
-                : valueB - valueA;
-        }
-    });
+    if (typeof valueA === 'string') {
+        return sortOrder === 'asc'
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+    } else {
+        return sortOrder === 'asc'
+            ? valueA - valueB
+            : valueB - valueA;
+    }
+});
 
     // 전체 페이지 수를 계산하는 변수, 필터링된 데이터 기준
     const totalPages = Math.ceil(sortedReservations.length / itemsPerPage);

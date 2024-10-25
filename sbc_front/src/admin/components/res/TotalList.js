@@ -69,21 +69,36 @@ const TotalList = () => {
     });
 
     const sortedReservations = [...filteredReservations].sort((a, b) => {
-        if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
+    if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
 
-        const valueA = a[sortColumn];
-        const valueB = b[sortColumn];
+    let valueA = a[sortColumn];
+    let valueB = b[sortColumn];
 
-        if (typeof valueA === 'string') {
-            return sortOrder === 'asc'
-                ? valueA.localeCompare(valueB)
-                : valueB.localeCompare(valueA);
-        } else {
-            return sortOrder === 'asc'
-                ? valueA - valueB
-                : valueB - valueA;
-        }
-    });
+    if (sortColumn === 'memberName') { // 선택된 컬럼이 회원명인 경우
+        valueA = a.member?.memberName || 'N/A';  // Null-safe 접근
+        valueB = b.member?.memberName || 'N/A';  // Null-safe 접근
+    }
+
+    if (sortColumn === 'siteName') {
+        valueA = a.site?.siteName || 'N/A';  // Null-safe 접근
+        valueB = b.site?.siteName || 'N/A';  // Null-safe 접근
+    }
+
+    if (valueA === null && valueB === null) return 0; // 둘 다 null이면 그대로 유지
+    if (valueA === null) return 1; // valueA가 null이면 valueB보다 뒤로
+    if (valueB === null) return -1; // valueB가 null이면 valueA보다 뒤로
+
+    if (typeof valueA === 'string') {
+        return sortOrder === 'asc'
+            ? valueA.localeCompare(valueB)
+            : valueB.localeCompare(valueA);
+    } else {
+        return sortOrder === 'asc'
+            ? valueA - valueB
+            : valueB - valueA;
+    }
+});
+
 
     // 전체 페이지 수 계산을 필터된 데이터 기준으로 변경
     const totalPages = Math.ceil(sortedReservations.length / itemsPerPage);
@@ -133,10 +148,10 @@ const TotalList = () => {
                     <th onClick={() => handleSort('checkoutDate')}>퇴실 날짜</th>
                     <th onClick={() => handleSort('resDate')}>예약 날짜</th>
                     <th onClick={() => handleSort('resTotalPay')}>총 결제 금액</th>
-                    <th onClick={() => handleSort('cancelResDate')}>취소 날짜</th>
-                    <th onClick={() => handleSort('cancelResReason')}>취소 사유</th>
-                    <th onClick={() => handleSort('reservatuons.member.memberName')}>회원 이름</th>
-                    <th onClick={() => handleSort('reservations.site.siteName')}>구역 이름</th>
+                    <th onClick={() => handleSort('resCancelDate')}>취소 날짜</th>
+                    <th onClick={() => handleSort('resCancelReason')}>취소 사유</th>
+                    <th onClick={() => handleSort('memberName')}>회원 이름</th>
+                    <th onClick={() => handleSort('siteName')}>구역 이름</th>
 
                 </tr>
                 </thead>

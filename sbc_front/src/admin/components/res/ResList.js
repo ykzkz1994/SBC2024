@@ -74,8 +74,21 @@ const ResList = () => {
     const sortedReservations = [...filteredReservations].sort((a, b) => {
         if (!sortColumn) return 0; // 정렬할 컬럼이 선택되지 않은 경우 원본 데이터 유지
 
-        const valueA = a[sortColumn];
-        const valueB = b[sortColumn];
+        let valueA = a[sortColumn];
+        let valueB = b[sortColumn];
+
+        if (sortColumn==='memberName') //선택된 컬럼이 회원명인 경우
+        {
+            valueA = a.member.memberName;
+            valueB = b.member.memberName;
+        }
+
+         if (sortColumn==='siteName')
+        {
+            valueA = a.site.siteName;
+            valueB = b.site.siteName;
+        }
+
 
         if (typeof valueA === 'string') {
             return sortOrder === 'asc'
@@ -140,8 +153,8 @@ const ResList = () => {
                     <th onClick={() => handleSort('checkoutDate')}>퇴실 날짜</th>
                     <th onClick={() => handleSort('resDate')}>예약 날짜</th>
                     <th onClick={() => handleSort('resTotalPay')}>총 결제 금액</th>
-                    <th onClick={() => handleSort('member.memberName')}>회원 ID</th>
-                    <th onClick={() => handleSort('site.siteName')}>구역 ID</th>
+                    <th onClick={() => handleSort('memberName')}>회원 이름</th>
+                    <th onClick={() => handleSort('siteName')}>구역 이름</th>
                 </tr>
                 </thead>
 
