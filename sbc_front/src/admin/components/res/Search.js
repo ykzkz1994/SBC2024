@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 // Search 컴포넌트: 검색어와 선택된 필드를 받아 필터링 기능을 제공하는 컴포넌트
 const Search = ({ searchTerm, setSearchTerm, selectedColumn, setSelectedColumn }) => {
 
+
+
+
     // 검색에서 사용할 필드 목록 정의 (실제 값과 화면에 표시될 이름(라벨)을 함께 설정)
     const columns = [
         { value: 'resId', label: '예약 번호' },
@@ -51,6 +54,8 @@ const Search = ({ searchTerm, setSearchTerm, selectedColumn, setSelectedColumn }
         </div>
     );
 };
+
+
 
 // Search 컴포넌트가 받을 프로퍼티스의 타입 정의 -부모컴포넌트의 값을 사용
 Search.propTypes = {
