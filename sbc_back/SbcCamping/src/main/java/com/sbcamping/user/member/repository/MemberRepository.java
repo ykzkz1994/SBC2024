@@ -1,13 +1,8 @@
 package com.sbcamping.user.member.repository;
 
 import com.sbcamping.domain.Member;
-import com.sbcamping.domain.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -23,6 +18,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 이름 & 이메일로 회원 확인
     Member findByMemberNameAndMemberEmail (String memberName, String memberEmail);
 
-    // 예약 내역 가져오는 메소드
-    Reservation findResulvationIDByMemberID(Long memberID);
 }

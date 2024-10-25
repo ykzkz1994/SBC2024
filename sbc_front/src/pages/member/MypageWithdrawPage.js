@@ -79,51 +79,55 @@ const MypageWithdrawPage = () => {
 
 
     return (
-        <div id="loginwrap">
-            <div>
-                <h3>회원탈퇴</h3>
+        <>
+            <div style={{marginTop: '30px'}}>
+                <h3>회원 인증</h3>
+                <hr></hr>
             </div>
-            <div className="modPwWrap">
-                <Form noValidate validated={validated} onSubmit={handleSubmit} id="loginbox">
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-                        <Form.Label column sm="3" style={{marginRight:'-10px'}}>
-                            이메일
-                        </Form.Label>
-                        <Col sm="9">
-                            <Form.Control type="text"
-                                          disabled
-                                          Value={loginState.member.memberEmail}
-                                          style={{paddingLeft: '8px'}}
-                            />
-                        </Col>
-                    </Form.Group>
+            <div id="loginwrap">
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Form.Label column sm={3} style={{marginRight:'-10px'}}>
-                            비밀번호
-                        </Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="password"
-                                          name="memberPw"
-                                          placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
-                                          style={{fontSize:'13px', padding:'8px', border:'1px solid grey'}}
-                                          required
-                                          minLength={10}
-                                          maxLength={15}
-                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
-                                          onChange={handleChangePw}
-                                          isInvalid={!isPwdValid}
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                비밀번호를 확인해주세요.
-                            </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <div className="mb-3">*현재 예약정보가 있을 경우 탈퇴할 수 없습니다.</div>
-                    <Button type="submit" variant="success">회원 탈퇴</Button>
-                </Form>
+                <div className="modPwWrap">
+                    <Form noValidate validated={validated} onSubmit={handleSubmit} id="loginbox">
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                            <Form.Label column sm="3" style={{marginRight: '-10px'}}>
+                                이메일
+                            </Form.Label>
+                            <Col sm="9">
+                                <Form.Control type="text"
+                                              disabled
+                                              Value={loginState.member.memberEmail}
+                                              style={{paddingLeft: '8px'}}
+                                />
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={3} style={{marginRight: '-10px'}}>
+                                비밀번호
+                            </Form.Label>
+                            <Col sm={9}>
+                                <Form.Control type="password"
+                                              name="memberPw"
+                                              placeholder="영문소문자, 숫자, 특수문자 포함 10-15자"
+                                              style={{fontSize: '13px', padding: '8px', border: '1px solid grey'}}
+                                              required
+                                              minLength={10}
+                                              maxLength={15}
+                                              pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
+                                              onChange={handleChangePw}
+                                              isInvalid={!isPwdValid}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    비밀번호를 확인해주세요.
+                                </Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <div className="mb-3">*현재 예약정보가 있을 경우 탈퇴할 수 없습니다.</div>
+                        <Button type="submit" className={"loginbutton_default"}>회원 탈퇴</Button>
+                    </Form>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

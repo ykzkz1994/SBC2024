@@ -15,10 +15,10 @@ import java.util.Map;
 public class APILoginFailHandler implements AuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.info("----------------로그인 실패 : " + exception);
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
+        log.info("----------------로그인 실패 : {}", String.valueOf(authenticationException));
         Gson gson = new Gson();
-        String gsonStr = gson.toJson(Map.of("error", "ERROR_LOGIN"));
+        String gsonStr = gson.toJson(Map.of("error", "LOGIN_ERROR"));
 
         response.setContentType("application/json");
         response.getWriter().println(gsonStr);

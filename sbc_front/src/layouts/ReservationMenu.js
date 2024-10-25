@@ -34,7 +34,7 @@ const ReservationMenu = () => {
     return(
         <>        
         <div className='imgwrap'>
-            <img src="https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" id="menuImg"></img>
+            <img src="https://cdn.pixabay.com/photo/2018/05/13/20/21/lake-3397784_1280.jpg" id="menuImg"></img>
         </div>
         <div id='menubuttonwrap'>
           <Link to={'/res/info'} className={`menubutton ${isActive('/res/info') ? 'active' : ''}`}>예약/요금안내</Link>

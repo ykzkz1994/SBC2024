@@ -337,7 +337,7 @@ const JoinInputPage = () => {
 
                         </Col>
                         <Col sm={2}>
-                            <Button variant="success" onClick={handleEmailCheck} style={{fontSize:'13px'}}>중복체크</Button>
+                            <Button onClick={handleEmailCheck} style={{fontSize:'13px', background:'darkslategrey', border:"1px solid darkslategrey"}}>중복체크</Button>
                             <MyVerticallyCenteredModal
                                 show={modalShow}
                                 onHide={() => setModalShow(false)}
@@ -528,7 +528,7 @@ const JoinInputPage = () => {
                     </Form.Group>
                 </Form>
                 <div className="joinButton">
-                    <Button variant="success" type="submit" onClick={handleSubmit}>회원가입</Button>
+                    <Button type="submit" onClick={handleSubmit} style={{background:'darkslategrey', border:'1px solid darkslategrey'}}>회원가입</Button>
                 </div>
             </div>
         </div>

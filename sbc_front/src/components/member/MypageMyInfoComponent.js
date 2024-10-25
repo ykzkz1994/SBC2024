@@ -18,9 +18,10 @@ const PasswordAuth = ({onSuccess}) => {
 
     const loginState = useSelector((state) => state.loginSlice)
     const memberState = {
-        memberId : loginState.member.memberId,
+        memberID : loginState.member.memberId,
         memberPw : '',
     }
+    console.log('ddd', loginState.member.memberId)
     const [member, setMember] = useState(memberState);
     const [pwd, setPwd] = useState("");
     const [isPwdValid, setIsPwdValid] = useState(true);
@@ -65,11 +66,15 @@ const PasswordAuth = ({onSuccess}) => {
     }
 
     return(
-        <div id="loginwrap">
-            <div>
+        <>
+            <div style={{marginTop: '30px'}}>
                 <h3>회원 인증</h3>
+                <hr></hr>
             </div>
-            <div  className="modPwWrap">
+
+    <div id="loginwrap">
+
+        <div className="modPwWrap">
                 <Form noValidate validated={validated} onSubmit={handleSubmit} id="loginbox">
                     <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
                         <Form.Label column sm="3" style={{marginRight:'-20px'}}>
@@ -109,6 +114,7 @@ const PasswordAuth = ({onSuccess}) => {
                 </Form>
             </div>
         </div>
+        </>
     )
 }
 
@@ -120,7 +126,7 @@ const MemberInfo = () => {
     const {moveToPath} = useCustomLogin()
 
     const loginState = useSelector((state) => state.loginSlice)
-    const loginMemberId = loginState.member.memberId? loginState.member.memberId : loginState.member.memberID
+    const loginMemberId = loginState.member.memberId;
 
     // 부트스트랩 변수
     const [validated, setValidated] = useState(false);
@@ -562,7 +568,7 @@ const MemberInfo = () => {
                 </div>
             </div>
             <div className="btnbox">
-                <Button variant="success" className={"ModButton"} type="submit" onClick={handleSubmit}>회원정보 수정</Button>
+                <Button className={"loginbutton_default"} type="submit" onClick={handleSubmit} >회원정보 수정</Button>
             </div>
         </div>
     );

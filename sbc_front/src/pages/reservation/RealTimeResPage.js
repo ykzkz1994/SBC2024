@@ -5,7 +5,8 @@ const RealTimeResPage = () => {
 
     return (
         <div>
-            <div style={{marginBottom: "20px"}}><h3>구역지도</h3></div>
+            <div><h4>구역지도</h4></div>
+            <hr></hr>
                 <div style={{
                     marginBottom: "30px"
                 }}>

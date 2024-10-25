@@ -25,7 +25,7 @@ ul.first_content {
 }
 
 .sites > ul > li > h3 > a {
-    background: #f68b1e;
+    background: darkslategrey;
     text-align: center;
     text-decoration: none;
     padding: 15px;
