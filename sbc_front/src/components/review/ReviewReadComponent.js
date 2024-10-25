@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {getOne} from "../../api/reviewApi";
+import {deleteOne, getOne} from "../../api/reviewApi";
+import ConfirmModal from "../../admin/components/util/ConfirmModal";
+import Button from 'react-bootstrap/Button';
 import {prefix} from "../../api/camperApi";
 
 const ReviewReadComponent = () => {
@@ -18,7 +20,8 @@ const ReviewReadComponent = () => {
         rtag_Silence: '',
         rtag_Kind: '',
         rtag_View: '',
-        member: {}
+        member: {},
+        review: {}
     }
 
     const {reviewID} = useParams()
@@ -50,15 +53,26 @@ const ReviewReadComponent = () => {
         setModalOpen(true);
     }
 
+    const confirmDelete = async () => {
+        try {
+            await deleteOne(currentID);
+            console.log(`${currentID}번 삭제되었습니다.`);
+            navigate("/review/list")
+        } catch (error) {
+            alert("삭제 실패:" + error.message);
+            console.error("삭제 중 오류 발생:", error);
+        } finally {
+            setModalOpen(false);
+        }
+    }
+
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
         navigate("/review/list")
     }
 
-
     return (
         <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
-            {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
                 {/* 타이틀 옆에 태그 이름 붙이기 */}
                 <h2 className="text-2xl font-bold">{reviewBoard.reviewTitle}</h2>
@@ -98,9 +112,33 @@ const ReviewReadComponent = () => {
                 <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{reviewBoard.reviewContent}</p>
             </div>
 
+            {reviewBoard.rtag_Clean === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#청결해요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_Price === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#가성비가 좋아요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_Facility === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#시설이 좋아요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_Photo === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#사진이 잘나와요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_Silence === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#조용해요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_Kind === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#친절해요</Button>}&nbsp;&nbsp;
+            {reviewBoard.rtag_View === 'Y' &&  <Button variant="success" style={{
+                borderRadius: "50px"
+            }}>#풍경이 좋아요</Button>}&nbsp;&nbsp;
+
 
             {/* 목록으로 돌아가기, 수정하기, 삭제하기 */}
-            <div className="text-right space-x-2">
+            <div className="text-right space-x-2" style={{
+                marginTop: "30px"
+            }}>
                 <button
                     onClick={handleBackToListClick}
                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
@@ -108,7 +146,7 @@ const ReviewReadComponent = () => {
                     목록으로
                 </button>
                 {/* 수정하기 삭제하기 자기 자신만 보이게 하기*/}
-                {loginState.member.memberId === reviewBoard.member.memberId && (
+                {loginState.member.memberId === reviewBoard.member.memberID && (
                     <>
                         <button
                             onClick={() => handleModifyClick(reviewBoard.reviewID)}
@@ -125,6 +163,14 @@ const ReviewReadComponent = () => {
                     </>
                 )}
             </div>
+
+            <ConfirmModal
+                isOpen={isModalOpen}
+                onRequestClose={() => setModalOpen(false)}
+                onConfirm={confirmDelete}
+                title="삭제 확인"
+                message="정말 삭제하시겠습니까?"
+            />
         </div>
 
 

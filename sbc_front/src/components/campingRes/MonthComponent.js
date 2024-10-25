@@ -103,6 +103,7 @@ const MonthComponent = () => {
 
     useEffect(() => {
         getSiteList().then(data => {
+            console.log(data)
             setSite(data)
         })
         resCheck().then(data => {
@@ -227,7 +228,7 @@ const MonthComponent = () => {
                                                 <>
                                                     {site.map((site, index) => (
                                                         <div key={index}>
-                                                            {filterCheck(site.siteId, formattedDate) ? (
+                                                            {filterCheck(site.siteId, formattedDate) || site.siteResLimit === 'Y' ? (
                                                                 <>
                                                                     <span className="resFail">
                                                                         &nbsp;&nbsp;완&nbsp;&nbsp;

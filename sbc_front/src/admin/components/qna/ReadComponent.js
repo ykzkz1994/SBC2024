@@ -79,6 +79,7 @@ function ReadComponent() {
         console.log("ID:", qboard.qboardID);
     };
 
+
     return (
         <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
             {/* 제목 및 작성 시간 */}
