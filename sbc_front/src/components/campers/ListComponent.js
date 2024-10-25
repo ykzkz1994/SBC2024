@@ -90,6 +90,33 @@ const ListComponent = () => {
 
     return (
         <div className="container mt-5">
+
+            <div className="d-flex mb-3 align-items-center">
+                <select
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="form-select me-2"
+                    style={{width: '150px'}} // 드롭다운 크기 조정
+                >
+                    <option value="title">제목 검색</option>
+                    <option value="content">내용 검색</option>
+                </select>
+                <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="form-control me-2"
+                    placeholder="검색어 입력"
+                    style={{width: '250px'}} // 입력창 크기 조정
+                />
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSearch} // 검색 실행
+                >
+                    검색
+                </button>
+            </div>
+
             <table className="table table-bordered table-hover">
                 <thead>
                 <tr>
@@ -106,14 +133,14 @@ const ListComponent = () => {
                         <tr
                             key={camperBoard.cboardID}
                             onClick={() => handleReadPage(camperBoard.cboardID)}
-                            style={{ cursor: "pointer" }}
+                            style={{cursor: "pointer"}}
                         >
                             <td>{camperBoard.cboardID}</td>
                             <td>
-                                <span className="badge bg-warning me-2" style={{ display: "inline-block" }}>
+                                <span className="badge bg-warning me-2" style={{display: "inline-block"}}>
                                     {camperBoard.cboardCategory}
                                 </span>
-                                <span style={{ display: "inline-block" }}>
+                                <span style={{display: "inline-block"}}>
                                     {truncateTitle(camperBoard.cboardTitle)}
                                 </span>
                                 {camperBoard.cboardAttachment && (
@@ -128,7 +155,7 @@ const ListComponent = () => {
                                         }}
                                     />
                                 )}
-                                <span style={{ display: "inline-block", marginLeft: "5px", color: "red" }}>
+                                <span style={{display: "inline-block", marginLeft: "5px", color: "red"}}>
                                     [{commentCounts[camperBoard.cboardID] || 0}]
                                 </span>
                             </td>
@@ -147,35 +174,10 @@ const ListComponent = () => {
                 </tbody>
             </table>
 
-            <div className="d-flex mb-3 align-items-center">
-                <select
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="form-select me-2"
-                    style={{ width: '150px' }} // 드롭다운 크기 조정
-                >
-                    <option value="title">제목 검색</option>
-                    <option value="content">내용 검색</option>
-                </select>
-                <input
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    className="form-control me-2"
-                    placeholder="검색어 입력"
-                    style={{ width: '250px' }} // 입력창 크기 조정
-                />
-                <button
-                    className="btn btn-primary"
-                    onClick={handleSearch} // 검색 실행
-                >
-                    검색
-                </button>
-            </div>
 
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="mx-auto">
-                    <PageComponent serverData={serverData} movePage={moveToList} />
+                    <PageComponent serverData={serverData} movePage={moveToList}/>
                 </div>
                 <button className="btn btn-primary" onClick={() => moveToAdd()}>
                     등록

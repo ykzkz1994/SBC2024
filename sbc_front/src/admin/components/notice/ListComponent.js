@@ -54,7 +54,7 @@ const ListComponent = () => {
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2, '0');
         const dd = String(date.getDate()).padStart(2, '0');
-        return `${yyyy}년 ${mm}월 ${dd}일`;
+        return `${yyyy}-${mm}-${dd}`;
     };
 
     // '글쓰기' 버튼 클릭 시 호출되는 함수: 공지 등록 페이지로 이동
