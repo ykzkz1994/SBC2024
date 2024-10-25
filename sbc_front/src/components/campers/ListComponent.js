@@ -137,9 +137,18 @@ const ListComponent = () => {
                         >
                             <td>{camperBoard.cboardID}</td>
                             <td>
-                                <span className="badge bg-warning me-2" style={{display: "inline-block"}}>
-                                    {camperBoard.cboardCategory}
-                                </span>
+
+                               <span
+                                   className="badge me-2"
+                                   style={{
+                                       display: "inline-block",
+                                       backgroundColor: camperBoard.cboardCategory === "잡담" ? "orange" : "green", // '잡담'은 주황색, 그 외는 초록색 배경
+                                       color: "white", // 모든 카테고리에 흰색 글씨
+                                   }}
+                               >
+    {camperBoard.cboardCategory}
+</span>
+
                                 <span style={{display: "inline-block"}}>
                                     {truncateTitle(camperBoard.cboardTitle)}
                                 </span>

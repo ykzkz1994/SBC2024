@@ -59,11 +59,6 @@ useEffect(() => {
     }
 }, [qbID, loginState]);
 
-
-
-
-
-
     const handleChangeQna = (e) => {
         const { name, value } = e.target;
         setQna(prev => ({
@@ -128,7 +123,6 @@ useEffect(() => {
                         value={qna.qBoardTitle} // qna의 상태를 직접 사용
                         onChange={handleChangeQna}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
                     />
                 </div>
                 <div>
@@ -139,7 +133,6 @@ useEffect(() => {
                         onChange={handleChangeQna}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows="5"
-                        required
                     />
                 </div>
                 <div>

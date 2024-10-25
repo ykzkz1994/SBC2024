@@ -89,9 +89,7 @@ const ReviewComponent = () => {
                     <div>No data available</div>
                 )}
             </div>
-            <div>
-                시간이 허락된다면 추가하고 싶은 내용 : 태그별 선호 구역, 태그별 고객분석
-            </div>
+        
         </>
     );
 }

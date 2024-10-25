@@ -10,7 +10,7 @@ const CommunityMenu = () => {
     return(
         <>        
         <div className='imgwrap'>
-            <img src="https://images.pexels.com/photos/1687845/pexels-photo-1687845.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" id="menuImg"></img>
+            <img src="https://cdn.pixabay.com/photo/2020/03/26/10/58/norway-4970080_1280.jpg" id="menuImg"></img>
         </div>
         <div id='menubuttonwrap'>
           <Link to={'/notice'} className={`menubutton ${isActive('/notice') ? 'active' : ''}`}>공지사항</Link>

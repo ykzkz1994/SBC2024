@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,8 +163,86 @@ public class ReviewServiceImpl implements ReviewService {
     // 6.삭제(delete)
     @Override
     public void remove(Long reviewID) {
-        reviewRepository.deleteById(reviewID);
+        Optional<Review> reviewDTO = reviewRepository.findById(reviewID);
+        if (reviewDTO.isPresent()) {
+            Review review = reviewDTO.get();
+            Reservation reservation = review.getReview();  // Review에서 Reservation 가져오기
+
+            if (reservation != null) {
+                reservation.setResReview('N');  // resReview를 'N'으로 설정
+                reservationRepository.save(reservation);  // 변경 사항 저장
+            }
+
+            // 리뷰 삭제
+            reviewRepository.deleteById(reviewID);
+        } else {
+            // reviewID에 해당하는 리뷰가 없는 경우 처리
+            throw new RuntimeException("Review not found with ID: " + reviewID);
+        }
     }
 
     // 7.수정(update)
+    @Override
+    public void modify(ReviewReqDTO reviewDTO) {
+
+        // 1.조회
+        Optional<Review> result = reviewRepository.findById(reviewDTO.getReviewID());
+        Review review = result.orElseThrow();
+
+        // 2.change : title, content, file, rtag_Clean, rtag_Price, rtag_Facility, rtag_Photo, rtag_Silence, rtag_Kind, rtag_View
+        String updateTtile = reviewDTO.getReviewTitle();
+        String updateContent = reviewDTO.getReviewContent();
+        String updateAttachment = reviewDTO.getReviewAttachment();
+        char updateRtagClean = reviewDTO.getRtag_Clean();
+        char updateRtagPrice = reviewDTO.getRtag_Price();
+        char updateRtagFacility = reviewDTO.getRtag_Facility();
+        char updateRtagPhoto = reviewDTO.getRtag_Photo();
+        char updateRtagSilence = reviewDTO.getRtag_Silence();
+        char updateRtagKind = reviewDTO.getRtag_Kind();
+        char updateRtagView = reviewDTO.getRtag_View();
+
+        if (updateTtile != null) {
+            review.changeTitle(updateTtile);
+        } else {
+            review.changeTitle(review.getReviewTitle());
+        }
+
+        if (updateContent != null) {
+            review.changeContent(updateContent);
+        } else {
+            review.changeContent(review.getReviewContent());
+        }
+
+        if (updateAttachment != null) {
+            review.changeAttachment(updateAttachment);
+        } else {
+            review.changeAttachment(review.getReviewAttachment());
+        }
+
+        // 각 태그에 대해 null 체크 후 변경
+        // '\0'는 char 타입의 기본값입니다.
+        if (updateRtagClean != '\0') {
+            review.changeClean(updateRtagClean);
+        }
+        if (updateRtagPrice != '\0') {
+            review.changePrice(updateRtagPrice);
+        }
+        if (updateRtagFacility != '\0') {
+            review.changeFacility(updateRtagFacility);
+        }
+        if (updateRtagPhoto != '\0') {
+            review.changePhoto(updateRtagPhoto);
+        }
+        if (updateRtagSilence != '\0') {
+            review.changeSilence(updateRtagSilence);
+        }
+        if (updateRtagKind != '\0') {
+            review.changeKind(updateRtagKind);
+        }
+        if (updateRtagView != '\0') {
+            review.changeView(updateRtagView);
+        }
+
+        reviewRepository.save(review);
+    }
 }

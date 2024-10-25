@@ -39,11 +39,8 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
 
     List<Reservation> findByResStatus(String resStatus);
 
-    // memberId를 사용하여 예약 내역 조회 (마이페이지 - 나의 예약내역)
-    @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId")
-    List<Reservation> findByMemberId(@Param("memberId") Long memberId);
-
-    @Query("SELECT r FROM Reservation r WHERE r.member.memberID = :memberId ORDER BY r.resId desc ")
-    List<Reservation> findByMemberIdOOrderByResId(@Param("memberId") Long memberId);
+    // 마이페이지 - 나의 예약내역, 회원탈퇴에 사용
+    @Query("SELECT r FROM Reservation r JOIN FETCH r.member m JOIN FETCH r.site s WHERE r.member.memberID = :memberId ORDER BY r.resId desc ")
+    List<Reservation> findByMemberIdOrderByResId(@Param("memberId") Long memberId);
 
 }

@@ -33,5 +33,6 @@ public interface ReviewService {
     void remove(Long reviewID);
 
     // 7. 수정(update)
+    void modify(ReviewReqDTO reviewDTO);
 
 }

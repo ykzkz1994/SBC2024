@@ -2,23 +2,22 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
-import com.sbcamping.user.member.dto.MemberDTO;
+import com.sbcamping.user.camper.dto.PageRequestDTO;
+import com.sbcamping.user.camper.dto.PageResponseDTO;
 
 import java.util.List;
-import java.util.Map;
 
 public interface MemberService {
-    public void addMember(Member member);
-    public Member updateMember(Member member);
-    public void deleteMember(Long memberID);
-    public Member getMember(Long memberId);
-    public String emailCheck(String memberEmail);
-    public String findEmail(String memberName, String memberPhone);
-    public Member findMemberByNameAndEmail(Member member);
-    public String updatePw(Member member);
-    public String authPw(Long memberId, String memberPw);
-    public List<Reservation> getMemberRes(Long memberId);
-    public Reservation getResDetail(Long resId);
-    public void cancelRes(Long resId, String reason);
-    public String withdraw(Long memberId, String memberPw);
+    void addMember(Member member);
+    Member updateMember(Member member);
+    Member getMember(Long memberId);
+    String emailCheck(String memberEmail);
+    String findEmail(String memberName, String memberPhone);
+    Member findMemberByNameAndEmail(Member member);
+    String updatePw(Member member);
+    String authPw(Long memberId, String memberPw);
+    List<Reservation> getMemberRes(Long memberId);
+    Reservation getResDetail(Long resId);
+    void cancelRes(Long resId, String reason);
+    String withdraw(Long memberId, String memberPw);
 }

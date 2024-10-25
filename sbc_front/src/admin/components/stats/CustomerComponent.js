@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import SearchComponent from "./SearchComponent";
-import { fetchCustomerStats } from '../../api/statsApi';  // 새로운 API 호출 함수 불러오기
+import { fetchCustomerStats } from '../../api/statsApi';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
+const AGE_COLORS = {
+    '10대': '#8884d8',
+    '20대': '#82ca9d',
+    '30대': '#ffc658',
+    '40대': '#ff8042',
+    '50대': '#a4de6c',
+    '60대': '#d0ed57'
+};
+
+const GENDER_COLORS = {
+    '여성': '#FF69B4',
+    '남성': '#4169E1',
+    '기타': '#808080' // 기타 색상 추가
+};
+
 const CustomerComponent = () => {
+    const [error, setError] = useState(null);
     const [genderData, setGenderData] = useState([]);
     const [ageData, setAgeData] = useState([]);
     const [localData, setLocalData] = useState([]);
@@ -13,237 +30,268 @@ const CustomerComponent = () => {
     const [rebookingRate, setRebookingRate] = useState(0);
     const [mostFrequentReservationCustomer, setMostFrequentReservationCustomer] = useState(null);
     const [mostFrequentCancellationCustomer, setMostFrequentCancellationCustomer] = useState(null);
-    const [startDate, setStartDate] = useState('2024-10-01');
-    const [endDate, setEndDate] = useState('2024-10-31');
-    const [siteId, setSiteId] = useState(null); // null을 기본 값으로 설정
-    const [dateType, setDateType] = useState('month');
+    const [loading, setLoading] = useState(false);
+    const [searchParams, setSearchParams] = useState({
+        dateType: 'day',
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0],
+        siteId: null
+    });
 
-    const handleSearch = (searchParams) => {
-        console.log('Search params received:', searchParams);
-        const { dateType, startDate, endDate, siteId } = searchParams;
+    const processData = (data) => {
+        console.log('Received data:', data);
 
-        // 상태 업데이트
-        setDateType(dateType);
-        setStartDate(startDate);
-        setEndDate(endDate);
-        setSiteId(siteId ? parseInt(siteId) : null); // siteId가 빈 문자열인 경우 null 처리
+        if (data.overallStats) {
+            const genderStats = { '여성': 0, '남성': 0 };
+            const ageStats = {};
+            const regionStats = {};
 
-        // 정확한 파라미터로 API 호출
-        fetchCustomerStats(startDate, endDate, dateType, siteId ? parseInt(siteId) : null)
-            .then((data) => {
-                // 성별 데이터 처리
-                if (data.genderStats) {
-                    const genderArray = Object.entries(data.genderStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setGenderData(genderArray);
+            data.overallStats.forEach(stat => {
+                // 성별 집계 수정
+                if (stat.gender === 'W') genderStats['여성'] += stat.count;
+                else if (stat.gender === 'M') genderStats['남성'] += stat.count; // 'M'으로 수정
+
+                // 연령대 집계
+                if (stat.ageGroup) {
+                    ageStats[stat.ageGroup] = (ageStats[stat.ageGroup] || 0) + stat.count;
                 }
 
-                // 연령대 데이터 처리
-                if (data.ageStats) {
-                    const ageArray = Object.entries(data.ageStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setAgeData(ageArray);
+                // 지역별 집계
+                if (stat.region) {
+                    regionStats[stat.region] = (regionStats[stat.region] || 0) + stat.count;
                 }
-
-                // 지역별 데이터 처리
-                if (data.localStats) {
-                    const localArray = Object.entries(data.localStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setLocalData(localArray);
-                }
-
-                // 누적 예약 통계
-                if (data.totalReservationStats) {
-                    setTotalReservationStats(data.totalReservationStats);
-                }
-
-                // 재예약 고객 비율
-                if (data.rebookingRate !== undefined) {
-                    setRebookingRate(data.rebookingRate);
-                }
-
-                // 최다 예약 고객
-                if (data.mostFrequentReservationCustomer) {
-                    setMostFrequentReservationCustomer(data.mostFrequentReservationCustomer);
-                }
-
-                // 최다 취소 고객
-                if (data.mostFrequentCancellationCustomer) {
-                    setMostFrequentCancellationCustomer(data.mostFrequentCancellationCustomer);
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching customer stats:', error);
             });
+
+            // 성별 데이터 설정
+            const genderArray = Object.entries(genderStats)
+                .filter(([_, value]) => value > 0)
+                .map(([key, value]) => ({ name: key, value: value }));
+            setGenderData(genderArray);
+
+            // 연령대 데이터 설정
+            const ageArray = Object.entries(ageStats)
+                .filter(([key, value]) => key !== '') // 빈 문자열 필터링
+                .map(([key, value]) => ({
+                    name: key,
+                    value: value
+                }));
+            setAgeData(ageArray);
+
+            // 지역별 데이터 설정
+            const localArray = Object.entries(regionStats)
+                .filter(([key, value]) => key !== '' && value > 0)
+                .map(([key, value]) => ({
+                    name: key,
+                    value: value
+                }));
+            setLocalData(localArray);
+        } else {
+            setGenderData([]);
+            setAgeData([]);
+            setLocalData([]);
+        }
+
+        // totalReservationStats 수정
+        setTotalReservationStats({ 
+            totalReservations: data.totalCustomers || 0, 
+            averageReservationsPerDay: data.totalCustomers ? (data.totalCustomers / 30) : 0 
+        });
+
+        // 다른 데이터 처리는 그대로 유지
+        if (data.rebookingRate !== undefined) {
+            setRebookingRate(data.rebookingRate);
+        }
+
+        // 최다 예약 고객 처리
+        setMostFrequentReservationCustomer(
+            data.mostFrequentReservationCustomerId ? {
+                customerId: data.mostFrequentReservationCustomerId,
+                customerName: data.mostFrequentReservationCustomerName,
+                customerEmail: data.mostFrequentReservationCustomerEmail,
+                reservationCount: data.mostFrequentReservationCount // 예약 횟수 추가
+            } : null
+        );
+
+        // 최다 취소 고객 처리
+        setMostFrequentCancellationCustomer(
+            data.mostFrequentCancellationCustomerId ? {
+                customerId: data.mostFrequentCancellationCustomerId,
+                customerName: data.mostFrequentCancellationCustomerName,
+                customerEmail: data.mostFrequentCancellationCustomerEmail,
+                cancellationCount: data.mostFrequentCancellationCount // 취소 횟수 추가
+            } : null
+        );
+    };
+
+    const onSearch = async (newSearchParams) => {
+        setSearchParams(newSearchParams);
+        setLoading(true);
+        try {
+            const data = await fetchCustomerStats(newSearchParams);
+            processData(data); // 데이터 처리 호출
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        // 컴포넌트가 마운트 될 때 API 호출
-        fetchCustomerStats(startDate, endDate, dateType, siteId ? parseInt(siteId) : null)
-            .then((data) => {
-                // 성별 데이터 처리
-                if (data.genderStats) {
-                    const genderArray = Object.entries(data.genderStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setGenderData(genderArray);
-                }
+        onSearch(searchParams);
+    }, []);
 
-                // 연령대 데이터 처리
-                if (data.ageStats) {
-                    const ageArray = Object.entries(data.ageStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setAgeData(ageArray);
-                }
-
-                // 지역별 데이터 처리
-                if (data.localStats) {
-                    const localArray = Object.entries(data.localStats).map(([key, value]) => ({
-                        name: key,
-                        value: value
-                    }));
-                    setLocalData(localArray);
-                }
-
-                // 누적 예약 통계
-                if (data.totalReservationStats) {
-                    setTotalReservationStats(data.totalReservationStats);
-                }
-
-                // 재예약 고객 비율
-                if (data.rebookingRate !== undefined) {
-                    setRebookingRate(data.rebookingRate);
-                }
-
-                // 최다 예약 고객
-                if (data.mostFrequentReservationCustomer) {
-                    setMostFrequentReservationCustomer(data.mostFrequentReservationCustomer);
-                }
-
-                // 최다 취소 고객
-                if (data.mostFrequentCancellationCustomer) {
-                    setMostFrequentCancellationCustomer(data.mostFrequentCancellationCustomer);
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching customer stats on mount:', error);
-            });
-    }, [startDate, endDate, dateType, siteId]); // 모든 의존성 추가
-
-    const wrapperStyle = {
-        width: '100%',
-        height: '400px',
-        backgroundColor: '#f0f0f0',
-        border: '1px solid #ccc',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    };
+    const NoDataMessage = () => (
+        <div className="h-full flex items-center justify-center bg-gray-100 text-gray-500">
+            해당 기간에 데이터가 존재하지 않습니다.
+        </div>
+    );
 
     return (
-        <>
-            {/* 검색 컴포넌트 */}
-            <SearchComponent onSearch={handleSearch} />
-
-            {/* 성별 비중 */}
-            <div className={"genderAge"} style={wrapperStyle}>
-                <h4>성별 비중</h4>
-                <ResponsiveContainer width="100%" height="80%">
-                    <BarChart data={genderData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="value" fill="#8884d8" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            {/* 연령별 비중 */}
-            <div className={"age"} style={wrapperStyle}>
-                <h4>연령별 비중</h4>
-                <ResponsiveContainer width="100%" height="80%">
-                    <BarChart data={ageData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="value" fill="#8884d8" />
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-
-            {/* 지역별 비중 */}
-            <div className={"local"} style={wrapperStyle}>
-                <h4>지역별 비중</h4>
-                <ResponsiveContainer width="100%" height="80%">
-                    <PieChart>
-                        <Pie
-                            data={localData}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            dataKey="value"
-                        >
-                            {localData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
-            </div>
-
-            {/* 누적 예약 고객 분석 */}
-            <div className={"analyse"} style={wrapperStyle}>
-                <h4>누적 예약 고객 분석</h4>
-                <fieldset>
-                    <legend>총 누적 예약 고객수</legend>
-                    <p>{totalReservationStats.totalReservations} (일 평균 예약 고객수: {totalReservationStats.averageReservationsPerDay ? totalReservationStats.averageReservationsPerDay.toFixed(2) : 'N/A'})</p>
-                </fieldset>
-                <fieldset>
-                    <legend>재예약 고객 비율</legend>
-                    <p>{rebookingRate ? rebookingRate.toFixed(2) : 'N/A'}%</p>
-                </fieldset>
-            </div>
-
-            {/* 최다 예약/최다 취소 고객 */}
-            <div className={"performance"} style={wrapperStyle}>
-                <h4>최다 예약/최다 취소 고객</h4>
-                <div>
-                    <h5>최다 예약 고객</h5>
-                    {mostFrequentReservationCustomer ? (
-                        <p>고객 ID: {mostFrequentReservationCustomer.customerId}, 예약 횟수: {mostFrequentReservationCustomer.reservationCount}</p>
-                    ) : (
-                        <p>데이터 없음</p>
-                    )}
+        <div className="container-fluid mt-4">
+            <SearchComponent onSearch={onSearch} />
+        <hr/>
+            <div className="row mt-4">
+                {/* 누적 예약 고객 분석 */}
+                <div className="col-md-6 mb-4">
+                    <div className="card rounded-3 shadow h-100">
+                        <div className="card-body">
+                            <h4 className="card-title">누적 예약 고객 분석</h4>
+                            <div className="mt-3">
+                                <h5>총 누적 예약 고객수</h5>
+                                <p>{totalReservationStats.totalReservations} (일 평균 예약 고객수: {totalReservationStats.averageReservationsPerDay ? totalReservationStats.averageReservationsPerDay.toFixed(2) : 'N/A'})</p>
+                            </div>
+                            <div className="mt-3">
+                                <h5>재예약 고객 비율</h5>
+                                <p>{rebookingRate ? rebookingRate.toFixed(2) : 'N/A'}%</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h5>최다 취소 고객</h5>
-                    {mostFrequentCancellationCustomer ? (
-                        <p>고객 ID: {mostFrequentCancellationCustomer.customerId}, 취소 횟수: {mostFrequentCancellationCustomer.cancellationCount}</p>
-                    ) : (
-                        <p>데이터 없음</p>
-                    )}
+
+                {/* 최다 예약/최다 취소 고객 */}
+                <div className="col-md-6 mb-4">
+                    <div className="card rounded-3 shadow h-100">
+                        <div className="card-body">
+                            <h4 className="card-title">최다 예약/최다 취소 고객</h4>
+                            <div className="mt-3">
+                                <h5>최다 예약 고객</h5>
+                                {mostFrequentReservationCustomer ? (
+                                    <p>
+                                        이름: {mostFrequentReservationCustomer.customerName}<br />
+                                        이메일: {mostFrequentReservationCustomer.customerEmail}<br />
+                                        (예약 횟수: {mostFrequentReservationCustomer.reservationCount}회)
+                                    </p>
+                                ) : (
+                                    <p>데이터 없음</p>
+                                )}
+                            </div>
+                            <div className="mt-3">
+                                <h5>최다 취소 고객</h5>
+                                {mostFrequentCancellationCustomer ? (
+                                    <p>
+                                        이름: {mostFrequentCancellationCustomer.customerName}<br />
+                                        이메일: {mostFrequentCancellationCustomer.customerEmail}<br />
+                                        (취소 횟수: {mostFrequentCancellationCustomer.cancellationCount}회)
+                                    </p>
+                                ) : (
+                                    <p>데이터 없음</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 성별 비중 */}
+                <div className="col-12 mb-4">
+                    <div className="card rounded-3 shadow">
+                        <div className="card-body">
+                            <h4 className="card-title">성별 비중</h4>
+                            <div style={{ height: '400px' }}>
+                                {genderData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={genderData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="value">
+                                                {genderData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={GENDER_COLORS[entry.name]} />
+                                                ))}
+                                            </Bar>
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <NoDataMessage />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 연령별 비중 */}
+                <div className="col-12 mb-4">
+                    <div className="card rounded-3 shadow">
+                        <div className="card-body">
+                            <h4 className="card-title">연령별 비중</h4>
+                            <div style={{ height: '400px' }}>
+                                {ageData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={ageData}>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="value">
+                                                {ageData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={AGE_COLORS[entry.name] || '#8884d8'} />
+                                                ))}
+                                            </Bar>
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <NoDataMessage />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 지역별 비중 */}
+                <div className="col-12 mb-4">
+                    <div className="card rounded-3 shadow">
+                        <div className="card-body">
+                            <h4 className="card-title">지역별 비중</h4>
+                            <div style={{ height: '400px' }}>
+                                {localData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={localData}
+                                                cx="50%"
+                                                cy="50%"
+                                                labelLine={false}
+                                                outerRadius={150}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                            >
+                                                {localData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend /> {/* 지역별 비중에만 Legend 추가 */}
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <NoDataMessage />
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
