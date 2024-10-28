@@ -14,9 +14,10 @@ const initState = {
     resList: [],
 }
 
+const navigate = useNavigate()
 
 function handleReview(resId) {
-
+    navigate('/review')
 }
 
 const MyPageResPage = () => {

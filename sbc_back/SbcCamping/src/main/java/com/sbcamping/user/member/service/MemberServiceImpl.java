@@ -1,20 +1,12 @@
 package com.sbcamping.user.member.service;
 
-import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
-import com.sbcamping.user.camper.dto.CamperBoardDTO;
-import com.sbcamping.user.camper.dto.PageRequestDTO;
-import com.sbcamping.user.camper.dto.PageResponseDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

@@ -1,0 +1,139 @@
+import {Button} from "react-bootstrap";
+import {useState} from "react";
+import collapse from "bootstrap/js/src/collapse";
+import axios from "axios";
+
+const LostItemAddPage = () => {
+
+    const [detectedObject, setDetectedObject] = useState([]);
+    const [lostItem, setLostItem] = useState({
+        category : [],
+        foundLocation : '',
+        description : '',
+        itemImage : '',
+    });
+
+
+    /*
+    *
+    * 이미지 분석 비동기 요청 메소드 시작
+    *
+    * */
+    const HandleRequestIA = () => {
+        const button = document.querySelector("input[type=button]");
+        const form = document.getElementById('fileUploadForm');
+        const formData = new FormData(form);
+        button.disabled = true;
+
+        const xhr = new XMLHttpRequest()
+        xhr.open("POST", "http://localhost:8080/java_service", true);
+        xhr.onload = function () {
+            // 처리 성공하면 img 출력
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+                const objects = response.detected_objects; // 인식된 객체
+                setDetectedObject(objects)
+                const resultDiv = document.getElementById("result");
+                // 이미지 분석 결과 : objects
+                resultDiv.innerHTML = response.message + " : " + objects + " <br>";
+
+                // img 태그 생성
+                const img_src = "data:image/jpeg;base64," + response.image;
+                const img = document.createElement("img");
+                img.src = img_src;
+                resultDiv.appendChild(img);
+
+                button.disabled = false;
+            } else {
+                console.error("ERROR : " + xhr.statusText);
+                button.disabled = false;
+            }
+        }
+        xhr.onerror = function () {
+            console.error("ERROR: " + xhr.statusText);
+            button.disabled = false;
+        }
+        xhr.send(formData);
+    }
+    /*
+    *
+    * 이미지 분석 비동기 요청 메소드 끝
+    *
+    * */
+
+    // 저장하기 버튼 클릭
+    function handleSaveButton() {
+        lostItem.category = detectedObject;
+        console.log('lostItem :', lostItem)
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0]
+        const formData = new FormData();
+        console.log("file : ", file, "category : ", lostItem.category)
+        formData.append("file", file)
+        formData.append("category", lostItem.category);
+        formData.append("foundLocation", lostItem.foundLocation);
+        formData.append("description", lostItem.description);
+
+        if(!file){
+            alert('이미지 파일을 등록해주세요')
+            return;
+        }
+
+        if (!lostItem.category || lostItem.category.length === 0) {
+            alert('이미지 파일 비동기 요청을 해주세요');
+            return;
+        }
+
+        if(lostItem.foundLocation === ''){
+            alert('습득 장소를 입력해주세요.')
+            return;
+        }
+
+        saveLostItem(formData)
+
+    }
+
+    const saveLostItem = async (formData) => {
+        console.log(formData.get("file"))
+        await axios.post
+    }
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setLostItem((prevParams) => ({
+            ...prevParams,
+            [name]: value,
+        }));
+
+    }
+
+    return(
+        <div>
+            <h1>분실물 이미지 분석</h1>
+            <hr></hr>
+            <form method="post" encType="multipart/form-data" id="fileUploadForm">
+                <p><input type="hidden" name="message" value="이미지 분석 결과"/></p>
+                <p>파일 : <input type="file" name="file" id="file"/></p>
+                <input type="button" onClick={HandleRequestIA} value="비동기 요청 click!!" style={{
+                    border: '1px solid grey',
+                    borderRadius: '5px',
+                    backgroundColor: '#eee',
+                    padding: '5px',
+                }}/>
+            </form>
+            <hr></hr>
+            <div id="result" style={{maxWidth:'500px'}}>
+                여기에 요청 결과가 출력되어야 합니다.
+            </div>
+            <div>
+                <hr></hr>
+                <p>습득 장소* : <input type="text" name="foundLocation" className="border-1" onChange={handleChange}/></p>
+                <p>추가 설명(선택) : <input type="text" maxLength='255' name="description" className="border-1"
+                                      onChange={handleChange}/></p>
+                <Button size="sm" variant="dark" onClick={handleSaveButton}>저장하기</Button>
+            </div>
+        </div>
+    )
+}
+
+export default LostItemAddPage;

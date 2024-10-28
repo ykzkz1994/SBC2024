@@ -104,16 +104,25 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         // 캠퍼게시판 목록, 상세조회
-        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/")){
+        if(path.equals("/api/campers/list") || path.startsWith("/api/campers")){
             return true;
         }
 
         //공지리스트 비회원도 볼 수 있게끔
-        if(path.equals("/admin/notices/list")){
+        if(path.equals("/admin/notices/list") || path.startsWith("/admin/notices/read")){
             return true;
         }
 
         if (path.startsWith("/api/res/")) {
+            return true;
+        }
+
+        // 파이썬 이미지 분석
+        if (path.equals("/java_service")){
+            return true;
+        }
+
+        if (path.startsWith("/lost")){
             return true;
         }
 
