@@ -32,10 +32,16 @@ const PageComponent = ({ serverData, movePage }) => {
 
     return (
         <div className="d-flex justify-content-center mt-4">
-            {/* 이전 페이지 그룹 버튼 */}
+            {/* 이전 페이지 버튼 */}
             <button
-                className="btn btn-primary mx-2"
+                className="btn btn-outline-secondary px-2"
                 onClick={handlePrevGroup}
+                style={{
+                    borderRadius: '4px',
+                    margin: '0 1px',
+                    color: '#0d6efd',
+                    borderColor: '#dee2e6'
+                }}
             >
                 &lt;
             </button>
@@ -44,17 +50,34 @@ const PageComponent = ({ serverData, movePage }) => {
             {pageNumbers.map(pageNum => (
                 <button
                     key={pageNum}
-                    className={`btn mx-2 ${serverData.current === pageNum ? 'btn-secondary' : 'btn-primary'}`}
-                    onClick={() => movePage({ page: pageNum })}
+                    className={`btn px-3 ${
+                        serverData.current === pageNum
+                            ? 'btn-primary'
+                            : 'btn-outline-secondary'
+                    }`}
+                    onClick={() => movePage({page: pageNum})}
+                    style={{
+                        borderRadius: '4px',
+                        margin: '0 1px',
+                        minWidth: '35px',
+                        color: serverData.current === pageNum ? 'white' : '#0d6efd',
+                        borderColor: '#dee2e6'
+                    }}
                 >
                     {pageNum}
                 </button>
             ))}
 
-            {/* 다음 페이지 그룹 버튼 */}
+            {/* 다음 페이지 버튼 */}
             <button
-                className="btn btn-primary mx-2"
+                className="btn btn-outline-secondary px-2"
                 onClick={handleNextGroup}
+                style={{
+                    borderRadius: '4px',
+                    margin: '0 1px',
+                    color: '#0d6efd',
+                    borderColor: '#dee2e6'
+                }}
             >
                 &gt;
             </button>

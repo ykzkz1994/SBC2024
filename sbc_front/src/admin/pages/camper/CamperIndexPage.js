@@ -8,7 +8,6 @@ const CamperIndexPage = () =>{
             <div>
                 <CommunityMenu/>
             </div>
-            <div><h1>캠퍼 게시판</h1></div>
             <div>
                 <Outlet/>
             </div>

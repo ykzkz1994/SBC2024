@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReviewStatsDTO {
     private LocalDate date;
+    private long siteId;
     private int totalReviews;
     private int cleanCount;
     private int priceCount;
@@ -19,6 +20,9 @@ public class ReviewStatsDTO {
     private int silenceCount;
     private int kindCount;
     private int viewCount;
+
+    public ReviewStatsDTO(LocalDate date, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+    }
 
     public void incrementTotalReviews() {
         this.totalReviews++;

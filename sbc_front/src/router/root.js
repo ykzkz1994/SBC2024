@@ -10,9 +10,9 @@ import CamperRouter from "./CamperRouter";
 import {createBrowserRouter} from "react-router-dom";
 import resRouter from "../admin/router/resRouter";
 import memberRouter from "../admin/router/memberRouter";
-import camperRouter from "../admin/router/camperRouter";
+import a_camperRouter from "../admin/router/A_camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
-import reviewRouter from "../admin/router/reviewRouter";
+import a_reviewRouter from "../admin/router/A_reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
 import ReviewRouter from "./ReviewRouter";
@@ -164,7 +164,7 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}campers/`,
         element: <Suspense fallback={Loading}><A_CamperIndex/></Suspense>,
-        children: camperRouter()
+        children: a_camperRouter()
     },
     {
         path: `${A_prefix}notices/`,
@@ -179,7 +179,7 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}reviews/`,
         element: <Suspense fallback={Loading}><A_ReviewIndex/></Suspense>,
-        children: reviewRouter()
+        children: a_reviewRouter()
     },
     {
         path: `${A_prefix}stats/`,

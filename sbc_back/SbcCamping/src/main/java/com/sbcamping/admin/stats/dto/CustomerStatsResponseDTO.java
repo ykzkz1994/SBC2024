@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,7 @@ public class CustomerStatsResponseDTO {
     private List<CustomerStat> overallStats; // 전체 통계
     private List<CustomerStat> siteStats;     // 사이트별 통계
     private long totalCustomers;               // 전체 고객 수
+    private Map<String, Double> reservationRatios; // 연령대와 성별에 따른 예약 비율
 
     // 최다 예약 고객 정보
     private Long mostFrequentReservationCustomerId;
@@ -49,6 +51,7 @@ public class CustomerStatsResponseDTO {
         private String ageGroup;  // 연령대
         private String region; // 지역
         private long count;    // 통계 수치
+        private Map<String, Double> reservationRatios; // 연령대와 성별에 따른 예약 비율
 
         public CustomerStat(String gender, String ageGroup, String region, long count) {
             this.gender = gender;

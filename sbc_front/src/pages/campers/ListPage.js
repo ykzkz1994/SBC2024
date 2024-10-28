@@ -6,10 +6,9 @@ const ListPage = () => {
     const page = queryParams.get("page") ? parseInt(queryParams.get("page")) : 1
     const size = queryParams.get("size") ? parseInt(queryParams.get("size")) : 10
     return (
-        <div className="p-4 w-full bg-white">
-            <div className="text-3xl font-extrabold">
-                Camper 게시판
-            </div>
+        <div>
+            <div><h1>캠퍼 게시판</h1></div>
+            <hr/>
             <ListComponent/>
         </div>
     );
