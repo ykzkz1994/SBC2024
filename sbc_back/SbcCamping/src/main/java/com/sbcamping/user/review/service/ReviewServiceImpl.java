@@ -138,7 +138,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
 
         // 해당 예약 조회
-
         Reservation reservation = optionalReservation.get();
         reservation.setResReview('Y'); // resReview 업데이트
         reservationRepository.save(reservation); // 변경사항 저장

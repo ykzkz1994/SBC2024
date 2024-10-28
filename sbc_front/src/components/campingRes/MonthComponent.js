@@ -11,7 +11,6 @@ const MonthComponent = () => {
 
     const [site, setSite] = useState([]);
 
-    const navigate = useNavigate();
     const today = new Date();
 
     // 날짜 비교 변수

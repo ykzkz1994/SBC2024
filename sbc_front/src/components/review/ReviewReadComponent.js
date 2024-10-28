@@ -126,26 +126,33 @@ const ReviewReadComponent = () => {
             </div>
 
             {reviewBoard.rtag_Clean === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#청결해요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#청결해요</Button>}
             {reviewBoard.rtag_Price === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#가성비가 좋아요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#가성비가 좋아요</Button>}
             {reviewBoard.rtag_Facility === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#시설이 좋아요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#시설이 좋아요</Button>}
             {reviewBoard.rtag_Photo === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#사진이 잘나와요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#사진이 잘나와요</Button>}
             {reviewBoard.rtag_Silence === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#조용해요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#조용해요</Button>}
             {reviewBoard.rtag_Kind === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#친절해요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#친절해요</Button>}
             {reviewBoard.rtag_View === 'Y' &&  <Button variant="success" style={{
-                borderRadius: "50px"
-            }}>#풍경이 좋아요</Button>}&nbsp;&nbsp;
+                borderRadius: "50px",
+                marginRight: "12px"
+            }}>#풍경이 좋아요</Button>}
 
 
             {/* 목록으로 돌아가기, 수정하기, 삭제하기 */}
