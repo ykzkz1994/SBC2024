@@ -86,7 +86,12 @@ const ReadComponent = () => {
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate('/admin/notices/list'); // 공지사항 목록 페이지로 이동
+        //권한을 검증하여 권한에 따라 다른경로로 라우팅
+         if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/notices/list');
+        } else {
+            navigate('/notices/list');
+        }
     };
 
     return (
@@ -94,7 +99,7 @@ const ReadComponent = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>} {/* 오류 메시지 출력 */}
             {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
-                <h2 className="text-2xl font-bold">공지사항 - #{nid}번</h2> {/* 글 번호 표시 */}
+                <h2 className="text-2xl font-bold">#{nid} 공지사항</h2> {/* 글 번호 표시 */}
                 <div>
                     <p className="text-gray-500 mb-1">작성 시간: {formatDate(createdAt)}</p>
                     <p className="text-gray-500">조회수: {views}</p> {/* 조회수 표시 */}

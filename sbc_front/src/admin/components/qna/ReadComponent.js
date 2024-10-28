@@ -86,45 +86,51 @@ function ReadComponent() {
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
                 <h2 className="text-2xl font-bold">{qboard.qboardTitle}</h2>
                 <div>
-                    <p className="text-gray-500 mb-1">작성일 : {qboard.qboardDate}</p>
-                    <p className="text-gray-500">조회수: {qboard.qboardViews}</p> {/* 조회수 표시 */}
+                    <p className="text-gray-500 mb-1">작성일 _ {qboard.qboardDate}</p>
+                    <p className="text-gray-500">조회수 _ {qboard.qboardViews}</p> {/* 조회수 표시 */}
                 </div>
             </div>
 
             <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-2">작성자 {qboard.member.memberName}</h3>
+                <h3 className="text-lg font-semibold mb-2">작성자 _ {qboard.member.memberName}</h3>
             </div>
 
-                <div className="mb-8">
-            {qboard.qboardAttachment && qboard.qboardAttachment.trim() !== "" && !imageLoadError ? (
+            <div className="mb-8">
+                <div className="flex items-center">
+                    <span className="text-lg font-semibold">첨부 이미지</span>
+                    {(!qboard.qboardAttachment || qboard.qboardAttachment.trim() === "" || imageLoadError) && (
+                        <span className="text-gray-500 ml-2">없음</span>
+                    )}
+                </div>
+                {qboard.qboardAttachment && qboard.qboardAttachment.trim() !== "" && !imageLoadError ? (
                     <div className="text-gray-700 flex justify-center">
                         <img
                             src={`${prefix}/view/${qboard.qboardAttachment}`}
                             alt="게시물 첨부 이미지"
                             className="rounded-lg"
                             style={{
-                                width: '100%', // 원하는 비율에 맞게 설정
-                                maxWidth: '500px', // 최대 너비 설정
-                                height: 'auto', // 비율을 유지하며 높이 자동 조정
+                                width: '100%',
+                                maxWidth: '500px',
+                                height: 'auto',
+                                marginBottom: '10px'
                             }}
                             onError={(e) => {
-                                e.target.onerror = null; // 무한 루프 방지
-                                setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
+                                e.target.onerror = null;
+                                setImageLoadError(true);
                             }}
                         />
                     </div>
-            ) : (
-                 <p className="text-gray-500"></p>)}
-                </div>
+                ) : null}
+            </div>
 
             <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">내용</h3>
                 <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{qboard.qboardContent}</p>
             </div>
 
             <div>
                 <hr/>
-                <label className="block text-gray-700">댓글</label>
-
+                <h3 className="text-lg font-semibold mb-2">댓글</h3>
                 <CommentComponent/>
 
             </div>
@@ -138,42 +144,42 @@ function ReadComponent() {
                     목록으로
                 </button>
 
-                    {loginState.member.memberRole === "ROLE_ADMIN" && (
-                        <>
-                            {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
-                            {loginState.member.memberId === qboard.member.memberID && (
-                                <button
-                                    onClick={() => handleModifyClick(qboard.qboardID)}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                                >
-                                    수정하기
-                                </button>
-                            )}
-                            <button
-                                onClick={() => handleDeleteClick(qboard.qboardID)}
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                            >
-                                삭제하기
-                            </button>
-                        </>
-                    )}
-
-                    {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === qboard.member.memberID && (
-                        <>
+                {loginState.member.memberRole === "ROLE_ADMIN" && (
+                    <>
+                        {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
+                        {loginState.member.memberId === qboard.member.memberID && (
                             <button
                                 onClick={() => handleModifyClick(qboard.qboardID)}
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                             >
                                 수정하기
                             </button>
-                            <button
-                                onClick={() => handleDeleteClick(qboard.qboardID)}
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                            >
-                                삭제하기
-                            </button>
-                        </>
-                    )}
+                        )}
+                        <button
+                            onClick={() => handleDeleteClick(qboard.qboardID)}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                        >
+                            삭제하기
+                        </button>
+                    </>
+                )}
+
+                {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === qboard.member.memberID && (
+                    <>
+                        <button
+                            onClick={() => handleModifyClick(qboard.qboardID)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        >
+                            수정하기
+                        </button>
+                        <button
+                            onClick={() => handleDeleteClick(qboard.qboardID)}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                        >
+                            삭제하기
+                        </button>
+                    </>
+                )}
             </div>
             <ConfirmModal
                 isOpen={isModalOpen}

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import useCustomMove from '../../../hooks/useCustomMove';
 import fileImage from "../../../images/fileAttatchment.png";
 import { Button } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 
 const initState = {
     dtoList: [],
@@ -113,7 +114,6 @@ function ListComponent(props) {
 
     return (
         <div className="container mt-5">
-            <h2 className="mb-4">Q&A 목록</h2>
 
             {/* 에러 메시지 표시 */}
             {error && (
@@ -128,18 +128,18 @@ function ListComponent(props) {
             </div>
 
             {/* Q&A 목록을 보여주는 테이블 */}
-            <table className="table table-bordered table-hover">
-                <thead className="table-secondary">
+            <Table className="table table-bordered table-hover">
+                <thead>
                     <tr>
                         {/* "번호" 열 중앙 정렬 */}
-                        <th scope="col" className="text-center" style={{ width: '10%' }}>번호</th>
+                        <th scope="col" className="text-center" style={{ width: '10%', backgroundColor:'#537f91', color:"white" }}>NO</th>
                         {/* "제목" 열 왼쪽 정렬 */}
-                        <th scope="col" style={{ width: '40%' }}>제목</th>
+                        <th scope="col" className="text-center" style={{ width: '40%', backgroundColor:'#537f91', color:"white" }}>제목</th>
                         {/* 나머지 열 중앙 정렬 */}
-                        <th scope="col" className="text-center" style={{ width: '15%' }}>작성자</th>
-                        <th scope="col" className="text-center" style={{ width: '15%' }}>작성일</th>
-                        <th scope="col" className="text-center" style={{ width: '10%' }}>조회수</th>
-                        <th scope="col" className="text-center" style={{ width: '10%' }}>답변상태</th>
+                        <th scope="col" className="text-center" style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>작성자</th>
+                        <th scope="col" className="text-center" style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>작성일</th>
+                        <th scope="col" className="text-center" style={{ width: '10%', backgroundColor:'#537f91', color:"white" }}>조회수</th>
+                        <th scope="col" className="text-center" style={{ width: '10%', backgroundColor:'#537f91', color:"white"  }}>답변상태</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,15 +149,20 @@ function ListComponent(props) {
                                 {/* "번호" 열 중앙 정렬 또는 공지 배지 */}
                                 {qb.member.memberRole === "ROLE_ADMIN" ? (
                                     <td className="align-middle text-center">
-                                        <span className="badge bg-danger">공지</span>
+                                        <span className="badge me-2"
+                                              style={{
+                                                  display: "inline-block",
+                                                  backgroundColor: "orangered",
+                                                  color: "white"
+                                              }}>공지</span>
                                     </td>
                                 ) : (
                                     <td className="align-middle text-center">{qb.qboardID}</td>
                                 )}
                                 {/* "제목" 열 왼쪽 정렬 */}
                                 <td
-                                    className="align-middle text-primary"
-                                    onClick={() => handleReadClick(qb.qboardID)} // 제목 클릭 시 호출되는 함수
+                                    onClick={() => handleReadClick(qb.qboardID)}
+                                    style={{ color: 'inherit' }}// 제목 클릭 시 호출되는 함수
                                 >
                                     <div className="d-flex align-items-center">
                                         {qb.qboardTitle}
@@ -173,7 +178,7 @@ function ListComponent(props) {
                                             />
                                         )}
                                         {commentCounts[qb.qboardID] > 0 && (
-                                            <span className="badge bg-danger ms-2">
+                                            <span className="text-red-500 ms-2">
                                                 [{commentCounts[qb.qboardID]}]
                                             </span>
                                         )}
@@ -195,7 +200,7 @@ function ListComponent(props) {
                         </tr>
                     )}
                 </tbody>
-            </table>
+            </Table>
 
             {/* 페이지네이션을 중앙 정렬하기 위해 div로 감싸기 */}
             <div className="d-flex justify-content-center my-4"> {/* my-4로 상하 여백 추가 */}
@@ -207,10 +212,10 @@ function ListComponent(props) {
             </div>
 
             {/* 글쓰기 버튼 */}
-            <div className="d-flex justify-content-end mt-3 mb-4"> {/* mb-4 유지 */}
+            <div className="d-flex justify-content-end mt-3 mb-20"> {/* mb-4 유지 */}
                 <Button
                     onClick={handleAddClick}
-                    variant="success"
+                    className="btn btn-success"
                 >
                     글쓰기
                 </Button>

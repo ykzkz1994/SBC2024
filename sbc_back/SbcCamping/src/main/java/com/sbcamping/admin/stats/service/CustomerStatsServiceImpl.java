@@ -82,6 +82,27 @@ public class CustomerStatsServiceImpl implements CustomerStatsService {
         Map<String, Object> mostFrequentReservationCustomer = getMostFrequentReservationCustomer(dateType, startDate, endDate, siteId);
         Map<String, Object> mostFrequentCancellationCustomer = getMostFrequentCancellationCustomer(dateType, startDate, endDate, siteId);
 
+        // 특정 연령대 및 성별의 예약 비율 계산
+        Map<String, Long> genderAgeCounts = genderStats.stream()
+                .collect(Collectors.groupingBy(stat -> stat.getAgeGroup() + "_" + stat.getGender(), Collectors.counting()));
+
+        Map<String, Long> totalCountsByGender = genderStats.stream()
+                .collect(Collectors.groupingBy(stat -> stat.getGender(), Collectors.counting()));
+
+        Map<String, Double> reservationRatios = new HashMap<>();
+
+        for (String key : genderAgeCounts.keySet()) {
+            String[] parts = key.split("_");
+            String ageGroup = parts[0];
+            String gender = parts[1];
+
+            Long countForGroup = genderAgeCounts.get(key);
+            Long totalForGender = totalCountsByGender.get(gender);
+
+            double ratio = (totalForGender > 0) ? (double) countForGroup / totalForGender * 100 : 0;
+            reservationRatios.put(key, ratio);
+        }
+
         // DTO에 값 설정
         CustomerStatsResponseDTO statsDTO = new CustomerStatsResponseDTO();
         statsDTO.setOverallStats(overallStats);
@@ -103,9 +124,10 @@ public class CustomerStatsServiceImpl implements CustomerStatsService {
         statsDTO.setMostFrequentCancellationCustomerEmail((String) mostFrequentCancellationCustomer.get("customerEmail"));
         statsDTO.setMostFrequentCancellationCount((Long) mostFrequentCancellationCustomer.get("cancellationCount")); // 취소 횟수 추가
 
+        // 연령대_성별 예약비율 설정
+        statsDTO.setReservationRatios(reservationRatios);
         return statsDTO;
     }
-
 
     // 성별 통계
     public List<CustomerStatsResponseDTO.CustomerStat> getGenderStats(String dateType, LocalDate startDate, LocalDate endDate, Long siteId) {
@@ -318,20 +340,23 @@ public class CustomerStatsServiceImpl implements CustomerStatsService {
     // 고객 리뷰 통계
     @Override
     public List<ReviewStatsDTO> reviews(String dateType, LocalDate startDate, LocalDate endDate, Long siteId) {
-        // Handle endDate logic
+        // endDate가 null인 경우 처리
         if (endDate == null) {
             endDate = determineEndDate(startDate, dateType);
         }
 
-        List<Review> reviewsList = siteId == null
+        // 특정 siteId에 따른 리뷰 목록 조회
+        List<Review> reviewsList = (siteId == null)
                 ? reviewStatsRepository.findByDateBetween(startDate, endDate)
                 : reviewStatsRepository.findReviewsByDateRangeAndSiteId(startDate, endDate, siteId);
 
-        log.info("Found {} reviews", reviewsList.size());
+        log.info("Found {} reviews for siteId: {}", reviewsList.size(), siteId);
 
+        // 결과를 저장할 맵 초기화
         Map<String, ReviewStatsDTO> resultMap = new TreeMap<>();
         initializeDateMap(startDate, endDate, dateType, resultMap);
 
+        // 리뷰 목록을 순회하며 통계 계산
         for (Review review : reviewsList) {
             LocalDate reviewDate = new java.sql.Date(review.getReviewDate().getTime()).toLocalDate();
             String key = getKey(reviewDate, dateType);

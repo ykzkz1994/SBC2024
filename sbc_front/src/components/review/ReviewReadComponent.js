@@ -41,7 +41,11 @@ const ReviewReadComponent = () => {
 
     // 수정하기 버튼 클릭시 호출되는 함수
     const handleModifyClick = (reviewID) => {
-        navigate(`/review/modify/${reviewID}`);
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/reviews/modify/${reviewID}`);
+        } else {
+            navigate(`/review/modify/${reviewID}`);
+        }
     }
 
     // 삭제하기 버튼 클릭
@@ -57,7 +61,11 @@ const ReviewReadComponent = () => {
         try {
             await deleteOne(currentID);
             console.log(`${currentID}번 삭제되었습니다.`);
-            navigate("/review/list")
+            if (loginState.member.memberRole === "ROLE_ADMIN") {
+                navigate('/admin/reviews/list');
+            } else {
+                navigate("/review/list");
+            }
         } catch (error) {
             alert("삭제 실패:" + error.message);
             console.error("삭제 중 오류 발생:", error);
@@ -68,7 +76,11 @@ const ReviewReadComponent = () => {
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate("/review/list")
+        if (loginState.member.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/reviews/list');
+        } else {
+            navigate("/review/list");
+        }
     }
 
     return (
@@ -77,17 +89,18 @@ const ReviewReadComponent = () => {
                 {/* 타이틀 옆에 태그 이름 붙이기 */}
                 <h2 className="text-2xl font-bold">{reviewBoard.reviewTitle}</h2>
                 <div>
-                    <p className="text-gray-500 mb-1">작성일 : {reviewBoard.reviewDate}</p>
+                    <p className="text-gray-500 mb-1">작성일 _ {reviewBoard.reviewDate}</p>
                 </div>
             </div>
 
             <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-2">작성자 {reviewBoard.member.memberName}</h3>
+                <h3 className="text-lg font-semibold mb-2">작성자 _ {reviewBoard.member.memberName}</h3>
             </div>
 
             <div className="mb-8">
                 {reviewBoard.reviewAttachment && reviewBoard.reviewAttachment.trim() !== "" && !imageLoadError ? (
                     <div className="text-gray-700 flex justify-center">
+                        <span className="text-lg font-semibold">첨부 이미지</span>
                         <img
                             src={`${prefix}/view/${reviewBoard.reviewAttachment}`}
                             alt="게시물 첨부 이미지"

@@ -11,6 +11,12 @@ const backUrl = "http://localhost:8080"; // 백엔드 기본경로 변수에 할
 // 백엔드 경로와 매핑명을 합쳐서
 export const noticeHost = `${backUrl}/admin/notices`;
 
+// axiosGuest 인스턴스를 생성하는 올바른 방식
+const axiosGuest = axios.create({
+    baseURL: noticeHost,
+    timeout: 10000
+});
+
 
 //유틸에 값 할당
 const transroot =()=>{
@@ -19,7 +25,7 @@ const transroot =()=>{
     return jwtAxios
 }
 
-
+//방문자용
 
 // 기본 axiosinstance에 tansroot한 jwtaxios를 할당
 const axiosInstance = transroot();
@@ -27,7 +33,7 @@ const axiosInstance = transroot();
 // 모든 공지사항 데이터를 가져오는 함수
     export const getAllNotices = async () => {
     try {
-        const response = await axios.get('http://localhost:8080/admin/notices/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
+        const response = await axiosGuest.get('/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
         console.log(response.data);  //디버깅용임 데이터가 왜 안넘어와
         // 필요한 경우 데이터 가공이나 필터링을 여기서 수행
         return response.data; // 모든 공지사항 데이터 반환
@@ -41,7 +47,7 @@ const axiosInstance = transroot();
 export const getOneNotice = async (id) => {
     try {
         //axios에서 제공하는 axiosInstance를 이용하여 get방식으로 ${id}로 받아온 정보를 response의 데이터에 할당
-        const response = await jwtAxios.get(`/read/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
+        const response = await axiosGuest.get(`/read/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
         const {
             nboardId,
             nboardTitle,
@@ -67,7 +73,7 @@ export const getOneNotice = async (id) => {
 // 공지사항 데이터를 생성하는 함수
 export const createNotice = async (noticeData) => {
     try {
-        await jwtAxios.post(`${noticeHost}/add`, noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
+        await axiosInstance.post('/add', noticeData); // 공지사항 데이터를 axiosInstance를 이용해 POST 방식으로 생성
         console.log("공지사항 생성 성공:", noticeData);
     } catch (error) {
         console.error("공지사항 생성 중 오류 발생, createNotice 함수:", error);

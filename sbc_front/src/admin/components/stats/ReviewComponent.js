@@ -74,6 +74,7 @@ const ReviewComponent = () => {
     return (
         <>
             <SearchComponent onSearch={onSearch}/>
+            <hr/>
             <div>
                 <h3>태그별 통계</h3>
                 {loading ? (

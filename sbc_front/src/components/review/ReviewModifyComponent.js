@@ -182,7 +182,7 @@ const ReviewModifyComponent = () => {
     return (
         <>
             <div>
-                <div className="space-y-4">
+                <div className="space-y-4 mb-20">
                     <label className="block text-gray-700">제목</label>
                     <input
                         name="reviewTitle"
@@ -265,7 +265,8 @@ const ReviewModifyComponent = () => {
                 <div className="text-right space-x-2">
                     <button
                         onClick={handleClickModify}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        onClick={handleClickModify}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-20"
                         style={{
                             marginTop: "20px"
                         }}

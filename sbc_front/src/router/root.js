@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import CampingInfoRouter from "./CampingInfoRouter";
-import NoticeRouter from "./NoticeRouter";
 import ResRouter from "./ResRouter";
 import Spinner from 'react-bootstrap/Spinner';
 import MypageRouter from "./MypageRouter";
@@ -10,14 +9,15 @@ import CamperRouter from "./CamperRouter";
 import {createBrowserRouter} from "react-router-dom";
 import resRouter from "../admin/router/resRouter";
 import memberRouter from "../admin/router/memberRouter";
-import camperRouter from "../admin/router/camperRouter";
+import a_camperRouter from "../admin/router/A_camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
-import reviewRouter from "../admin/router/reviewRouter";
+import a_reviewRouter from "../admin/router/A_reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
 import ReviewRouter from "./ReviewRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
+const {adminNoticesRouter,userNoticesRouter} = noticeRouter
 const Loading = <Spinner animation="border" />;
 
 /*
@@ -102,9 +102,9 @@ const root = createBrowserRouter([
         children: ResRouter()
     },
     {
-        path: "notice",
+        path: "notices",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
-        children: NoticeRouter()
+        children: userNoticesRouter
     },
     {
         path: "qna",
@@ -164,12 +164,12 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}campers/`,
         element: <Suspense fallback={Loading}><A_CamperIndex/></Suspense>,
-        children: camperRouter()
+        children: a_camperRouter()
     },
     {
         path: `${A_prefix}notices/`,
         element: <Suspense fallback={Loading}><A_NoticeIndex/></Suspense>,
-        children: noticeRouter()
+        children: adminNoticesRouter
     },
     {
         path: `${A_prefix}qnas/`,
@@ -179,7 +179,7 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}reviews/`,
         element: <Suspense fallback={Loading}><A_ReviewIndex/></Suspense>,
-        children: reviewRouter()
+        children: a_reviewRouter()
     },
     {
         path: `${A_prefix}stats/`,

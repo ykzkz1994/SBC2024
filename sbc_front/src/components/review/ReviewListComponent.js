@@ -87,15 +87,27 @@ const ReviewListComponent = () => {
 
     const handleAddClick = (res) => {
         setSelectRes(res)
-        navigate("/review/add", {
-            state: {
-                resData:res
-            }
-        })
+        if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/reviews/add', {
+                state: {
+                    resData: res
+                }
+            });
+        } else {
+            navigate("/review/add", {
+                state: {
+                    resData: res
+                }
+            });
+        }
     }
 
     const handleReadClick = (reviewID) => {
-        navigate(`/review/read/${reviewID}`)
+        if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/reviews/read/${reviewID}`);
+        } else {
+            navigate(`/review/read/${reviewID}`);
+        }
     }
 
     const formatDate = (date) => {
@@ -106,14 +118,17 @@ const ReviewListComponent = () => {
     }
 
     return (
-        <div>
+        <div className="container mt-5">
+            <div className="d-flex mb-3 align-items-center">
+                <BoardSearchComponent onSearch={handleSearch}/>
+            </div>
             <Table bordered hover responsive className="text-sm-center">
                 <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
+                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>NO</th>
+                    <th style={{ width: '50%', backgroundColor:'#537f91', color:"white" }}>제목</th>
+                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>작성자</th>
+                    <th style={{ width: '20%', backgroundColor:'#537f91', color:"white" }}>작성일</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -146,15 +161,16 @@ const ReviewListComponent = () => {
                 ))}
                 </tbody>
             </Table>
-            <Button onClick={handleFirstShow}>글쓰기</Button>
-
+            <div className="d-flex justify-content-center my-4">
             <BootstrapPagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
-            <BoardSearchComponent onSearch={handleSearch}/>
-
+            </div>
+            <div className="d-flex justify-content-end mt-3 mb-20">
+            <Button onClick={handleFirstShow} className="btn btn-success">글쓰기</Button>
+            </div>
             <Modal show={firstShow} onHide={handleFirstClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>예약내역을 선택해주세요</Modal.Title>
@@ -180,7 +196,9 @@ const ReviewListComponent = () => {
                             </tr>
                         ) : (
                             resData.map(res => (
+
                                 res.resReview === "N" && res.resStatus === "사용완료" ? (
+
                                     <tr key={res.resId}>
                                         <td onClick={() => handleAddClick(res)}>{res.resId}</td>
                                         <td>{res.checkoutDate}</td>
@@ -188,13 +206,14 @@ const ReviewListComponent = () => {
                                         <td>{res.site.siteName}</td>
                                     </tr>
                                 ) : null
+
                             ))
                         )}
                         </tbody>
                     </Table>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary">
+                    <Button variant="primary" >
                         글쓰기
                     </Button>
                     <Button variant="secondary" onClick={handleFirstClose}>

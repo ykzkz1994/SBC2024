@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getAllNotices } from "../../api/NoticeApi"; // API 모듈에서 함수 가져오기
 import { useNavigate } from 'react-router-dom';
 import { getPagination } from "item-pagination";
-import { useSelector } from "react-redux"; // 서버 사이드 렌더링에서 사용하기 위해 권한정보를 받아오는
+import { useSelector } from "react-redux";
+import Table from "react-bootstrap/Table"; // 서버 사이드 렌더링에서 사용하기 위해 권한정보를 받아오는
 
 
 const ListComponent = () => {
@@ -65,12 +66,16 @@ const ListComponent = () => {
     // 제목 클릭 시 상세보기 페이지로 이동하는 함수
     const handleTitleClick = (id) => {
         console.log("상세 페이지로 이동할 ID:", id);
-        navigate(`/admin/notices/read/${id}`); // 상세보기 페이지 경로로 이동
+            //권한을 검증하고 권한에 따라 다른 url로 이동
+          if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/notices/read/${id}`);
+        } else {
+            navigate(`/notices/read/${id}`);
+        }
     };
 
     return (
         <div className="container mt-5">
-            <h2 className="mb-4">공지사항 목록</h2>
 
             {/* 에러 메시지 표시 */}
             {error && (
@@ -80,57 +85,89 @@ const ListComponent = () => {
             )}
 
             {/* 공지사항 목록을 보여주는 테이블 */}
-            <table className="table table-bordered table-hover">
+            <Table bordered hover responsive className="text-sm-center">
                 <thead className="">
-                    <tr>
-                        {/* 테이블 헤더 */}
-                        <th style={{ width: '10%' }}>NO</th>
-                        <th style={{ width: '50%' }}>제목</th>
-                        <th style={{ width: '20%' }}>작성일</th>
-                        <th style={{ width: '20%' }}>조회수</th>
-                    </tr>
+                <tr>
+                    {/* 테이블 헤더 */}
+                    <th style={{width: '10%', backgroundColor: '#537f91', color: "white"}}>NO</th>
+                    <th style={{width: '50%', backgroundColor: '#537f91', color: "white"}}>제목</th>
+                    <th style={{width: '20%', backgroundColor: '#537f91', color: "white"}}>작성일</th>
+                    <th style={{width: '20%', backgroundColor: '#537f91', color: "white"}}>조회수</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {getPagination(notices, itemsPerPage, currentPage).length > 0 ? (
-                        getPagination(notices, itemsPerPage, currentPage).map((notice) => (
-                            <tr key={notice.nboardId} className="table-row" style={{ cursor: 'pointer' }}>
-                                <td className="align-middle">{notice.nboardId}</td>
-                                <td
-                                    className="align-middle text-primary"
-                                    onClick={() => handleTitleClick(notice.nboardId)} // 제목 클릭 시 호출되는 함수
-                                >
-                                    {notice.nboardTitle}
-                                </td>
-                                <td className="align-middle">{formatDate(notice.nboardDate)}</td>
-                                <td className="align-middle">{notice.nboardViews}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4" className="text-center">공지사항이 없습니다.</td>
+                {getPagination(notices, itemsPerPage, currentPage).length > 0 ? (
+                    getPagination(notices, itemsPerPage, currentPage).map((notice) => (
+                        <tr key={notice.nboardId} className="table-row" style={{cursor: 'pointer'}}>
+                            <td className="align-middle">{notice.nboardId}</td>
+                            <td
+                                className="d-flex align-items-center"
+                                onClick={() => handleTitleClick(notice.nboardId)} // 제목 클릭 시 호출되는 함수
+                            >
+                                {notice.nboardTitle}
+                            </td>
+                            <td className="align-middle">{formatDate(notice.nboardDate)}</td>
+                            <td className="align-middle">{notice.nboardViews}</td>
                         </tr>
-                    )}
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="4" className="text-center">공지사항이 없습니다.</td>
+                    </tr>
+                )}
                 </tbody>
-            </table>
+            </Table>
 
             {/* 페이지네이션 */}
             <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageClick(currentPage - 1)}>
-                            &laquo;
+                        <button
+                            className="page-link"
+                            onClick={() => handlePageClick(currentPage - 1)}
+                            style={{
+                                border: '1px solid #dee2e6',
+                                margin: '0 1px',
+                                color: '#0d6efd',
+                                padding: '6px 12px',
+                                borderRadius: '4px'
+                            }}
+                        >
+                            &lt;
                         </button>
                     </li>
                     {[...Array(totalPages).keys()].map((page) => (
                         <li key={page + 1} className={`page-item ${currentPage === page + 1 ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => handlePageClick(page + 1)}>
+                            <button
+                                className="page-link"
+                                onClick={() => handlePageClick(page + 1)}
+                                style={{
+                                    border: '1px solid #dee2e6',
+                                    margin: '0 1px',
+                                    color: currentPage === page + 1 ? 'white' : '#0d6efd',
+                                    backgroundColor: currentPage === page + 1 ? '#0d6efd' : 'white',
+                                    padding: '6px 12px',
+                                    minWidth: '35px',
+                                    borderRadius: '4px'
+                                }}
+                            >
                                 {page + 1}
                             </button>
                         </li>
                     ))}
                     <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageClick(currentPage + 1)}>
-                            &raquo;
+                        <button
+                            className="page-link"
+                            onClick={() => handlePageClick(currentPage + 1)}
+                            style={{
+                                border: '1px solid #dee2e6',
+                                margin: '0 1px',
+                                color: '#0d6efd',
+                                padding: '6px 12px',
+                                borderRadius: '4px'
+                            }}
+                        >
+                            &gt;
                         </button>
                     </li>
                 </ul>
@@ -138,7 +175,7 @@ const ListComponent = () => {
 
             {/* 관리자 조건부 렌더링 - 글쓰기 버튼 */}
             {loginState.member?.memberRole === 'ROLE_ADMIN' && (
-                <div className="d-flex justify-content-end mt-3">
+                <div className="d-flex justify-content-end mt-3 mb-20">
                     <button
                         onClick={handleAddClick}
                         className="btn btn-success"
