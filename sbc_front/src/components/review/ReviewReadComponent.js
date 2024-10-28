@@ -122,7 +122,7 @@ const ReviewReadComponent = () => {
             </div>
 
             <div className="mb-8">
-                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{reviewBoard.reviewContent}</p>
+                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg whitespace-pre-wrap">{reviewBoard.reviewContent}</p>
             </div>
 
             {reviewBoard.rtag_Clean === 'Y' &&  <Button variant="success" style={{
