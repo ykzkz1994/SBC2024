@@ -1,7 +1,7 @@
-import React from 'react';
-import {useCallback} from "react";
-import BasicLayout from "../../layouts/BasicLayout";
 import {Outlet} from 'react-router-dom';
+import React from 'react';
+import BasicLayout from "../../layouts/BasicLayout";
+
 
 import CommunityMenu from "../../components/menus/CommunityMenu";
 
