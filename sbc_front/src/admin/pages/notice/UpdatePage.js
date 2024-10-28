@@ -1,9 +1,9 @@
-// src/admin/pages/notice/ModifyPage.js
+// src/admin/pages/notice/UpdatePage.js
 
 import React from 'react';
 import UpdateComponent from '../../components/notice/UpdateComponent';
 
-const ModifyPage = () => {
+const UpdatePage = () => {
     return (
         <div>
             <a href={"/admin/notices/list"} style={{textDecoration: 'none', color: 'black'}}>
@@ -13,4 +13,4 @@ const ModifyPage = () => {
     );
 };
 
-export default ModifyPage;
+export default UpdatePage;

@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import CampingInfoRouter from "./CampingInfoRouter";
-import NoticeRouter from "./NoticeRouter";
 import ResRouter from "./ResRouter";
 import Spinner from 'react-bootstrap/Spinner';
 import MypageRouter from "./MypageRouter";
@@ -18,6 +17,7 @@ import qnaRoutes from "../admin/router/qnaRouter";
 import ReviewRouter from "./ReviewRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
+const {adminNoticesRouter,userNoticesRouter} = noticeRouter
 const Loading = <Spinner animation="border" />;
 
 /*
@@ -102,9 +102,9 @@ const root = createBrowserRouter([
         children: ResRouter()
     },
     {
-        path: "notice",
+        path: "notices",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
-        children: NoticeRouter()
+        children: userNoticesRouter
     },
     {
         path: "qna",
@@ -169,7 +169,7 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}notices/`,
         element: <Suspense fallback={Loading}><A_NoticeIndex/></Suspense>,
-        children: noticeRouter()
+        children: adminNoticesRouter
     },
     {
         path: `${A_prefix}qnas/`,
