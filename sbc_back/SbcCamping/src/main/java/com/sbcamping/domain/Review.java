@@ -64,7 +64,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "RES_ID", referencedColumnName = "RES_ID")
-    private Reservation review;
+    private Reservation reservation;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
@@ -111,4 +111,8 @@ public class Review {
         this.rtag_View = view;
     }
 
+    // 통계에서 사용하는 메서드
+    public long getSiteId() {
+        return reservation != null ? reservation.getSite().getSiteId() : 0; // siteId가 없을 경우 0 반환
+    }
 }

@@ -5,15 +5,23 @@ import { fetchCancelStats } from "../../api/statsApi";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const ResCancelComponent = () => {
+    // 현재 월의 시작일과 마지막일 계산
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    // 초기 검색 파라미터 설정
+    const initialSearchParams = {
+        dateType: 'month',
+        startDate: firstDayOfMonth.toISOString().split('T')[0],
+        endDate: lastDayOfMonth.toISOString().split('T')[0],
+        siteId: null
+    };
+
     const [cancelStats, setCancelStats] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [searchParams, setSearchParams] = useState({
-        dateType: 'day',
-        startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date().toISOString().split('T')[0],
-        siteId: null
-    });
+    const [searchParams, setSearchParams] = useState(initialSearchParams);
 
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('ko-KR', {
@@ -36,8 +44,9 @@ const ResCancelComponent = () => {
         }
     };
 
+    // 컴포넌트 마운트 시 초기 데이터 로드
     useEffect(() => {
-        onSearch(searchParams);
+        onSearch(initialSearchParams);
     }, []);
 
     const renderTableContent = () => {
@@ -142,22 +151,26 @@ const ResCancelComponent = () => {
 
     return (
         <div className="container mx-auto px-4">
-            <SearchComponent onSearch={onSearch} dateType={searchParams.dateType} />
+            <SearchComponent 
+                onSearch={onSearch} 
+                dateType={searchParams.dateType}
+                initialValues={initialSearchParams} // SearchComponent에 초기값 전달
+            />
             <hr className="my-6" />
-            <div className="mb-10 h-96"> {/* 높이를 고정합니다 */}
+            <div className="mb-10 h-96">
                 {renderGraph()}
             </div>
             <div className="mt-10">
                 <Table bordered className="w-full">
                     <thead>
-                    <tr>
-                        <th>예약 취소 날짜</th>
-                        <th>취소건수</th>
-                        <th>취소 금액</th>
-                    </tr>
+                        <tr>
+                            <th>예약 취소 날짜</th>
+                            <th>취소건수</th>
+                            <th>취소 금액</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {renderTableContent()}
+                        {renderTableContent()}
                     </tbody>
                 </Table>
             </div>

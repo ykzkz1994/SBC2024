@@ -23,13 +23,14 @@ function InactiveListComponent() {
     const {page, size} = useCustomMove()
     const [serverData, setServerData] = useState(initState)
     const [searchParams, setSearchParams] = useState({ type: 'name', keyword: ''});
+    const [currentPage, setCurrentPage] = useState(page); // 현재 페이지 상태
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = searchParams.keyword
                     ? await searchMember(searchParams.type, searchParams.keyword, { page, size })
-                    : await getInactiveList({ page, size });
+                    : await getInactiveList({ page: currentPage, size });
 
                 console.log(data);
                 setServerData(data);
@@ -39,19 +40,18 @@ function InactiveListComponent() {
         };
 
         fetchData();
-    }, [page, size, searchParams]);
+    }, [currentPage, size, searchParams]);
 
     const handleSearch = (type, keyword) => {
         setSearchParams({ type, keyword}); // 검색 파라미터 설정
     };
 
     // 페이지네이션
-    const [currentPage, setCurrentPage] = useState(1);
     const totalPages = serverData.totalPage; // 총 페이지 수
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-        // 데이터 요청 등 필요한 작업 수행
+    const handlePageChange = (newPage) => {
+        console.log("Changing to page:", newPage);
+        setCurrentPage(newPage);
     };
 
     // 날짜 포맷팅
@@ -66,7 +66,7 @@ function InactiveListComponent() {
     return (
         <div>
             <div>
-            <h1>휴면 회원 리스트 </h1>
+            <h1>탈퇴/휴면 회원 리스트 </h1>
                 <hr/>
                 <MemberSearchComponent onSearch={handleSearch}/>
                 <hr/>
@@ -82,6 +82,7 @@ function InactiveListComponent() {
                 <th>생년월일</th>
                 <th>지역</th>
                 <th>가입일</th>
+                <th>상태</th>
             </tr>
             </thead>
                <tbody>
@@ -102,6 +103,14 @@ function InactiveListComponent() {
                                <td>{member.memberBirth}</td>
                                <td>{member.memberLocal}</td>
                                <td>{formatDate(new Date(member.memberRegDate))}</td>
+                               <td style={{
+                                   color: member.memberStatus.trim().toUpperCase() === "X" ? 'red' :
+                                       member.memberStatus.trim().toUpperCase() === "OFF" ? 'blue' : 'black'
+                               }}>
+                                   {member.memberStatus.trim().toUpperCase() === "ON" ? '' :
+                                       member.memberStatus.trim().toUpperCase() === "X" ? '탈퇴' :
+                                           member.memberStatus.trim().toUpperCase() === "OFF" ? '휴면' : ''}
+                               </td>
                            </tr>
                        ))
                )}
