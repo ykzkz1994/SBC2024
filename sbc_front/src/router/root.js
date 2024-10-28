@@ -102,7 +102,7 @@ const root = createBrowserRouter([
         children: ResRouter()
     },
     {
-        path: "notice",
+        path: "notices",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
         children: userNoticesRouter
     },
