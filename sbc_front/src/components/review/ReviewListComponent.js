@@ -142,7 +142,7 @@ const ReviewListComponent = () => {
                             whiteSpace: 'nowrap' // 텍스트가 줄 바꿈되지 않도록
                         }}>
                             {rw.reviewTitle}
-                            {rw.reviewAttachment && (
+                            {rw.reviewAttachment && rw.reviewAttachment !== 'null' ? (
                                 <img
                                     src={fileImage}
                                     alt="첨부 이미지"
@@ -153,7 +153,7 @@ const ReviewListComponent = () => {
                                         marginLeft: '4px' // 제목과 이미지 사이 간격 조정
                                     }}
                                 />
-                            )}
+                            ): null}
                         </td>
                         <td>{rw.member.memberName}</td>
                         <td>{formatDate(new Date(rw.reviewDate))}</td>
@@ -175,6 +175,10 @@ const ReviewListComponent = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>예약내역을 선택해주세요</Modal.Title>
                 </Modal.Header>
+                <p style={{
+                    textAlign: "center",
+                    marginBottom : "-10px"
+                }}>구역을 사용하신 경우에만 예약내역이 표시가 됩니다.</p>
                 <Modal.Body>
                     <Table bordered hover responsive className="text-sm-center">
                         <thead>
@@ -188,18 +192,21 @@ const ReviewListComponent = () => {
                         <tbody>
                         {resData.length === 0 ? (
                             <tr>
-                                <td colSpan={5}>예약내역이 존재하지 않습니다</td>
+                                <td colSpan={4}>예약내역이 존재하지 않습니다</td>
                             </tr>
                         ) : (
                             resData.map(res => (
-                                res.resReview === "N" && (
+
+                                res.resReview === "N" && res.resStatus === "사용완료" ? (
+
                                     <tr key={res.resId}>
                                         <td onClick={() => handleAddClick(res)}>{res.resId}</td>
                                         <td>{res.checkoutDate}</td>
                                         <td>{res.resUserName}</td>
                                         <td>{res.site.siteName}</td>
                                     </tr>
-                                )
+                                ) : null
+
                             ))
                         )}
                         </tbody>

@@ -40,13 +40,6 @@ public class ResController {
         return service.getSite();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @GetMapping("/memberList")
-    public List<Member> getMember() {
-
-        return service.getMember();
-    }
-
 
     @GetMapping("/resList")
     public ResponseEntity<List<Object[]>> getResCheck() {

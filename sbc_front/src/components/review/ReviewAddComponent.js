@@ -24,13 +24,13 @@ const ReviewAddComponent = () => {
         reservation: {
             resId: resData.resId
         },
-        rtag_Clean: '',
-        rtag_Price: '',
-        rtag_Facility: '',
-        rtag_Photo: '',
-        rtag_Silence: '',
-        rtag_Kind: '',
-        rtag_View: '',
+        rtag_Clean: 'N',
+        rtag_Price: 'N',
+        rtag_Facility: 'N',
+        rtag_Photo: 'N',
+        rtag_Silence: 'N',
+        rtag_Kind: 'N',
+        rtag_View: 'N',
         file: null
     }
 
