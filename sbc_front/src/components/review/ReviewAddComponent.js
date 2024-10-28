@@ -104,13 +104,6 @@ const ReviewAddComponent = () => {
         }
     }
 
-    useEffect(() => {
-        if (review.rtag_Clean === 'Y'){
-            setValue(['1']);
-        }
-
-    }, [review.rtag_Clean]);
-
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -147,7 +140,6 @@ const ReviewAddComponent = () => {
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
-
             <ToggleButtonGroup type="checkbox" value={value} onChange={handleChange}>
                 <ToggleButton id="tbg-btn-1" value={'1'} variant="outline-success" style={{
                     borderRadius: "50px"
@@ -171,7 +163,6 @@ const ReviewAddComponent = () => {
                     borderRadius: "50px"
                 }}>#풍경이 좋아요</ToggleButton>&nbsp;&nbsp;
             </ToggleButtonGroup>
-
             <div className="text-right space-x-2">
                 <button
                     type="submit"
