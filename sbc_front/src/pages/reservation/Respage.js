@@ -11,8 +11,6 @@ import Modal from "react-bootstrap/Modal";
 
 const Respage = () => {
 
-
-
     const initState = {
         member: {
             memberId: 0,
@@ -27,6 +25,7 @@ const Respage = () => {
         checkoutDate: '',
         resTotalPay: 0,
     }
+
     // 예약데이터 추가하는 상태 관리
     const [res, setRes] = useState({...initState});
 
@@ -164,7 +163,6 @@ const Respage = () => {
                 firstSetShow(false)
                 secondSetShow(true);
                 setResData(res);
-
                 setResNumber(result);
                 setRes({...initState});
 

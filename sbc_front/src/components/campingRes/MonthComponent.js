@@ -11,7 +11,6 @@ const MonthComponent = () => {
 
     const [site, setSite] = useState([]);
 
-    const navigate = useNavigate();
     const today = new Date();
 
     // 날짜 비교 변수
@@ -103,6 +102,7 @@ const MonthComponent = () => {
 
     useEffect(() => {
         getSiteList().then(data => {
+            console.log(data)
             setSite(data)
         })
         resCheck().then(data => {
@@ -227,7 +227,7 @@ const MonthComponent = () => {
                                                 <>
                                                     {site.map((site, index) => (
                                                         <div key={index}>
-                                                            {filterCheck(site.siteId, formattedDate) ? (
+                                                            {filterCheck(site.siteId, formattedDate) || site.siteResLimit === 'Y' ? (
                                                                 <>
                                                                     <span className="resFail">
                                                                         &nbsp;&nbsp;완&nbsp;&nbsp;

@@ -59,11 +59,6 @@ useEffect(() => {
     }
 }, [qbID, loginState]);
 
-
-
-
-
-
     const handleChangeQna = (e) => {
         const { name, value } = e.target;
         setQna(prev => ({
@@ -128,7 +123,6 @@ useEffect(() => {
                         value={qna.qBoardTitle} // qna의 상태를 직접 사용
                         onChange={handleChangeQna}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
                     />
                 </div>
                 <div>
@@ -139,7 +133,6 @@ useEffect(() => {
                         onChange={handleChangeQna}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows="5"
-                        required
                     />
                 </div>
                 <div>
@@ -154,7 +147,7 @@ useEffect(() => {
                 </div>
                     {qna.qBoardAttachment && qna.qBoardAttachment.trim() !== "" && !imageLoadError ? (
                         <div>
-                            <label className="block text-gray-700">이미지</label>
+                            <label className="block text-gray-700">첨부 이미지</label>
                             {showDeleteButton && (
                                 <div>
                                     <button type="button" onClick={deleteOldImage}>X</button>
@@ -171,8 +164,8 @@ useEffect(() => {
                             )}
                         </div>
                     ) : (
-                        <p className="text-gray-500"></p>)}
 
+                        <p className="text-gray-500"></p>)}
                 <div className="text-right space-x-2">
                     <button
                         onClick={handleClickModify}

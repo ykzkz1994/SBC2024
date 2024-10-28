@@ -157,7 +157,7 @@ const ReadComponent = ({ cBoardId }) => {
                         className="btn btn-primary me-2"
                         onClick={moveToList}
                     >
-                        목록으로
+                        목록
                     </button>
                     {getCookieMemberId() === camper.member.memberID && (
                         <button

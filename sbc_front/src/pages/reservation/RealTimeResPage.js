@@ -1,7 +1,5 @@
-import React, {useState} from "react";
-import campingImg from "../../images/campingimg.png"
+import campingImg from "../../images/camimage.png"
 import MonthComponent from "../../components/campingRes/MonthComponent";
-import useCustomLogin from "../../hooks/useCustomLogin";
 
 const RealTimeResPage = () => {
 

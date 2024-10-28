@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import CampingInfoRouter from "./CampingInfoRouter";
-import NoticeRouter from "./NoticeRouter";
 import ResRouter from "./ResRouter";
 import Spinner from 'react-bootstrap/Spinner';
 import MypageRouter from "./MypageRouter";
@@ -10,14 +9,16 @@ import CamperRouter from "./CamperRouter";
 import {createBrowserRouter} from "react-router-dom";
 import resRouter from "../admin/router/resRouter";
 import memberRouter from "../admin/router/memberRouter";
-import camperRouter from "../admin/router/camperRouter";
+import a_camperRouter from "../admin/router/A_camperRouter";
 import noticeRouter from "../admin/router/noticeRouter";
-import reviewRouter from "../admin/router/reviewRouter";
+import a_reviewRouter from "../admin/router/A_reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
 import lostItemRouter from "./lostItemRouter"
+import ReviewRouter from "./ReviewRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
+const {adminNoticesRouter,userNoticesRouter} = noticeRouter
 const Loading = <Spinner animation="border" />;
 
 /*
@@ -35,6 +36,7 @@ const FIndEmail = lazy(() => import("../pages/login/FindEmailPage"))
 const MyPageIndex = lazy(() => import("../pages/member/MypageIndexPage"))
 const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
 const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
+const ReviewIndex = lazy(() => import("../pages/review/ReviewIndexPage"))
 const Sitemap = lazy(() => import("../pages/login/SitemapPage"))
 // 분실물 (이미지 분석)
 const LostItem = lazy(() => import("../pages/lostItem/LostItemIndexPage"))
@@ -60,7 +62,6 @@ const A_CamperIndex = lazy(() => import("../admin/pages/camper/CamperIndexPage")
 const A_NoticeIndex = lazy(() => import("../admin/pages/notice/NoticeIndexPage"))
 const A_QnaIndex = lazy(() => import("../admin/pages/qna/QnaIndexPage"))
 const A_ReviewIndex = lazy(() => import("../admin/pages/review/ReviewIndexPage"))
-
 
 // 관리자 주소
 const A_prefix = "admin/"
@@ -104,9 +105,9 @@ const root = createBrowserRouter([
         children: ResRouter()
     },
     {
-        path: "notice",
+        path: "notices",
         element: <Suspense fallback={Loading}><NoticeIndex/></Suspense>,
-        children: NoticeRouter()
+        children: userNoticesRouter
     },
     {
         path: "qna",
@@ -122,6 +123,11 @@ const root = createBrowserRouter([
         path: "campers",
         element: <Suspense fallback={Loading}><CamperIndex/></Suspense>,
         children: CamperRouter()
+    },
+    {
+        path: "review",
+        element: <Suspense fallback={Loading}><ReviewIndex/></Suspense>,
+        children: ReviewRouter()
     },
     {
         path: "sitemap",
@@ -166,12 +172,12 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}campers/`,
         element: <Suspense fallback={Loading}><A_CamperIndex/></Suspense>,
-        children: camperRouter()
+        children: a_camperRouter()
     },
     {
         path: `${A_prefix}notices/`,
         element: <Suspense fallback={Loading}><A_NoticeIndex/></Suspense>,
-        children: noticeRouter()
+        children: adminNoticesRouter
     },
     {
         path: `${A_prefix}qnas/`,
@@ -181,14 +187,13 @@ const root = createBrowserRouter([
     {
         path: `${A_prefix}reviews/`,
         element: <Suspense fallback={Loading}><A_ReviewIndex/></Suspense>,
-        children: reviewRouter()
+        children: a_reviewRouter()
     },
     {
         path: `${A_prefix}stats/`,
         element: <Suspense fallback={Loading}><StatsIndex/></Suspense>,
         children: statsRouter()
-    },
-
+    }
 ])
 
 export default root;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -68,5 +69,46 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
     private Member member;
+
+    // 글 , 태그 , 파일 수정 항목
+    public void changeTitle(String title) {
+        this.reviewTitle = title;
+    }
+
+    public void changeContent(String content) {
+        this.reviewContent = content;
+    }
+
+    public void changeAttachment(String attachment) {
+        this.reviewAttachment = attachment;
+    }
+
+    public void changeClean(char clean) {
+        this.rtag_Clean = clean;
+    }
+
+    public void changePrice(char price) {
+        this.rtag_Price = price;
+    }
+
+    public void changeFacility(char facility) {
+        this.rtag_Facility = facility;
+    }
+
+    public void changePhoto(char photo) {
+        this.rtag_Photo = photo;
+    }
+
+    public void changeSilence(char silence) {
+        this.rtag_Silence = silence;
+    }
+
+    public void changeKind(char kind) {
+        this.rtag_Kind = kind;
+    }
+
+    public void changeView(char view) {
+        this.rtag_View = view;
+    }
 
 }

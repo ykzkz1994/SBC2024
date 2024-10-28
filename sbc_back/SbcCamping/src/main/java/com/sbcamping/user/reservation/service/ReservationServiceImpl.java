@@ -7,7 +7,7 @@ import com.sbcamping.domain.Site;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.dto.ReservationDTO;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private static int number = 1;
 
+    @Transactional
     @Override
     public Reservation register(ReservationDTO reservationDTO) {
         if (reservationDTO.getMember() == null || reservationDTO.getSite() == null) {
@@ -94,12 +96,6 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Site> getSite() {
 
         return siteRepository.findAll();
-    }
-
-    @Override
-    public List<Member> getMember() {
-
-        return memberRepository.findAll();
     }
 
     @Override

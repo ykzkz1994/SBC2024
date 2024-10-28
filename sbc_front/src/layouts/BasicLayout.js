@@ -68,7 +68,7 @@ const BasicLayout = ({children}) => {
                                 <NavDropdown.Item href="/res/realtime">실시간예약</NavDropdown.Item>
                             </NavDropdown>
                             <NavDropdown title="커뮤니티">
-                                <NavDropdown.Item href="/notice">공지사항</NavDropdown.Item>
+                                <NavDropdown.Item href="/notices">공지사항</NavDropdown.Item>
                                 <NavDropdown.Item href="/qna">문의 게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/campers">캠퍼 게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/review">리뷰 게시판</NavDropdown.Item>

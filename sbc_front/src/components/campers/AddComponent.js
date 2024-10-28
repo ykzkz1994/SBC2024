@@ -129,7 +129,7 @@ const AddComponent = () => {
                 </div>
             </div>
 
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end mb-20">
                 <button
                     type="button"
                     className="btn btn-primary"

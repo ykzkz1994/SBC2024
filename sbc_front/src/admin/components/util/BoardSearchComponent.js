@@ -22,14 +22,18 @@ const BoardSearchComponent = ({onSearch}) => {
 
     return (
         <>
-            <div>
-                <select id="type" name="type" value={type} onChange={handleTypeChange}>
+            <div className="d-flex mb-3 align-items-center">
+                <select id="type" name="type" value={type} onChange={handleTypeChange}
+                    className="form-select me-2"
+                    style={{width: '150px'}}>
                     <option value="title">제목</option>
                     <option value="content">내용</option>
                 </select>
                 <input id="keyword" name="keyword" type="text" placeholder='검색어를 입력해주세요' value={keyword}
                        onChange={(e) => setKeyword(e.target.value)}
-                       onKeyDown={handleKeyDown}/>
+                       onKeyDown={handleKeyDown}
+                       className="form-control me-2"
+                       style={{width: '250px'}}/>
                 <Button onClick={handleSearch}>검색</Button>
             </div>
         </>

@@ -19,10 +19,26 @@ public class SalesStatsResponseDTO {
     private Long siteId;
     private String dateType;
 
-    private List<ResSalesResultDTO> stats;
+    private List<ResSalesResultDTO> statsList;
     private Map<String, Object> totalStats;
     private Map<Long, SiteSalesInfo> siteTotals;
 
     public <E> SalesStatsResponseDTO(ArrayList<E> es, Map<String, Object> totalStats, Map<Long, SiteSalesInfo> siteTotals) {
+    }
+
+    public SalesStatsResponseDTO(List<ResSalesResultDTO> statsList, Map<String, Object> totalStats, Map<Long, SiteSalesInfo> siteTotals) {
+    }
+
+    @Override
+    public String toString() {
+        return "SalesStatsResponseDTO{" +
+                "startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", siteId=" + siteId +
+                ", dateType='" + dateType + '\'' +
+                ", stats.size=" + (statsList != null ? statsList.size() : 0) +
+                ", totalStats=" + totalStats +
+                ", siteTotals.size=" + (siteTotals != null ? siteTotals.size() : 0) +
+                '}';
     }
 }
