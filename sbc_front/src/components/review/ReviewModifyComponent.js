@@ -30,6 +30,9 @@ const ReviewModifyComponent = () => {
     const [showDeleteButton, setShowDeleteButton] = useState(true);
     const [imageLoadError, setImageLoadError] = useState(false);
 
+    // 태그 선택
+    const [value, setValue] = useState([]);
+
     const loginState = useSelector((state) => state.loginSlice)
 
     useEffect(() => {
@@ -69,8 +72,34 @@ const ReviewModifyComponent = () => {
         }
     }, [reviewID, loginState]);
 
-    // 태그 선택
-    const [value, setValue] = useState([1, 7]);
+    useEffect(() => {
+        const selectValues  = [];
+
+        if (review.rtag_Clean === 'Y') {
+            selectValues.push('1');
+        }
+        if (review.rtag_Price === 'Y') {
+            selectValues.push('2');
+        }
+        if (review.rtag_Facility === 'Y') {
+            selectValues.push('3');
+        }
+        if (review.rtag_Photo === 'Y') {
+            selectValues.push('4');
+        }
+        if (review.rtag_Silence === 'Y') {
+            selectValues.push('5');
+        }
+        if (review.rtag_Kind === 'Y') {
+            selectValues.push('6');
+        }
+        if (review.rtag_View === 'Y') {
+            selectValues.push('7');
+        }
+
+        setValue(selectValues)
+
+    }, [review]);
 
     // 태그 선택시 상태 업데이트
     const handleChange = (val) => {
@@ -153,7 +182,7 @@ const ReviewModifyComponent = () => {
     return (
         <>
             <div>
-                <div className="space-y-4">
+                <div className="space-y-4 mb-20">
                     <label className="block text-gray-700">제목</label>
                     <input
                         name="reviewTitle"
@@ -209,7 +238,7 @@ const ReviewModifyComponent = () => {
                 )}
 
                 <ToggleButtonGroup type="checkbox" value={value} onChange={handleChange}>
-                    <ToggleButton type="checkbox" id="tbg-btn-1" value={'1'}  checked="true" variant="outline-success" style={{
+                    <ToggleButton id="tbg-btn-1" value={'1'}  checked="true" variant="outline-success" style={{
                         borderRadius: "50px"
                     }}>#청결해요</ToggleButton>&nbsp;&nbsp;
                     <ToggleButton id="tbg-btn-2" value={'2'} variant="outline-success" style={{
@@ -235,7 +264,8 @@ const ReviewModifyComponent = () => {
                 <div className="text-right space-x-2">
                     <button
                         onClick={handleClickModify}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        onClick={handleClickModify}
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-20"
                         style={{
                             marginTop: "20px"
                         }}

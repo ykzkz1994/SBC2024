@@ -6,10 +6,12 @@ const ReviewIndexPage = () =>{
     return(
         <BasicLayout>
             <div>
-            <CommunityMenu/>
+
+                <CommunityMenu/>
             </div>
             <div>
-                <div> Review Index Page </div>
+                <div><h1>리뷰 게시판</h1></div>
+                <hr/>
                 <Outlet/>
             </div>
         </BasicLayout>

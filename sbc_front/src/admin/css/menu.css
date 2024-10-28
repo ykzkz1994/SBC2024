@@ -27,11 +27,11 @@
 
 
 .menubutton:hover{
-    background-color: rgb(99, 194, 99);
+    background-color: #3f606e;
     color: white;
 }
 
-.clicked{
-    background-color: rgb(92, 173, 92);
+.menubutton.active {
+    background-color: #3f606e;
     color: white;
 }
