@@ -27,7 +27,7 @@ const axiosInstance = transroot();
 // 모든 공지사항 데이터를 가져오는 함수
     export const getAllNotices = async () => {
     try {
-        const response = await axios.get('http://localhost:8080/admin/notices/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
+        const response = await axiosInstance.get('/list'); // 모든 공지사항 데이터를 GET 방식으로 요청해 가져옴
         console.log(response.data);  //디버깅용임 데이터가 왜 안넘어와
         // 필요한 경우 데이터 가공이나 필터링을 여기서 수행
         return response.data; // 모든 공지사항 데이터 반환
@@ -41,7 +41,7 @@ const axiosInstance = transroot();
 export const getOneNotice = async (id) => {
     try {
         //axios에서 제공하는 axiosInstance를 이용하여 get방식으로 ${id}로 받아온 정보를 response의 데이터에 할당
-        const response = await jwtAxios.get(`/read/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
+        const response = await axiosInstance.get(`/read/${id}`); // 특정 ID의 공지사항 데이터를 GET 방식으로 요청
         const {
             nboardId,
             nboardTitle,

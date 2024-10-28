@@ -86,7 +86,12 @@ const ReadComponent = () => {
 
     // 목록으로 돌아가기 버튼 클릭 시 호출되는 함수
     const handleBackToListClick = () => {
-        navigate('/admin/notices/list'); // 공지사항 목록 페이지로 이동
+        //권한을 검증하여 권한에 따라 다른경로로 라우팅
+         if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate('/admin/notices/list');
+        } else {
+            navigate('/notices/list');
+        }
     };
 
     return (

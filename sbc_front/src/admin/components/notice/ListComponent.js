@@ -66,7 +66,12 @@ const ListComponent = () => {
     // 제목 클릭 시 상세보기 페이지로 이동하는 함수
     const handleTitleClick = (id) => {
         console.log("상세 페이지로 이동할 ID:", id);
-        navigate(`/admin/notices/read/${id}`); // 상세보기 페이지 경로로 이동
+            //권한을 검증하고 권한에 따라 다른 url로 이동
+          if (loginState.member?.memberRole === "ROLE_ADMIN") {
+            navigate(`/admin/notices/read/${id}`);
+        } else {
+            navigate(`/notices/read/${id}`);
+        }
     };
 
     return (

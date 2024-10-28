@@ -114,7 +114,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         //공지리스트 비회원도 볼 수 있게끔
-        if(path.equals("/admin/notices/list")){
+        if(path.equals("/notices/list")){
+            return true;
+        }
+        //공지 내용 비회원도 볼 수 있게끔
+          if(path.startsWith("/notices/read/")){
             return true;
         }
 
