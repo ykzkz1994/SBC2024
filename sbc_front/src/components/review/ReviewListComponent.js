@@ -127,7 +127,7 @@ const ReviewListComponent = () => {
                             whiteSpace: 'nowrap' // 텍스트가 줄 바꿈되지 않도록
                         }}>
                             {rw.reviewTitle}
-                            {rw.reviewAttachment && (
+                            {rw.reviewAttachment && rw.reviewAttachment !== 'null' ? (
                                 <img
                                     src={fileImage}
                                     alt="첨부 이미지"
@@ -138,7 +138,7 @@ const ReviewListComponent = () => {
                                         marginLeft: '4px' // 제목과 이미지 사이 간격 조정
                                     }}
                                 />
-                            )}
+                            ): null}
                         </td>
                         <td>{rw.member.memberName}</td>
                         <td>{formatDate(new Date(rw.reviewDate))}</td>

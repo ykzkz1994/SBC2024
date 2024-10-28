@@ -56,7 +56,7 @@ public class ReviewController {
     // 4. 등록
     @PostMapping("/")
     public Map<String, Long> register(ReviewReqDTO reviewDTO) {
-        log.info("register...........", reviewDTO);
+        log.info("register...........{}", reviewDTO);
         MultipartFile file = reviewDTO.getFile();
         String uploadFileName = fileUtil.saveFile(file);
         reviewDTO.setReviewAttachment(uploadFileName);
