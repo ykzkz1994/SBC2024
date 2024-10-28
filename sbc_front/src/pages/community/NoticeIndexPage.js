@@ -8,8 +8,14 @@ const NoticeIndexPage = () =>{
         <BasicLayout>
             <CommunityMenu/>
             <div>
-                <div> <ListComponent/> </div>
-                <Outlet/>
+                <div>
+                    <div><h1>공지 게시판</h1></div>
+                    <hr/>
+                </div>
+                <div>
+                    <Outlet/>
+                </div>
+
             </div>
         </BasicLayout>
     );
