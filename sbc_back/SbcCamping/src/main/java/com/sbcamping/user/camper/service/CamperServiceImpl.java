@@ -4,7 +4,6 @@ import com.sbcamping.common.jwt.JWTUtil;
 import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.domain.CamperBoardComment;
 import com.sbcamping.domain.Member;
-import com.sbcamping.exception.NoResultsFoundException;
 import com.sbcamping.user.camper.dto.*;
 import com.sbcamping.user.camper.repository.CamperCommentRepository;
 import com.sbcamping.user.camper.repository.CamperRepository;
@@ -178,10 +177,10 @@ public class CamperServiceImpl implements CamperService {
     }
     //댓글 리스트
     @Override
-    public List<CamperBoardCommentResDTO> getCommentList(Long boardId) {
+    public List<CamperBoardCommentReqDTO> getCommentList(Long boardId) {
         List<CamperBoardComment> getList = commentRepository.getCommentList(boardId);
-        List<CamperBoardCommentResDTO> result = getList.stream()
-                .map(c -> modelMapper.map(c, CamperBoardCommentResDTO.class))
+        List<CamperBoardCommentReqDTO> result = getList.stream()
+                .map(c -> modelMapper.map(c, CamperBoardCommentReqDTO.class))
                 .collect(Collectors.toList());
         return result;
     }

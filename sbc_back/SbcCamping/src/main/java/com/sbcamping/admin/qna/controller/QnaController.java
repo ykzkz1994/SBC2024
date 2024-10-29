@@ -91,6 +91,7 @@ public class QnaController {
         return Map.of("RESULT", "SUCCESS");
     }
 
+
     // 5. 삭제 (Delete)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @DeleteMapping("/{qbID}")

@@ -59,13 +59,13 @@ export const postAdd = async (qna) => {
 // putOne : 게시글 수정(Modify)
 export const putOne = async (qbID, qna) => {
     const header = {headers:{"Content-Type" : "multipart/form-data"}};
-    const res = await jwtAxios.put(`${prefix}/${qbID}`, qna, header)
+    const res = await axios.put(`${prefix}/${qbID}`, qna, header)
     return res.data;
 }
 
 // deleteOne : 게시글 삭제
 export const deleteOne = async (qbID) => {
-    const res = await jwtAxios.delete(`${prefix}/${qbID}`);
+    const res = await axios.delete(`${prefix}/${qbID}`);
     return res.data;
 }
 

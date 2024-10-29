@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CamperBoardCommentResDTO {
+public class CamperBoardCommentReqDTO {
     @JsonProperty("boardId")
     private Long boardId;
 

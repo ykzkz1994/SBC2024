@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Table } from 'react-bootstrap';
-import { FaStore, FaShower, FaWater, FaBuilding, FaRecycle } from 'react-icons/fa';
+import React, {useState} from 'react';
+import {Container, Row, Col, Card, Table} from 'react-bootstrap';
+import {FaStore, FaShower, FaWater, FaBuilding, FaRecycle} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/campinginfo.css'
 
@@ -10,27 +10,27 @@ const FacilityGuidePage = () => {
     const facilities = [
         {
             title: "매점",
-            icon: <FaStore />,
+            icon: <FaStore/>,
             images: [require('../../images/shop.jpg'), require('../../images/campingshop.jpg')],
         },
         {
             title: "샤워실 및 화장실",
-            icon: <FaShower />,
+            icon: <FaShower/>,
             images: [require('../../images/shower.jpg'), require('../../images/toilet.jpg')],
         },
         {
             title: "개수대",
-            icon: <FaWater />,
+            icon: <FaWater/>,
             images: [require('../../images/sink.jpg')],
         },
         {
             title: "관리사무실",
-            icon: <FaBuilding />,
+            icon: <FaBuilding/>,
             images: [require('../../images/Managementoffice.jpg')],
         },
         {
             title: "분리수거장",
-            icon: <FaRecycle />,
+            icon: <FaRecycle/>,
             images: [require('../../images/recycle.jpg')],
         }
     ];
@@ -50,13 +50,12 @@ const FacilityGuidePage = () => {
                     <img
                         src={require('../../images/FacilityGuide.jpg')}
                         alt="캠핑장 안내도"
-                        style={{ width: '900px', height: '563px', margin:'auto' }}
+                        style={{width: '900px', height: '563px', margin: 'auto'}}
                         className="img-fluid mb-4"
                     />
-                    <hr />
+                    <hr/>
                 </Col>
             </Row>
-
 
 
             <Row className={"mb-5"}>
@@ -69,26 +68,42 @@ const FacilityGuidePage = () => {
                                     <Card key={index} className="mb-3 accordianNav">
                                         <Card.Body className="dropArrow">
                                             <h3 onClick={() => handleToggle(index)}>
-                                                <span style={{ fontSize: '1.2rem', marginRight: '8px', color:'green' }}>{facility.icon}</span>
+                                                <span style={{
+                                                    fontSize: '1.2rem',
+                                                    marginRight: '8px',
+                                                    color: 'green'
+                                                }}>{facility.icon}</span>
                                                 {facility.title}
                                             </h3>
-                                            <div style={{ display: activeIndex === index ? 'block' : 'none' }}>
+                                            <div style={{display: activeIndex === index ? 'block' : 'none'}}>
                                                 <Row className="d-flex justify-content-center align-items-center">
                                                     {facility.images.length === 1 ? (
-                                                        <Col className="d-flex justify-content-center align-items-center">
+                                                        <Col
+                                                            className="d-flex justify-content-center align-items-center">
                                                             <img
                                                                 src={facility.images[0]}
                                                                 alt={facility.title}
-                                                                style={{ width: '1200px', height: '550px', objectFit: 'contain', marginTop: '20px' }}
+                                                                style={{
+                                                                    width: '1200px',
+                                                                    height: '550px',
+                                                                    objectFit: 'contain',
+                                                                    marginTop: '20px'
+                                                                }}
                                                             />
                                                         </Col>
                                                     ) : (
                                                         facility.images.map((img, idx) => (
-                                                            <Col key={idx} xs={12} md={6} className="d-flex justify-content-center align-items-center">
+                                                            <Col key={idx} xs={12} md={6}
+                                                                 className="d-flex justify-content-center align-items-center">
                                                                 <img
                                                                     src={img}
                                                                     alt={facility.title}
-                                                                    style={{ width: '1200px', height: '550px', objectFit: 'cover', marginTop: '20px' }}
+                                                                    style={{
+                                                                        width: '1200px',
+                                                                        height: '550px',
+                                                                        objectFit: 'cover',
+                                                                        marginTop: '20px'
+                                                                    }}
                                                                 />
                                                             </Col>
                                                         ))
@@ -106,7 +121,8 @@ const FacilityGuidePage = () => {
 
             <Row className="mb-5">
                 <Col>
-                    <Table bordered hover style={{width:'500px',margin:'auto', textAlign:'center', fontSize:'14px' }}>
+                    <Table bordered hover
+                           style={{width: '500px', margin: 'auto', textAlign: 'center', fontSize: '14px'}}>
                         <thead>
                         <tr>
                             <th>구분</th>
