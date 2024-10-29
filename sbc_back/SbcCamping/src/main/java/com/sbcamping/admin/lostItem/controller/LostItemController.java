@@ -66,7 +66,7 @@ public class LostItemController {
     }
 
     // 3. 분실물 수정
-    @PutMapping("/api/lost/mod/{itemId}")
+    @PutMapping("/api/lost/{itemId}")
     public Map<String, Long> updateItem(@PathVariable Long itemId, @RequestBody LostItemDTO lostItemDTO) {
         log.info("------------ 분실물 수정 메소드 : {}" + itemId + "dto : ", lostItemDTO);
         Long savedItemId = lostItemService.updateItem(itemId, lostItemDTO);

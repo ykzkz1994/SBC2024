@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
-import SearchComponent from "./SearchComponent";
+import SearchComponent from "../util/SearchComponent";
 import { fetchCustomerStats } from '../../api/statsApi';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/customerStatsComponent.css'

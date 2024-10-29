@@ -132,7 +132,7 @@ const LostItemListPage = () => {
                     const header = {
                         headers:{'Content-Type': 'application/json'}
                     }
-                    await axios.put(`${prefix}/mod/${itemId}`, lostItemDTO, header)
+                    await axios.put(`${prefix}/${itemId}`, lostItemDTO, header)
 
                 }catch (e) {
                     console.log(e)
