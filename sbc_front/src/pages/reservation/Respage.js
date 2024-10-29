@@ -157,11 +157,6 @@ const Respage = () => {
                 alert("입실 인원수를 선택해주세요.")
             }, 100)
             return;
-        } else if (res.resPeople > maxPeople) {
-            firstSetShow(false)
-            setTimeout(() => {
-                alert("입실 인원수가 너무 많습니다.")
-            })
         }
 
         resAdd(res)
