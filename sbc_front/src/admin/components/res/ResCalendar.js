@@ -234,8 +234,9 @@ const ResCalendar = () => {
                                             //클릭시 모달창의 상태를 True로, reservation으로 선택한 예약 상태값 변환
                                             onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
                                         >
-                                            {/*구역명 출력*/}
-                                            {reservation.site.siteName}
+                                           {/* 예약 상태가 '예약취소'가 아닌 경우에만 구역명을 출력 */}
+{reservation.resStatus !== '예약취소' && reservation.site.siteName}
+
                                         </div>
                                     ))
                                 ) : (

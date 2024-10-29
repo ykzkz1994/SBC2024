@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReadComponent from '../../components/notice/ReadComponent';
-import NoticeMoveCompornent from "../../components/notice/NoticeMoveCompornent";
+
 
 
 const ReadPage = () => {
