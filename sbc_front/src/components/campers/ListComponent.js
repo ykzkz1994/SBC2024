@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { getList, getSearchList } from "../../api/camperApi";
+import {useEffect, useState} from "react";
+import {getList, getSearchList} from "../../api/camperApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import PageComponent from "../common/PageComponent";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import { getCommentList } from "../../api/camperApi"; // 댓글 수 가져오기 위한 API import
+import {getCommentList} from "../../api/camperApi"; // 댓글 수 가져오기 위한 API import
 
 const initState = {
     dtoList: [],
@@ -19,8 +19,8 @@ const initState = {
 };
 
 const ListComponent = () => {
-    const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
-    const { exceptionHandle } = useCustomLogin();
+    const {page, size, refresh, moveToList, moveToRead, moveToAdd} = useCustomMove();
+    const {exceptionHandle} = useCustomLogin();
     const [serverData, setServerData] = useState(initState);
     const [searchType, setSearchType] = useState("title");
     const [searchText, setSearchText] = useState("");
@@ -30,10 +30,10 @@ const ListComponent = () => {
     const loadData = async () => {
         let data;
         if (searchText) {
-            const searchParam = { page, size, searchType, searchText };
+            const searchParam = {page, size, searchType, searchText};
             data = await getSearchList(searchParam);
         } else {
-            data = await getList({ page, size });
+            data = await getList({page, size});
         }
 
         setServerData(data);
@@ -42,12 +42,12 @@ const ListComponent = () => {
         const counts = await Promise.all(
             data.dtoList.map(async (camperBoard) => {
                 const commentsData = await getCommentList(camperBoard.cboardID);
-                return { cboardID: camperBoard.cboardID, count: commentsData.length || 0 }; // 댓글이 없으면 0으로 처리
+                return {cboardID: camperBoard.cboardID, count: commentsData.length || 0}; // 댓글이 없으면 0으로 처리
             })
         );
 
         // 댓글 개수 상태 업데이트
-        const countsMap = counts.reduce((acc, { cboardID, count }) => {
+        const countsMap = counts.reduce((acc, {cboardID, count}) => {
             acc[cboardID] = count;
             return acc;
         }, {});
@@ -106,7 +106,7 @@ const ListComponent = () => {
                         <tr
                             key={camperBoard.cboardID}
                             onClick={() => handleReadPage(camperBoard.cboardID)}
-                            style={{ cursor: "pointer" }}
+                            style={{cursor: "pointer"}}
                         >
                             <td>{camperBoard.cboardID}</td>
                             <td>
@@ -160,7 +160,7 @@ const ListComponent = () => {
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value)}
                     className="form-select me-2"
-                    style={{ width: '150px' }} // 드롭다운 크기 조정
+                    style={{width: '150px'}} // 드롭다운 크기 조정
                 >
                     <option value="title">제목 검색</option>
                     <option value="content">내용 검색</option>
@@ -171,7 +171,7 @@ const ListComponent = () => {
                     onChange={(e) => setSearchText(e.target.value)}
                     className="form-control me-2"
                     placeholder="검색어 입력"
-                    style={{ width: '250px' }} // 입력창 크기 조정
+                    style={{width: '250px'}} // 입력창 크기 조정
                 />
                 <button
                     className="btn btn-primary"
@@ -183,7 +183,7 @@ const ListComponent = () => {
 
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="mx-auto">
-                    <PageComponent serverData={serverData} movePage={moveToList} />
+                    <PageComponent serverData={serverData} movePage={moveToList}/>
                 </div>
                 <button className="btn btn-primary" onClick={() => moveToAdd()}>
                     등록
