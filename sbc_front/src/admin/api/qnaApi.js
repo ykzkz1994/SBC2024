@@ -9,7 +9,7 @@ const prefix = `${API_SERVER_HOST}/admin/qnas`
 // getList : 페이지 처리 및 전체 게시글 목록 가져오기
 export const getList = async (pageParam) => {
     const {page,size} = pageParam
-    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
+    const res = await axios.get(`${prefix}/list`, {params: {page:page, size:size}})
     return res.data
 }
 
@@ -26,7 +26,7 @@ export const searchBoard = async (type, keyword, pageParam) => {
     };
 
     // 요청 보내기
-    const res = await jwtAxios.get(`${prefix}/search`, { params });
+    const res = await axios.get(`${prefix}/search`, { params });
 
     console.log(res.data);
     return res.data;
@@ -34,7 +34,7 @@ export const searchBoard = async (type, keyword, pageParam) => {
 
 // getOne : 게시글 상세 페이지(read)
 export const getOne = async (qbID) => {
-    const res = await jwtAxios.get(`${prefix}/${qbID}`);
+    const res = await axios.get(`${prefix}/${qbID}`);
     console.log(res.data);
     return res.data
 }
@@ -91,7 +91,7 @@ export const deleteComment = async (qcommentID, qbID) => {
 // getCommentList : 해당 게시글의 댓글 목록 가져오기
 export const getCommentList = async (qbID) => {
     try {
-        const res = await jwtAxios.get(`${prefix}/${qbID}/comments/list`);
+        const res = await axios.get(`${prefix}/${qbID}/comments/list`);
         const count = res.data ? Object.keys(res.data).length : 0; // 데이터가 있는 경우만 카운트
         return res.data;
     } catch (error) {

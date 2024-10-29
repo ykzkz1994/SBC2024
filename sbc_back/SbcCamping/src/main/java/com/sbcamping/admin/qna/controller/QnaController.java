@@ -25,7 +25,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
 @RequestMapping("/admin/qnas")
 public class QnaController {
 
@@ -42,6 +41,7 @@ public class QnaController {
     }
 
     // 2. 등록 : ROLE에 따라서 게시글 또는 자주하는 질문으로 뷰에서 표시됨 -> Question_Board 공지여부 컬럼(Qboard_notice)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/")
     public Map<String, Long> register(QnaReqDTO qnaDTO) {
         log.info("register............." + qnaDTO);
@@ -60,6 +60,7 @@ public class QnaController {
         return qnaService.get(qbID); }
 
     // 4. 수정 (Update)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PutMapping("/{qbID}")
     public Map<String, String> modify(@PathVariable("qbID") Long qbID, QnaReqDTO qnaDTO) {
         QnaDTO oldQnaDTO = qnaService.get(qbID);
@@ -91,6 +92,7 @@ public class QnaController {
     }
 
     // 5. 삭제 (Delete)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @DeleteMapping("/{qbID}")
     @Transactional
     public Map<String, String> remove(@PathVariable("qbID") Long qbID) {
@@ -124,6 +126,7 @@ public class QnaController {
     }
 
     // 1. 댓글 등록 : ROLE에 따라서  -> Question_Board 관리자 답변 상태 컬럼(Qboard_asked)
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/{qbID}/comments/")
     public Map<String, Long> register(@ModelAttribute QnaCommentReqDTO qnaCommentDTO, @PathVariable("qbID") Long qbID) {
 
@@ -132,6 +135,7 @@ public class QnaController {
     }
 
     // 2. 댓글 수정
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PutMapping("/{qbID}/comments/{qcommentID}")
     public Map<String, String> modify(@PathVariable("qcommentID") Long qcommentID, @PathVariable("qbID") Long qbID, QnaCommentDTO qnaCommentDTO) {
         qnaCommentDTO.setQCommentID(qcommentID);
@@ -149,6 +153,7 @@ public class QnaController {
     }
 
     // 4. 댓글 삭제
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @DeleteMapping("/{qbID}/comments/{qcommentID}")
     @Transactional
     public Map<String, String> removeComment(@PathVariable("qcommentID") Long qcommentID,  @PathVariable("qbID") Long qbID) {

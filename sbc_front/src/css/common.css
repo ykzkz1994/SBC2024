@@ -8,10 +8,10 @@
 .navwrap{
     max-width: 1200px;
     margin: 0 auto;
-    font-size: 1rem;
+    font-size: 16px;
 }
 .dropdown-box > div > div{
-    font-size: 0.9rem;
+    font-size: 15px;
 }
 
 #logo{

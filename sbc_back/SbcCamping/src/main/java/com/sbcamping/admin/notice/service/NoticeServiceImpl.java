@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class NoticeServiceImpl implements NoticeService{
     //dto변환 도와주는 modelmapper
     private final ModelMapper modelMapper;
 
+    // 메인페이지 최신글 3개
+    public List<NoticeBoard> getLatestThreeNotices() {
+        return noticeRepository.getThirdList(PageRequest.of(0, 3));
+    }
 
     @Override
     public List<NoticeDTO> getAllNotices() {    //게시글 전체목록을 불러오는 메서드
