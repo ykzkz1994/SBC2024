@@ -117,7 +117,7 @@ const ReadComponent = () => {
             {/* 공지사항 내용 표시 영역 */}
             <div className="mb-8">
                 <h2 className="text-lg font-semibold mb-2">공지 내용</h2> {/* '공지 내용' 텍스트 추가 */}
-                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{content}</p>
+                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg whitespace-pre-wrap">{content}</p>
             </div>
 
             {/* 목록으로 돌아가기, 수정하기, 삭제하기 버튼 */}
