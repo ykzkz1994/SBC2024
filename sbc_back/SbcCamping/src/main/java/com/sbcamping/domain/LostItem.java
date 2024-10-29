@@ -23,7 +23,7 @@ public class LostItem {
     private String category;        // 아이템 분류
 
     @Column(nullable = false)
-    private LocalDate regDate;      // 분실물 등록일
+    private LocalDate regDate;      // 분실물 등록일 (자동생성)
 
     @Column(nullable = false, length = 20)
     private String foundLocation;   // 습득 장소
@@ -40,13 +40,23 @@ public class LostItem {
 
     // 분실물 등록일 자동 입력
     @PrePersist
-    protected void onCreate() {
-        if (this.regDate == null) {
-            this.regDate = LocalDate.now();
-        }
+    protected void onCreate() {if (this.regDate == null) {this.regDate = LocalDate.now();}}
+
+    public void changeCategory(String newCategory) {
+        this.category = newCategory;
     }
 
+    public void changeFoundLocation(String newFoundLocation) {
+        this.foundLocation = newFoundLocation;
+    }
 
+    public void changeState(String newState) {
+        this.state = newState;
+    }
+
+    public void changeDescription(String newDescription) {
+        this.description = newDescription;
+    }
 
 
 }

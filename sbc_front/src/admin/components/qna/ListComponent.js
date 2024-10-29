@@ -143,7 +143,7 @@ function ListComponent(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {serverData.dtoList.length > 0 ? (
+                    {serverData.dtoList && serverData.dtoList.length > 0 ? (
                         serverData.dtoList.map(qb => (
                             <tr key={qb.qboardID} className="table-row" style={{ cursor: 'pointer' }}>
                                 {/* "번호" 열 중앙 정렬 또는 공지 배지 */}

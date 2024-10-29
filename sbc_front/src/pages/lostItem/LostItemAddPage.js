@@ -1,17 +1,18 @@
 import {Button} from "react-bootstrap";
 import {useState} from "react";
-import collapse from "bootstrap/js/src/collapse";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const LostItemAddPage = () => {
 
     const [detectedObject, setDetectedObject] = useState([]);
     const [lostItem, setLostItem] = useState({
-        category : [],
+        category : '',
         foundLocation : '',
         description : '',
         itemImage : '',
     });
+    const navigate = useNavigate();
 
 
     /*
@@ -44,6 +45,7 @@ const LostItemAddPage = () => {
                 resultDiv.appendChild(img);
 
                 button.disabled = false;
+
             } else {
                 console.error("ERROR : " + xhr.statusText);
                 button.disabled = false;
@@ -94,8 +96,13 @@ const LostItemAddPage = () => {
     }
 
     const saveLostItem = async (formData) => {
-        console.log(formData.get("file"))
-        await axios.post
+        const header = {
+            headers:{'Content-Type': 'multipart/form-data'}
+        }
+        let result = await axios.post(`http://localhost:8080/api/lost/`, formData, header);
+        console.log('result :', result);
+        alert(result.data.itemId + '번 분실물 등록 완료!')
+        navigate('/lost/list')
     }
 
     const handleChange = (event) => {
@@ -114,10 +121,10 @@ const LostItemAddPage = () => {
             <form method="post" encType="multipart/form-data" id="fileUploadForm">
                 <p><input type="hidden" name="message" value="이미지 분석 결과"/></p>
                 <p>파일 : <input type="file" name="file" id="file"/></p>
-                <input type="button" onClick={HandleRequestIA} value="비동기 요청 click!!" style={{
-                    border: '1px solid grey',
+                <input type="button" onClick={HandleRequestIA} value="비동기 요청(파이썬 서버 ON)" style={{
+                    border: '1px solid orange',
                     borderRadius: '5px',
-                    backgroundColor: '#eee',
+                    backgroundColor: 'orange',
                     padding: '5px',
                 }}/>
             </form>
@@ -130,7 +137,7 @@ const LostItemAddPage = () => {
                 <p>습득 장소* : <input type="text" name="foundLocation" className="border-1" onChange={handleChange}/></p>
                 <p>추가 설명(선택) : <input type="text" maxLength='255' name="description" className="border-1"
                                       onChange={handleChange}/></p>
-                <Button size="sm" variant="dark" onClick={handleSaveButton}>저장하기</Button>
+                <Button size="sm" variant="primary" onClick={handleSaveButton}>저장하기</Button>
             </div>
         </div>
     )

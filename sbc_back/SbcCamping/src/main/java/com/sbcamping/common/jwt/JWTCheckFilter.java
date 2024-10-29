@@ -136,7 +136,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if (path.startsWith("/lost")){
+        if (path.startsWith("/api/lost")){
             return true;
         }
 

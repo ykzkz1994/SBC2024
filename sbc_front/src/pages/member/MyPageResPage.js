@@ -9,19 +9,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-
-const initState = {
-    resList: [],
-}
-
-const navigate = useNavigate()
-
-function handleReview(resId) {
-    navigate('/review')
-}
-
 const MyPageResPage = () => {
 
+    const initState = {
+        resList: [],
+    }
     const loginState = useSelector((state) => state.loginSlice)
     const [serverData, setServerData] = useState(initState);
     const { refresh} = useCustomMove()
@@ -31,6 +23,10 @@ const MyPageResPage = () => {
     const memberId = loginState.member.memberId;
 
     const [reservationId, setReservationId] = useState('');
+
+    function handleReview(resId) {
+        navigate('/review')
+    }
 
     // 예약 상세 페이지로 이동
     const handleClickResId = (e) => {
