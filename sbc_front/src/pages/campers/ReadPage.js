@@ -23,11 +23,10 @@ const ReadPage = () => {
     }, [page, size]);
 
     return (
-        <div className="container mt-5">
-            <div className="display-4 mb-4">
-
-            </div>
-            <ReadComponent cBoardId={cBoardId} /> {/* ReadComponent에 cBoardId 전달 */}
+        <div>
+            <div className="mt-3"><h1>캠퍼 게시판</h1></div>
+            <hr/>
+            <ReadComponent cBoardId={cBoardId}/> {/* ReadComponent에 cBoardId 전달 */}
         </div>
     );
 };

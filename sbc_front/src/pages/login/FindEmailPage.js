@@ -101,10 +101,11 @@ const FindEmailPage = () => {
     return(
         <BasicLayout>
             <LoginMenu/>
+            <div style={{marginTop: '20px'}}>
+                <h3>이메일 찾기</h3>
+                <hr></hr>
+            </div>
             <div id="loginwrap">
-                <div>
-                    <h3>이메일 찾기</h3>
-                </div>
                 <div id="loginbox">
                     <input type="text"
                            name="memberName"
@@ -119,10 +120,11 @@ const FindEmailPage = () => {
                            maxLength={'11'}
                            required
                            onChange={handleChange}
-                           style={{fontSize:'14px'}}
+                           style={{fontSize: '14px'}}
                            placeholder={" 핸드폰 번호를 입력해주세요. (-없이 숫자만)"}></input>
                     <div>
-                        <input type="submit" onClick={handleSubmit} className={"loginbutton_default"} value="이메일 찾기"></input>
+                        <input type="submit" onClick={handleSubmit} className={"loginbutton_default"}
+                               value="이메일 찾기"></input>
                         <MyVerticallyCenteredModal
                             show={modalShow}
                             onHide={() => setModalShow(false)}

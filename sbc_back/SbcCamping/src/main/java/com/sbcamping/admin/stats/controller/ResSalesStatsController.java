@@ -78,4 +78,22 @@ public class ResSalesStatsController {
         }
     }
 
+    // 메인 페이지 예약내역 단순 호출
+    @GetMapping("/")
+    public ResponseEntity<List<Reservation>> getAllReservations(
+            @RequestParam String dateType,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        log.info("Fetching all reservations");
+
+        LocalDate end = determineEndDate(dateType, startDate, endDate);
+        if (end == null) {
+            return ResponseEntity.badRequest().body(null); // Bad request 처리
+        }
+
+        List<Reservation> response = service.getReservations(dateType, startDate, end);
+        log.info("Fetched sales stats: response={}", response);
+        return ResponseEntity.ok(response); // DTO 사용
+    }
 }

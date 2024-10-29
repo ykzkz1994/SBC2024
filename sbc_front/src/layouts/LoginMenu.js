@@ -10,7 +10,7 @@ const LoginMenu = () => {
     return (
         <>
             <div className='imgwrap'>
-                <img src={camp} id="menuImg" alt="Menu" />
+                <img src="https://cdn.pixabay.com/photo/2024/09/05/08/24/mountain-9024209_1280.jpg" id="menuImg" alt="Menu" />
             </div>
             <div id='menubuttonwrap'>
                 <Link to={'/login'} className={`menubutton ${isActive('/login') ? 'active' : ''}`}>로그인</Link>

@@ -1,8 +1,15 @@
+import "../../css/campinginfo.css"
+
 const ResGuideComponent = () => {
     return (
+        <>
         <div>
-            <div>
-                <h4>예약안내</h4>
+            <h4>예약/요금안내</h4>
+            <hr></hr>
+        </div>
+        <div className="res-guide-box">
+            <div className="res-title">
+                <h4>◎ 예약안내</h4>
                 <ul>
                     <li>
                         저희 캠핑장을 찾아주셔서 감사합니다. 원활한 예약 진행을
@@ -10,8 +17,8 @@ const ResGuideComponent = () => {
                     </li>
                 </ul>
             </div>
-            <div>
-                <h4>예약방법</h4>
+            <div className="res-title">
+                <h4>◎ 예약방법</h4>
                 <ul>
                     <li>
                         <b>온라인 예약</b> : 홈페이지에서 원하는 날짜와 캠핑장
@@ -19,8 +26,8 @@ const ResGuideComponent = () => {
                     </li>
                 </ul>
             </div>
-            <div>
-                <h4>이용안내</h4>
+            <div className="res-title">
+                <h4>◎ 이용안내</h4>
                 <ul>
                     <li>입실시간 : 14:00</li>
                     <li>퇴실시간 : 12:00</li>
@@ -30,8 +37,8 @@ const ResGuideComponent = () => {
                     </li>
                 </ul>
             </div>
-            <div>
-                <h4>예약 시 주의사항</h4>
+            <div className="res-title">
+                <h4>◎ 예약 시 주의사항</h4>
                 <ul>
                     <li>
                         <b>1.최소 연령 제한</b> : 예약은 만 18세 이상만
@@ -87,15 +94,15 @@ const ResGuideComponent = () => {
                     </li>
                 </ul>
             </div>
-            <div>
-                <h4>이용 요금 안내</h4>
+            <div className="res-title">
+                <h4>◎ 이용 요금 안내</h4>
                 <ul>
                     <li>평일 : 40000원</li>
                     <li>주말 : 80000원</li>
                 </ul>
             </div>
-            <div>
-                <h4>환불 규정 안내</h4>
+            <div className="res-title">
+                <h4>◎ 환불 규정 안내</h4>
                 <h6>예약 취소 시 아래 환불 규정을 참고해 주시기 바랍니다.</h6>
                 <ul>
                     <li>
@@ -111,6 +118,7 @@ const ResGuideComponent = () => {
                 <h6>환불 규정을 반드시 확인하신 후 예약해 주시기 바랍니다.</h6>
             </div>
         </div>
+        </>
     );
 };
 

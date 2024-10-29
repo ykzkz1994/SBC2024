@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReviewStatsRepository extends JpaRepository<Review, Long> {
     // 기간별, 사이트별 목록화
     @Query("SELECT r FROM Review r " +
-            "JOIN r.review res " +
+            "JOIN r.reservation res " +
             "WHERE r.reviewDate BETWEEN :startDate AND :endDate " +
             "AND (:siteId IS NULL OR res.site.siteId = :siteId)") // Reservation 엔티티에 siteId 필드가 있다고 가정
     List<Review> findReviewsByDateRangeAndSiteId(@Param("startDate") LocalDate startDate,

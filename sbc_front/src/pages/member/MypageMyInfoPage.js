@@ -1,4 +1,4 @@
-import MemberInfoPage from "../../components/member/mypageMyInfoComponent";
+import MemberInfoPage from "../../components/member/MypageMyInfoComponent";
 
 const MypageMemberInfoPage = () => {
     return(

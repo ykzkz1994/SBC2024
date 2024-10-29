@@ -7,20 +7,31 @@ export const API_SERVER_HOST = 'http://localhost:8080'
 const prefix = `${API_SERVER_HOST}/admin/stats`
 
 // 매출 현황 : 금액 가져오기, 예약 건수
-export const fetchSalesStats = async (params) => {
-    console.log('Fetching sales stats with:', params);
-
+export const fetchSalesStats = async (startDate, endDate, dateType, siteId) => {
     try {
+        console.log('Received dates:', { startDate, endDate });
+
+        const params = {
+            startDate,
+            endDate,
+            dateType,
+            siteId: siteId || undefined
+        };
+
+        console.log('Request params:', params);
+
         const response = await jwtAxios.get(`${prefix}/reservation-sales/sales`, { params });
-        console.log('API response data:', response.data);
 
-        if (!response.data || !response.data.stats) {
-            throw new Error("Invalid response structure");
+        console.log('Raw API response:', response.data);
+
+        if (response.data && Array.isArray(response.data.statsList)) {
+            return response.data;
+        } else {
+            console.error('Unexpected response structure:', response.data);
+            throw new Error('Invalid response structure');
         }
-
-        return response.data;
     } catch (error) {
-        console.error('API request error:', error.response?.data || error.message);
+        console.error('API request error:', error);
         throw error;
     }
 };
@@ -51,21 +62,26 @@ export const fetchReviewStats = async (params) => {
 }
 
 // 고객 현황 : 성별, 연령대, 지역별 통계
-export const fetchCustomerStats = async (startDate, endDate, dateType, siteId = null) => {
+export const fetchCustomerStats = async (params) => {
     try {
-        const params = new URLSearchParams({
-            startDate,
-            endDate,
-            dateType,
-            ...(siteId && { siteId })
-        });
-        
         console.log('Sending request with params:', params.toString()); // 디버깅용 로그
-
-        const response = await jwtAxios.get(`${prefix}/customer/all`, { params });
+        const response = await jwtAxios.get(`${prefix}/customer/all`, {params});
+        console.log('API Response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching customer stats:', error);
         throw error;
     }
+}
+
+// 단순 특정기간 예약 리스트 불러오기
+export const getStatsReservations = async (params) => {
+      try {
+        const response = await  jwtAxios.get(`${prefix}/reservation-sales/`, {params})
+    console.log('API Response:', response.data);
+    return response.data; } catch (error) {
+          console.error('Error fetching customer stats:', error);
+          throw error;
+      }
+
 };

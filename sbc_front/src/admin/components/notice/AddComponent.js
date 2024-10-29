@@ -47,18 +47,12 @@ const AddComponent = () => {
             });
     };
 
-
-
-
     // 목록으로 버튼 클릭 핸들러
     const handleBackToList = () => {
         navigate('/admin/notices/list');
     };
-
-
-
     return (
-        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 mb-40">
             <h2 className="text-2xl font-bold mb-4">공지사항 추가</h2>
             <form onSubmit={addNotice} className="space-y-4">
                 <div>

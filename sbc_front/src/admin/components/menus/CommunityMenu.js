@@ -1,31 +1,43 @@
 import '../../css/menu.css';
-import { Link } from "react-router-dom";
-
-var div2 = document.getElementsByClassName("menubutton");
-
-function handleClick(event) {
-    if (event.target.classList.contains("clicked")) {
-        event.target.classList.remove("clicked");
-    } else {
-        for (var i = 0; i < div2.length; i++) {
-            div2[i].classList.remove("clicked");
-        }
-        event.target.classList.add("clicked");
-    }
-}
-
+import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from 'react';
 
 const CommunityMenu = () => {
-    return(
-        <>        
-        <div id='menubuttonwrap'>
-          <Link to={'/admin/notices'} className='menubutton'>공지사항</Link>
-          <Link to={'/admin/qnas'} className='menubutton'>문의게시판</Link>
-          <Link to={'/admin/campers'} className='menubutton'>캠퍼게시판</Link>
-          <Link to={'/admin/reviews'} className='menubutton'>리뷰게시판</Link>
-        </div>
+    const location = useLocation();
+    const [activeMenu, setActiveMenu] = useState('');
 
-        </>
+    // 현재 경로에 따라 활성화된 메뉴 설정
+    useEffect(() => {
+        setActiveMenu(location.pathname);
+    }, [location]);
+
+    return(
+        <div id='menubuttonwrap'>
+            <Link
+                to='/admin/notices'
+                className={`menubutton ${activeMenu === '/admin/notices' ? 'active' : ''}`}
+            >
+                공지사항
+            </Link>
+            <Link
+                to='/admin/qnas'
+                className={`menubutton ${activeMenu === '/admin/qnas' ? 'active' : ''}`}
+            >
+                문의게시판
+            </Link>
+            <Link
+                to='/admin/campers'
+                className={`menubutton ${activeMenu === '/admin/campers' ? 'active' : ''}`}
+            >
+                캠퍼게시판
+            </Link>
+            <Link
+                to='/admin/reviews'
+                className={`menubutton ${activeMenu === '/admin/reviews' ? 'active' : ''}`}
+            >
+                리뷰게시판
+            </Link>
+        </div>
     );
 }
 

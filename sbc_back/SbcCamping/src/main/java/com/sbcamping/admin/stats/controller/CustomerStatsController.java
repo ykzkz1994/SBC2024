@@ -1,6 +1,8 @@
 package com.sbcamping.admin.stats.controller;
 
 import com.sbcamping.admin.stats.dto.CustomerStatsReqDTO;
+import com.sbcamping.admin.stats.dto.CustomerStatsResponseDTO;
+import com.sbcamping.admin.stats.dto.ReviewStatsDTO;
 import com.sbcamping.admin.stats.service.CustomerStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -29,89 +31,58 @@ public class CustomerStatsController {
     @Autowired
     private CustomerStatsService service;
 
-    // 고객 통계 : 기간별 조회 - 성별 /gender, 연령별 /age, 지역별 / local
+    // 고객 통계 : 기간별 조회 - 성별 /gender, 연령별 /age, 지역별 /local
     @GetMapping("/all")
-    public ResponseEntity<?> getAllCustomerStats(
+    public ResponseEntity<CustomerStatsResponseDTO> getAllCustomerStats(
+            @RequestParam String dateType,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam String dateType,
             @RequestParam(required = false) Long siteId
     ) {
         try {
-            log.info("Received request - dateType: {}, startDate: {}, endDate: {}, siteId: {}",
-                    dateType, startDate, endDate, siteId);
+            // 서비스에서 통계 조회
+            CustomerStatsResponseDTO allStats = service.getAllCustomerStats(dateType, startDate, endDate, siteId);
 
-            LocalDate start = startDate;
-            LocalDate end;
-
-            switch (dateType) {
-                case "day":
-                    end = endDate != null ? endDate : start;
-                    break;
-                case "month":
-                    YearMonth yearMonth = YearMonth.from(start);
-                    end = yearMonth.atEndOfMonth();
-                    break;
-                case "year":
-                    end = start.withMonth(12).withDayOfMonth(31);
-                    break;
-                default:
-                    return ResponseEntity.badRequest().body("Invalid date type");
-            }
-
-            Map<String, Object> allStats = service.getAllCustomerStats(startDate, endDate, dateType, siteId);
-            log.info(allStats);
+            // DTO로 변환 (service에서 DTO를 생성하므로, 추가 매핑 필요 없음)
             return ResponseEntity.ok(allStats);
 
         } catch (Exception e) {
             log.error("Error processing customer stats", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing customer stats: " + e.getMessage());
+                    .body(null);
         }
     }
 
-    // 2-1 누적 예약 고객수, 일 평균 예약 고객수, 재예약 고객 비율
-    // 2-4 최다 예약 & 최다 취소 고객 명단 /performance
-
-    // 2-5 고객 리뷰 현황
+    // 2-2 고객 리뷰 현황
     @GetMapping("/reviews")
-    public ResponseEntity<?> getReviewStats(
+    public ResponseEntity<List<ReviewStatsDTO>> getReviewStats(
             @RequestParam String dateType,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long siteId
     ) {
         try {
-            log.info("Received request - dateType: {}, startDate: {}, endDate: {}, siteId: {}",
+            log.info("Received request for review stats - dateType: {}, startDate: {}, endDate: {}, siteId: {}",
                     dateType, startDate, endDate, siteId);
 
-            LocalDate start = startDate;
-            LocalDate end;
-
-            switch (dateType) {
-                case "day":
-                    end = endDate != null ? endDate : start;
-                    break;
-                case "month":
-                    YearMonth yearMonth = YearMonth.from(start);
-                    end = yearMonth.atEndOfMonth();
-                    break;
-                case "year":
-                    end = start.withMonth(12).withDayOfMonth(31);
-                    break;
-                default:
-                    return ResponseEntity.badRequest().body("Invalid date type");
-            }
-
-            List<CustomerStatsReqDTO> result = service.reviews(start, end, siteId, dateType);
-
-            log.info("Processed {} review stats", result.size());
-
+            List<ReviewStatsDTO> result = service.reviews(dateType, startDate, endDate, siteId);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("Error processing review stats", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing review stats: " + e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    private LocalDate determineEndDate(String dateType, LocalDate startDate, LocalDate endDate) {
+        switch (dateType) {
+            case "day":
+                return endDate != null ? endDate : startDate;
+            case "month":
+                return YearMonth.from(startDate).atEndOfMonth();
+            case "year":
+                return startDate.withMonth(12).withDayOfMonth(31);
+            default:
+                return null;
         }
     }
 

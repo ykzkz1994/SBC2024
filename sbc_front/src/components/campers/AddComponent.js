@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { postAdd } from "../../api/camperApi"; // 회원 정보를 가져오는 API 제거
 import useCustomMove from "../../hooks/useCustomMove";
 import {useSelector} from "react-redux";
@@ -79,17 +79,21 @@ const AddComponent = () => {
     };
 
     return (
-        <div className="border border-primary mt-4 p-4">
-            <div className="mb-3">
-                {/* 나머지 필드들 */}
-                <div className="row mb-2">
-                    <label className="col-sm-2 col-form-label">카테고리</label>
-                    <div className="col-sm-10">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 space-y-4 mb-40">
+            <div className="space-y-4">
+                <div className="mb-8 flex items-center">
+                    <h3 className="text-lg font-semibold mr-5" style={{marginBottom: 0}}>카테고리</h3>
+                    <div>
                         <select
                             className="form-select"
                             name="cBoardCategory"
                             value={cboard.cBoardCategory}
                             onChange={handleChangeTodo}
+                            style={{
+                                width: 'auto',
+                                minWidth: '160px', // 카테고리를 선택하세요 텍스트 길이에 맞춤
+                                padding: '0.375rem 2.25rem 0.375rem 0.75rem' // 기본 패딩 유지
+                            }}
                         >
                             <option>카테고리를 선택하세요</option>
                             <option value="잡담">잡담</option>
@@ -100,51 +104,50 @@ const AddComponent = () => {
 
                 {/* 제목, 첨부파일, 내용 등 추가 필드 */}
                 {/* 제목 */}
-                <div className="row mb-2">
-                    <label className="col-sm-2 col-form-label">제목</label>
-                    <div className="col-sm-10">
-                        <input
-                            className="form-control whitespace-pre-wrap"
-                            name="cBoardTitle"
-                            type="text"
-                            value={cboard.cBoardTitle}
-                            onChange={handleChangeTodo}
-                        />
-                    </div>
-                </div>
-
-                {/* 첨부파일 */}
-                <div className="row mb-2">
-                    <label className="col-sm-2 col-form-label">첨부파일</label>
-                    <div className="col-sm-10">
-                        <input
-                            type="file"
-                            className="form-control"
-                            name="cBoardAttachment"
-                            onChange={handleFileChange}
-                        />
-                    </div>
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">제목</h3>
+                    <input
+                        name="cBoardTitle"
+                        type="text"
+                        value={cboard.cBoardTitle}
+                        onChange={handleChangeTodo}
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="제목을 입력하세요"
+                        required
+                    />
                 </div>
 
                 {/* 내용 */}
-                <div className="row mb-2">
-                    <label className="col-sm-2 col-form-label">내용</label>
-                    <div className="col-sm-10">
-                        <textarea
-                            className="form-control whitespace-pre-wrap"
-                            name="cBoardContent"
-                            value={cboard.cBoardContent}
-                            onChange={handleChangeTodo}
-                            rows="4"
-                        />
-                    </div>
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">내용</h3>
+                    <textarea
+                        name="qBoardContent"
+                        value={cboard.cBoardContent}
+                        onChange={handleChangeTodo}
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="5"
+                        placeholder="내용을 입력하세요"
+                        required
+                    />
                 </div>
+
+                {/* 첨부파일 */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">이미지 업로드</h3>
+                    <input
+                        type="file"
+                        name="cBoardAttachment"
+                        onChange={handleFileChange}
+                        className="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
             </div>
 
-            <div className="d-flex justify-content-end">
+            <div className="text-right space-x-2">
                 <button
                     type="button"
-                    className="btn btn-primary"
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                     onClick={handleClickAdd}
                 >
                     등록

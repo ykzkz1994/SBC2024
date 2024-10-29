@@ -7,7 +7,7 @@ import com.sbcamping.domain.Site;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.dto.ReservationDTO;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     private static int number = 1;
 
+    @Transactional
     @Override
     public Reservation register(ReservationDTO reservationDTO) {
         if (reservationDTO.getMember() == null || reservationDTO.getSite() == null) {
@@ -97,12 +99,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Member> getMember() {
-
-        return memberRepository.findAll();
-    }
-
-    @Override
     public List<Object[]> getResCheck() {
 
         return reservationRepository.getReservations();
@@ -119,11 +115,16 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservations = reservationRepository.findByResStatus("예약완료");
 
         reservations.forEach(reservation ->  {
-            // checkout_Date가 하루 이전이거나 같은날인지
-            // 현재날짜가 2024-10-23 이고 checkoutDate가 2024-10-22 일경우
-            // 10-22 이전 까지는 true 반환해 사용완료로 바뀐다.
-            // isBefore 10-21 까지 true
-            // isEqual 10-22 true
+
+            /**
+             * checkout_Date가 하루 이전이거나 같은날인지
+             * 현재날짜가 2024-10-23 이고 checkoutDate가 2024-10-22 일경우
+             * 10-22 이전 까지는 true 반환해 사용완료로 바뀐다.
+             * isBefore 10-21 까지 true
+             * isEqual 10-22 true
+             * @Param checkoutDate 확인할 체크아웃 날짜
+             */
+            
             if (reservation.getCheckoutDate().isBefore(now.minusDays(1))
                     ||
                     reservation.getCheckoutDate().isEqual(now.minusDays(1))) {

@@ -1,12 +1,20 @@
 package com.sbcamping.user.member.service;
 
+import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.user.camper.dto.CamperBoardDTO;
+import com.sbcamping.user.camper.dto.PageRequestDTO;
+import com.sbcamping.user.camper.dto.PageResponseDTO;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 비밀번호가 일치하는 경우
-        List<Reservation> resList = reservationRepository.findByMemberId(memberId);
+        List<Reservation> resList = reservationRepository.findByMemberIdOrderByResId(memberId);
         LocalDate today = LocalDate.now();
         // 예약정보가 "예약완료"인 경우(예약취소는 제외)
         for (Reservation reservation : resList) {
@@ -57,7 +66,8 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         }
-        member.changeStatus("OFF");
+        member.changeStatus("WITHDRAWN");
+        member.changePhone("00000000000");
         memberRepository.save(member);
         msg = "success";
 
@@ -68,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void cancelRes(Long resId, String reason) {
         Reservation res = reservationRepository.findById(resId).orElse(null);
-        Objects.requireNonNull(res).setResStatus("예약취소");
+        Objects.requireNonNull(res, "reservation is null").setResStatus("예약취소");
         res.setResCancelDate(LocalDate.now());
         // 예약 취소 사유도 추가
         res.setResCancelReason(reason);
@@ -86,10 +96,13 @@ public class MemberServiceImpl implements MemberService {
     // 예약내역 가져오기
     @Override
     public List<Reservation> getMemberRes(Long memberId) {
-        List<Reservation> list = reservationRepository.findByMemberIdOOrderByResId(memberId);
+        List<Reservation> list = reservationRepository.findByMemberIdOrderByResId(memberId);
         log.info("예약내역 : {}", list);
         return list;
     }
+
+
+
 
     // 비밀번호 인증 (회원정보수정 들어갈 때 사용)
     @Override
@@ -119,7 +132,7 @@ public class MemberServiceImpl implements MemberService {
         // ID로 member 조회
         Member member = memberRepository.findById(mem.getMemberID()).orElse(null);
         String msg;
-        log.info("회원 상태 : {}", member.getMemberStatus());
+        log.info("회원 상태 : {}", Objects.requireNonNull(member, "Member is null !!").getMemberStatus());
         if(member.getMemberStatus().equals("OFF")){
             msg = "fail";
             return msg;
@@ -202,12 +215,6 @@ public class MemberServiceImpl implements MemberService {
 
         // 회원정보 수정
         return memberRepository.save(member);
-    }
-
-    // 회원 삭제
-    @Override
-    public void deleteMember(Long memberID) {
-        memberRepository.deleteById(memberID);
     }
 
     // 회원 조회
