@@ -1,7 +1,6 @@
 package com.sbcamping.user.camper.controller;
 
 import com.sbcamping.common.util.CustomFileUtil;
-import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.user.camper.dto.*;
 import com.sbcamping.user.camper.service.CamperService;
 import jakarta.persistence.EntityNotFoundException;
@@ -174,7 +173,7 @@ public class CamperController {
      * @param 댓글 id
      */
     @GetMapping("/comments/{boardId}")
-    public List<CamperBoardCommentResDTO> commentList(
+    public List<CamperBoardCommentReqDTO> commentList(
             @PathVariable("boardId") Long boardId
     ) {
         return camperService.getCommentList(boardId);
