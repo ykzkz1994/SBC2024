@@ -7,7 +7,7 @@ const QnaIndexPage = () =>{
     // 로그인 여부 확인
     const {isLogin, moveToLoginReturn} = useCustomLogin()
     if(!isLogin){
-        alert('이 페이지에 접근하려면 로그인이 필요합니다');
+        alert('회원만 이용가능합니다.');
         return moveToLoginReturn()
     }
 
@@ -16,7 +16,7 @@ const QnaIndexPage = () =>{
             <CommunityMenu/>
             <div>
                 <div>
-                    <div><h1>문의 게시판</h1></div>
+                    <div className="mt-3"><h1>문의 게시판</h1></div>
                     <hr/>
                 </div>
                 <div>

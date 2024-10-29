@@ -95,7 +95,7 @@ const ReadComponent = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 mb-40">
             {error && <p className="text-red-500 mb-4">{error}</p>} {/* 오류 메시지 출력 */}
             {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}

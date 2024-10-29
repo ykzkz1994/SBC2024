@@ -39,7 +39,7 @@ const BasicLayout = ({ children }) => {
             <img
                 src={logo}
                 alt="로고"
-                style={{width: '600px', height: 'auto'}}
+                style={{width: '350px', height: 'auto'}}
                 onClick={() => navigate("/admin")}
                 className="cursor-pointer"// 원하는 크기로 조정
             />
@@ -65,6 +65,7 @@ const BasicLayout = ({ children }) => {
                   <NavDropdown.Item href="/admin/qnas">문의 게시판</NavDropdown.Item>
                   <NavDropdown.Item href="/admin/campers">캠퍼 게시판</NavDropdown.Item>
                   <NavDropdown.Item href="/admin/reviews">리뷰 게시판</NavDropdown.Item>
+                  <NavDropdown.Item href="/admin/lost">분실물 찾기</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="통계 관리">
                   <NavDropdown.Item href="/admin/stats">예약 매출 통계</NavDropdown.Item>

@@ -34,7 +34,7 @@ const BoardSearchComponent = ({onSearch}) => {
                        onKeyDown={handleKeyDown}
                        className="form-control me-2"
                        style={{width: '250px'}}/>
-                <Button onClick={handleSearch}>검색</Button>
+                <Button onClick={handleSearch} style={{backgroundColor: "#457575", borderColor: "#457575"}}>검색</Button>
             </div>
         </>
     );

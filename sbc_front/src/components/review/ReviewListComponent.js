@@ -9,6 +9,7 @@ import {Button} from "react-bootstrap";
 import BootstrapPagination from "../../admin/components/util/BootstrapPagination";
 import BoardSearchComponent from "../../admin/components/util/BoardSearchComponent";
 import Modal from "react-bootstrap/Modal";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 
 const initState = {
@@ -41,9 +42,19 @@ const ReviewListComponent = () => {
     // 첫번째 모달
     const [firstShow, firstSetShow] = useState(false);
 
+    // 로그인 여부 확인
+    const {isLogin, moveToLoginReturn} = useCustomLogin()
+
     // 모달 컨트롤 함수
     const handleFirstClose = () => firstSetShow(false);
-    const handleFirstShow = () => firstSetShow(true);
+
+    const handleFirstShow = () => {
+        if (!isLogin) {
+            alert("로그인을 하시고 이용해주세요")
+            return;
+        }
+        firstSetShow(true);
+    }
 
     // 예약 데이터 저장 관리
     const [resData, setResData] = useState([])
@@ -119,7 +130,7 @@ const ReviewListComponent = () => {
 
     return (
         <div className="container mt-5">
-            <div className="d-flex mb-3 align-items-center">
+            <div className="d-flex align-items-center">
                 <BoardSearchComponent onSearch={handleSearch}/>
             </div>
             <Table bordered hover responsive className="text-sm-center">
@@ -133,7 +144,7 @@ const ReviewListComponent = () => {
                 </thead>
                 <tbody>
                 {serverData.dtoList.map(rw => (
-                    <tr key={rw.reviewID}>
+                    <tr key={rw.reviewID} style={{ cursor: 'pointer' }}>
                         <td>{rw.reviewID}</td>
                         <td onClick={() => handleReadClick(rw.reviewID)} style={{
                             display: 'flex',
@@ -161,6 +172,7 @@ const ReviewListComponent = () => {
                 ))}
                 </tbody>
             </Table>
+
             <div className="d-flex justify-content-center my-4">
             <BootstrapPagination
                 currentPage={currentPage}
@@ -168,17 +180,21 @@ const ReviewListComponent = () => {
                 onPageChange={handlePageChange}
             />
             </div>
+
             <div className="d-flex justify-content-end mt-3 mb-20">
             <Button onClick={handleFirstShow} className="btn btn-success">글쓰기</Button>
             </div>
+
             <Modal show={firstShow} onHide={handleFirstClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>예약내역을 선택해주세요</Modal.Title>
                 </Modal.Header>
+
                 <p style={{
                     textAlign: "center",
                     marginBottom : "-10px"
                 }}>구역을 사용하신 경우에만 예약내역이 표시가 됩니다.</p>
+
                 <Modal.Body>
                     <Table bordered hover responsive className="text-sm-center">
                         <thead>
@@ -196,9 +212,7 @@ const ReviewListComponent = () => {
                             </tr>
                         ) : (
                             resData.map(res => (
-
                                 res.resReview === "N" && res.resStatus === "사용완료" ? (
-
                                     <tr key={res.resId}>
                                         <td onClick={() => handleAddClick(res)}>{res.resId}</td>
                                         <td>{res.checkoutDate}</td>
@@ -221,8 +235,6 @@ const ReviewListComponent = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-
         </div>
     );
 };

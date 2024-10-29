@@ -9,7 +9,7 @@ const NoticeIndexPage = () =>{
             <CommunityMenu/>
             <div>
                 <div>
-                    <div><h1>공지 게시판</h1></div>
+                    <div className="mt-3"><h1>공지 게시판</h1></div>
                     <hr/>
                 </div>
                 <div>

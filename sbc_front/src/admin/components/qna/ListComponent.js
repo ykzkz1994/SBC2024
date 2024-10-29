@@ -123,7 +123,7 @@ function ListComponent(props) {
             )}
 
             {/* 검색 컴포넌트 */}
-            <div className="d-flex mb-3 align-items-center">
+            <div className="d-flex align-items-center">
                 <BoardSearchComponent onSearch={handleSearch} />
             </div>
 
@@ -143,7 +143,7 @@ function ListComponent(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {serverData.dtoList.length > 0 ? (
+                    {serverData.dtoList && serverData.dtoList.length > 0 ? (
                         serverData.dtoList.map(qb => (
                             <tr key={qb.qboardID} className="table-row" style={{ cursor: 'pointer' }}>
                                 {/* "번호" 열 중앙 정렬 또는 공지 배지 */}
@@ -212,7 +212,7 @@ function ListComponent(props) {
             </div>
 
             {/* 글쓰기 버튼 */}
-            <div className="d-flex justify-content-end mt-3 mb-20"> {/* mb-4 유지 */}
+            <div className="d-flex justify-content-end mt-3 mb-5"> {/* mb-4 유지 */}
                 <Button
                     onClick={handleAddClick}
                     className="btn btn-success"

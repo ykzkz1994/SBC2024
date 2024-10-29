@@ -285,4 +285,12 @@ public class ResSalesStatsServiceImpl implements ResSalesStatsService {
         );
     }
 
+    // 1-3
+
+    @Override
+    public List<Reservation> getReservations(String dateType, LocalDate startDate, LocalDate endDate) {
+        List<Reservation> result = statsRepository.findByDateBetween(startDate, endDate);
+
+        return result;
+    }
 }

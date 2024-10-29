@@ -52,10 +52,9 @@ const TotalPage = () => {
     };
 
     return (
-        <div className="max-w-full mx-auto p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-2xl font-bold mb-6">전체 예약 조회 페이지</h1>
-
-
+        <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h1>전체 예약 조회</h1> {/* 페이지 제목 */}
+            <hr/>
 
             {/* 드롭다운 스타일의 컴포넌트 선택 셀렉 */}
             <div className="flex justify-end mb-4">
@@ -64,9 +63,12 @@ const TotalPage = () => {
                     onChange={(e) => setNowComponent(e.target.value)}
                     className="p-2 border rounded"
                 >
-                    <option value="TotalList">전체 예약 조회</option> {/*1옵션*/}
-                    <option value="ResList">예약 완료 조회</option>   {/*2옵션*/}
-                    <option value="CancelList">예약 취소 조회</option>{/*3옵션*/}
+                    <option value="TotalList">전체 예약 조회</option>
+                    {/*1옵션*/}
+                    <option value="ResList">예약 완료 조회</option>
+                    {/*2옵션*/}
+                    <option value="CancelList">예약 취소 조회</option>
+                    {/*3옵션*/}
                 </select>
             </div>
 

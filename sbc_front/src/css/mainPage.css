@@ -230,9 +230,9 @@ ul.board_list li a p.date_day .big_day {
 
 .board_right .call{
     background: url("https://img.freepik.com/premium-vector/vector-design-customer-service-icon-style_822882-367928.jpg?w=740");
-    background-size: max(170px);
+    background-size: max(130px);
     background-repeat: no-repeat;
-    background-position: left;
+    background-position: right;
 }
 .board_right> div {
     padding: 30px 25px;

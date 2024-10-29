@@ -148,20 +148,28 @@ function CommentComponent() {
                                     className="text-sm text-gray-500">{new Date(comment.qcommentDate).toLocaleString('ko-KR', {
                                     // ... date options ...
                                 })}</span>
-                                        <div className="ml-auto space-x-2">  {/* space-x-3에서 space-x-2로 변경 */}
-                                            {((loginState.member.memberRole === "ROLE_ADMIN" &&
-                                                    loginState.member.memberId === comment.member.memberID) ||
-                                                (loginState.member.memberRole !== "ROLE_ADMIN" &&
-                                                    loginState.member.memberId === comment.member.memberID)) && (
+                                        <div className="ml-auto space-x-2"> {/* space-x-3에서 space-x-2로 변경 */}
+                                            {(
+                                                loginState.member.memberRole === "ROLE_ADMIN" &&
+                                                (loginState.member.memberId === comment.member.memberID) // 관리자인 경우 자신이 쓴 댓글
+                                            ) && (
                                                 <>
                                                     <button
                                                         onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
-                                                        className="px-2 py-0.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-700">수정
-                                                    </button>
-                                                    <button onClick={() => handleClickDelete(comment.qcommentID)}
-                                                            className="px-2 py-0.5 bg-red-500 text-white rounded text-sm hover:bg-red-700">삭제
+                                                        className="px-2 py-0.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-700">
+                                                        수정
                                                     </button>
                                                 </>
+                                            )}
+                                            {(
+                                                loginState.member.memberRole === "ROLE_ADMIN" || // 관리자인 경우
+                                                loginState.member.memberId === comment.member.memberID // 또는 댓글 작성자일 경우
+                                            ) && (
+                                                <button
+                                                    onClick={() => handleClickDelete(comment.qcommentID)}
+                                                    className="px-2 py-0.5 bg-red-500 text-white rounded text-sm hover:bg-red-700">
+                                                    삭제
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -176,17 +184,17 @@ function CommentComponent() {
             )}
         </div>
 
-        {/* 댓글 입력 폼 */}
-        <div className="border rounded-lg bg-white p-3 mt-4">
-            <div className="flex items-center gap-3">
-                <div className="flex-1">
-                    <input
-                        type="text"
-                        value={commentContent}
-                        onChange={handleChange}
-                        placeholder="댓글을 남겨보세요"
-                        className="w-full outline-none text-base placeholder-gray-400"
-                        required
+            {/* 댓글 입력 폼 */}
+            <div className="border rounded-lg bg-white p-3 mt-4">
+                <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            value={commentContent}
+                            onChange={handleChange}
+                            placeholder="댓글을 남겨보세요"
+                            className="w-full outline-none text-base placeholder-gray-400"
+                            required
                     />
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">

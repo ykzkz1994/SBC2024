@@ -75,7 +75,7 @@ const ListComponent = () => {
     };
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 mb-10">
 
             {/* 에러 메시지 표시 */}
             {error && (

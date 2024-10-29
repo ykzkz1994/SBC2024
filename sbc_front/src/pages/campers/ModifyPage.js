@@ -13,12 +13,9 @@ const ModifyPage = () => {
 
     return (
         <div className="container mt-4">
-            <div className="mb-4">
-                <h1 className="display-4 font-weight-bold">
-                    Camper 게시판 글쓰기
-                </h1>
-            </div>
-            <ModifyComponent cBoardId={cBoardId} /> {/* ModifyComponent에 cBoardId 전달 */}
+            <div className="mt-3"><h1>캠퍼 게시판</h1></div>
+            <hr/>
+            <ModifyComponent cBoardId={cBoardId}/> {/* ModifyComponent에 cBoardId 전달 */}
         </div>
     );
 }

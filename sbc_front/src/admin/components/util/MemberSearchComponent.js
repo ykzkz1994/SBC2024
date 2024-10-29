@@ -85,7 +85,7 @@ function MemberSearchComponent({ onSearch }) {
                     onKeyDown={handleKeyDown}
                     className="form-control me-2 w-50" // Bootstrap의 form-control 클래스 추가
                 />
-                <Button onClick={handleSearch}>조회</Button>
+                <Button onClick={handleSearch} style={{backgroundColor: "#457575", borderColor: "#457575"}}>조회</Button>
             </div>
         </>
     );

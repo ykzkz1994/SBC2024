@@ -29,10 +29,8 @@ const ResCalendarPage = () => {
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             {/* 페이지 중앙 정렬컨테이너 */}
             <div style={{ width: '100%' }}>
-                <h1>날짜/구역별 예약 리스트 페이지</h1> {/* 페이지 제목 */}
+                <h1>날짜/구역별 예약 리스트</h1> {/* 페이지 제목 */}
                 <hr />
-                <br />
-                <br />
 
                 {/* 예약 상태 안내문구 우정렬*/}
                 <div className="mb-4 text-right">
