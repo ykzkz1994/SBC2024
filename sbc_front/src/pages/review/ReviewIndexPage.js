@@ -20,7 +20,7 @@ const ReviewIndexPage = () => {
             <div>
                 <CommunityMenu/>
             </div>
-            <div><h1>리뷰 게시판</h1></div>
+            <div className="mt-3"><h1>리뷰 게시판</h1></div>
             <hr/>
             <div>
                 <Outlet/>

@@ -65,9 +65,11 @@ function QnaForm() {
     };
 
     return (
+        <>
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 space-y-4 mb-40">
         <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-                <label className="block text-gray-700">제목</label>
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">제목</h3>
                 <input
                     name="qBoardTitle"
                     type="text"
@@ -78,8 +80,8 @@ function QnaForm() {
                     required
                 />
             </div>
-            <div>
-                <label className="block text-gray-700">내용</label>
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">내용</h3>
                 <textarea
                     name="qBoardContent"
                     value={qna.qBoardContent}
@@ -90,8 +92,8 @@ function QnaForm() {
                     required
                 />
             </div>
-            <div>
-                <label className="block text-gray-700">이미지 첨부</label>
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">이미지 업로드</h3>
                 <input
                     type="file"
                     onChange={handleFileChange}
@@ -107,6 +109,8 @@ function QnaForm() {
                 </button>
             </div>
         </form>
+        </div>
+            </>
     );
 }
 

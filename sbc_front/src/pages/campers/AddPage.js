@@ -11,13 +11,10 @@ const AddPage = () => {
     }
 
     return (
-        <div className="container p-4">
-            <div className="text-center mb-4">
-                <h1 className="display-4 font-weight-bold">
-                    Camper 게시판 글쓰기
-                </h1>
-            </div>
-            <AddComponent />
+        <div>
+                <div className="mt-3"><h1>캠퍼 게시판</h1></div>
+                <hr/>
+            <AddComponent/>
         </div>
     );
 }

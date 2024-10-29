@@ -85,122 +85,98 @@ const ReadComponent = ({ cBoardId }) => {
     }
 
     return (
-        <div className="container mt-4">
-            <div className="border p-4 rounded" style={{maxWidth: "600px", margin: "auto"}}>
-                {/* 카테고리와 제목 */}
-                <h1>{camper.cboardCategory} - {camper.cboardTitle}</h1>
-                <hr/>
-
-                {/* 작성일과 조회수 */}
-                <div className="row mb-2">
-                    <div className="col-sm-6">
-                        <strong>작성일: </strong>{camper.cboardDate}
-                    </div>
-                    <div className="col-sm-6">
-                        <strong>조회수: </strong>{camper.cboardViews}
-                    </div>
-                </div>
-                <hr/>
-
-                {/* 작성자 */}
-                <div className="mb-2">
-                    <strong>작성자: </strong>
-                    {camper.member && camper.member.memberName ? camper.member.memberName : '작성자가 없습니다.'}
-                </div>
-                <hr/>
-
-                <div className="mb-2">
-                    <strong>첨부파일: </strong>
-                    {camper.cboardAttachment ? (
-                        isImageFile(camper.cboardAttachment) ? (
-                            // 이미지 파일인 경우 표시
-                            <img
-                                src={`${prefix}/view/${camper.cboardAttachment}`}
-                                alt="첨부 이미지"
-                                style={{maxWidth: '100%', height: 'auto', marginBottom: '10px'}}
-                            />
-                        ) : (
-                            // 일반 파일의 경우 다운로드 링크 제공
-                            <a
-                                href={`/api/campers/files/${camper.cboardAttachment}`}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                첨부파일 보기
-                            </a>
-                        )
-                    ) : (
-                        <span>없음</span>
-                    )}
-                </div>
-                {/*{camper.cboardAttachment && camper.cboardAttachment.trim() !== "" && !imageLoadError ? (*/}
-                {/*    <div className="text-gray-700 flex justify-center">*/}
-                {/*        <img*/}
-                {/*            src={`${prefix}/view/${camper.cboardAttachment}`}*/}
-                {/*            alt="게시물 첨부 이미지"*/}
-                {/*            className="rounded-lg"*/}
-                {/*            style={{*/}
-                {/*                width: '100%', // 원하는 비율에 맞게 설정*/}
-                {/*                maxWidth: '500px', // 최대 너비 설정*/}
-                {/*                height: 'auto', // 비율을 유지하며 높이 자동 조정*/}
-                {/*            }}*/}
-                {/*            onError={(e) => {*/}
-                {/*                e.target.onerror = null; // 무한 루프 방지*/}
-                {/*                setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적*/}
-                {/*            }}*/}
-                {/*        />*/}
-                {/*    </div>*/}
-                {/*) : (*/}
-                {/*    <p className="text-gray-500"></p>*/}
-                {/*)}*/}
-                <hr />
-
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-2">내용</h3>
-                    <textarea className="form-control text-gray-700 bg-gray-100 p-4 rounded-lg" readOnly
-                              rows="6">{camper.cboardContent}</textarea>
-                </div>
-
-                {/* 댓글 컴포넌트 */}
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 mb-40">
+            {/* 제목 및 작성 시간 */}
+            <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
+                <h2 className="text-2xl font-bold">[{camper.cboardCategory}] {camper.cboardTitle}</h2>
                 <div>
-                    <hr/>
-                    <h3 className="text-lg font-semibold mb-2">댓글</h3>
-                    <CommentComponent cBoardId={cBoardId}/> {/* 댓글 컴포넌트 추가 */}
-                </div>
-
-                {/* 버튼 */}
-                <div className="text-right space-x-2">
-                    <button
-                        type="button"
-                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-                        onClick={moveToList}
-                    >
-                        목록으로
-                    </button>
-                    {getCookieMemberId() === camper.member.memberID && (
-                        <button
-                            type="button"
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                            onClick={() => moveToModify(cBoardId)}
-                        >
-                            수정하기
-                        </button>
-
-                    )}
-                    {getCookieMemberId() === camper.member.memberID && (
-                        <button
-                            type="button"
-                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                            onClick={handleDelete}
-                        >
-                            삭제하기
-                        </button>
-
-                    )}
-
+                    <p className="text-gray-500 mb-1">작성일 _ {camper.cboardDate}</p>
+                    <p className="text-gray-500">조회수 _ {camper.cboardViews}</p> {/* 조회수 표시 */}
                 </div>
             </div>
+
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">작성자
+                    _ {camper.member && camper.member.memberName ? camper.member.memberName : '작성자가 없습니다.'}
+                </h3>
+            </div>
+
+            <div className="mb-8">
+                {camper.cboardAttachment && camper.cboardAttachment.trim() !== "" && !imageLoadError ? (
+                    <>
+                        <span className="text-lg font-semibold">첨부 이미지</span>
+                        <div className="text-gray-700 flex justify-center">
+                            <img
+                                src={`${prefix}/view/${camper.cboardAttachment}`}
+                                alt="게시물 첨부 이미지"
+                                className="rounded-lg"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '500px',
+                                    height: 'auto',
+                                    marginBottom: '10px'
+                                }}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    setImageLoadError(true);
+                                }}
+                            />
+                        </div>
+                    </>
+                ) : null}
+            </div>
+
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-2">내용</h3>
+                <textarea
+                    name="qBoardContent"
+                    value={camper.cboardContent} // qna의 상태를 직접 사용
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                    rows="5"
+                    readOnly
+                />
+            </div>
+
+            {/* 댓글 컴포넌트 */}
+            <div className="mb-8">
+                <hr/>
+                <h3 className="text-lg font-semibold mb-2">댓글</h3>
+                <CommentComponent cBoardId={cBoardId}/> {/* 댓글 컴포넌트 추가 */}
+            </div>
+
+            {/* 버튼 */}
+            <div className="text-right space-x-2">
+                <button
+                    type="button"
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                    onClick={moveToList}
+                >
+                    목록으로
+                </button>
+                {getCookieMemberId() === camper.member.memberID && (
+                    <button
+                        type="button"
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                        onClick={() => moveToModify(cBoardId)}
+                    >
+                        수정하기
+                    </button>
+
+                )}
+                {getCookieMemberId() === camper.member.memberID && (
+                    <button
+                        type="button"
+                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
+                        onClick={handleDelete}
+                    >
+                        삭제하기
+                    </button>
+
+                )}
+            </div>
         </div>
-    );
+)
+    ;
 };
 
 export default ReadComponent;

@@ -114,110 +114,107 @@ const ModifyComponent = ({ cBoardId }) => {
     }
 
     return (
-        <div className="container mt-4 p-4 border border-primary">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 space-y-4 mb-40y">
             {error && <div className="alert alert-danger">{error}</div>}
-            <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">작성자</label>
-                <div className="col-sm-10">
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={cboard.member.memberName}
-                        readOnly
-                    />
-                </div>
-            </div>
+            <div className="space-y-4">
 
-            <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">카테고리</label>
-                <div className="col-sm-10">
-                    <select
-                        className="form-select"
-                        name="cBoardCategory"
-                        value={cboard.cBoardCategory}
-                        onChange={handleChangeCboard}
-                    >
-                        <option value="">카테고리를 선택하세요</option>
-                        <option value="잡담">잡담</option>
-                        <option value="정보">정보</option>
-                    </select>
+                <div className="mb-8 flex items-center">
+                    <h3 className="text-lg font-semibold mr-5" style={{marginBottom: 0}}>카테고리</h3>
+                    <div>
+                        <select
+                            className="form-select"
+                            name="cBoardCategory"
+                            value={cboard.cBoardCategory}
+                            onChange={handleChangeCboard}
+                            style={{
+                                width: 'auto',
+                                minWidth: '160px', // 카테고리를 선택하세요 텍스트 길이에 맞춤
+                                padding: '0.375rem 2.25rem 0.375rem 0.75rem' // 기본 패딩 유지
+                            }}
+                        >
+                            <option>카테고리를 선택하세요</option>
+                            <option value="잡담">잡담</option>
+                            <option value="정보">정보</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">제목</label>
-                <div className="col-sm-10">
+                {/* 제목 */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">제목</h3>
                     <input
-                        type="text"
-                        className="form-control whitespace-pre-wrap"
                         name="cBoardTitle"
+                        type="text"
                         value={cboard.cBoardTitle}
                         onChange={handleChangeCboard}
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="제목을 입력하세요"
+                        required
                     />
                 </div>
-            </div>
 
-            <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">내용</label>
-                <div className="col-sm-10">
+                {/* 내용 */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">내용</h3>
                     <textarea
-                        name="cBoardContent"
-                        className="form-control whitespace-pre-wrap"
+                        name="qBoardContent"
                         value={cboard.cBoardContent}
                         onChange={handleChangeCboard}
-                        rows="4"
+                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="5"
+                        placeholder="내용을 입력하세요"
+                        required
                     />
                 </div>
-            </div>
 
-            <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">첨부파일</label>
-                <div className="col-sm-10">
+                {/* 첨부파일 */}
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">이미지 업로드</h3>
                     <input
                         type="file"
-                        className="form-control"
                         name="cBoardAttachment"
-                        onChange={handleFileChange} // 단일 파일만 선택 가능
+                        onChange={handleFileChange}
+                        className="form-control w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-            </div>
-            {cboard.cBoardAttachment && cboard.cBoardAttachment.trim() !== "" && !imageLoadError ? (
-                <div>
-                    <label className="block text-gray-700">이미지</label>
-                    {showDeleteButton && (
-                        <div>
-                            <button type="button" onClick={deleteOldImage}>X</button>
-                            <img
-                                src={`${prefix}/view/s_${cboard.cBoardAttachment}`}
-                                alt="게시물 첨부 이미지"
-                                className="rounded-lg"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
-                                }}
-                            />
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <p className="text-gray-500"></p>
-            )}
-            <div className="d-flex justify-content-end">
+
+                {cboard.cBoardAttachment && cboard.cBoardAttachment.trim() !== "" && !imageLoadError ? (
+                    <div>
+                        <h3 className="text-lg font-semibold mb-2">첨부 이미지</h3>
+                        {showDeleteButton && (
+                            <div>
+                                <button type="button" onClick={deleteOldImage}>X</button>
+                                <img
+                                    src={`${prefix}/view/s_${cboard.cBoardAttachment}`}
+                                    alt="게시물 첨부 이미지"
+                                    className="rounded-lg"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </div>
+                ) : null}
+
+            <div className="text-right space-x-2">
                 <button
                     type="button"
-                    className="btn btn-primary mx-2"
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                     onClick={handleClickModify}
                 >
                     수정
                 </button>
                 <button
                     type="button"
-                    className="btn btn-secondary mx-2"
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
                     onClick={handleClickCancel}
                 >
                     취소
                 </button>
             </div>
+        </div>
         </div>
     );
 };

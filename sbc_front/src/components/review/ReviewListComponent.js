@@ -133,7 +133,7 @@ const ReviewListComponent = () => {
                 </thead>
                 <tbody>
                 {serverData.dtoList.map(rw => (
-                    <tr key={rw.reviewID}>
+                    <tr key={rw.reviewID} style={{ cursor: 'pointer' }}>
                         <td>{rw.reviewID}</td>
                         <td onClick={() => handleReadClick(rw.reviewID)} style={{
                             display: 'flex',

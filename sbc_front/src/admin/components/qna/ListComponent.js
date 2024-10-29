@@ -212,7 +212,7 @@ function ListComponent(props) {
             </div>
 
             {/* 글쓰기 버튼 */}
-            <div className="d-flex justify-content-end mt-3 mb-20"> {/* mb-4 유지 */}
+            <div className="d-flex justify-content-end mt-3 mb-5"> {/* mb-4 유지 */}
                 <Button
                     onClick={handleAddClick}
                     className="btn btn-success"

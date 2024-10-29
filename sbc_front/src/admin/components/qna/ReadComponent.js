@@ -81,7 +81,7 @@ function ReadComponent() {
 
 
     return (
-        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 mb-40">
             {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
                 <h2 className="text-2xl font-bold">{qboard.qboardTitle}</h2>
@@ -96,13 +96,9 @@ function ReadComponent() {
             </div>
 
             <div className="mb-8">
-                <div className="flex items-center">
-                    <span className="text-lg font-semibold">첨부 이미지</span>
-                    {(!qboard.qboardAttachment || qboard.qboardAttachment.trim() === "" || imageLoadError) && (
-                        <span className="text-gray-500 ml-2">없음</span>
-                    )}
-                </div>
                 {qboard.qboardAttachment && qboard.qboardAttachment.trim() !== "" && !imageLoadError ? (
+                   <>
+                    <span className="text-lg font-semibold">첨부 이미지</span>
                     <div className="text-gray-700 flex justify-center">
                         <img
                             src={`${prefix}/view/${qboard.qboardAttachment}`}
@@ -120,6 +116,7 @@ function ReadComponent() {
                             }}
                         />
                     </div>
+                   </>
                 ) : null}
             </div>
 
@@ -134,7 +131,7 @@ function ReadComponent() {
                 />
             </div>
 
-            <div>
+            <div className="mb-8">
                 <hr/>
                 <h3 className="text-lg font-semibold mb-2">댓글</h3>
                 <CommentComponent/>
