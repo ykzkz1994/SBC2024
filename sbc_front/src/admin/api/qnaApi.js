@@ -9,7 +9,7 @@ const prefix = `${API_SERVER_HOST}/admin/qnas`
 // getList : 페이지 처리 및 전체 게시글 목록 가져오기
 export const getList = async (pageParam) => {
     const {page,size} = pageParam
-    const res = await jwtAxios.get(`${prefix}/list`, {params: {page:page, size:size}})
+    const res = await axios.get(`${prefix}/list`, {params: {page:page, size:size}})
     return res.data
 }
 
@@ -34,7 +34,7 @@ export const searchBoard = async (type, keyword, pageParam) => {
 
 // getOne : 게시글 상세 페이지(read)
 export const getOne = async (qbID) => {
-    const res = await jwtAxios.get(`${prefix}/${qbID}`);
+    const res = await axios.get(`${prefix}/${qbID}`);
     console.log(res.data);
     return res.data
 }

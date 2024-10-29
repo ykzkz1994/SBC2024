@@ -124,7 +124,7 @@ const ListComponent = () => {
                                 <span style={{display: "inline-block"}}>
                                     {truncateTitle(camperBoard.cboardTitle)}
                                 </span>
-                                {camperBoard.cboardAttachment && (
+                                {camperBoard.cboardAttachment && camperBoard.cboardAttachment !== 'null' && (
                                     <img
                                         src="/path/to/attachment-icon.png"
                                         alt="첨부파일 아이콘"

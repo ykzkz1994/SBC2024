@@ -135,6 +135,16 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // qna read
+        if (path.matches("^/admin/qnas/\\d+$")) {
+            return true;
+        }
+
+        // qna read comments
+        if (path.matches("^/admin/qnas/\\d+/comments/list$")) {
+            return true;
+        }
+
 
         return false;
     }

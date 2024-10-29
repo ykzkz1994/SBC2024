@@ -118,15 +118,7 @@ const ReadComponent = ({ cBoardId }) => {
                                 alt="첨부 이미지"
                                 style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
                             />
-                        ) : (
-                            // 일반 파일의 경우 다운로드 링크 제공
-                            <a
-                                href={`/api/campers/files/${camper.cboardAttachment}`}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                첨부파일 보기
-                            </a>
-                        )
+                        ) : null
                     ) : (
                         <span>없음</span>
                     )}
