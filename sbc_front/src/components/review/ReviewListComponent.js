@@ -161,6 +161,7 @@ const ReviewListComponent = () => {
                 ))}
                 </tbody>
             </Table>
+
             <div className="d-flex justify-content-center my-4">
             <BootstrapPagination
                 currentPage={currentPage}
@@ -168,17 +169,21 @@ const ReviewListComponent = () => {
                 onPageChange={handlePageChange}
             />
             </div>
+
             <div className="d-flex justify-content-end mt-3 mb-20">
             <Button onClick={handleFirstShow} className="btn btn-success">글쓰기</Button>
             </div>
+
             <Modal show={firstShow} onHide={handleFirstClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>예약내역을 선택해주세요</Modal.Title>
                 </Modal.Header>
+
                 <p style={{
                     textAlign: "center",
                     marginBottom : "-10px"
                 }}>구역을 사용하신 경우에만 예약내역이 표시가 됩니다.</p>
+
                 <Modal.Body>
                     <Table bordered hover responsive className="text-sm-center">
                         <thead>
@@ -196,9 +201,7 @@ const ReviewListComponent = () => {
                             </tr>
                         ) : (
                             resData.map(res => (
-
                                 res.resReview === "N" && res.resStatus === "사용완료" ? (
-
                                     <tr key={res.resId}>
                                         <td onClick={() => handleAddClick(res)}>{res.resId}</td>
                                         <td>{res.checkoutDate}</td>
