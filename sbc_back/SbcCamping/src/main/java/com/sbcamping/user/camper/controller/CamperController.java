@@ -4,6 +4,7 @@ import com.sbcamping.common.util.CustomFileUtil;
 import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.user.camper.dto.*;
 import com.sbcamping.user.camper.service.CamperService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -42,7 +43,7 @@ public class CamperController {
      * @param 게시판 id
      */
     @GetMapping("/{id}")
-    public CamperBoard get(
+    public CamperBoardDTO get(
             @PathVariable Long id
     ) {
         return camperService.get(id);
@@ -57,20 +58,48 @@ public class CamperController {
     public Map<String, String>  modify(
             @RequestHeader(name = "Authorization") String auth,
             @RequestHeader("X-Refresh-Token") String refreshToken,
-            @PathVariable Long id, CamperBoardDTO camperBoardDTO
+            @PathVariable("id") Long id, CamperBoardReqDTO camperDTO
     ) {
-        if (!camperService.isBoardAuth(auth, refreshToken, camperBoardDTO.getCBoardID())) {
-            return Map.of("res", "F", "code", "403");
+//        if (!camperService.isBoardAuth(auth, refreshToken, camperBoardDTO.getCBoardID())) {
+//            return Map.of("res", "F", "code", "403");
+//        }
+//
+//        MultipartFile file = camperBoardDTO.getFile();
+//        String uploadFileName = fileUtil.saveFile(file);
+//        camperBoardDTO.setCBoardAttachment(uploadFileName);
+//
+//        camperBoardDTO.setCBoardID(id);
+//        camperService.modify(camperBoardDTO);
+//
+//        return Map.of("res", "S");
+        log.info("modify....", id);
+
+        CamperBoardDTO oldCamperDTO = camperService.get(id);
+        if (oldCamperDTO == null){
+            throw  new EntityNotFoundException("게시글을 찾을 수 없습니다.");
         }
 
-        MultipartFile file = camperBoardDTO.getFile();
-        String uploadFileName = fileUtil.saveFile(file);
-        camperBoardDTO.setCBoardAttachment(uploadFileName);
+        log.info("게시글 수정 전: " + oldCamperDTO);
+        camperDTO.setCBoardId(id);
 
-        camperBoardDTO.setCBoardID(id);
-        camperService.modify(camperBoardDTO);
+        if (camperDTO.getFile() != null) {
+            MultipartFile newFile = camperDTO.getFile();
+            String newUploadFileName = fileUtil.saveFile(newFile);
+            camperDTO.setCBoardAttachment(newUploadFileName);
 
-        return Map.of("res", "S");
+            String oldUploadedFileName = oldCamperDTO.getCBoardAttachment();
+            if (oldUploadedFileName != null) {
+                try {
+                    fileUtil.deleteFile(oldUploadedFileName);
+                    log.info("삭제완료 " + oldUploadedFileName);
+                } catch (Exception e){
+                    log.error("파일 삭제 중 오류 발생: " + oldUploadedFileName, e);
+                }
+            }
+        }
+
+        camperService.modify(camperDTO);
+        return Map.of("RESULT", "SUCCESS");
     }
 
     /**
@@ -80,6 +109,7 @@ public class CamperController {
      */
     @PostMapping("/")
     public Map<String, Long> register(CamperBoardDTO camperBoardDTO) {
+        log.info("register camper board: {}", camperBoardDTO);
         MultipartFile file = camperBoardDTO.getFile();
         String uploadFileName = fileUtil.saveFile(file);
         camperBoardDTO.setCBoardAttachment(uploadFileName);
