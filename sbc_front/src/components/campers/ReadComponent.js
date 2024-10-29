@@ -21,6 +21,7 @@ const ReadComponent = ({ cBoardId }) => {
     const [camper, setCamper] = useState(initState); // 게시글 데이터 상태
     const [loading, setLoading] = useState(true); // 로딩 상태
     const { moveToList, moveToModify } = useCustomMove(); // 페이지 이동 훅
+    const [imageLoadError, setImageLoadError] = useState(false)
 
     // 게시글 데이터 로딩
     useEffect(() => {
@@ -131,6 +132,27 @@ const ReadComponent = ({ cBoardId }) => {
                         <span>없음</span>
                     )}
                 </div>
+                {/*{camper.cboardAttachment && camper.cboardAttachment.trim() !== "" && !imageLoadError ? (*/}
+                {/*    <div className="text-gray-700 flex justify-center">*/}
+                {/*        <img*/}
+                {/*            src={`${prefix}/view/${camper.cboardAttachment}`}*/}
+                {/*            alt="게시물 첨부 이미지"*/}
+                {/*            className="rounded-lg"*/}
+                {/*            style={{*/}
+                {/*                width: '100%', // 원하는 비율에 맞게 설정*/}
+                {/*                maxWidth: '500px', // 최대 너비 설정*/}
+                {/*                height: 'auto', // 비율을 유지하며 높이 자동 조정*/}
+                {/*            }}*/}
+                {/*            onError={(e) => {*/}
+                {/*                e.target.onerror = null; // 무한 루프 방지*/}
+                {/*                setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적*/}
+                {/*            }}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*) : (*/}
+                {/*    <p className="text-gray-500"></p>*/}
+                {/*)}*/}
+                <hr />
 
                 <div className="mb-8">
                     <h3 className="text-lg font-semibold mb-2">내용</h3>

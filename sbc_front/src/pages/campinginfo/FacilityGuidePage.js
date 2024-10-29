@@ -136,7 +136,7 @@ const FacilityGuidePage = () => {
                         </tr>
                         <tr>
                             <td>이용요금(1박)</td>
-                            <td>25,000원</td>
+                            <td>예약/요금안내 참고</td>
                         </tr>
                         <tr>
                             <td>부대시설</td>

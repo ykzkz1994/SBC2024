@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { getOne, putOne } from "../../api/camperApi";
+import React, { useState, useEffect } from "react";
+import {getOne, prefix, putOne} from "../../api/camperApi";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
 
@@ -17,9 +17,13 @@ const ModifyComponent = ({ cBoardId }) => {
         file: null
     };
 
-    const [cboard, setCboard] = useState({ ...initState });
+    const [cboard, setCboard] = useState({...initState});
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const [imageLoadError, setImageLoadError] = useState(false);
+    const [showDeleteButton, setShowDeleteButton] = useState(true);
+    //현재 로그인중인 사용자의 정보를 받아오는 변수 매핑으로 치고 들어왔을 때 권한을 검증하여 관리자가 아닌경우 메인페이지로 리다이랙트 하기위해
+
 
     useEffect(() => {
         getOne(cBoardId).then((data) => {
@@ -52,10 +56,18 @@ const ModifyComponent = ({ cBoardId }) => {
             formData.append("cBoardTitle", cboard.cBoardTitle);
             formData.append("cBoardContent", cboard.cBoardContent);
             formData.append("cBoardViews", cboard.cBoardViews);
-            formData.append("cBoardAttachment", cboard.cBoardAttachment);
-            if (cboard.file != null) {
-                formData.append("file", cboard.file);
+
+            // 파일 처리
+            if (cboard.file) {
+                formData.append("file", cboard.file)
+            } else {
+                if (cboard.cBoardAttachment === null || cboard.cBoardAttachment === '' || cboard.file === null) {
+                    formData.append("cBoardAttachment", null)
+                } else {
+                    formData.append("cBoardAttachment", cboard.cBoardAttachment)
+                }
             }
+
             // 수정데이터 확인
             console.log('cboardId:', formData.get('cBoardId'), 'memberId:', formData.get("member"), 'views:', formData.get("cBoardViews"));
 
@@ -94,11 +106,18 @@ const ModifyComponent = ({ cBoardId }) => {
         setCboard((prevCboard) => ({ ...prevCboard, file: file })); // 단일 파일 업데이트
     };
 
+    const deleteOldImage = () => {
+        setCboard((prevCboard) => ({ ...prevCboard, file: null }));
+        setShowDeleteButton(false)
+        console.log("deleteOldImage");
+        console.log(cboard.cBoardAttachment)
+    }
+
     return (
         <div className="container mt-4 p-4 border border-primary">
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">WRITER</label>
+                <label className="col-sm-2 col-form-label font-weight-bold">작성자</label>
                 <div className="col-sm-10">
                     <input
                         type="text"
@@ -110,7 +129,7 @@ const ModifyComponent = ({ cBoardId }) => {
             </div>
 
             <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">CATEGORY</label>
+                <label className="col-sm-2 col-form-label font-weight-bold">카테고리</label>
                 <div className="col-sm-10">
                     <select
                         className="form-select"
@@ -126,11 +145,11 @@ const ModifyComponent = ({ cBoardId }) => {
             </div>
 
             <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">TITLE</label>
+                <label className="col-sm-2 col-form-label font-weight-bold">제목</label>
                 <div className="col-sm-10">
                     <input
                         type="text"
-                        className="form-control"
+                        className="form-control whitespace-pre-wrap"
                         name="cBoardTitle"
                         value={cboard.cBoardTitle}
                         onChange={handleChangeCboard}
@@ -139,11 +158,11 @@ const ModifyComponent = ({ cBoardId }) => {
             </div>
 
             <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">CONTENT</label>
+                <label className="col-sm-2 col-form-label font-weight-bold">내용</label>
                 <div className="col-sm-10">
                     <textarea
                         name="cBoardContent"
-                        className="form-control"
+                        className="form-control whitespace-pre-wrap"
                         value={cboard.cBoardContent}
                         onChange={handleChangeCboard}
                         rows="4"
@@ -152,7 +171,7 @@ const ModifyComponent = ({ cBoardId }) => {
             </div>
 
             <div className="row mb-3">
-                <label className="col-sm-2 col-form-label font-weight-bold">ATTACHMENT</label>
+                <label className="col-sm-2 col-form-label font-weight-bold">첨부파일</label>
                 <div className="col-sm-10">
                     <input
                         type="file"
@@ -162,7 +181,27 @@ const ModifyComponent = ({ cBoardId }) => {
                     />
                 </div>
             </div>
-
+            {cboard.cBoardAttachment && cboard.cBoardAttachment.trim() !== "" && !imageLoadError ? (
+                <div>
+                    <label className="block text-gray-700">이미지</label>
+                    {showDeleteButton && (
+                        <div>
+                            <button type="button" onClick={deleteOldImage}>X</button>
+                            <img
+                                src={`${prefix}/view/s_${cboard.cBoardAttachment}`}
+                                alt="게시물 첨부 이미지"
+                                className="rounded-lg"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
+                                }}
+                            />
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <p className="text-gray-500"></p>
+            )}
             <div className="d-flex justify-content-end">
                 <button
                     type="button"
