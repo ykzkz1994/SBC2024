@@ -9,6 +9,7 @@ import {Button} from "react-bootstrap";
 import BootstrapPagination from "../../admin/components/util/BootstrapPagination";
 import BoardSearchComponent from "../../admin/components/util/BoardSearchComponent";
 import Modal from "react-bootstrap/Modal";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 
 const initState = {
@@ -41,9 +42,19 @@ const ReviewListComponent = () => {
     // 첫번째 모달
     const [firstShow, firstSetShow] = useState(false);
 
+    // 로그인 여부 확인
+    const {isLogin, moveToLoginReturn} = useCustomLogin()
+
     // 모달 컨트롤 함수
     const handleFirstClose = () => firstSetShow(false);
-    const handleFirstShow = () => firstSetShow(true);
+
+    const handleFirstShow = () => {
+        if (!isLogin) {
+            alert("로그인을 하시고 이용해주세요")
+            return;
+        }
+        firstSetShow(true);
+    }
 
     // 예약 데이터 저장 관리
     const [resData, setResData] = useState([])
@@ -119,7 +130,7 @@ const ReviewListComponent = () => {
 
     return (
         <div className="container mt-5">
-            <div className="d-flex mb-3 align-items-center">
+            <div className="d-flex align-items-center">
                 <BoardSearchComponent onSearch={handleSearch}/>
             </div>
             <Table bordered hover responsive className="text-sm-center">
@@ -224,8 +235,6 @@ const ReviewListComponent = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-
         </div>
     );
 };

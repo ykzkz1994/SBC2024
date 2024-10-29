@@ -135,6 +135,15 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // 파이썬 이미지 분석
+        if (path.equals("/java_service")){
+            return true;
+        }
+
+        if (path.startsWith("/api/lost")){
+            return true;
+        }
+
         // qna read
         if (path.matches("^/admin/qnas/\\d+$")) {
             return true;

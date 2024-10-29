@@ -14,7 +14,9 @@ import noticeRouter from "../admin/router/noticeRouter";
 import a_reviewRouter from "../admin/router/A_reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
+import lostItemRouter from "./lostItemRouter"
 import ReviewRouter from "./ReviewRouter";
+import a_lostItemRouter from "../admin/router/A_lostItemRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
 const {adminNoticesRouter,userNoticesRouter} = noticeRouter
@@ -37,6 +39,8 @@ const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
 const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
 const ReviewIndex = lazy(() => import("../pages/review/ReviewIndexPage"))
 const Sitemap = lazy(() => import("../pages/login/SitemapPage"))
+// 분실물 (이미지 분석)
+const LostItem = lazy(() => import("../pages/lostItem/LostItemIndexPage"))
 
 /*
 관리자 페이지
@@ -59,6 +63,7 @@ const A_CamperIndex = lazy(() => import("../admin/pages/camper/CamperIndexPage")
 const A_NoticeIndex = lazy(() => import("../admin/pages/notice/NoticeIndexPage"))
 const A_QnaIndex = lazy(() => import("../admin/pages/qna/QnaIndexPage"))
 const A_ReviewIndex = lazy(() => import("../admin/pages/review/ReviewIndexPage"))
+const A_LostIndex = lazy(()=> import("../admin/pages/LostIndexPage"))
 
 // 관리자 주소
 const A_prefix = "admin/"
@@ -130,6 +135,11 @@ const root = createBrowserRouter([
         path: "sitemap",
         element: <Suspense fallback={Loading}><Sitemap/></Suspense>
     },
+    {
+        path: `lost`,
+        element: <Suspense fallback={Loading}><LostItem/></Suspense>,
+        children : lostItemRouter()
+    },
 
     // 관리자
 
@@ -185,6 +195,11 @@ const root = createBrowserRouter([
         path: `${A_prefix}stats/`,
         element: <Suspense fallback={Loading}><StatsIndex/></Suspense>,
         children: statsRouter()
+    },
+    {
+        path: `${A_prefix}lost/`,
+        element: <Suspense fallback={Loading}><A_LostIndex/></Suspense>,
+        children: a_lostItemRouter()
     }
 ])
 

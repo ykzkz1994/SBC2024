@@ -48,6 +48,7 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
         <!--오라클 DB-->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
@@ -55,7 +56,7 @@
             <scope>runtime</scope>
         </dependency>
 
-            <!-- 스트링부트 테스트-->
+        <!-- 스트링부트 테스트-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -121,6 +122,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>6.1.11</version>
+        </dependency>
+
+        <!-- reactive web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
     </dependencies>

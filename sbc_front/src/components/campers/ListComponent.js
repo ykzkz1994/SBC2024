@@ -1,9 +1,12 @@
-import {useEffect, useState} from "react";
-import {getList, getSearchList} from "../../api/camperApi";
+import { useEffect, useState } from "react";
+import { getList, getSearchList } from "../../api/camperApi";
 import useCustomMove from "../../hooks/useCustomMove";
 import PageComponent from "../common/PageComponent";
 import useCustomLogin from "../../hooks/useCustomLogin";
-import {getCommentList} from "../../api/camperApi"; // 댓글 수 가져오기 위한 API import
+import fileImage from "../../images/fileAttatchment.png";
+import { getCommentList } from "../../api/camperApi";
+import {Button} from "react-bootstrap";
+import Table from "react-bootstrap/Table"; // 댓글 수 가져오기 위한 API import
 
 const initState = {
     dtoList: [],
@@ -19,8 +22,8 @@ const initState = {
 };
 
 const ListComponent = () => {
-    const {page, size, refresh, moveToList, moveToRead, moveToAdd} = useCustomMove();
-    const {exceptionHandle} = useCustomLogin();
+    const { page, size, refresh, moveToList, moveToRead, moveToAdd } = useCustomMove();
+    const { exceptionHandle } = useCustomLogin();
     const [serverData, setServerData] = useState(initState);
     const [searchType, setSearchType] = useState("title");
     const [searchText, setSearchText] = useState("");
@@ -30,10 +33,10 @@ const ListComponent = () => {
     const loadData = async () => {
         let data;
         if (searchText) {
-            const searchParam = {page, size, searchType, searchText};
+            const searchParam = { page, size, searchType, searchText };
             data = await getSearchList(searchParam);
         } else {
-            data = await getList({page, size});
+            data = await getList({ page, size });
         }
 
         setServerData(data);
@@ -42,12 +45,12 @@ const ListComponent = () => {
         const counts = await Promise.all(
             data.dtoList.map(async (camperBoard) => {
                 const commentsData = await getCommentList(camperBoard.cboardID);
-                return {cboardID: camperBoard.cboardID, count: commentsData.length || 0}; // 댓글이 없으면 0으로 처리
+                return { cboardID: camperBoard.cboardID, count: commentsData.length || 0 }; // 댓글이 없으면 0으로 처리
             })
         );
 
         // 댓글 개수 상태 업데이트
-        const countsMap = counts.reduce((acc, {cboardID, count}) => {
+        const countsMap = counts.reduce((acc, { cboardID, count }) => {
             acc[cboardID] = count;
             return acc;
         }, {});
@@ -90,14 +93,42 @@ const ListComponent = () => {
 
     return (
         <div className="container mt-5">
-            <table className="table table-bordered table-hover">
+
+            <div className="d-flex mb-3 align-items-center">
+                <select
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="form-select me-2"
+                    style={{width: '150px'}} // 드롭다운 크기 조정
+                >
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                </select>
+                <input
+                    type="text"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="form-control me-2"
+                    placeholder="검색어를 입력해주세요"
+                    style={{width: '250px'}} // 입력창 크기 조정
+                />
+                <button
+                    className="btn btn-primary"
+                    onClick={handleSearch}
+                    style={{backgroundColor:'#457575', border:'1px solid #457575'}}// 검색 실행
+                >
+                    검색
+                </button>
+            </div>
+
+            <Table bordered hover responsive className="text-sm-center">
                 <thead>
                 <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>조회수</th>
-                    <th>작성일</th>
+                    <th style={{ width: '10%', backgroundColor:'#537f91', color:"white" }}>NO</th>
+                    <th style={{ width: '40%', backgroundColor:'#537f91', color:"white" }}>제목</th>
+                    <th style={{ width: '20%', backgroundColor:'#537f91', color:"white" }}>작성자</th>
+                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>작성일</th>
+                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>조회수</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -109,7 +140,7 @@ const ListComponent = () => {
                             style={{cursor: "pointer"}}
                         >
                             <td>{camperBoard.cboardID}</td>
-                            <td>
+                            <td className="d-flex align-items-center">
                                <span
                                    className="badge me-2"
                                    style={{
@@ -124,27 +155,26 @@ const ListComponent = () => {
                                 <span style={{display: "inline-block"}}>
                                     {truncateTitle(camperBoard.cboardTitle)}
                                 </span>
-                                {camperBoard.cboardAttachment && camperBoard.cboardAttachment !== 'null' && (
+                                {camperBoard.cboardAttachment && (
                                     <img
-                                        src="/path/to/attachment-icon.png"
-                                        alt="첨부파일 아이콘"
+                                        src={fileImage}
+                                        alt="첨부 이미지"
+                                        className="ms-2"
                                         style={{
-                                            width: "20px",
-                                            height: "20px",
-                                            marginLeft: "5px",
-                                            display: "inline-block",
+                                            width: '1em', // 글자 크기에 맞춰 조정
+                                            height: '1em', // 글자 크기에 맞춰 조정
                                         }}
                                     />
                                 )}
-                                <span style={{display: "inline-block", marginLeft: "5px", color: "red"}}>
+                                <span className="text-red-500 ms-2">
                                     [{commentCounts[camperBoard.cboardID] || 0}]
                                 </span>
                             </td>
                             <td>{camperBoard.membername}</td>
-                            <td>{camperBoard.cboardViews}</td>
                             <td>
                                 {formatDate(new Date(camperBoard.cboardDate))}
                             </td>
+                            <td>{camperBoard.cboardViews}</td>
                         </tr>
                     ))
                 ) : (
@@ -153,41 +183,14 @@ const ListComponent = () => {
                     </tr>
                 )}
                 </tbody>
-            </table>
-
-            <div className="d-flex mb-3 align-items-center">
-                <select
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="form-select me-2"
-                    style={{width: '150px'}} // 드롭다운 크기 조정
-                >
-                    <option value="title">제목 검색</option>
-                    <option value="content">내용 검색</option>
-                </select>
-                <input
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    className="form-control me-2"
-                    placeholder="검색어 입력"
-                    style={{width: '250px'}} // 입력창 크기 조정
-                />
-                <button
-                    className="btn btn-primary"
-                    onClick={handleSearch} // 검색 실행
-                >
-                    검색
-                </button>
-            </div>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <div className="mx-auto">
+            </Table>
+                <div className="d-flex justify-content-center my-4">
                     <PageComponent serverData={serverData} movePage={moveToList}/>
                 </div>
-                <button className="btn btn-primary" onClick={() => moveToAdd()}>
-                    등록
-                </button>
+            <div className="d-flex justify-content-end mt-3 mb-5">
+                <Button className="btn btn-success" onClick={() => moveToAdd()}>
+                    글쓰기
+                </Button>
             </div>
         </div>
     );

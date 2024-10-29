@@ -123,7 +123,7 @@ function ListComponent(props) {
             )}
 
             {/* 검색 컴포넌트 */}
-            <div className="d-flex mb-3 align-items-center">
+            <div className="d-flex align-items-center">
                 <BoardSearchComponent onSearch={handleSearch} />
             </div>
 
