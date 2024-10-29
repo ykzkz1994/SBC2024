@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -340,35 +341,131 @@ public class CustomerStatsServiceImpl implements CustomerStatsService {
     // 고객 리뷰 통계
     @Override
     public List<ReviewStatsDTO> reviews(String dateType, LocalDate startDate, LocalDate endDate, Long siteId) {
-        // endDate가 null인 경우 처리
-        if (endDate == null) {
-            endDate = determineEndDate(startDate, dateType);
+        try {
+            if (endDate == null) {
+                endDate = determineEndDate(startDate, dateType);
+            }
+
+            // 리뷰 데이터 조회
+            List<Review> reviewsList = (siteId == null)
+                    ? reviewStatsRepository.findByDateBetween(startDate, endDate)
+                    : reviewStatsRepository.findReviewsByDateRangeAndSiteId(startDate, endDate, siteId);
+
+            // 예약 데이터 조회
+            List<Reservation> reservations = getReservations(dateType, startDate, endDate, siteId);
+
+            // 사이트별 예약 수와 리뷰 수를 저장할 Map
+            Map<Long, Integer> reservationsBySite = new HashMap<>();
+            Map<Long, Integer> reviewsBySite = new HashMap<>();
+
+            // 예약 데이터 집계
+            for (Reservation reservation : reservations) {
+                Long siteid = reservation.getSite().getSiteId();
+                reservationsBySite.merge(siteid, 1, Integer::sum);
+            }
+
+            // 리뷰 데이터 집계
+            for (Review review : reviewsList) {
+                Long siteid = review.getReservation().getSite().getSiteId();
+                reviewsBySite.merge(siteid, 1, Integer::sum);
+            }
+
+            // 날짜별 + 사이트별 통계를 저장할 맵
+            Map<String, Map<Long, ReviewStatsDTO>> dateAndSiteStats = new TreeMap<>();
+            Map<String, ReviewStatsDTO> dateTotalStats = new TreeMap<>();
+
+            // 리뷰 데이터 처리
+            for (Review review : reviewsList) {
+                if (review.getReviewDate() == null) continue;
+
+                LocalDate reviewLocalDate = new java.sql.Date(review.getReviewDate().getTime()).toLocalDate();
+                String dateKey = reviewLocalDate.toString();
+                Long reviewSiteId = review.getSiteId();
+
+                // 날짜별 + 사이트별 통계 처리
+                dateAndSiteStats.computeIfAbsent(dateKey, k -> new HashMap<>());
+                ReviewStatsDTO siteStats = dateAndSiteStats.get(dateKey)
+                        .computeIfAbsent(reviewSiteId, k -> {
+                            ReviewStatsDTO dto = createNewStatsDTO(reviewLocalDate, reviewSiteId);
+                            // 해당 사이트의 예약 수와 리뷰 수 설정
+                            dto.setTotalReservations(reservationsBySite.getOrDefault(reviewSiteId, 0));
+                            return dto;
+                        });
+                updateStats(siteStats, review);
+
+                // 날짜별 전체 통계 처리
+                ReviewStatsDTO totalStats = dateTotalStats.computeIfAbsent(dateKey, k -> {
+                    ReviewStatsDTO dto = createNewStatsDTO(reviewLocalDate, 0L);
+                    // 전체 예약 수 설정
+                    dto.setTotalReservations(reservations.size());
+                    return dto;
+                });
+                updateStats(totalStats, review);
+            }
+
+            // 결과 리스트 생성
+            List<ReviewStatsDTO> result = new ArrayList<>();
+
+            // 날짜별 전체 통계 추가 (전체 예약 수 포함)
+            dateTotalStats.values().forEach(dto -> {
+                dto.setTotalReservations(reservations.size());
+                dto.setTotalReviews(reviewsList.size());
+                result.add(dto);
+            });
+
+            // 사이트별 통계 추가
+            if (siteId != null) {
+                dateAndSiteStats.values().forEach(siteMap -> {
+                    ReviewStatsDTO siteStats = siteMap.get(siteId);
+                    if (siteStats != null) {
+                        // 특정 사이트의 예약 수와 리뷰 수 설정
+                        siteStats.setTotalReservations(reservationsBySite.getOrDefault(siteId, 0));
+                        siteStats.setTotalReviews(reviewsBySite.getOrDefault(siteId, 0));
+                        result.add(siteStats);
+                    }
+                });
+            } else {
+                dateAndSiteStats.values().forEach(siteMap ->
+                        siteMap.forEach((siteid, dto) -> {
+                            // 각 사이트별 예약 수와 리뷰 수 설정
+                            dto.setTotalReservations(reservationsBySite.getOrDefault(siteid, 0));
+                            dto.setTotalReviews(reviewsBySite.getOrDefault(siteid, 0));
+                            result.add(dto);
+                        }));
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            log.error("Error processing reviews: ", e);
+            throw new RuntimeException("리뷰 통계 처리 중 오류가 발생했습니다.", e);
         }
+    }
 
-        // 특정 siteId에 따른 리뷰 목록 조회
-        List<Review> reviewsList = (siteId == null)
-                ? reviewStatsRepository.findByDateBetween(startDate, endDate)
-                : reviewStatsRepository.findReviewsByDateRangeAndSiteId(startDate, endDate, siteId);
+    private ReviewStatsDTO createNewStatsDTO(LocalDate date, Long siteId) {
+        ReviewStatsDTO dto = new ReviewStatsDTO();
+        dto.setReviewDate(java.sql.Date.valueOf(date));
+        dto.setSiteId(siteId);
+        return dto;
+    }
 
-        log.info("Found {} reviews for siteId: {}", reviewsList.size(), siteId);
+    private void updateStats(ReviewStatsDTO dto, Review review) {
+        dto.incrementTotalReviews();
+        incrementTagCounts(dto, review);
+    }
 
-        // 결과를 저장할 맵 초기화
-        Map<String, ReviewStatsDTO> resultMap = new TreeMap<>();
-        initializeDateMap(startDate, endDate, dateType, resultMap);
 
-        // 리뷰 목록을 순회하며 통계 계산
-        for (Review review : reviewsList) {
-            LocalDate reviewDate = new java.sql.Date(review.getReviewDate().getTime()).toLocalDate();
-            String key = getKey(reviewDate, dateType);
-
-            ReviewStatsDTO dto = resultMap.get(key);
-            if (dto == null) continue;
-
-            incrementTagCounts(dto, review);
-            dto.incrementTotalReviews();
+    private LocalDate incrementDate(LocalDate date, String dateType) {
+        switch (dateType.toLowerCase()) {
+            case "daily":
+                return date.plusDays(1);
+            case "weekly":
+                return date.plusWeeks(1);
+            case "monthly":
+                return date.plusMonths(1);
+            default:
+                return date.plusDays(1);
         }
-
-        return new ArrayList<>(resultMap.values());
     }
 
     private LocalDate determineEndDate(LocalDate startDate, String dateType) {

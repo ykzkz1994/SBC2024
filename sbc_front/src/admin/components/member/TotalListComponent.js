@@ -25,12 +25,14 @@ function TotalListComponent(props) {
     const [searchParams, setSearchParams] = useState({ type: 'name', keyword: ''});
 
     useEffect(() => {
+        console.log("Fetching data for page:", currentPage);
         const fetchData = async () => {
             try {
                 const data = searchParams.keyword
                     ? await searchMember(searchParams.type, searchParams.keyword, { page: currentPage, size })
-                    : await getFullList({ page, size });
+                    : await getFullList({ page: currentPage, size });
 
+                console.log("Fetched data:", data);
                 setServerData(data);
             } catch (error) {
                 console.error('API 호출 중 오류 발생:', error);
@@ -48,7 +50,8 @@ function TotalListComponent(props) {
     const totalPages = serverData.totalPage; // 총 페이지 수
 
     const handlePageChange = (newPage) => {
-        setCurrentPage(newPage); // 현재 페이지를 업데이트
+        console.log("Changing to page:", newPage);
+        setCurrentPage(newPage);
     };
 
     const formatDate = (date) => {
@@ -99,7 +102,14 @@ function TotalListComponent(props) {
                                 <td>{member.memberBirth}</td>
                                 <td>{member.memberLocal}</td>
                                 <td>{formatDate(new Date(member.memberRegDate))}</td>
-                                <td style={{ color: 'red' }}>{member.memberStatus.trim().toUpperCase() === "ON" ? '' : '휴면'}</td>
+                                <td style={{
+                                    color: member.memberStatus.trim().toUpperCase() === "X" ? 'red' :
+                                        member.memberStatus.trim().toUpperCase() === "OFF" ? 'blue' : 'black'
+                                }}>
+                                    {member.memberStatus.trim().toUpperCase() === "ON" ? '' :
+                                        member.memberStatus.trim().toUpperCase() === "X" ? '탈퇴' :
+                                            member.memberStatus.trim().toUpperCase() === "OFF" ? '휴면' : ''}
+                                </td>
                             </tr>
                         ))
                 )}

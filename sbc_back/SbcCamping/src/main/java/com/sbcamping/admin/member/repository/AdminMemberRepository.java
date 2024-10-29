@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface AdminMemberRepository extends JpaRepository<Member, Long> {
 
     // 휴면회원 리스트
-    @Query("select m from Member m where m.memberStatus='OFF'")
+    @Query("select m from Member m where m.memberStatus in ('OFF','X')")
     Page<Member> selectInactive(Pageable pageable);
 
     // 회원 검색 (1) 회원명

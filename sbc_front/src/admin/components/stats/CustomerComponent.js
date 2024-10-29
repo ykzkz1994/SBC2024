@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import SearchComponent from "./SearchComponent";
 import { fetchCustomerStats } from '../../api/statsApi';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../css/customerStatsComponent.css'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
@@ -37,6 +38,19 @@ const CustomerComponent = () => {
         endDate: new Date().toISOString().split('T')[0],
         siteId: null
     });
+
+    // 현재 월의 시작일과 마지막일 계산
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    // 초기 검색 파라미터 설정
+    const initialSearchParams = {
+        dateType: 'month',
+        startDate: firstDayOfMonth.toISOString().split('T')[0],
+        endDate: lastDayOfMonth.toISOString().split('T')[0],
+        siteId: null
+    };
 
     const processData = (data) => {
         console.log('Received data:', data);
@@ -128,7 +142,7 @@ const CustomerComponent = () => {
         setLoading(true);
         try {
             const data = await fetchCustomerStats(newSearchParams);
-            processData(data); // 데이터 처리 호출
+            processData(data);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -136,8 +150,9 @@ const CustomerComponent = () => {
         }
     };
 
+    // 컴포넌트 마운트 시 초기 데이터 로드
     useEffect(() => {
-        onSearch(searchParams);
+        onSearch(initialSearchParams);
     }, []);
 
     const NoDataMessage = () => (
@@ -148,21 +163,42 @@ const CustomerComponent = () => {
 
     return (
         <div className="container-fluid mt-4">
-            <SearchComponent onSearch={onSearch} />
+            <SearchComponent 
+                onSearch={onSearch}
+                initialValues={initialSearchParams} // SearchComponent에 초기값 전달
+            />
         <hr/>
             <div className="row mt-4">
                 {/* 누적 예약 고객 분석 */}
                 <div className="col-md-6 mb-4">
                     <div className="card rounded-3 shadow h-100">
-                        <div className="card-body">
-                            <h4 className="card-title">누적 예약 고객 분석</h4>
-                            <div className="mt-3">
-                                <h5>총 누적 예약 고객수</h5>
-                                <p>{totalReservationStats.totalReservations} (일 평균 예약 고객수: {totalReservationStats.averageReservationsPerDay ? totalReservationStats.averageReservationsPerDay.toFixed(2) : 'N/A'})</p>
+                        <div className="card-body text-center"> {/* text-center 추가 */}
+                            <h4 className="card-title mb-4">누적 예약 고객 분석</h4>
+                            <div className="mt-4 p-3 bg-light rounded"> {/* 배경과 패딩 추가 */}
+                                <h5 className="text-primary mb-3">총 누적 예약 고객수</h5>
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <h2 className="display-4 mb-0 text-dark">
+                                        {totalReservationStats.totalReservations}
+                                    </h2>
+                                    <span className="ms-2 text-muted">명</span>
+                                </div>
+                                <p className="text-muted mt-2">
+                                    일 평균 예약 고객수:
+                                    <span className="fw-bold ms-2">
+                        {totalReservationStats.averageReservationsPerDay
+                            ? totalReservationStats.averageReservationsPerDay.toFixed(2)
+                            : 'N/A'} 명
+                    </span>
+                                </p>
                             </div>
-                            <div className="mt-3">
-                                <h5>재예약 고객 비율</h5>
-                                <p>{rebookingRate ? rebookingRate.toFixed(2) : 'N/A'}%</p>
+                            <div className="mt-4 p-3 bg-light rounded"> {/* 배경과 패딩 추가 */}
+                                <h5 className="text-success mb-3">재예약 고객 비율</h5>
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <h2 className="display-4 mb-0 text-dark">
+                                        {rebookingRate ? rebookingRate.toFixed(1) : 'N/A'}
+                                    </h2>
+                                    <span className="ms-2 text-muted">%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -171,30 +207,56 @@ const CustomerComponent = () => {
                 {/* 최다 예약/최다 취소 고객 */}
                 <div className="col-md-6 mb-4">
                     <div className="card rounded-3 shadow h-100">
-                        <div className="card-body">
-                            <h4 className="card-title">최다 예약/최다 취소 고객</h4>
-                            <div className="mt-3">
-                                <h5>최다 예약 고객</h5>
+                        <div className="card-body text-center">
+                            <h4 className="card-title mb-4">최다 예약/최다 취소 고객</h4>
+
+                            {/* 최다 예약 고객 */}
+                            <div className="mt-4 p-3 bg-light rounded">
+                                <h5 className="text-primary mb-3">최다 예약 고객</h5>
                                 {mostFrequentReservationCustomer ? (
-                                    <p>
-                                        이름: {mostFrequentReservationCustomer.customerName}<br />
-                                        이메일: {mostFrequentReservationCustomer.customerEmail}<br />
-                                        (예약 횟수: {mostFrequentReservationCustomer.reservationCount}회)
-                                    </p>
+                                    <div className="customer-info">
+                                        <div className="mb-2">
+                                            <span className="fw-bold">이름:</span>
+                                            <span className="ms-2">{mostFrequentReservationCustomer.customerName}</span>
+                                        </div>
+                                        <div className="mb-2">
+                                            <span className="fw-bold">이메일:</span>
+                                            <span className="ms-2">{mostFrequentReservationCustomer.customerEmail}</span>
+                                        </div>
+                                        <div className="d-flex justify-content-center align-items-center mt-3">
+                                            <h3 className="mb-0 text-primary">
+                                                {mostFrequentReservationCustomer.reservationCount}
+                                            </h3>
+                                            <span className="ms-2 text-muted">회 예약</span>
+                                        </div>
+                                    </div>
                                 ) : (
-                                    <p>데이터 없음</p>
+                                    <p className="text-muted">데이터 없음</p>
                                 )}
                             </div>
-                            <div className="mt-3">
-                                <h5>최다 취소 고객</h5>
+
+                            {/* 최다 취소 고객 */}
+                            <div className="mt-4 p-3 bg-light rounded">
+                                <h5 className="text-danger mb-3">최다 취소 고객</h5>
                                 {mostFrequentCancellationCustomer ? (
-                                    <p>
-                                        이름: {mostFrequentCancellationCustomer.customerName}<br />
-                                        이메일: {mostFrequentCancellationCustomer.customerEmail}<br />
-                                        (취소 횟수: {mostFrequentCancellationCustomer.cancellationCount}회)
-                                    </p>
+                                    <div className="customer-info">
+                                        <div className="mb-2">
+                                            <span className="fw-bold">이름:</span>
+                                            <span className="ms-2">{mostFrequentCancellationCustomer.customerName}</span>
+                                        </div>
+                                        <div className="mb-2">
+                                            <span className="fw-bold">이메일:</span>
+                                            <span className="ms-2">{mostFrequentCancellationCustomer.customerEmail}</span>
+                                        </div>
+                                        <div className="d-flex justify-content-center align-items-center mt-3">
+                                            <h3 className="mb-0 text-danger">
+                                                {mostFrequentCancellationCustomer.cancellationCount}
+                                            </h3>
+                                            <span className="ms-2 text-muted">회 취소</span>
+                                        </div>
+                                    </div>
                                 ) : (
-                                    <p>데이터 없음</p>
+                                    <p className="text-muted">데이터 없음</p>
                                 )}
                             </div>
                         </div>

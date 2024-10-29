@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import ConfirmModal from "../../admin/components/util/ConfirmModal";
+import {useSelector} from "react-redux";
 
 function CommentComponent() {
     const [serverData, setServerData] = useState([]); // 댓글 목록 상태
@@ -11,6 +12,8 @@ function CommentComponent() {
     const [editingCommentId, setEditingCommentId] = useState(null); // 수정 중인 댓글 ID
     const [editingCommentContent, setEditingCommentContent] = useState(""); // 수정할 댓글 내용
     const { cBoardId } = useParams(); // URL에서 cBoardId 가져오기
+
+    const loginState = useSelector((state) => state.loginSlice)
 
     // 댓글 목록 가져오기
     const fetchComments = async () => {
@@ -171,19 +174,27 @@ function CommentComponent() {
                                         })}
                                     </span>
                                         <div className="ml-auto space-x-2">
-                                            {getCookieMemberId() === comment.member.memberID && (
+                                            {(
+                                                loginState.member.memberRole === "ROLE_ADMIN" &&
+                                                (loginState.member.memberId === comment.member.memberID) // 관리자인 경우 자신이 쓴 댓글
+                                            ) && (
                                                 <>
                                                     <button
-                                                        className="px-2 py-0.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-700"
-                                                        onClick={() => handleClickEdit(comment.cCommentID, comment.cCommentContent)}>
+                                                        onClick={() => handleClickEdit(comment.qcommentID, comment.qcommentContent)}
+                                                        className="px-2 py-0.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-700">
                                                         수정
                                                     </button>
-                                                    <button
-                                                        className="px-2 py-0.5 bg-red-500 text-white rounded text-sm hover:bg-red-700"
-                                                        onClick={() => handleClickDelete(comment.cCommentID)}>
-                                                        삭제
-                                                    </button>
                                                 </>
+                                            )}
+                                            {(
+                                                loginState.member.memberRole === "ROLE_ADMIN" || // 관리자인 경우
+                                                loginState.member.memberId === comment.member.memberID // 또는 댓글 작성자일 경우
+                                            ) && (
+                                                <button
+                                                    onClick={() => handleClickDelete(comment.qcommentID)}
+                                                    className="px-2 py-0.5 bg-red-500 text-white rounded text-sm hover:bg-red-700">
+                                                    삭제
+                                                </button>
                                             )}
                                         </div>
                                     </div>

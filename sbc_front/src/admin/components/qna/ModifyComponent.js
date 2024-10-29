@@ -114,9 +114,9 @@ useEffect(() => {
 
     return (
         <>
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-gray-700">제목</label>
+            <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 space-y-4 mb-40">
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">제목</h3>
                     <input
                         name="qBoardTitle"
                         type="text"
@@ -125,8 +125,9 @@ useEffect(() => {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-                <div>
-                    <label className="block text-gray-700">내용</label>
+
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">내용</h3>
                     <textarea
                         name="qBoardContent"
                         value={qna.qBoardContent} // qna의 상태를 직접 사용
@@ -135,8 +136,9 @@ useEffect(() => {
                         rows="5"
                     />
                 </div>
-                <div>
-                    <label className="block text-gray-700">이미지 첨부</label>
+
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">이미지 업로드</h3>
                     <input
                         type="file"
                         ref={uploadRef}
@@ -145,27 +147,27 @@ useEffect(() => {
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
-                    {qna.qBoardAttachment && qna.qBoardAttachment.trim() !== "" && !imageLoadError ? (
-                        <div>
-                            <label className="block text-gray-700">첨부 이미지</label>
-                            {showDeleteButton && (
-                                <div>
-                                    <button type="button" onClick={deleteOldImage}>X</button>
-                                    <img
-                                        src={`${prefix}/view/s_${qna.qBoardAttachment}`}
-                                        alt="게시물 첨부 이미지"
-                                        className="rounded-lg"
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
-                                        }}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    ) : (
 
-                        <p className="text-gray-500"></p>)}
+                {qna.qBoardAttachment && qna.qBoardAttachment.trim() !== "" && !imageLoadError ? (
+                    <div>
+                        <h3 className="text-lg font-semibold mb-2">첨부 이미지</h3>
+                        {showDeleteButton && (
+                            <div>
+                                <button type="button" onClick={deleteOldImage}>X</button>
+                                <img
+                                    src={`${prefix}/view/s_${qna.qBoardAttachment}`}
+                                    alt="게시물 첨부 이미지"
+                                    className="rounded-lg"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        setImageLoadError(true); // 새로운 상태 변수를 사용하여 이미지 로드 실패를 추적
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </div>
+                ) : null }
+
                 <div className="text-right space-x-2">
                     <button
                         onClick={handleClickModify}

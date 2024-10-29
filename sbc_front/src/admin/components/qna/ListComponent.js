@@ -166,7 +166,7 @@ function ListComponent(props) {
                                 >
                                     <div className="d-flex align-items-center">
                                         {qb.qboardTitle}
-                                        {qb.qboardAttachment && (
+                                        {qb.qboardAttachment && qb.qboardAttachment !== 'null' ? (
                                             <img
                                                 src={fileImage}
                                                 alt="첨부 이미지"
@@ -176,7 +176,7 @@ function ListComponent(props) {
                                                     height: '1em', // 글자 크기에 맞춰 조정
                                                 }}
                                             />
-                                        )}
+                                        ): null}
                                         {commentCounts[qb.qboardID] > 0 && (
                                             <span className="text-red-500 ms-2">
                                                 [{commentCounts[qb.qboardID]}]
@@ -212,7 +212,7 @@ function ListComponent(props) {
             </div>
 
             {/* 글쓰기 버튼 */}
-            <div className="d-flex justify-content-end mt-3 mb-20"> {/* mb-4 유지 */}
+            <div className="d-flex justify-content-end mt-3 mb-5"> {/* mb-4 유지 */}
                 <Button
                     onClick={handleAddClick}
                     className="btn btn-success"

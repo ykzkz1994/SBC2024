@@ -7,7 +7,7 @@ const ListPage = () => {
     const size = queryParams.get("size") ? parseInt(queryParams.get("size")) : 10
     return (
         <div>
-            <div><h1>캠퍼 게시판</h1></div>
+            <div className="mt-3"><h1>캠퍼 게시판</h1></div>
             <hr/>
             <ListComponent/>
         </div>

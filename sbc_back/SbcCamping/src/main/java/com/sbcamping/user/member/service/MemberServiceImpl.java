@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         }
-        member.changeStatus("OFF");
+        member.changeStatus("WITHDRAWN");
         member.changePhone("00000000000");
         memberRepository.save(member);
         msg = "success";

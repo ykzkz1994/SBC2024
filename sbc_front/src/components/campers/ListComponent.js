@@ -183,13 +183,10 @@ const ListComponent = () => {
                 )}
                 </tbody>
             </Table>
-
-
-
                 <div className="d-flex justify-content-center my-4">
                     <PageComponent serverData={serverData} movePage={moveToList}/>
                 </div>
-            <div className="d-flex justify-content-end mt-3 mb-20">
+            <div className="d-flex justify-content-end mt-3 mb-5">
                 <Button className="btn btn-success" onClick={() => moveToAdd()}>
                     글쓰기
                 </Button>

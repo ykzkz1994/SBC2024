@@ -95,7 +95,7 @@ const ReadComponent = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400">
+        <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md border-2 border-gray-400 mb-40">
             {error && <p className="text-red-500 mb-4">{error}</p>} {/* 오류 메시지 출력 */}
             {/* 제목 및 작성 시간 */}
             <div className="flex justify-between items-center mb-8"> {/* 간격을 더 주기 위해 mb-8 적용 */}
@@ -117,7 +117,7 @@ const ReadComponent = () => {
             {/* 공지사항 내용 표시 영역 */}
             <div className="mb-8">
                 <h2 className="text-lg font-semibold mb-2">공지 내용</h2> {/* '공지 내용' 텍스트 추가 */}
-                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{content}</p>
+                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg whitespace-pre-wrap">{content}</p>
             </div>
 
             {/* 목록으로 돌아가기, 수정하기, 삭제하기 버튼 */}

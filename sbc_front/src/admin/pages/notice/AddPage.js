@@ -11,8 +11,6 @@ const AddPage = () => {
         <div>
             <a href={"/admin/notices/list"} style={{textDecoration: 'none', color: 'black'}}>
             </a>
-
-
             <AddComponent/>
         </div>
     );

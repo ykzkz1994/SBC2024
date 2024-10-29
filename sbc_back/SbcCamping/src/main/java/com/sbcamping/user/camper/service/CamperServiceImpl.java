@@ -53,23 +53,37 @@ public class CamperServiceImpl implements CamperService {
 
         return savedCamperBoard.getCBoardID();
     }
-
+    //read
+//    @Override
+//    public CamperBoard get(Long cBoardId) {
+//        CamperBoard camperBoard = camperRepository.findById(cBoardId)
+//                .orElseThrow(() -> new NoResultsFoundException("해당 캠퍼 보드를 찾을 수 없습니다."));
+//
+//        camperBoard.changeViews(camperBoard.getCBoardViews() + 1);
+//
+//        camperRepository.save(camperBoard);
+//
+//        return camperBoard;
+//    }
     @Override
-    public CamperBoard get(Long cBoardId) {
-        CamperBoard camperBoard = camperRepository.findById(cBoardId)
-                .orElseThrow(() -> new NoResultsFoundException("해당 캠퍼 보드를 찾을 수 없습니다."));
+    public CamperBoardDTO get(Long cBoardID) {
+        Optional<CamperBoard> camperBoard = camperRepository.findById(cBoardID);
+        CamperBoard cb = null;
 
-        camperBoard.changeViews(camperBoard.getCBoardViews() + 1);
+        if (camperBoard.isPresent()) {
+            cb = camperBoard.orElseThrow();
+            cb.changeViews(cb.getCBoardViews() + 1);
+            this.camperRepository.save(cb);
+        }
 
-        camperRepository.save(camperBoard);
-
-        return camperBoard;
+        CamperBoardDTO dto = modelMapper.map(cb, CamperBoardDTO.class);
+        return dto;
     }
 
     @Override
-    public void modify(CamperBoardDTO camperBoardDTO) {
+    public void modify(CamperBoardReqDTO camperBoardDTO) {
 
-        Optional<CamperBoard> result = camperRepository.findById(camperBoardDTO.getCBoardID());
+        Optional<CamperBoard> result = camperRepository.findById(camperBoardDTO.getCBoardId());
 
         CamperBoard camperBoard = result.orElseThrow(null);
 
@@ -87,11 +101,12 @@ public class CamperServiceImpl implements CamperService {
 
         if (camperBoardDTO.getCBoardAttachment() != null) {
             camperBoard.changeAttachment(camperBoardDTO.getCBoardAttachment());
+        } else {
+            camperBoard.changeAttachment(camperBoard.getCBoardAttachment());
         }
-
-
         camperRepository.save(camperBoard);
     }
+
 
     @Override
     public void remove(Long cBoardId) {
