@@ -21,7 +21,6 @@ const ReadComponent = ({ cBoardId }) => {
     const [camper, setCamper] = useState(initState); // 게시글 데이터 상태
     const [loading, setLoading] = useState(true); // 로딩 상태
     const { moveToList, moveToModify } = useCustomMove(); // 페이지 이동 훅
-    const [imageLoadError, setImageLoadError] = useState(false)
 
     // 게시글 데이터 로딩
     useEffect(() => {
