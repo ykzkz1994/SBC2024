@@ -103,13 +103,38 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
-        // 캠퍼게시판 목록, 상세조회
-        if(path.equals("/api/campers/list") || path.startsWith("/api/campers/")){
+        // 캠퍼리스트
+        if (path.equals("/api/campers/list")) {
             return true;
         }
 
-        // 리뷰 게시판
-        if (path.startsWith("/api/review/")) {
+        // 캠퍼리스트 상세
+        if (path.matches("^/api/campers/\\d+$")) {
+            return true;
+        }
+
+        // 캠퍼리스트 댓글 목록
+        if (path.matches("^/api/campers/comments/\\d+$")) {
+            return true;
+        }
+
+        // 리뷰 게시판 리스트
+        if (path.equals("/api/review/list")) {
+            return true;
+        }
+
+        // 나의 예약 내역 확인하기
+        if (path.equals("/api/review/reviewCheck")) {
+            return true;
+        }
+
+        // 리뷰 게시판 상세
+        if (path.matches("^/api/review/read/\\d+$")) {
+            return true;
+        }
+
+        // 예약내역 확인
+        if (path.startsWith("/api/res")) {
             return true;
         }
 
@@ -117,7 +142,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(path.equals("/notices/list")){
             return true;
         }
-             //공지리스트 비회원도 볼 수 있게끔
+        //공지리스트 비회원도 볼 수 있게끔
         if(path.equals("/admin/notices/list")){
             return true;
         }
@@ -126,21 +151,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
           if(path.startsWith("/notices/read/")){
             return true;
         }
-              //공지 내용 비회원도 볼 수 있게끔
+          //공지 내용 비회원도 볼 수 있게끔
           if(path.startsWith("/admin/notices/read/")){
             return true;
         }
 
-        if (path.startsWith("/api/res/")) {
-            return true;
-        }
-
-        // 파이썬 이미지 분석
-        if (path.equals("/java_service")){
-            return true;
-        }
-
-        if (path.startsWith("/api/lost")){
+          // qna list
+        if (path.equals("/admin/qnas/list")) {
             return true;
         }
 
@@ -154,6 +171,19 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // 사진 보여주는거 허용
+        if (path.startsWith("/api/campers/view")) {
+            return true;
+        }
+
+        // 파이썬 이미지 분석
+        if (path.equals("/java_service")){
+            return true;
+        }
+
+        if (path.startsWith("/api/lost")){
+            return true;
+        }
 
         return false;
     }

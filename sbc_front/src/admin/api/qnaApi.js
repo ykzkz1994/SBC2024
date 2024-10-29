@@ -59,13 +59,13 @@ export const postAdd = async (qna) => {
 // putOne : 게시글 수정(Modify)
 export const putOne = async (qbID, qna) => {
     const header = {headers:{"Content-Type" : "multipart/form-data"}};
-    const res = await jwtAxios.put(`${prefix}/${qbID}`, qna, header)
+    const res = await axios.put(`${prefix}/${qbID}`, qna, header)
     return res.data;
 }
 
 // deleteOne : 게시글 삭제
 export const deleteOne = async (qbID) => {
-    const res = await jwtAxios.delete(`${prefix}/${qbID}`);
+    const res = await axios.delete(`${prefix}/${qbID}`);
     return res.data;
 }
 
@@ -91,7 +91,7 @@ export const deleteComment = async (qcommentID, qbID) => {
 // getCommentList : 해당 게시글의 댓글 목록 가져오기
 export const getCommentList = async (qbID) => {
     try {
-        const res = await jwtAxios.get(`${prefix}/${qbID}/comments/list`);
+        const res = await axios.get(`${prefix}/${qbID}/comments/list`);
         const count = res.data ? Object.keys(res.data).length : 0; // 데이터가 있는 경우만 카운트
         return res.data;
     } catch (error) {

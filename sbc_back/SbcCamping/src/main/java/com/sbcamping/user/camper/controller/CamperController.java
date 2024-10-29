@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -106,6 +107,7 @@ public class CamperController {
      *
      * @param 게시판 내용
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/")
     public Map<String, Long> register(CamperBoardDTO camperBoardDTO) {
         log.info("register camper board: {}", camperBoardDTO);
@@ -184,6 +186,7 @@ public class CamperController {
      *
      * @param
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/comments")
     public Map<String, Long> registerComment(
             @RequestHeader(name = "Authorization") String auth,
@@ -200,6 +203,7 @@ public class CamperController {
      *
      * @param
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PutMapping("/comments")
     public Map<String, String> updateComment(
             @RequestHeader(name = "Authorization") String auth,
@@ -219,6 +223,7 @@ public class CamperController {
      *
      * @param
      */
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @DeleteMapping("/{cBoardId}/comments/{cCommentId}")
     @Transactional
     public Map<String, String> removeComment(

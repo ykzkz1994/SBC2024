@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCookie } from "../util/cookieUtil";
+import jwtAxios from "../util/jwtUtil";
 //서버 주소
 export const API_SERVER_HOST = "http://localhost:8080";
 
@@ -67,7 +68,7 @@ export const deleteOne = async (cBoardId) => {
 // API 호출을 위한 putOne 함수
 export const putOne = async (cBoardId, formdata) => {
   try {
-    const res = await axios.put(`${prefix}/${cBoardId}`, formdata, {
+    const res = await jwtAxios.put(`${prefix}/${cBoardId}`, formdata, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Authorization": `Bearer ${accessToken}`,
@@ -100,7 +101,7 @@ export const getCommentList = async (cBoardId) => {
 
 // 댓글 삭제
 export const deleteComment = async (cCommentId, cBoardId) => {
-  const res = await axios.delete(`${prefix}/${cBoardId}/comments/${cCommentId}`, commonHeader)
+  const res = await jwtAxios.delete(`${prefix}/${cBoardId}/comments/${cCommentId}`, commonHeader)
   return res.data;
 }
 
@@ -112,11 +113,11 @@ export const updateComment = async (cCommentId, cComment, cBoardId) => {
     cCommentContent: cComment
   };
 
-  const res = await axios.put(`${prefix}/comments`, body, commonHeader);
+  const res = await jwtAxios.put(`${prefix}/comments`, body, commonHeader);
   return res.data;
 };
 //댓글 등록
 export const postCommentAdd = async (req) => {
-  const res = await axios.post(`${prefix}/comments`, req, commonHeader);
+  const res = await jwtAxios.post(`${prefix}/comments`, req, commonHeader);
   return await res.data;
 };
