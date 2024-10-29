@@ -115,11 +115,16 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservations = reservationRepository.findByResStatus("예약완료");
 
         reservations.forEach(reservation ->  {
-            // checkout_Date가 하루 이전이거나 같은날인지
-            // 현재날짜가 2024-10-23 이고 checkoutDate가 2024-10-22 일경우
-            // 10-22 이전 까지는 true 반환해 사용완료로 바뀐다.
-            // isBefore 10-21 까지 true
-            // isEqual 10-22 true
+
+            /**
+             * checkout_Date가 하루 이전이거나 같은날인지
+             * 현재날짜가 2024-10-23 이고 checkoutDate가 2024-10-22 일경우
+             * 10-22 이전 까지는 true 반환해 사용완료로 바뀐다.
+             * isBefore 10-21 까지 true
+             * isEqual 10-22 true
+             * @Param checkoutDate 확인할 체크아웃 날짜
+             */
+            
             if (reservation.getCheckoutDate().isBefore(now.minusDays(1))
                     ||
                     reservation.getCheckoutDate().isEqual(now.minusDays(1))) {

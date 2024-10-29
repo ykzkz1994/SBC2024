@@ -51,6 +51,7 @@ const Respage = () => {
         memberEmail,
         weekDayPay,
         weekEndPay,
+        maxPeople
     } = location.state || {};
 
     // 내가 예약한 날짜에 예약이 있는지 확인하는 상태
@@ -402,13 +403,12 @@ const Respage = () => {
                     </Form.Label>
                     <Col sm="10">
                         <Form.Select name="resPeople" onChange={handleChangeRes} aria-label="입실 인원수">
-                            <option>입실인원수를 선택해주세요</option>
-                            <option value="1">1명</option>
-                            <option value="2">2명</option>
-                            <option value="3">3명</option>
-                            <option value="4">4명</option>
-                            <option value="5">5명</option>
-                            <option value="6">6명</option>
+                            <option>입실 인원수는 최대 {maxPeople}명입니다.</option>
+                            {Array.from({length: maxPeople}, (_, index) => (
+                                <option key={index + 1} value={index + 1}>
+                                    {index + 1}명
+                                </option>
+                            ))}
                         </Form.Select>
                     </Col>
                 </Form.Group>

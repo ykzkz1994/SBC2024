@@ -42,9 +42,9 @@ export const reviewCheck = async (memberId) => {
 export const postAdd = async (review) => {
     try {
         const res = await axios.post(`${prefix}/`, review, {
-            // headers: {
-            //     'Content-Type': 'multipart/form-data' // 파일 업로드 헤더 설정
-            // }
+            headers: {
+                'Content-Type': 'multipart/form-data' // 파일 업로드 헤더 설정
+            }
         });
         console.log(res.data);
         return res.data
