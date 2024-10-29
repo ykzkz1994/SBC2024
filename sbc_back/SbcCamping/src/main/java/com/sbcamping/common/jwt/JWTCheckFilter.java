@@ -114,10 +114,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         //공지리스트 비회원도 볼 수 있게끔
-        if(path.equals("/notices/list")){
-            return true;
-        }
-             //공지리스트 비회원도 볼 수 있게끔
         if(path.equals("/admin/notices/list")){
             return true;
         }
@@ -132,6 +128,15 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         if (path.startsWith("/api/res/")) {
+            return true;
+        }
+
+        // 파이썬 이미지 분석
+        if (path.equals("/java_service")){
+            return true;
+        }
+
+        if (path.startsWith("/api/lost")){
             return true;
         }
 

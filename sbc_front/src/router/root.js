@@ -14,6 +14,7 @@ import noticeRouter from "../admin/router/noticeRouter";
 import a_reviewRouter from "../admin/router/A_reviewRouter";
 import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
+import lostItemRouter from "./lostItemRouter"
 import ReviewRouter from "./ReviewRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
@@ -37,6 +38,8 @@ const CamperIndex = lazy(() =>  import("../pages/campers/CamperIndexPage"))
 const QnaIndex = lazy(()=>import("../pages/community/QnaIndexPage"))
 const ReviewIndex = lazy(() => import("../pages/review/ReviewIndexPage"))
 const Sitemap = lazy(() => import("../pages/login/SitemapPage"))
+// 분실물 (이미지 분석)
+const LostItem = lazy(() => import("../pages/lostItem/LostItemIndexPage"))
 
 /*
 관리자 페이지
@@ -129,6 +132,11 @@ const root = createBrowserRouter([
     {
         path: "sitemap",
         element: <Suspense fallback={Loading}><Sitemap/></Suspense>
+    },
+    {
+        path: `lost`,
+        element: <Suspense fallback={Loading}><LostItem/></Suspense>,
+        children : lostItemRouter()
     },
 
     // 관리자
