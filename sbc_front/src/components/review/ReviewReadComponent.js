@@ -100,7 +100,6 @@ const ReviewReadComponent = () => {
             <div className="mb-8">
                 {reviewBoard.reviewAttachment && reviewBoard.reviewAttachment.trim() !== "" && !imageLoadError ? (
                     <div className="text-gray-700 flex justify-center">
-                        <span className="text-lg font-semibold">첨부 이미지</span>
                         <img
                             src={`${prefix}/view/${reviewBoard.reviewAttachment}`}
                             alt="게시물 첨부 이미지"
