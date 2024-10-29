@@ -117,23 +117,24 @@ const LostItemAddPage = () => {
     return(
         <div>
             <h1>분실물 이미지 분석</h1>
-            <hr></hr>
-            <form method="post" encType="multipart/form-data" id="fileUploadForm">
+            <hr/>
+            <form method="post" encType="multipart/form-data" id="fileUploadForm" className="mt-5 mb-5">
                 <p><input type="hidden" name="message" value="이미지 분석 결과"/></p>
                 <p>파일 : <input type="file" name="file" id="file"/></p>
-                <input type="button" onClick={HandleRequestIA} value="비동기 요청(파이썬 서버 ON)" style={{
+                <input type="button" onClick={HandleRequestIA} value="이미지 분석 실행" style={{
                     border: '1px solid orange',
                     borderRadius: '5px',
                     backgroundColor: 'orange',
                     padding: '5px',
                 }}/>
             </form>
-            <hr></hr>
-            <div id="result" style={{maxWidth:'500px'}}>
-                여기에 요청 결과가 출력되어야 합니다.
+            <hr/>
+            <div id="result" style={{maxWidth: '500px'}} className="mt-5 mb-5">
+                이미지 파일 첨부 후 분석 실행 버튼을 눌러주세요
             </div>
-            <div>
-                <hr></hr>
+            <hr/>
+            <div className="mt-5">
+
                 <p>습득 장소* : <input type="text" name="foundLocation" className="border-1" onChange={handleChange}/></p>
                 <p>추가 설명(선택) : <input type="text" maxLength='255' name="description" className="border-1"
                                       onChange={handleChange}/></p>

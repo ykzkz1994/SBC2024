@@ -16,6 +16,7 @@ import statsRouter from "../admin/router/statsRouter";
 import qnaRoutes from "../admin/router/qnaRouter";
 import lostItemRouter from "./lostItemRouter"
 import ReviewRouter from "./ReviewRouter";
+import a_lostItemRouter from "../admin/router/A_lostItemRouter";
 
 const { adminQnaRouter, userQnaRouter } = qnaRoutes;
 const {adminNoticesRouter,userNoticesRouter} = noticeRouter
@@ -62,6 +63,7 @@ const A_CamperIndex = lazy(() => import("../admin/pages/camper/CamperIndexPage")
 const A_NoticeIndex = lazy(() => import("../admin/pages/notice/NoticeIndexPage"))
 const A_QnaIndex = lazy(() => import("../admin/pages/qna/QnaIndexPage"))
 const A_ReviewIndex = lazy(() => import("../admin/pages/review/ReviewIndexPage"))
+const A_LostIndex = lazy(()=> import("../admin/pages/LostIndexPage"))
 
 // 관리자 주소
 const A_prefix = "admin/"
@@ -193,6 +195,11 @@ const root = createBrowserRouter([
         path: `${A_prefix}stats/`,
         element: <Suspense fallback={Loading}><StatsIndex/></Suspense>,
         children: statsRouter()
+    },
+    {
+        path: `${A_prefix}lost/`,
+        element: <Suspense fallback={Loading}><A_LostIndex/></Suspense>,
+        children: a_lostItemRouter()
     }
 ])
 

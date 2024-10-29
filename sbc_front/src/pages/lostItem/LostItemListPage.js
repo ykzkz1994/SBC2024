@@ -179,30 +179,30 @@ const LostItemListPage = () => {
         setSelectedImage(null);
     };
 
-
-
-
+    const handleAddClick = () => {
+            navigate('/admin/lost/add');
+    };
 
     return (
         <>
-            <div>
-                <h4>분실물 목록<span style={{fontSize:'14px'}}>　SB캠핑장 연락처 : 031-1111-7777</span></h4>
-                <hr></hr>
+            <div className="mt-3 mb-5">
+                <h1>분실물 목록<span style={{fontSize:'14px'}}>　SB캠핑장 연락처 : 031-1111-7777</span></h1>
+                <hr/>
             </div>
 
             <div className="d-flex mb-2 align-items-center">
                 <div className="d-flex mb-2 align-items-center">
                     <select id="type" name="type" value={type} onChange={handleTypeChange}
-                            className="form-select me-2 p-sm-1"
-                            style={{width: '120px'}}>
+                            className="form-select me-2"
+                            style={{width: '150px'}}>
                         <option value="category">분류</option>
                         <option value="foundLocation">습득장소</option>
                     </select>
                     <input id="keyword" name="keyword" type="text" placeholder='검색어를 입력해주세요' value={keyword}
                            onChange={(e) => setKeyword(e.target.value)}
-                           className="form-control me-2 p-sm-1"
+                           className="form-control me-2"
                            style={{width: '250px'}}/>
-                    <Button size={"sm"} onClick={() => handleSearch(type, keyword)} style={{backgroundColor:'#457575', border:'1px solid #457575'}}>검색</Button>
+                    <Button onClick={() => handleSearch(type, keyword)} style={{backgroundColor:'#457575', border:'1px solid #457575'}}>검색</Button>
                 </div>
 
             </div>
@@ -320,6 +320,7 @@ const LostItemListPage = () => {
                     </tr>}
                     </tbody>
                 </Table>
+
             </div>
 
             {/* 페이지네이션을 중앙 정렬하기 위해 div로 감싸기 */}
@@ -330,6 +331,18 @@ const LostItemListPage = () => {
                     onPageChange={handlePageChange}
                 />
             </div>
+
+            {email === 'admin@sbc.com' ? (
+                <>
+            <div className="d-flex justify-content-end mt-3 mb-5"> {/* mb-4 유지 */}
+                <Button
+                    onClick={handleAddClick}
+                    className="btn btn-success"
+                >
+                    분실물 등록
+                </Button>
+            </div>
+                </>) : null }
         </>
     )
 }

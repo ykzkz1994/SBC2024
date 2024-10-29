@@ -210,7 +210,7 @@ const MainPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#"> <p className="text-l card-title mb-3 text-center"> 분실물 등록 바로가기 ▶</p></a>
+                                <a href="/admin/lost/add"> <p className="text-l card-title mb-3 text-center"> 분실물 등록 바로가기 ▶</p></a>
                         </div>
                     </div>
                 </div>

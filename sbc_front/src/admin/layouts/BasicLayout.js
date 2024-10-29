@@ -65,6 +65,7 @@ const BasicLayout = ({ children }) => {
                   <NavDropdown.Item href="/admin/qnas">문의 게시판</NavDropdown.Item>
                   <NavDropdown.Item href="/admin/campers">캠퍼 게시판</NavDropdown.Item>
                   <NavDropdown.Item href="/admin/reviews">리뷰 게시판</NavDropdown.Item>
+                  <NavDropdown.Item href="/admin/lost">분실물 찾기</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="통계 관리">
                   <NavDropdown.Item href="/admin/stats">예약 매출 통계</NavDropdown.Item>

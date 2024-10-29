@@ -37,6 +37,12 @@ const CommunityMenu = () => {
             >
                 리뷰게시판
             </Link>
+            <Link
+                to='/admin/lost'
+                className={`menubutton ${activeMenu === '/admin/lost' ? 'active' : ''}`}
+            >
+                분실물 찾기
+            </Link>
         </div>
     );
 }

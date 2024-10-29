@@ -94,7 +94,7 @@ const ListComponent = () => {
     return (
         <div className="container mt-5">
 
-            <div className="d-flex mb-5 align-items-center">
+            <div className="d-flex mb-3 align-items-center">
                 <select
                     value={searchType}
                     onChange={(e) => setSearchType(e.target.value)}
@@ -114,7 +114,8 @@ const ListComponent = () => {
                 />
                 <button
                     className="btn btn-primary"
-                    onClick={handleSearch} // 검색 실행
+                    onClick={handleSearch}
+                    style={{backgroundColor:'#457575', border:'1px solid #457575'}}// 검색 실행
                 >
                     검색
                 </button>

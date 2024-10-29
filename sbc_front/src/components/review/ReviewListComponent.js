@@ -119,7 +119,7 @@ const ReviewListComponent = () => {
 
     return (
         <div className="container mt-5">
-            <div className="d-flex mb-3 align-items-center">
+            <div className="d-flex align-items-center">
                 <BoardSearchComponent onSearch={handleSearch}/>
             </div>
             <Table bordered hover responsive className="text-sm-center">

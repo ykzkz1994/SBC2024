@@ -72,7 +72,7 @@ const BasicLayout = ({children}) => {
                                 <NavDropdown.Item href="/qna">문의 게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/campers">캠퍼 게시판</NavDropdown.Item>
                                 <NavDropdown.Item href="/review">리뷰 게시판</NavDropdown.Item>
-                                <NavDropdown.Item href="/lost">분실물 목록</NavDropdown.Item>
+                                <NavDropdown.Item href="/lost">분실물 찾기</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                     </div>
