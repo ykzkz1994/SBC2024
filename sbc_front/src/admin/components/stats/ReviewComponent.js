@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import SearchComponent from "./SearchComponent";
+import SearchComponent from "../util/SearchComponent";
 import { fetchReviewStats } from "../../api/statsApi";
 
 const ReviewComponent = () => {

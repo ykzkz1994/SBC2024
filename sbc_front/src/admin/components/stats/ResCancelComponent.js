@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
-import SearchComponent from "./SearchComponent";
+import SearchComponent from "../util/SearchComponent";
 import { fetchCancelStats } from "../../api/statsApi";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 

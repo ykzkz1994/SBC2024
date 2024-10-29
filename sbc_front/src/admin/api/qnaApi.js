@@ -26,7 +26,7 @@ export const searchBoard = async (type, keyword, pageParam) => {
     };
 
     // 요청 보내기
-    const res = await jwtAxios.get(`${prefix}/search`, { params });
+    const res = await axios.get(`${prefix}/search`, { params });
 
     console.log(res.data);
     return res.data;

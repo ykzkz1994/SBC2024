@@ -4,8 +4,7 @@ import CommunityMenu from "../../components/menus/CommunityMenu";
 import useCustomLogin from "../../../hooks/useCustomLogin";
 const QnaIndexPage = () =>{
 
-
-    return(
+      return(
         <BasicLayout>
             <div>
             <CommunityMenu/>

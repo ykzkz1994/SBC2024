@@ -5,7 +5,6 @@ import useCustomLogin from "../../hooks/useCustomLogin";
 
 const QnaIndexPage = () =>{
 
-
     return(
         <BasicLayout>
             <CommunityMenu/>
