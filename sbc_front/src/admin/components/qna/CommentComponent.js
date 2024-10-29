@@ -150,7 +150,7 @@ function CommentComponent() {
                                 })}</span>
                                         <div className="ml-auto space-x-2"> {/* space-x-3에서 space-x-2로 변경 */}
                                             {(
-                                                loginState.member.memberRole === "ROLE_ADMIN" &&
+                                                loginState.member.memberRole === "ROLE_ADMIN" ||
                                                 (loginState.member.memberId === comment.member.memberID) // 관리자인 경우 자신이 쓴 댓글
                                             ) && (
                                                 <>

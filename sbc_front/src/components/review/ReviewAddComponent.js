@@ -152,7 +152,7 @@ const ReviewAddComponent = () => {
                     <ToggleButton id="tbg-btn-3" value={'3'} variant="outline-warning" style={{
                         borderRadius: "50px"
                     }}>#시설이 좋아요</ToggleButton>&nbsp;&nbsp;
-                    <ToggleButton id="tbg-btn-4" value={'4'} variant="outline-light" style={{
+                    <ToggleButton id="tbg-btn-4" value={'4'} variant="outline-dark" style={{
                         borderRadius: "50px"
                     }}>#사진이 잘나와요</ToggleButton>&nbsp;&nbsp;
                     <ToggleButton id="tbg-btn-5" value={'5'} variant="outline-info" style={{

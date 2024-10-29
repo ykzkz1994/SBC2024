@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
 
 export const API_SERVER_HOST = "http://localhost:8080"
 
@@ -41,7 +42,7 @@ export const reviewCheck = async (memberId) => {
 // 게시글 등록
 export const postAdd = async (review) => {
     try {
-        const res = await axios.post(`${prefix}/`, review, {
+        const res = await jwtAxios.post(`${prefix}/`, review, {
             headers: {
                 'Content-Type': 'multipart/form-data' // 파일 업로드 헤더 설정
             }
@@ -63,13 +64,13 @@ export const getOne = async (reviewId) => {
 
 // 게시글 삭제
 export const deleteOne = async (reviewId) => {
-    const res = await axios.delete(`${prefix}/delete/${reviewId}`)
+    const res = await jwtAxios.delete(`${prefix}/delete/${reviewId}`)
     return res.data
 }
 
 // 게시글 수정
 export const PutOne = async (reviewID, review) => {
     const header = {headers: {"Content-Type" : "multipart/form-data"}};
-    const res = await axios.put(`${prefix}/modify/${reviewID}`, review, header)
+    const res = await jwtAxios.put(`${prefix}/modify/${reviewID}`, review, header)
     return res.data
 }

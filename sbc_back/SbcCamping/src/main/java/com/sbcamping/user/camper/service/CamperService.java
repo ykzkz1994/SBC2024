@@ -1,7 +1,6 @@
 package com.sbcamping.user.camper.service;
 
 
-import com.sbcamping.domain.CamperBoard;
 import com.sbcamping.user.camper.dto.*;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public interface CamperService {
             PageRequestDTO requestDTO, String type, String keyword
     );
 
-    List<CamperBoardCommentResDTO> getCommentList(Long boardId);
+    List<CamperBoardCommentReqDTO> getCommentList(Long boardId);
 
     Long registerComment(String auth, String refreshToken, CamperBoardCommentDTO dto);
 

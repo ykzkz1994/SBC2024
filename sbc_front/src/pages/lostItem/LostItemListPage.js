@@ -183,6 +183,7 @@ const LostItemListPage = () => {
             navigate('/admin/lost/add');
     };
 
+
     return (
         <>
             <div className="mt-3 mb-5">
@@ -290,6 +291,7 @@ const LostItemListPage = () => {
                                         </div>
                                     )}
 
+                                {/* 관리자 계정인 경우 수정, 삭제 버튼 추가*/}
                                 {email === 'admin@sbc.com' ? (
                                     <td>
                                         {editingItemId === item.itemId ? (
