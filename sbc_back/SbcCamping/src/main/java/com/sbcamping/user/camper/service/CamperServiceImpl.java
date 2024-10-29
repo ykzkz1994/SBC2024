@@ -87,11 +87,12 @@ public class CamperServiceImpl implements CamperService {
 
         if (camperBoardDTO.getCBoardAttachment() != null) {
             camperBoard.changeAttachment(camperBoardDTO.getCBoardAttachment());
+        } else {
+            camperBoard.changeAttachment(camperBoard.getCBoardAttachment());
         }
-
-
         camperRepository.save(camperBoard);
     }
+
 
     @Override
     public void remove(Long cBoardId) {

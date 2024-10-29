@@ -18,11 +18,7 @@ const AddComponent = () => {
     }
 
     const [cboard, setCboard] = useState({ ...initState });
-    //
-    // useEffect(() => {
-    //     const currentDate = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식
-    //     setCboard((prev) => ({ ...prev, cBoardDate: currentDate }));
-    // }, []);
+
 
     const { moveToList } = useCustomMove();
 
@@ -45,6 +41,21 @@ const AddComponent = () => {
 
     // 등록 버튼 눌렀을 때 메소드
     const handleClickAdd = async () => {
+
+        // 필드 검증
+        if (!cboard.cBoardCategory.trim()) {
+            alert("카테고리를 선택하세요.");
+            return;
+        }
+        if (!cboard.cBoardTitle.trim()) {
+            alert("제목을 입력하세요.");
+            return;
+        }
+        if (!cboard.cBoardContent.trim()) {
+            alert("내용을 입력하세요.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("cBoardTitle", cboard.cBoardTitle);
         formData.append("cBoardCategory", cboard.cBoardCategory);
@@ -58,6 +69,7 @@ const AddComponent = () => {
 
         await postAdd(formData)
             .then(result => {
+                setCboard({...initState})
                 console.log("등록 서버 응답:", result);
                 moveToList(); // 등록 완료 후 campers/list 페이지로 이동
             })
@@ -92,7 +104,7 @@ const AddComponent = () => {
                     <label className="col-sm-2 col-form-label">제목</label>
                     <div className="col-sm-10">
                         <input
-                            className="form-control"
+                            className="form-control whitespace-pre-wrap"
                             name="cBoardTitle"
                             type="text"
                             value={cboard.cBoardTitle}
@@ -119,7 +131,7 @@ const AddComponent = () => {
                     <label className="col-sm-2 col-form-label">내용</label>
                     <div className="col-sm-10">
                         <textarea
-                            className="form-control"
+                            className="form-control whitespace-pre-wrap"
                             name="cBoardContent"
                             value={cboard.cBoardContent}
                             onChange={handleChangeTodo}
