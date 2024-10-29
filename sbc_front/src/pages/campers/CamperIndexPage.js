@@ -12,7 +12,7 @@ const CamperIndexPage = () => {
   const handleClickAdd = useCallback(() => {
     navigate({ pathname: "add" });
   });
-
+//index페이지 = 모든 페이지에 공통 레이아웃과 메뉴 적용
   return (
     <BasicLayout>
       <CommunityMenu />

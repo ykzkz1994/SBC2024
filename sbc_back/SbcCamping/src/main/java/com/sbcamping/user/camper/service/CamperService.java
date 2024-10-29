@@ -11,9 +11,9 @@ public interface CamperService {
 
     Long register(CamperBoardDTO camperBoardDTO);
 
-    CamperBoard get(Long cBoardId);
+    CamperBoardDTO get(Long cBoardId);
 
-    void modify(CamperBoardDTO camperBoardDTO);
+    void modify(CamperBoardReqDTO camperBoardDTO);
 
     void remove(Long cBoardId);
 

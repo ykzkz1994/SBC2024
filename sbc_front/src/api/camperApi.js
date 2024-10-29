@@ -15,18 +15,19 @@ const commonHeader = {
     "X-Refresh-Token": memberInfo.refreshToken
   },
 };
-
+// 로그아웃 상태에서도 read/list 페이지 이동 가능
+// memberId 없다면 null 상태로
 export const getCookieMemberId = () => {
   return memberInfo && memberInfo.member ? memberInfo.member.memberId : null;
 }
 
-//상세페이지
+//게시글 상세페이지
 export const getOne = async (cBoardId) => {
   const res = await axios.get(`${prefix}/${cBoardId}`);
   return res.data;
 };
 
-//목록페이지
+//게시글 목록페이지
 export const getList = async (pageParam) => {
   const { page, size } = pageParam;
   const res = await axios.get(`${prefix}/list`, {
@@ -44,7 +45,7 @@ export const getSearchList = async (searchParam) => {
   return res.data;
 };
 
-//추가
+//게시글 등록
 export const postAdd = async (formData) => {
   const header = {
     headers: { "Content-Type": "multipart/form-data" },
@@ -56,13 +57,13 @@ export const postAdd = async (formData) => {
   return res.data;
 };
 
-//삭제
+//게시글 삭제
 export const deleteOne = async (cBoardId) => {
   const res = await axios.delete(`${prefix}/${cBoardId}`, commonHeader);
   return res.data;
 };
 
-// 수정
+//게시글 수정
 // API 호출을 위한 putOne 함수
 export const putOne = async (cBoardId, formdata) => {
   try {
@@ -114,7 +115,7 @@ export const updateComment = async (cCommentId, cComment, cBoardId) => {
   const res = await axios.put(`${prefix}/comments`, body, commonHeader);
   return res.data;
 };
-
+//댓글 등록
 export const postCommentAdd = async (req) => {
   const res = await axios.post(`${prefix}/comments`, req, commonHeader);
   return await res.data;

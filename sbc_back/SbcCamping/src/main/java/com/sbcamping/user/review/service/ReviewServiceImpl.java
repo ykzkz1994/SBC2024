@@ -125,7 +125,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .reviewAttachment(reviewDTO.getReviewAttachment())
                 .reviewTitle(reviewDTO.getReviewTitle())
                 .reviewContent(reviewDTO.getReviewContent())
-                .review(optionalReservation.get())
+                .reservation(optionalReservation.get())
                 .member(member.get())
                 .reviewDate(new Date())
                 .rtag_Clean(reviewDTO.getRtag_Clean())
@@ -138,7 +138,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .build();
 
         // 해당 예약 조회
-
         Reservation reservation = optionalReservation.get();
         reservation.setResReview('Y'); // resReview 업데이트
         reservationRepository.save(reservation); // 변경사항 저장
@@ -166,7 +165,7 @@ public class ReviewServiceImpl implements ReviewService {
         Optional<Review> reviewDTO = reviewRepository.findById(reviewID);
         if (reviewDTO.isPresent()) {
             Review review = reviewDTO.get();
-            Reservation reservation = review.getReview();  // Review에서 Reservation 가져오기
+            Reservation reservation = review.getReservation();  // Review에서 Reservation 가져오기
 
             if (reservation != null) {
                 reservation.setResReview('N');  // resReview를 'N'으로 설정

@@ -3,12 +3,8 @@ package com.sbcamping.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "Camper_Board")

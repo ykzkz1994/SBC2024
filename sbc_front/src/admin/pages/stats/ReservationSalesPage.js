@@ -11,6 +11,7 @@ const ReservationSalesPage = () => {
     const [dateType, setDateType] = useState('day');
 
     const handleSearch = async (searchParams) => {
+        setLoading(true);
         try {
             console.log('Search params:', searchParams);
 
@@ -28,6 +29,7 @@ const ReservationSalesPage = () => {
                 dateType,
                 siteId ? parseInt(siteId) : undefined
             );
+            setDateType(searchParams.dateType);
             console.log('Received data:', data);
 
             if (data && Array.isArray(data.statsList)) {
