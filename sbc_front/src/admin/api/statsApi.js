@@ -65,11 +65,23 @@ export const fetchReviewStats = async (params) => {
 export const fetchCustomerStats = async (params) => {
     try {
         console.log('Sending request with params:', params.toString()); // 디버깅용 로그
-        const response = await jwtAxios.get(`${prefix}/customer/all`, { params });
+        const response = await jwtAxios.get(`${prefix}/customer/all`, {params});
         console.log('API Response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching customer stats:', error);
         throw error;
     }
+}
+
+// 단순 특정기간 예약 리스트 불러오기
+export const getStatsReservations = async (params) => {
+      try {
+        const response = await  jwtAxios.get(`${prefix}/reservation-sales/`, {params})
+    console.log('API Response:', response.data);
+    return response.data; } catch (error) {
+          console.error('Error fetching customer stats:', error);
+          throw error;
+      }
+
 };

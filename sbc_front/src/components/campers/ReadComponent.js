@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getOne, deleteOne, getMemberById, prefix, getCookieMemberId } from "../../api/camperApi"; // API 함수 가져오기
 import useCustomMove from "../../hooks/useCustomMove";
 import CommentComponent from "./CommentComponent"; // CommentComponent 추가
@@ -85,10 +85,10 @@ const ReadComponent = ({ cBoardId }) => {
 
     return (
         <div className="container mt-4">
-            <div className="border p-4 rounded" style={{ maxWidth: "600px", margin: "auto" }}>
+            <div className="border p-4 rounded" style={{maxWidth: "600px", margin: "auto"}}>
                 {/* 카테고리와 제목 */}
                 <h1>{camper.cboardCategory} - {camper.cboardTitle}</h1>
-                <hr />
+                <hr/>
 
                 {/* 작성일과 조회수 */}
                 <div className="row mb-2">
@@ -99,14 +99,14 @@ const ReadComponent = ({ cBoardId }) => {
                         <strong>조회수: </strong>{camper.cboardViews}
                     </div>
                 </div>
-                <hr />
+                <hr/>
 
                 {/* 작성자 */}
                 <div className="mb-2">
                     <strong>작성자: </strong>
                     {camper.member && camper.member.memberName ? camper.member.memberName : '작성자가 없습니다.'}
                 </div>
-                <hr />
+                <hr/>
 
                 <div className="mb-2">
                     <strong>첨부파일: </strong>
@@ -116,7 +116,7 @@ const ReadComponent = ({ cBoardId }) => {
                             <img
                                 src={`${prefix}/view/${camper.cboardAttachment}`}
                                 alt="첨부 이미지"
-                                style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
+                                style={{maxWidth: '100%', height: 'auto', marginBottom: '10px'}}
                             />
                         ) : (
                             // 일반 파일의 경우 다운로드 링크 제공
@@ -131,51 +131,46 @@ const ReadComponent = ({ cBoardId }) => {
                         <span>없음</span>
                     )}
                 </div>
-                <hr />
 
-                {/* 내용 */}
-                <div className="mb-2">
-                    <strong>내용: </strong>
-                    <textarea
-                        className="form-control"
-                        value={camper.cboardContent}
-                        readOnly
-                        rows="6"
-                    />
+                <div className="mb-8">
+                    <h3 className="text-lg font-semibold mb-2">내용</h3>
+                    <textarea className="form-control text-gray-700 bg-gray-100 p-4 rounded-lg" readOnly
+                              rows="6">{camper.cboardContent}</textarea>
                 </div>
 
                 {/* 댓글 컴포넌트 */}
-                <div className="mb-4">
-                    <h5>댓글</h5>
-                    <CommentComponent cBoardId={cBoardId} /> {/* 댓글 컴포넌트 추가 */}
+                <div>
+                    <hr/>
+                    <h3 className="text-lg font-semibold mb-2">댓글</h3>
+                    <CommentComponent cBoardId={cBoardId}/> {/* 댓글 컴포넌트 추가 */}
                 </div>
 
                 {/* 버튼 */}
-                <div className="d-flex justify-content-center mt-4">
+                <div className="text-right space-x-2">
                     <button
                         type="button"
-                        className="btn btn-primary me-2"
+                        className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
                         onClick={moveToList}
                     >
-                        목록
+                        목록으로
                     </button>
                     {getCookieMemberId() === camper.member.memberID && (
                         <button
                             type="button"
-                            className="btn btn-warning me-2"
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                             onClick={() => moveToModify(cBoardId)}
                         >
-                            수정
+                            수정하기
                         </button>
 
                     )}
                     {getCookieMemberId() === camper.member.memberID && (
                         <button
                             type="button"
-                            className="btn btn-danger"
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
                             onClick={handleDelete}
                         >
-                            삭제
+                            삭제하기
                         </button>
 
                     )}

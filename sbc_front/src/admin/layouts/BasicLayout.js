@@ -39,7 +39,7 @@ const BasicLayout = ({ children }) => {
             <img
                 src={logo}
                 alt="로고"
-                style={{width: '600px', height: 'auto'}}
+                style={{width: '350px', height: 'auto'}}
                 onClick={() => navigate("/admin")}
                 className="cursor-pointer"// 원하는 크기로 조정
             />

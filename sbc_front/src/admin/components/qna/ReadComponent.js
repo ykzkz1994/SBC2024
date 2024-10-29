@@ -125,7 +125,13 @@ function ReadComponent() {
 
             <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-2">내용</h3>
-                <p className="text-gray-700 bg-gray-100 p-4 rounded-lg">{qboard.qboardContent}</p>
+                <textarea
+                    name="qBoardContent"
+                    value={qboard.qboardContent} // qna의 상태를 직접 사용
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
+                    rows="5"
+                    readOnly
+                />
             </div>
 
             <div>

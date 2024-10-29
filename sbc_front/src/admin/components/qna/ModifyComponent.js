@@ -166,7 +166,7 @@ useEffect(() => {
                     ) : (
 
                         <p className="text-gray-500"></p>)}
-                <div className="text-right space-x-2">
+                <div className="text-right space-x-2 mb-20">
                     <button
                         onClick={handleClickModify}
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
