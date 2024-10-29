@@ -240,31 +240,37 @@ const ReviewModifyComponent = () => {
 
                 <ToggleButtonGroup type="checkbox" value={value} onChange={handleChange}>
                     <ToggleButton id="tbg-btn-1" value={'1'}  checked="true" variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#청결해요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#청결해요</ToggleButton>
                     <ToggleButton id="tbg-btn-2" value={'2'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#가성비가 좋아요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#가성비가 좋아요</ToggleButton>
                     <ToggleButton id="tbg-btn-3" value={'3'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#시설이 좋아요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#시설이 좋아요</ToggleButton>
                     <ToggleButton id="tbg-btn-4" value={'4'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#사진이 잘나와요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#사진이 잘나와요</ToggleButton>
                     <ToggleButton id="tbg-btn-5" value={'5'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#조용해요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#조용해요</ToggleButton>
                     <ToggleButton id="tbg-btn-6" value={'6'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#친절해요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#친절해요</ToggleButton>
                     <ToggleButton id="tbg-btn-7" value={'7'} variant="outline-success" style={{
-                        borderRadius: "50px"
-                    }}>#풍경이 좋아요</ToggleButton>&nbsp;&nbsp;
+                        borderRadius: "50px",
+                        marginRight: "12px"
+                    }}>#풍경이 좋아요</ToggleButton>
                 </ToggleButtonGroup>
 
                 <div className="text-right space-x-2">
                     <button
-                        onClick={handleClickModify}
                         onClick={handleClickModify}
                         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-20"
                         style={{

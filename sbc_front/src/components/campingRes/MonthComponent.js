@@ -173,7 +173,11 @@ const MonthComponent = () => {
                     </Button>
                 )}
             </div>
-
+            
+            <h4>구역상태</h4>
+            <p className="resSuccess">예</p> : 예약가능&nbsp;&nbsp;
+            <p className="resFail">완</p> : 예약불가&nbsp;&nbsp;
+            <p className="resRepair">수</p> : 수리중&nbsp;&nbsp;
             <Table responsive bordered>
                 <thead>
                 <tr>
@@ -225,53 +229,70 @@ const MonthComponent = () => {
                                                 "예약 불가"
                                             ) : (
                                                 <>
-                                                    {site.map((site, index) => (
-                                                        <div key={index}>
-                                                            {filterCheck(site.siteId, formattedDate) || site.siteResLimit === 'Y' ? (
-                                                                <>
-                                                                    <span className="resFail">
-                                                                        &nbsp;&nbsp;완&nbsp;&nbsp;
-                                                                    </span>
-                                                                    <Link
-                                                                        to={`#`}
-                                                                        className="linkFail"
-                                                                    >
-                                                                        &nbsp;{site.siteName}
-                                                                    </Link>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <span className="resSuccess">
-                                                                &nbsp;&nbsp;예&nbsp;&nbsp;
-                                                            </span>
-                                                                    <Link
-                                                                        to={`/res/respage`}
-                                                                        state={{
-                                                                            year: dayInfo.year,
-                                                                            month: dayInfo.month,
-                                                                            day: dayInfo.day,
-                                                                            memberId: loginState.member.memberId,
-                                                                            memberName: loginState.member.memberName,
-                                                                            memberPhone: loginState.member.memberPhone,
-                                                                            memberEmail: loginState.member.memberEmail,
-                                                                            siteId: site.siteId,
-                                                                            siteName: site.siteName,
-                                                                            weekDayPay: site.weekdayPay, // 평일요금
-                                                                            weekEndPay: site.weekendPay, // 주말요금
-                                                                        }}
-                                                                    >
-                                                                        &nbsp;{site.siteName}
-                                                                    </Link>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    ))}
+                                                    {site.map((site, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                {(() => {
+                                                                    if (site.siteResLimit === 'Y') {
+                                                                        return (
+                                                                            <>
+                                                                                <span className="resRepair">
+                                                                                    &nbsp;&nbsp;수&nbsp;&nbsp;
+                                                                                </span>
+                                                                                <Link to="#" className="linkFail">
+                                                                                    &nbsp;{site.siteName}
+                                                                                </Link>
+                                                                            </>
+                                                                        )
+                                                                    }
+                                                                    else if (filterCheck(site.siteId, formattedDate)) {
+                                                                        return (
+                                                                            <>
+                                                                                <span className="resFail">
+                                                                                    &nbsp;&nbsp;완&nbsp;&nbsp;
+                                                                                </span>
+                                                                                <Link to="#" className="linkFail">
+                                                                                    &nbsp;{site.siteName}
+                                                                                </Link>
+                                                                            </>
+                                                                        );
+                                                                    } else {
+                                                                        return (
+                                                                            <>
+                                                                                <span className="resSuccess">
+                                                                                    &nbsp;&nbsp;예&nbsp;&nbsp;
+                                                                                </span>
+                                                                                <Link
+                                                                                    to="/res/respage"
+                                                                                    state={{
+                                                                                        year: dayInfo.year,
+                                                                                        month: dayInfo.month,
+                                                                                        day: dayInfo.day,
+                                                                                        memberId: loginState.member.memberId,
+                                                                                        memberName: loginState.member.memberName,
+                                                                                        memberPhone: loginState.member.memberPhone,
+                                                                                        memberEmail: loginState.member.memberEmail,
+                                                                                        siteId: site.siteId,
+                                                                                        siteName: site.siteName,
+                                                                                        weekDayPay: site.weekdayPay,
+                                                                                        weekEndPay: site.weekendPay,
+                                                                                        maxPeople: site.maxPeople
+                                                                                    }}
+                                                                                >
+                                                                                    &nbsp;{site.siteName}
+                                                                                </Link>
+                                                                            </>
+                                                                        );
+                                                                    }
+                                                                })()}
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </>
                                             )
                                         }
                                     </td>
                                 )
-                                    ;
                             } else {
                                 // 공백일경우
                                 return <td key={j} style={{
