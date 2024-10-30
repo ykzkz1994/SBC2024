@@ -19,15 +19,12 @@ const SiteManagements = () => {
     // 사이트 전체 정보 목록을 저장하는 변수
     const [sites, setSites] = useState([]);
 
-    // 수정 모달 창(1)의 표시 여부를 관리하는 변수
+    // 수정 모달 창(1)의 표시 여부를 관리하는 상태변수
     const [firstModal, setFirstModal] = useState(false);
-
     // 현재 선택된 구역의 정보를 저장하는 변수
     const [selectedSite, setSelectedSite] = useState(null);
-
-    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 변수
+    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 상태 변수
     const [newSiteValue, setNewSiteValue] = useState({});
-
     // 수정 확인 기능을 하는 두 번째 모달 창의 표시 여부를 관리하는 변수
     const [secondModal, setSecondModal] = useState(false);
 
@@ -208,7 +205,6 @@ const SiteManagements = () => {
                                     수정하기
                                 </Button>
                             </td>
-
                         </tr>
                     ))
                 ) : (
@@ -252,9 +248,7 @@ const SiteManagements = () => {
                                     maxLength={10} // 최대 10글자 제한
                                 />
                             </Form.Group>
-
                             <br/>
-
                             {/* **예약 제한 라디오 버튼** */}
                             <Form.Group className="mb-3">
                                 <Form.Label>예약 제한</Form.Label> {/*챠 1 - Y=예약 불가 ,N= 예약 가능*/}
@@ -319,7 +313,6 @@ const SiteManagements = () => {
                                     max={maxLimitPeople} // 최대값 설정
                                 />
                             </Form.Group>
-
                             {/* **평일 요금 입력 필드** */}
                             <Form.Group className="mb-3">
                                 <Form.Label>평일 요금</Form.Label>

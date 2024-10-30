@@ -63,7 +63,7 @@ const ListComponent = () => {
         navigate('/admin/notices/add'); // 공지 등록 페이지 경로로 이동
     };
 
-    // 제목 클릭 시 상세보기 페이지로 이동하는 함수
+    // 제목 클릭 상세페이지 이동 함수
     const handleTitleClick = (id) => {
         console.log("상세 페이지로 이동할 ID:", id);
             //권한을 검증하고 권한에 따라 다른 url로 이동
@@ -173,7 +173,7 @@ const ListComponent = () => {
                 </ul>
             </nav>
 
-            {/* 관리자 조건부 렌더링 - 글쓰기 버튼 */}
+            {/*수정페이지 이동버튼 조건부 랜더링 -관리자*/}
             {loginState.member?.memberRole === 'ROLE_ADMIN' && (
                 <div className="d-flex justify-content-end mt-3 mb-20">
                     <button
