@@ -1,6 +1,6 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
-import SearchComponent from "./SearchComponent";
+import SearchComponent from "../util/SearchComponent";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const SalesComponent = ({ salesStats, loading, error, dateType, onSearch }) => {

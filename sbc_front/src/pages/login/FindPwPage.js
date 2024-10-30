@@ -55,10 +55,11 @@ const AuthNameAndEmail = ({onSuccess}) => {
     return(
         <BasicLayout>
             <LoginMenu/>
+            <div style={{marginTop: '20px'}}>
+                <h3>비밀번호 찾기</h3>
+                <hr></hr>
+            </div>
             <div id="loginwrap">
-                <div>
-                    <h3>비밀번호 찾기</h3>
-                </div>
                 <div id="loginbox">
                     <input type="text"
                            name="memberName"
@@ -71,11 +72,12 @@ const AuthNameAndEmail = ({onSuccess}) => {
                            value={member.memberEmail}
                            maxLength={'50'}
                            required
-                           style={{fontSize:"16px"}}
+                           style={{fontSize: "16px"}}
                            onChange={handleChange}
                            placeholder={" 이메일을 입력해주세요."}></input>
                     <div>
-                        <input type="submit" onClick={handleSubmit} className={"loginbutton_default"} value={"비밀번호 변경"}></input>
+                        <input type="submit" onClick={handleSubmit} className={"loginbutton_default"}
+                               value={"비밀번호 변경"}></input>
                     </div>
                 </div>
             </div>
@@ -84,7 +86,8 @@ const AuthNameAndEmail = ({onSuccess}) => {
 }
 
 
-{/* 비밀번호 변경 컴포넌트 */}
+{/* 비밀번호 변경 컴포넌트 */
+}
 const PwModifyPage = ({memberData}) => {
     const [validated, setValidated] = useState(false);
     // 비밀번호 검사용 변수

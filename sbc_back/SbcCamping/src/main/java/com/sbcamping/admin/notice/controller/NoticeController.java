@@ -3,7 +3,9 @@ package com.sbcamping.admin.notice.controller;
 import com.sbcamping.admin.notice.dto.NoticeDTO;
 import com.sbcamping.admin.notice.service.NoticeService;
 
+import com.sbcamping.domain.NoticeBoard;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,13 @@ public class NoticeController {
 
     //불변 인스턴스변수 선언
     private final NoticeService noticeService;
+
+    // 메인페이지 공지 최신글
+    @GetMapping("/main/list")
+    public ResponseEntity<List<NoticeBoard>> getThreeNotices() {
+        List<NoticeBoard> notices = noticeService.getLatestThreeNotices();
+        return new ResponseEntity<>(notices, HttpStatus.OK);
+    }
 
     // 모든 공지글 목록을 가져오는 GET 요청 방식 처리 메서드
     @GetMapping("/list")

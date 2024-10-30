@@ -132,7 +132,7 @@ const LostItemListPage = () => {
                     const header = {
                         headers:{'Content-Type': 'application/json'}
                     }
-                    await axios.put(`${prefix}/mod/${itemId}`, lostItemDTO, header)
+                    await axios.put(`${prefix}/${itemId}`, lostItemDTO, header)
 
                 }catch (e) {
                     console.log(e)
@@ -182,6 +182,7 @@ const LostItemListPage = () => {
     const handleAddClick = () => {
             navigate('/admin/lost/add');
     };
+
 
     return (
         <>
@@ -290,6 +291,7 @@ const LostItemListPage = () => {
                                         </div>
                                     )}
 
+                                {/* 관리자 계정인 경우 수정, 삭제 버튼 추가*/}
                                 {email === 'admin@sbc.com' ? (
                                     <td>
                                         {editingItemId === item.itemId ? (

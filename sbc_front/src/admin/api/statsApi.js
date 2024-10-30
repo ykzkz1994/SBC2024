@@ -6,7 +6,7 @@ export const API_SERVER_HOST = 'http://localhost:8080'
 
 const prefix = `${API_SERVER_HOST}/admin/stats`
 
-// 매출 현황 : 금액 가져오기, 예약 건수
+// 예약 매출 통계 : 금액 가져오기, 예약 건수
 export const fetchSalesStats = async (startDate, endDate, dateType, siteId) => {
     try {
         console.log('Received dates:', { startDate, endDate });
@@ -37,7 +37,7 @@ export const fetchSalesStats = async (startDate, endDate, dateType, siteId) => {
 };
 
 
-// 예약 취소 현황 : 취소 건수, 취소 금액
+// 예약 취소 통계 : 취소 건수, 취소 금액
 export const fetchCancelStats = async (params) => {
     console.log('Fetching cancel stats with params:', params);
     try {
@@ -50,7 +50,7 @@ export const fetchCancelStats = async (params) => {
     }
 }
 
-// 고객 리뷰 현황 : 태그별 리뷰 건수
+// 고객 리뷰 통계 : 태그별 리뷰 건수
 export const fetchReviewStats = async (params) => {
     try {
         const response = await jwtAxios.get(`${prefix}/customer/reviews`, { params });
@@ -61,7 +61,7 @@ export const fetchReviewStats = async (params) => {
     }
 }
 
-// 고객 현황 : 성별, 연령대, 지역별 통계
+// 고객 특정 통계 : 성별, 연령대, 지역별 통계
 export const fetchCustomerStats = async (params) => {
     try {
         console.log('Sending request with params:', params.toString()); // 디버깅용 로그
