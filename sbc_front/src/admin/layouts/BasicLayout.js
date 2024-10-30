@@ -58,7 +58,7 @@ const BasicLayout = ({ children }) => {
                 </NavDropdown>
                 <NavDropdown title="회원 관리">
                   <NavDropdown.Item href="/admin/member">전체 회원 리스트</NavDropdown.Item>
-                  <NavDropdown.Item href="/admin/member/inactivelist">휴면 회원 리스트</NavDropdown.Item>
+                  <NavDropdown.Item href="/admin/member/inactivelist">탈퇴/휴면 회원 리스트</NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown title="커뮤니티 관리">
                   <NavDropdown.Item as={Link} to="/admin/notices/list">공지사항</NavDropdown.Item>

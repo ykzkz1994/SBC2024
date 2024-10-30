@@ -29,9 +29,10 @@ const SitemapPage = () => {
                         <h3><a href="/notice">커뮤니티</a></h3>
                         <ul>
                             <li><a href="/notices">공지사항</a></li>
-                            <li><a href="/qna">문의게시판</a></li>
-                            <li><a href="/campers">캠퍼게시판</a></li>
-                            <li><a href="/review">리뷰게시판</a></li>
+
+                            <li><a href="/qna">문의 게시판</a></li>
+                            <li><a href="/campers">캠퍼 게시판</a></li>
+                            <li><a href="/review">리뷰 게시판</a></li>
                             <li><a href="/lost">분실물 찾기</a></li>
                         </ul>
                     </li>
@@ -45,12 +46,12 @@ const SitemapPage = () => {
                         </ul>
                     </li>
                     <li className="five">
-                        <h3><a href="/mypage">마이페이지</a></h3>
+                        <h3><a href="/mypage">마이 페이지</a></h3>
                         <ul>
-                            <li><a href="/mypage/res">나의예약내역</a></li>
-                            <li><a href="/mypage/info">회원정보수정</a></li>
-                            <li><a href="/mypage/modpw">비밀번호변경</a></li>
-                            <li><a href="/mypage/withdraw">회원탈퇴</a></li>
+                            <li><a href="/mypage/res">나의 예약내역</a></li>
+                            <li><a href="/mypage/info">회원정보 수정</a></li>
+                            <li><a href="/mypage/modpw">비밀번호 변경</a></li>
+                            <li><a href="/mypage/withdraw">회원 탈퇴</a></li>
                         </ul>
                     </li>
                     <li className="six">
