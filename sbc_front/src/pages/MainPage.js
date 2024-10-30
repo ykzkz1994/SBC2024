@@ -127,7 +127,7 @@ const MainPage = () => {
                                 <a href="/camping/guide">
                                     <h2>시설안내</h2>
                                     <p>
-                                        <span>삼락오토캠핑장</span>에서<br/>
+                                        <span>SB 캠핑장</span>에서<br/>
                                         원하시는정보를 찾아보세요!
                                     </p>
                                 </a>
@@ -135,7 +135,7 @@ const MainPage = () => {
                             <div className="call">
                                 <h2>문의 및 안내전화</h2>
                                 <p className="call_number">
-                                    031-1111-7777, <br/> 010-3113-1331
+                                    031-1111-7777 <br/> 010-3113-1331
                                 </p>
                             </div>
                         </div>
