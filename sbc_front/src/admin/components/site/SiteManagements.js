@@ -78,8 +78,7 @@ const SiteManagements = () => {
             setError('기준 인원은 최대 인원보다 클 수 없습니다.');
             return; // 검증 실패 시 함수 종료
         }
-        // 추가적인 검증 로직을 여기에 추가할 수 있습니다.
-
+        // 추가적인 검증 로직을 여기에 추가하면 됨
         setFirstModal(false); // 수정 모달 창을 숨김
         setSecondModal(true); // 수정 확인 모달 창을 표시
     };
@@ -132,7 +131,6 @@ const SiteManagements = () => {
             setError('수정할 사이트를 선택해주세요.');
             return;
         }
-
         try {
             // updateSiteData API 호출
             const updatedSite = await updateSiteData(selectedSite.siteId, newSiteValue);
@@ -140,15 +138,13 @@ const SiteManagements = () => {
             // 로컬 상태 업데이트
             setSites((prevSites) =>
                 prevSites.map((site) =>
-                    site.siteId === selectedSite.siteId ? {...site, ...updatedSite} : site
-                )
-            );
+                    site.siteId === selectedSite.siteId ? {...site, ...updatedSite} : site));
             setSecondModal(false); // 수정 확인 모달 창을 숨김
             setSelectedSite(null); // 선택된 구역 정보 초기화
             setNewSiteValue({}); // 수정된 값 초기화
             setError(''); // 에러 메시지 초기화
             alert("수정 성공");
-            //비동기식으로 정보를 다시 불러옴
+            //비동기식으로 정보를 다시 불러옴=새로고침과 유사한 경험을 위해
             await settingSites();
         } catch (error) {
             console.error('수정에 실패했습니다:', error);
