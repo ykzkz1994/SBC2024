@@ -2,6 +2,7 @@ package com.sbcamping.user.member.controller;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.user.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,10 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class LoginController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
     // 이메일 중복체크
     @GetMapping("/emailcheck")

@@ -19,9 +19,7 @@ import java.util.Map;
 @Slf4j
 public class JWTCheckFilter extends OncePerRequestFilter {
 
-
-    // 적용 범위 : 마이페이지, 각 게시판 게시글 작성 페이지 (?)
-
+    // front 에서 API 서버로 요청시 JWT 토큰 체크
     // 유효한 JWT 토큰인지 확인하는 필터 클래스
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
@@ -138,6 +136,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // 메인페이지 공지 최신글 3개
+        if(path.equals("/admin/notices/main/list")){
+            return true;
+        }
+
         //공지리스트 비회원도 볼 수 있게끔
         if(path.equals("/notices/list")){
             return true;
@@ -151,12 +154,13 @@ public class JWTCheckFilter extends OncePerRequestFilter {
           if(path.startsWith("/notices/read/")){
             return true;
         }
-          //공지 내용 비회원도 볼 수 있게끔
-          if(path.startsWith("/admin/notices/read/")){
+
+        //공지 내용 비회원도 볼 수 있게끔
+        if(path.startsWith("/admin/notices/read/")){
             return true;
         }
 
-          // qna list
+        // qna list
         if (path.equals("/admin/qnas/list")) {
             return true;
         }
@@ -181,6 +185,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         }
 
+        // 분실물
         if (path.startsWith("/api/lost")){
             return true;
         }

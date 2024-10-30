@@ -11,7 +11,6 @@ import {useEffect, useState} from "react";
 const MainPage = () => {
 
     const navigate = useNavigate();
-    const loginState = useSelector((state) => state.loginSlice)
     const [serverData, setServerData] = useState([]);
     const [error, setError] = useState(null); // 오류 상태 추가
 
@@ -20,7 +19,7 @@ const MainPage = () => {
             try {
                 const data = await axios.get(`http://localhost:8080/admin/notices/main/list`);
                 const result = data.data;
-                console.log(result);
+                //console.log(result);
                 setServerData(result);
             } catch (err) {
                 console.error(err); // 콘솔에 오류 로그
@@ -85,7 +84,7 @@ const MainPage = () => {
                 </div>
 
                 {/* 공지사항 */}
-                {error && <p>{error}</p>} {/* 오류 메시지 표시 */}
+
                 <div id="main_board_left" className="wrap">
                     <div className="main_board_inner">
                         <div id="tabs">
@@ -101,7 +100,7 @@ const MainPage = () => {
                                 <ul className="board_list">
                                     {serverData && serverData.length > 0 ? (
                                             serverData.map(notice => (
-                                                <li>
+                                                <li key={notice.nboardId}>
                                                     <a href={`/admin/notices/read/${notice.nboardId}`}>
                                                         <p className="date_day"><span
                                                             className="big_day">{formatDate(new Date(notice.nboardDate))}</span>
@@ -113,9 +112,12 @@ const MainPage = () => {
                                             )))
                                         :
                                         <>공지사항을 불러오는 중입니다.</>
+
                                     }
+
                                 </ul>
                             </div>
+
                             <div id="tabs-2">
                                 <ul className="board_list">
                                 </ul>
@@ -141,6 +143,7 @@ const MainPage = () => {
                         </div>
                     </div>
                 </div>
+                {error && <p>{error}</p>} {/* 오류 메시지 표시 */}
             </div>
             <div style={{marginBottom: '150px'}}></div>
 

@@ -4,6 +4,7 @@ import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MemberService {
     void addMember(Member member);
@@ -18,4 +19,5 @@ public interface MemberService {
     Reservation getResDetail(Long resId);
     void cancelRes(Long resId, String reason);
     String withdraw(Long memberId, String memberPw);
+    Map<String, Long> getReviewNo(Long resID);
 }
