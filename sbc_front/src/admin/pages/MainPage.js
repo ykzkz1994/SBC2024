@@ -205,7 +205,8 @@ const MainPage = () => {
                                     <h4 className="card-title mb-3">현재 등록 분실물</h4>
                                     <div className="mt-3 p-3 bg-light rounded">
                                         <div className="stats-number">
-                                            <span className="number">0</span>
+                                            {/* 분실물 갯수 API 호출 넣어야함 2024-10-30 */}
+                                            <span className="number">10</span>
                                             <span className="unit">개</span>
                                         </div>
                                     </div>
