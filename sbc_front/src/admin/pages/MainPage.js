@@ -202,7 +202,7 @@ const MainPage = () => {
                         <div className="card-container">
                             <div className="card rounded-3 shadow">
                                 <div className="card-body text-center">
-                                    <h4 className="card-title mb-3">당월 등록 분실물</h4>
+                                    <h4 className="card-title mb-3">현재 등록 분실물</h4>
                                     <div className="mt-3 p-3 bg-light rounded">
                                         <div className="stats-number">
                                             <span className="number">0</span>
