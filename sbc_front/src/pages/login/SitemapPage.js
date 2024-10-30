@@ -32,6 +32,7 @@ const SitemapPage = () => {
                             <li><a href="/qna">문의게시판</a></li>
                             <li><a href="/campers">캠퍼게시판</a></li>
                             <li><a href="/review">리뷰게시판</a></li>
+                            <li><a href="/lost">분실물 목록</a></li>
                         </ul>
                     </li>
                     <li className="four">

@@ -19,4 +19,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 게시글 검색 : 내용
     Page<Review> findByReviewContentContaining(String content, Pageable pageable);
+
+    // 예약번호로 리뷰 글번호 가져오기
+    @Query("select r from Review r where r.reservation.resId = :resId")
+    Review findByResId(Long resId);
 }

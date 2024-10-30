@@ -1,6 +1,6 @@
 import "../../css/mypage.css"
 import {useSelector} from "react-redux";
-import {cancelRes, getReservations} from "../../api/mypageApi";
+import {cancelRes, getReservations, getReviewNo} from "../../api/mypageApi";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import React, {useEffect, useState} from "react";
 import useCustomMove from "../../hooks/useCustomMove";
@@ -15,6 +15,7 @@ const MyPageResPage = () => {
         resList: [],
     }
     const loginState = useSelector((state) => state.loginSlice)
+    const [error, setError] = useState(null); // 오류 상태 추가
     const [serverData, setServerData] = useState(initState);
     const { refresh} = useCustomMove()
     const navigate = useNavigate();
@@ -69,7 +70,7 @@ const MyPageResPage = () => {
 
     // 예약 취소 버튼 눌렀을 때 동작
     function handleClickCancel(resId) {
-        console.log('resId :', resId);
+        //console.log('resId :', resId);
         setReservationId(resId)
         // 모달창 열기
         handleShow()
@@ -113,10 +114,11 @@ const MyPageResPage = () => {
             .then(data => {
             setServerData(data);
             setFilteredData(data);
-            console.log('data :' , serverData)
+            //console.log('data :' , serverData)
         }).catch(error => {
-            console.log('오류')
-            exceptionHandle(error);
+            console.log('오류', error)
+            setError('예약내역을 가져오는 데 문제가 발생했습니다. 서버를 확인해주세요.'); // 오류 메시지 설정
+            //exceptionHandle(error);
         });
     }, [refresh]);
 
@@ -141,6 +143,17 @@ const MyPageResPage = () => {
     };
 
 
+    function handleMoveReview(resId) {
+        try {
+            getReviewNo(resId).then(data => {
+                const reviewId = data.reviewId;
+                navigate(`/review/read/${reviewId}`);
+            })
+        }catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div style={{marginTop: '30px'}}>
             <h3>예약 내역</h3>
@@ -155,6 +168,7 @@ const MyPageResPage = () => {
                 <input className="submit" type="submit" value="검색" onClick={handleStatusSubmit}/>
             </div>
             <div className="tablewrap">
+                {error && <p>{error}</p>} {/* 오류 메시지 표시 */}
                 {filteredData.length > 0 ? (
                     <table>
                         <thead>
@@ -196,17 +210,20 @@ const MyPageResPage = () => {
                                     }
                                     </td>
                                 <td>{reservation.resStatus}</td>
-                                <td>{reservation.resStatus === '예약완료' && (
+                                <td>
+                                    {reservation.resStatus === '예약완료' && (
                                     <button onClick={() => handleClickCancel(reservation.resId)}
                                             className="canclebtn">예약취소</button>
-                                )}
+                                    )}
                                     {reservation.resStatus === '예약취소' && (
                                         <span>-</span>
                                     )}
-                                    {reservation.resStatus === '사용완료' && (
-                                        <button onClick={() => handleReview(reservation.resId)}
-                                                className="reviewbtn">리뷰작성</button>
-                                    )}</td>
+                                    {reservation.resStatus === '사용완료' && reservation.resReview === 'N' ? (
+                                        <button onClick={() => handleReview(reservation.resId)} className="reviewbtn">리뷰작성</button>
+                                    ) : reservation.resStatus === '사용완료' && reservation.resReview === 'Y' ? (
+                                        <button onClick={()=>handleMoveReview(reservation.resId)} className="reviewbtn" >리뷰보기</button>
+                                    ) : null}
+                                </td>
 
                                 {/* 예약 취소 모달창 */}
                                 <Modal show={show} onHide={handleClose}>
