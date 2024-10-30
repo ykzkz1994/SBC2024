@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,6 +55,7 @@ public class ReviewController {
     }
 
     // 4. 등록
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PostMapping("/")
     public Map<String, Long> register(ReviewReqDTO reviewDTO) {
         log.info("register...........{}", reviewDTO);
@@ -75,6 +77,7 @@ public class ReviewController {
     }
 
     // 6. 삭제
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @DeleteMapping("delete/{reviewId}")
     @Transactional
     public Map<String, String> remove(@PathVariable Long reviewId) {
@@ -92,6 +95,7 @@ public class ReviewController {
     }
 
     // 7. 수정
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @PutMapping("/modify/{reviewId}")
     public Map<String, String> modify(@PathVariable Long reviewId, ReviewReqDTO reviewDTO) {
         log.info("modify...........", reviewId);

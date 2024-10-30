@@ -121,7 +121,7 @@ const AddComponent = () => {
                 <div className="mb-8">
                     <h3 className="text-lg font-semibold mb-2">내용</h3>
                     <textarea
-                        name="qBoardContent"
+                        name="cBoardContent"
                         value={cboard.cBoardContent}
                         onChange={handleChangeTodo}
                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
