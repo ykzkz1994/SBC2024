@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getOne, deleteOne, getMemberById, prefix, getCookieMemberId } from "../../api/camperApi"; // API 함수 가져오기
 import useCustomMove from "../../hooks/useCustomMove";
-import CommentComponent from "./CommentComponent"; // CommentComponent 추가
+import CommentComponent from "./CommentComponent";
+import {useSelector} from "react-redux"; // CommentComponent 추가
 
 const initState = {
     member: {
@@ -21,6 +22,7 @@ const ReadComponent = ({ cBoardId }) => {
     const [camper, setCamper] = useState(initState); // 게시글 데이터 상태
     const [loading, setLoading] = useState(true); // 로딩 상태
     const { moveToList, moveToModify } = useCustomMove(); // 페이지 이동 훅
+    const loginState = useSelector((state) => state.loginSlice)
 
     // 게시글 데이터 로딩
     useEffect(() => {
@@ -162,7 +164,7 @@ const ReadComponent = ({ cBoardId }) => {
                         </button>
 
                     )}
-                    {getCookieMemberId() === camper.member.memberID && (
+                    {(getCookieMemberId() === camper.member.memberID || loginState.member.memberRole === "ROLE_ADMIN") && (
                         <button
                             type="button"
                             className="btn btn-danger"
@@ -170,9 +172,7 @@ const ReadComponent = ({ cBoardId }) => {
                         >
                             삭제
                         </button>
-
                     )}
-
                 </div>
             </div>
         </div>
