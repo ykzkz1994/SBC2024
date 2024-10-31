@@ -34,9 +34,9 @@ const ResCalendarPage = () => {
 
                 {/* 예약 상태 안내문구 우정렬*/}
                 <div className="mb-4 text-right">
-                    <span className="text-red-500 font-bold">빨간색</span> - 예약이 완료된 구역&nbsp;&nbsp;
+                    <span className="text-red-500 font-bold">빨간색</span> - 예약 완료
                     <br/>
-                    <span className="text-blue-500">파란색</span> - 예약된 내역이 없는 구역
+                    <span className="text-blue-500">파란색</span> - 예약 없음
                 </div>
 
                 {/* 예약달력컴포넌트 렌더링 */}
