@@ -3,6 +3,7 @@ package com.sbcamping.user.member.controller;
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
 import com.sbcamping.user.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,10 +16,10 @@ import java.util.Map;
 @Slf4j
 @RestController("userMemberController") //사용자 관련 멤버 컨트롤러
 @RequestMapping("/api/member")
+@RequiredArgsConstructor
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
     // 회원가입
     @PostMapping("/")
@@ -46,6 +47,14 @@ public class MemberController {
     @GetMapping("/res/{resID}")
     public Reservation getDetailMyRes(@PathVariable(name = "resID") Long resID){
         return memberService.getResDetail(resID);
+    }
+
+    // 예약번호로 리뷰글 번호 찾기
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/review/{resId}")
+    public Map<String, Long> getReviewNo(@PathVariable Long resId){
+        log.info("--------- 예약번호로 리뷰글 찾기 : {}", resId);
+        return memberService.getReviewNo(resId);
     }
 
     // 회원정보 수정 페이지 들어가기 전 비밀번호 인증

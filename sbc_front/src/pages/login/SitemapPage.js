@@ -29,6 +29,7 @@ const SitemapPage = () => {
                         <h3><a href="/notice">커뮤니티</a></h3>
                         <ul>
                             <li><a href="/notices">공지사항</a></li>
+
                             <li><a href="/qna">문의 게시판</a></li>
                             <li><a href="/campers">캠퍼 게시판</a></li>
                             <li><a href="/review">리뷰 게시판</a></li>

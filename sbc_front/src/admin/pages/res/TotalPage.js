@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 
 
 const TotalPage = () => {
     // 컴포넌트 상태 관리
-    const [nowComponent, setNowComponent] = useState('TotalList');  //
+    const [nowComponent, setNowComponent] = useState('TotalList');
     const [searchTerm, setSearchTerm] = useState(''); // search기능의 검생어를 정장해놓음 변수
 
 

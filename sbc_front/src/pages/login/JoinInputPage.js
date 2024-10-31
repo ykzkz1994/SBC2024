@@ -56,7 +56,7 @@ const JoinInputPage = () => {
         const form = event.currentTarget;
         event.preventDefault();
         setValidated(true)
-        console.log('local : ', local);
+        //console.log('local : ', local);
 
         let valid = true;
 
@@ -124,7 +124,7 @@ const JoinInputPage = () => {
     const handleClickJoin = async (members) => {
         try {
             const action = await joinPost(members);
-            console.log(action)
+            //console.log(action)
             if(action.error) {
                 console.log('회원가입 실패')
                 alert('회원가입 실패')
@@ -146,7 +146,7 @@ const JoinInputPage = () => {
     const handleEmailCheck = async (e) =>{
         const emailElement = document.getElementsByName("memberEmail");
         const email = emailElement[0].value;
-        console.log('1', email)
+        //console.log('1', email)
         
         // 이메일 유효성 검사 (간단한 정규 표현식 사용)
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -158,16 +158,16 @@ const JoinInputPage = () => {
             // 사용 불가능한 이메일 메시지 설정
             alert('이메일 형식을 확인해주세요')
             // 모달 표시
-            e.preventDefault()
+            return
         }
 
-        console.log('2', email)
+        //console.log('2', email)
         // 이메일이 유효한 경우(이메일 형식인 경우) 중복체크
         try {
             // api 서버 호출
             const action = await emailCheck(email);
             setModalShow(true)
-            console.log('3', email)
+            //console.log('3', email)
 
             if(action.msg === 'enable'){
                 setEmailCheckResult('사용 가능한 이메일입니다.');
@@ -227,7 +227,7 @@ const JoinInputPage = () => {
             [name]: value,
         }));
 
-        console.log(local);
+        //console.log(local);
 
         // 비밀번호 유효성 검사
         if(name === 'memberPw'){
@@ -266,7 +266,7 @@ const JoinInputPage = () => {
         // 생년월일 검사
         if (name === 'memberBirth'){
             const birth = event.target.value;
-            console.log(birth)
+            //console.log(birth)
             const regExp = /^[0-9]{8}$/;
             if(regExp.test(birth) && birth.length == 8){
                 setIsMemBirthValid(true)
@@ -381,7 +381,6 @@ const JoinInputPage = () => {
                                           id={"password_re"}
                                           minLength={10}
                                           maxLength={15}
-                                          pattern={"^(?=.*[a-z])((?=.*\\d)|(?=.*\\W)).{10,15}$"}
                                           onChange={handleConfirmPwd}
                                           isInvalid={!isPwdMatch}
                             />
@@ -426,7 +425,8 @@ const JoinInputPage = () => {
                                           required
                                           minLength={10}
                                           maxLength={11}
-                                          pattern="^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$"                                          onChange={handleChangeJoin}
+                                          onChange={handleChangeJoin}
+                                          isInvalid={!isPhoneValid}
                             />
                             <Form.Control.Feedback type="invalid">
                                 핸드폰 번호를 확인해주세요.

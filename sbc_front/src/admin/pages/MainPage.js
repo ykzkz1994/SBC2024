@@ -113,10 +113,8 @@ const MainPage = () => {
             const now = new Date();
             setCurrentTime(now.toLocaleString());
         };
-
         updateCurrentTime(); // 처음 렌더링 시 바로 시간 업데이트
         const intervalId = setInterval(updateCurrentTime, 1000); // 1초마다 업데이트
-
         return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 interval 해제
     }, []);
 

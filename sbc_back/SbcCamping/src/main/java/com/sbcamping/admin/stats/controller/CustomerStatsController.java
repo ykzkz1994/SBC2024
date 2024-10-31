@@ -1,6 +1,5 @@
 package com.sbcamping.admin.stats.controller;
 
-import com.sbcamping.admin.stats.dto.CustomerStatsReqDTO;
 import com.sbcamping.admin.stats.dto.CustomerStatsResponseDTO;
 import com.sbcamping.admin.stats.dto.ReviewStatsDTO;
 import com.sbcamping.admin.stats.service.CustomerStatsService;

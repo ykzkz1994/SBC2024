@@ -52,15 +52,13 @@ const UpdateComponent = () => {
         try {
             //수정된 데이터 처리로직
             console.log(`공지사항 업데이트 시작 (ID: ${nid})`);
-            //새 입력값을 할당
+            //새 입력값
             const updateData = {
                 nboardTitle: title,
-                nboardContent: content,
-            };
+                nboardContent: content,};
             console.log("전송 데이터:", updateData);
             await updateNotice(nid, updateData); // 업데이트 API 호출
             console.log('수정된 공지사항:', { nid, title, content });
-
             // 수정 완료 후 공지사항 목록 페이지로 이동
             navigate('/admin/notices/list');
         } catch (error) {
@@ -101,11 +99,9 @@ const UpdateComponent = () => {
                 <div className="text-right">
                     <button
                         type="submit"/*submit으로 함수처리*/
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                    >
+                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
                         수정 완료
                     </button>
-
                 </div>
             </form>
         </div>

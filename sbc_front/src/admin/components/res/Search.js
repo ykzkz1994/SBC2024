@@ -44,12 +44,12 @@ const Search = ({ searchTerm, setSearchTerm, selectedColumn, setSelectedColumn }
 
             {/* 검색어 입력 필드 */}
             <Form.Control
-                type="text" // 텍스트 입력 방식
+                type="text" // 텍스트 입력
                 value={searchTerm} // 검색어 값을 properties로 받아와 설정
                 onChange={(e) => setSearchTerm(e.target.value)} // 값이 변경되면 해당 밸류를 부모에 할당
                 placeholder="검색어를 입력하세요" //텍스트창 들어갈 입력 유도 멘트
-                className="me-2" //css-여백
-                style={{ width: '200px' }} // css-너비
+                className="me-2"
+                style={{ width: '200px' }}
             />
         </div>
     );

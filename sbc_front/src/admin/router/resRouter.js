@@ -4,7 +4,7 @@ import {Navigate} from "react-router-dom";
 //예약 페이지에서 경로를 세부 설정해주는 resRouter....
 const Loading = <div>Loading...</div>;
 const ResTotal = lazy(() => import("../pages/res/TotalPage"))
-const DateSite = lazy(() => import("../pages/res/DateSitePage"));
+const DateSite = lazy(() => import("../pages/res/ResCalendarPage"));
 
 
 

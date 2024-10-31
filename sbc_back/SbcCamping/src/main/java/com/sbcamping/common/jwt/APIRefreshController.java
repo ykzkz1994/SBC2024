@@ -29,7 +29,7 @@ public class APIRefreshController {
         String accessToken = authHeader.substring(7);
 
         // Access 토큰이 만료되지 않았다면 PASS, 기존 값 반환하고 메소드 종료
-        if(checkExpiredToken(accessToken) == false){
+        if(!checkExpiredToken(accessToken)){
             return Map.of("accessToken", accessToken, "refreshToken", refreshToken);
         }
 
