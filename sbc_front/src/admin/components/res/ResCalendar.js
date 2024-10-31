@@ -209,43 +209,43 @@ const ResCalendar = () => {
                         }).sort((a, b) => a.site.siteId - b.site.siteId) // siteId 기준 오름차순 정렬
                         : [];
 
-                    return (
-                        <div
-                            key={index}
-                            className={`h-full p-2 rounded overflow-auto ${textColor} ${borderClass} ${bgColor}`}
-                        >
-                            {/* 날짜 표시 */}
-                            <div className="flex justify-between items-center mb-1">
-                                {/* 현재 달의 날짜는 숫자로, 이전/다음 달의 날짜는 형식화된 문자열로 표시 */}
-                                <span className="font-bold text-base">{day.isCurrentMonth ? day.date : day.formatted}</span>
-                                {/* 오늘 날짜인 경우 '오늘'이라는 텍스트 표시 */}
-                                {isToday && (
-                                    <span className="text-sm text-red-500">오늘</span>
-                                )}
-                            </div>
+                  return (
+        <div
+            key={index}
+            className={`h-full p-2 rounded overflow-auto ${textColor} ${borderClass} ${bgColor}`}
+        >
+            {/* 날짜 표시 */}
+            <div className="flex justify-between items-center mb-1">
+                {/* 현재 달의 날짜는 숫자로, 이전/다음 달의 날짜는 형식화된 문자열로 표시 */}
+                <span className="font-bold text-base">{day.date}</span>
+                {/* 오늘 날짜인 경우 '오늘'이라는 텍스트 표시 */}
+                {isToday && (
+                    <span className="text-sm text-red-500">오늘</span>
+                )}
+            </div>
 
-                            {/* 예약 정보 표시 */}
-                            <div className="mt-1">
-                                {reservationsForDay.length > 0 ? (
-                                    reservationsForDay.map((reservation, resIndex) => (
-                                        <div
-                                            key={resIndex}
-                                            className="text-sm text-red-600 cursor-pointer hover:bg-gray-200 p-1 rounded"
-                                            //클릭시 모달창의 상태를 True로, reservation으로 선택한 예약 상태값 변환
-                                            onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
-                                        >
-                                           {/* 예약 상태가 '예약취소'가 아닌 경우에만 구역명을 출력 */}
-{reservation.resStatus !== '예약취소' && reservation.site.siteName}
-
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-sm text-blue-400">예약 없음</div>
-                                )}
+            {/* 예약 정보는 현재 달의 날짜에만 표시 */}
+            {day.isCurrentMonth && (
+                <div className="mt-1">
+                    {reservationsForDay.length > 0 ? (
+                        reservationsForDay.map((reservation, resIndex) => (
+                            <div
+                                key={resIndex}
+                                className="text-sm text-red-600 cursor-pointer hover:bg-gray-200 p-1 rounded"
+                                onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
+                            >
+                                {/* 예약 상태가 '예약취소'가 아닌 경우에만 구역명을 출력 */}
+                                {reservation.resStatus !== '예약취소' && reservation.site.siteName}
                             </div>
-                        </div>
-                    );
-                })}
+                        ))
+                    ) : (
+                        <div className="text-sm text-blue-400">예약 없음</div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+})}
             </div>
 
             {/* 예약 정보 모달 */}
