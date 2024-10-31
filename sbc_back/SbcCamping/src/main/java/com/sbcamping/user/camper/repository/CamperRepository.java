@@ -10,8 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CamperRepository extends JpaRepository<CamperBoard, Long> {
-    @Query("SELECT c FROM CamperBoard c WHERE c.cBoardTitle LIKE %:keyword% OR c.cBoardContent LIKE %:keyword%")
-    List<CamperBoard> findByKeyword(@Param("keyword") String keyword);
 
     @Query("select c from CamperBoard c order by c.cBoardID desc")
     Page<CamperBoard> orderdList(Pageable pageable);
