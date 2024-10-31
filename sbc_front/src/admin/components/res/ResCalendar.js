@@ -196,12 +196,6 @@ const ResCalendar = () => {
                     // 해당 날짜의 예약들 필터링
                     const reservationsForDay = cellDate
                         ? reservations.filter(reservation => {
-                            // reservation.resDate는 LocalDate 형식이므로 'YYYY-MM-DD' 형태로 변환되어 있다고 가정
-                            // 만약 reservation.resDate가 Date 객체라면, 다음과 같이 변환할 수 있습니다:
-                            // const resDate = new Date(reservation.resDate);
-                            // return resDate.getFullYear() === currentDate.getFullYear() &&
-                            //        (resDate.getMonth() + 1) === (currentDate.getMonth() + 1) &&
-                            //        resDate.getDate() === day.date;
                             return (
                                 new Date(reservation.checkinDate) <= new Date(cellDate) &&
                                 new Date(reservation.checkoutDate) > new Date(cellDate)
@@ -247,7 +241,6 @@ const ResCalendar = () => {
     );
 })}
             </div>
-
             {/* 예약 정보 모달 */}
             <div className="modal fade" ref={modalRef} tabIndex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -269,14 +262,12 @@ const ResCalendar = () => {
                                     <p><strong>예약 날짜:</strong> {selectRes.resDate}</p>
                                     <p><strong>입실 날짜:</strong> {selectRes.checkinDate}</p>
                                     <p><strong>퇴실 날짜:</strong> {selectRes.checkoutDate}</p>
-                                    {/* 숙박일수를 계산하여 출력 */}
-                                    <p>
+                                    <p> {/* 숙박일수를 계산하여 출력 */}
                                         <strong>숙박 일수:</strong>
                                         <span className="text-red-600 font-bold">
                                             {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24))}박&nbsp;
                                             {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24)) + 1}일
-                                        </span>
-                                    </p>
+                                        </span></p>
                                     <p><strong>예약 상태:</strong> {selectRes.resStatus}</p>
                                     <p><strong>결제 금액:</strong> {selectRes.resTotalPay}</p>
                                     <p><strong>취소 날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : 'N/A'}</p>
