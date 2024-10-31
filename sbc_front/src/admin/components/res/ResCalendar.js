@@ -196,12 +196,6 @@ const ResCalendar = () => {
                     // 해당 날짜의 예약들 필터링
                     const reservationsForDay = cellDate
                         ? reservations.filter(reservation => {
-                            // reservation.resDate는 LocalDate 형식이므로 'YYYY-MM-DD' 형태로 변환되어 있다고 가정
-                            // 만약 reservation.resDate가 Date 객체라면, 다음과 같이 변환할 수 있습니다:
-                            // const resDate = new Date(reservation.resDate);
-                            // return resDate.getFullYear() === currentDate.getFullYear() &&
-                            //        (resDate.getMonth() + 1) === (currentDate.getMonth() + 1) &&
-                            //        resDate.getDate() === day.date;
                             return (
                                 new Date(reservation.checkinDate) <= new Date(cellDate) &&
                                 new Date(reservation.checkoutDate) > new Date(cellDate)
@@ -209,44 +203,44 @@ const ResCalendar = () => {
                         }).sort((a, b) => a.site.siteId - b.site.siteId) // siteId 기준 오름차순 정렬
                         : [];
 
-                    return (
-                        <div
-                            key={index}
-                            className={`h-full p-2 rounded overflow-auto ${textColor} ${borderClass} ${bgColor}`}
-                        >
-                            {/* 날짜 표시 */}
-                            <div className="flex justify-between items-center mb-1">
-                                {/* 현재 달의 날짜는 숫자로, 이전/다음 달의 날짜는 형식화된 문자열로 표시 */}
-                                <span className="font-bold text-base">{day.isCurrentMonth ? day.date : day.formatted}</span>
-                                {/* 오늘 날짜인 경우 '오늘'이라는 텍스트 표시 */}
-                                {isToday && (
-                                    <span className="text-sm text-red-500">오늘</span>
-                                )}
-                            </div>
-
-                            {/* 예약 정보 표시 */}
-                            <div className="mt-1">
-                                {reservationsForDay.length > 0 ? (
-                                    reservationsForDay.map((reservation, resIndex) => (
-                                        <div
-                                            key={resIndex}
-                                            className="text-sm text-red-600 cursor-pointer hover:bg-gray-200 p-1 rounded"
-                                            //클릭시 모달창의 상태를 True로, reservation으로 선택한 예약 상태값 변환
-                                            onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
-                                        >
-                                            {/*구역명 출력*/}
-                                            {reservation.site.siteName}
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-sm text-blue-400">예약 없음</div>
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
+                  return (
+        <div
+            key={index}
+            className={`h-full p-2 rounded overflow-auto ${textColor} ${borderClass} ${bgColor}`}
+        >
+            {/* 날짜 표시 */}
+            <div className="flex justify-between items-center mb-1">
+                {/* 현재 달의 날짜는 숫자로, 이전/다음 달의 날짜는 형식화된 문자열로 표시 */}
+                <span className="font-bold text-base">{day.date}</span>
+                {/* 오늘 날짜인 경우 '오늘'이라는 텍스트 표시 */}
+                {isToday && (
+                    <span className="text-sm text-red-500">오늘</span>
+                )}
             </div>
 
+            {/* 예약 정보는 현재 달의 날짜에만 표시 */}
+            {day.isCurrentMonth && (
+                <div className="mt-1">
+                    {reservationsForDay.length > 0 ? (
+                        reservationsForDay.map((reservation, resIndex) => (
+                            <div
+                                key={resIndex}
+                                className="text-sm text-red-600 cursor-pointer hover:bg-gray-200 p-1 rounded"
+                                onClick={() => { setSelectRes(reservation); setModalOpen(true); }}
+                            >
+                                {/* 예약 상태가 '예약취소'가 아닌 경우에만 구역명을 출력 */}
+                                {reservation.resStatus !== '예약취소' && reservation.site.siteName}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-sm text-blue-400">예약 없음</div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+})}
+            </div>
             {/* 예약 정보 모달 */}
             <div className="modal fade" ref={modalRef} tabIndex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
@@ -268,14 +262,12 @@ const ResCalendar = () => {
                                     <p><strong>예약 날짜:</strong> {selectRes.resDate}</p>
                                     <p><strong>입실 날짜:</strong> {selectRes.checkinDate}</p>
                                     <p><strong>퇴실 날짜:</strong> {selectRes.checkoutDate}</p>
-                                    {/* 숙박일수를 계산하여 출력 */}
-                                    <p>
+                                    <p> {/* 숙박일수를 계산하여 출력 */}
                                         <strong>숙박 일수:</strong>
                                         <span className="text-red-600 font-bold">
                                             {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24))}박&nbsp;
                                             {Math.ceil((new Date(selectRes.checkoutDate) - new Date(selectRes.checkinDate)) / (1000 * 60 * 60 * 24)) + 1}일
-                                        </span>
-                                    </p>
+                                        </span></p>
                                     <p><strong>예약 상태:</strong> {selectRes.resStatus}</p>
                                     <p><strong>결제 금액:</strong> {selectRes.resTotalPay}</p>
                                     <p><strong>취소 날짜:</strong> {selectRes.resCancelDate ? selectRes.resCancelDate : 'N/A'}</p>

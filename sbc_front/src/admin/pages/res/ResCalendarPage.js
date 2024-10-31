@@ -4,7 +4,7 @@ import ResCalendar from '../../components/res/ResCalendar'; // ResCalendar 컴�
 import { useNavigate, useLocation } from "react-router-dom"; // useNavigate는 경로 이동을, useLocation은 현재 경로 정보를 얻기 위한 훅입니다.
 import { useSelector } from 'react-redux'; // 현재 로그인 한 사용자의 권한 검증을 위해
 
-const DateSitePage = () => {
+const ResCalendarPage = () => {
     // Redux 스토어에서 loginSlice 접근
     const loginState = useSelector((state) => state.loginSlice);
     const navigate = useNavigate(); // 경로 이동 훅
@@ -23,7 +23,7 @@ const DateSitePage = () => {
 
 
     // 디버깅 확인용 로그
-    console.log("DateSitePage 로드 됐다!!!!");
+    console.log("ResCalendarPage 로드 됐다!!!!");
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -34,9 +34,9 @@ const DateSitePage = () => {
 
                 {/* 예약 상태 안내문구 우정렬*/}
                 <div className="mb-4 text-right">
-                    <span className="text-red-500 font-bold">빨간색</span> - 예약이 완료된 구역&nbsp;&nbsp;
+                    <span className="text-red-500 font-bold">빨간색</span> - 예약 완료
                     <br/>
-                    <span className="text-blue-500">파란색</span> - 예약된 내역이 없는 구역
+                    <span className="text-blue-500">파란색</span> - 예약 없음
                 </div>
 
                 {/* 예약달력컴포넌트 렌더링 */}
@@ -46,4 +46,4 @@ const DateSitePage = () => {
     );
 };
 
-export default DateSitePage;
+export default ResCalendarPage;
