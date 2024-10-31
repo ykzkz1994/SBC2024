@@ -45,12 +45,14 @@ const ReviewListComponent = () => {
     // 로그인 여부 확인
     const {isLogin, moveToLoginReturn} = useCustomLogin()
 
+
     // 모달 컨트롤 함수
     const handleFirstClose = () => firstSetShow(false);
 
     const handleFirstShow = () => {
         if (!isLogin) {
             alert("로그인을 하시고 이용해주세요")
+            navigate("/login")
             return;
         }
         firstSetShow(true);
@@ -136,15 +138,15 @@ const ReviewListComponent = () => {
             <Table bordered hover responsive className="text-sm-center">
                 <thead>
                 <tr>
-                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>NO</th>
-                    <th style={{ width: '50%', backgroundColor:'#537f91', color:"white" }}>제목</th>
-                    <th style={{ width: '15%', backgroundColor:'#537f91', color:"white" }}>작성자</th>
-                    <th style={{ width: '20%', backgroundColor:'#537f91', color:"white" }}>작성일</th>
+                    <th style={{width: '15%', backgroundColor: '#537f91', color: "white"}}>NO</th>
+                    <th style={{width: '50%', backgroundColor: '#537f91', color: "white"}}>제목</th>
+                    <th style={{width: '15%', backgroundColor: '#537f91', color: "white"}}>작성자</th>
+                    <th style={{width: '20%', backgroundColor: '#537f91', color: "white"}}>작성일</th>
                 </tr>
                 </thead>
                 <tbody>
                 {serverData.dtoList.map(rw => (
-                    <tr key={rw.reviewID} style={{ cursor: 'pointer' }}>
+                    <tr key={rw.reviewID} style={{cursor: 'pointer'}}>
                         <td>{rw.reviewID}</td>
                         <td onClick={() => handleReadClick(rw.reviewID)} style={{
                             display: 'flex',
@@ -164,7 +166,7 @@ const ReviewListComponent = () => {
                                         marginLeft: '4px' // 제목과 이미지 사이 간격 조정
                                     }}
                                 />
-                            ): null}
+                            ) : null}
                         </td>
                         <td>{rw.member.memberName}</td>
                         <td>{formatDate(new Date(rw.reviewDate))}</td>
@@ -174,15 +176,15 @@ const ReviewListComponent = () => {
             </Table>
 
             <div className="d-flex justify-content-center my-4">
-            <BootstrapPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
+                <BootstrapPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </div>
 
             <div className="d-flex justify-content-end mt-3 mb-20">
-            <Button onClick={handleFirstShow} className="btn btn-success">글쓰기</Button>
+                <Button onClick={handleFirstShow} className="btn btn-success">글쓰기</Button>
             </div>
 
             <Modal show={firstShow} onHide={handleFirstClose}>
@@ -192,8 +194,8 @@ const ReviewListComponent = () => {
 
                 <p style={{
                     textAlign: "center",
-                    marginBottom : "-10px"
-                }}>구역을 사용하신 경우에만 예약내역이 표시가 됩니다.</p>
+                    marginBottom: "-10px"
+                }}>퇴실하신 경우에만 예약내역이 표시가 됩니다.</p>
 
                 <Modal.Body>
                     <Table bordered hover responsive className="text-sm-center">
@@ -206,28 +208,30 @@ const ReviewListComponent = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {resData.length === 0 ? (
+                        {resData.length === 0 && (
                             <tr>
                                 <td colSpan={4}>예약내역이 존재하지 않습니다</td>
                             </tr>
-                        ) : (
-                            resData.map(res => (
-                                res.resReview === "N" && res.resStatus === "사용완료" ? (
-                                    <tr key={res.resId}>
-                                        <td onClick={() => handleAddClick(res)}>{res.resId}</td>
-                                        <td>{res.checkoutDate}</td>
-                                        <td>{res.resUserName}</td>
-                                        <td>{res.site.siteName}</td>
-                                    </tr>
-                                ) : null
-
+                        )}
+                        {resData.filter(res => res.resReview === "N" && res.resStatus === "사용완료").length > 0 ? (
+                            resData.filter(res => res.resReview === "N" && res.resStatus === "사용완료").map(res => (
+                                <tr key={res.resId}>
+                                    <td onClick={() => handleAddClick(res)}>{res.resId}</td>
+                                    <td>{res.checkoutDate}</td>
+                                    <td>{res.resUserName}</td>
+                                    <td>{res.site.siteName}</td>
+                                </tr>
                             ))
+                        ) : (
+                            <tr>
+                                <td colSpan={4}>예약 내역이 존재하지 않습니다</td>
+                            </tr>
                         )}
                         </tbody>
                     </Table>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" >
+                    <Button variant="primary">
                         글쓰기
                     </Button>
                     <Button variant="secondary" onClick={handleFirstClose}>

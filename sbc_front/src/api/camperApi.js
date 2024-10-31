@@ -52,7 +52,7 @@ export const postAdd = async (formData) => {
     headers: { "Content-Type": "multipart/form-data" },
   };
 
-  const res = await axios.post(`${prefix}/`, formData, header);
+  const res = await jwtAxios.post(`${prefix}/`, formData, header);
 
   console.log(res);
   return res.data;
@@ -68,7 +68,7 @@ export const deleteOne = async (cBoardId) => {
 // API 호출을 위한 putOne 함수
 export const putOne = async (cBoardId, formdata) => {
   try {
-    const res = await jwtAxios.put(`${prefix}/${cBoardId}`, formdata, {
+    const res = await axios.put(`${prefix}/${cBoardId}`, formdata, {
       headers: {
         "Content-Type": "multipart/form-data",
         "Authorization": `Bearer ${accessToken}`,

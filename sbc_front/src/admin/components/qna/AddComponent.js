@@ -39,6 +39,8 @@ function QnaForm() {
     const handleSubmit = async (e) => {
         e.preventDefault(); // 기본 제출 방지
 
+
+
         const formData = new FormData();
         formData.append("qBoardTitle", qna.qBoardTitle);
         formData.append("qBoardContent", qna.qBoardContent);
