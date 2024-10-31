@@ -52,33 +52,23 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         if (file == null) {
             return null;
         }
-
         String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path savePath = Paths.get(uploadPath, savedName);
-
-
         if(!uploadPath.isEmpty()){
             log.info("업로드 경로================================:{}", uploadPath);
-
             try {
                 Files.copy(file.getInputStream(), savePath);
                 String contentType = file.getContentType();
-
                 // 이미지 여부 확인
                 if (contentType != null && contentType.startsWith("image")) {
                     Path thumbnailPath = Paths.get(uploadPath,"s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
                     Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
                 }
-
-
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-
             return savedName;
-
         }
-
        return null;
     }
 

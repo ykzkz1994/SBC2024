@@ -105,6 +105,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.equals("/api/campers/list")) {
             return true;
         }
+        //캠퍼리스트 검색
+        if (path.equals("/api/campers/search")) {
+            return true;
+        }
 
         // 캠퍼리스트 상세
         if (path.matches("^/api/campers/\\d+$")) {
