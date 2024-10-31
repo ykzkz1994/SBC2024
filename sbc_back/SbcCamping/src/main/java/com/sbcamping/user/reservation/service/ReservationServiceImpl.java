@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
         log.info("MemberId: ", memberId);
         log.info("SiteId: ", siteId);
 
-        // 예약번호를 생성해서 만들어야되는데 어케하지? 날짜+01 .. 02 .. 03
+        // 예약번호를 생성해서 만듬
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 

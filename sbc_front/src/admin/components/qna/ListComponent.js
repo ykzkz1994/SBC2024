@@ -8,6 +8,7 @@ import useCustomMove from '../../../hooks/useCustomMove';
 import fileImage from "../../../images/fileAttatchment.png";
 import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
+import useCustomLogin from "../../../hooks/useCustomLogin";
 
 const initState = {
     dtoList: [],
@@ -32,6 +33,9 @@ function ListComponent(props) {
     const loginState = useSelector((state) => state.loginSlice);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+
+    // 로그인 여부 확인
+    const {isLogin, moveToLoginReturn} = useCustomLogin()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,6 +83,12 @@ function ListComponent(props) {
     };
 
     const handleAddClick = () => {
+        if (!isLogin) {
+            alert("로그인을 하시고 이용해주세요")
+            navigate("/login")
+            return;
+        }
+
         if (loginState.member?.memberRole === "ROLE_ADMIN") {
             navigate('/admin/qnas/add');
         } else {

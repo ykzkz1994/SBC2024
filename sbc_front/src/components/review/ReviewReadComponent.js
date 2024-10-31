@@ -174,7 +174,7 @@ const ReviewReadComponent = () => {
                     목록으로
                 </button>
                 {/* 수정하기 삭제하기 자기 자신만 보이게 하기*/}
-                {loginState.member.memberId === reviewBoard.member.memberID && (
+                {(loginState.member.memberId === reviewBoard.member.memberID || loginState.member.memberRole === "ROLE_ADMIN") && (
                     <>
                         <button
                             onClick={() => handleModifyClick(reviewBoard.reviewID)}

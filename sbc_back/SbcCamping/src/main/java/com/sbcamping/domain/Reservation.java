@@ -17,7 +17,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class Reservation {
 
-
     @Id
     @Column(name = "RES_ID", nullable = false, length = 10)
     private String resId; // 예약 번호

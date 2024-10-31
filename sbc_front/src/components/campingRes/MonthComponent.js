@@ -26,7 +26,7 @@ const MonthComponent = () => {
 
     const loginState = useSelector((state) => state.loginSlice)
 
-    // 달력 만드는 함수 (테스트)
+    // 달력 만드는 함수
     // 요일
     const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -50,7 +50,7 @@ const MonthComponent = () => {
         const weeks = [];
         let date = 1;
 
-        for (let i = 0; i < 5; i++) { // 최대 6주
+        for (let i = 0; i < 5; i++) { // 최대 5주
             const week = [];
 
             for (let j = 0; j < 7; j++) {
@@ -197,7 +197,6 @@ const MonthComponent = () => {
                                 return date.toISOString().split('T')[0]
                             })
 
-                            // 이거 배껴서 true 나오면 이미 예약되어있다고 막아버리면 될듯
                             const filterCheck = (siteId, date) => {
 
                                 const filterData = resCheckData.filter((item, index) =>

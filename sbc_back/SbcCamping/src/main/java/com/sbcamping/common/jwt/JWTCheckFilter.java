@@ -49,10 +49,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             if (authorities != null && !authorities.isEmpty()) {
                 // 첫 번째 권한의 authority 값 추출
                 memberRole = (String) authorities.get(0).get("authority");
-            } else if(role != null){
+            } else if (role != null) {
                 memberRole = role;
-            }
-            else {
+            } else {
                 throw new RuntimeException("권한 정보가 없습니다.");
             }
             Long memberId = (Long) claims.get("memberId");
@@ -67,7 +66,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             // 사용자의 인증 상태 저장 (인증 완료)
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("------------------JWT 체크 오류 : {}", e.getMessage());
             Gson gson = new Gson();
             String msg = gson.toJson(Map.of("error", "ERROR_ACCESS_TOKEN"));
@@ -83,7 +82,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         // preflight 요청은 체크하지 않음
         // preflight 란 CORS 상황에서 보안을 확인하기 위해 브라우저가 제공하는 기능
-        if(request.getMethod().equals("OPTIONS")){
+        if (request.getMethod().equals("OPTIONS")) {
             return true;
         }
 
@@ -92,21 +91,22 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         log.info("URL CHECK : {}", path);
 
         // api/auth/ 경로의 호출은 체크하지 않음 (로그인 요청할 때는 JWT 토큰이 없는 상태이기에 하는 설정)
-        if(path.startsWith("/api/auth")){
+        if (path.startsWith("/api/auth")) {
             return true;
         }
 
         // 회원가입 요청 경로 예외
-        if(path.equals("/api/member/")){
+        if (path.equals("/api/member/")) {
+            return true;
+        }
+
+        // 캠퍼 검색
+        if (path.equals("/api/campers/search")) {
             return true;
         }
 
         // 캠퍼리스트
         if (path.equals("/api/campers/list")) {
-            return true;
-        }
-        //캠퍼리스트 검색
-        if (path.equals("/api/campers/search")) {
             return true;
         }
 
@@ -117,6 +117,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         // 캠퍼리스트 댓글 목록
         if (path.matches("^/api/campers/comments/\\d+$")) {
+            return true;
+        }
+
+        // 리뷰 게시판 검색
+        if (path.equals("/api/review/search")) {
             return true;
         }
 
@@ -146,21 +151,26 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         //공지리스트 비회원도 볼 수 있게끔
-        if(path.equals("/notices/list")){
+        if (path.equals("/notices/list")) {
             return true;
         }
         //공지리스트 비회원도 볼 수 있게끔
-        if(path.equals("/admin/notices/list")){
+        if (path.equals("/admin/notices/list")) {
             return true;
         }
 
         //공지 내용 비회원도 볼 수 있게끔
-          if(path.startsWith("/notices/read/")){
+        if (path.startsWith("/notices/read/")) {
             return true;
         }
 
         //공지 내용 비회원도 볼 수 있게끔
-        if(path.startsWith("/admin/notices/read/")){
+        if (path.startsWith("/admin/notices/read/")) {
+            return true;
+        }
+
+        // 문의 게시판 검색
+        if (path.equals("/admin/qnas/search")) {
             return true;
         }
 
@@ -185,7 +195,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         }
 
         // 파이썬 이미지 분석
-        if (path.equals("/java_service")){
+        if (path.equals("/java_service")) {
             return true;
         }
 
