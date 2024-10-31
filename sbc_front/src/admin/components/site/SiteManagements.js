@@ -19,15 +19,12 @@ const SiteManagements = () => {
     // 사이트 전체 정보 목록을 저장하는 변수
     const [sites, setSites] = useState([]);
 
-    // 수정 모달 창(1)의 표시 여부를 관리하는 변수
+    // 수정 모달 창(1)의 표시 여부를 관리하는 상태변수
     const [firstModal, setFirstModal] = useState(false);
-
     // 현재 선택된 구역의 정보를 저장하는 변수
     const [selectedSite, setSelectedSite] = useState(null);
-
-    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 변수
+    // 모달 창에서 수정된 새로운 값을 임시로 저장하는 상태 변수
     const [newSiteValue, setNewSiteValue] = useState({});
-
     // 수정 확인 기능을 하는 두 번째 모달 창의 표시 여부를 관리하는 변수
     const [secondModal, setSecondModal] = useState(false);
 
@@ -81,8 +78,7 @@ const SiteManagements = () => {
             setError('기준 인원은 최대 인원보다 클 수 없습니다.');
             return; // 검증 실패 시 함수 종료
         }
-        // 추가적인 검증 로직을 여기에 추가할 수 있습니다.
-
+        // 추가적인 검증 로직을 여기에 추가하면 됨
         setFirstModal(false); // 수정 모달 창을 숨김
         setSecondModal(true); // 수정 확인 모달 창을 표시
     };
@@ -135,7 +131,6 @@ const SiteManagements = () => {
             setError('수정할 사이트를 선택해주세요.');
             return;
         }
-
         try {
             // updateSiteData API 호출
             const updatedSite = await updateSiteData(selectedSite.siteId, newSiteValue);
@@ -143,15 +138,13 @@ const SiteManagements = () => {
             // 로컬 상태 업데이트
             setSites((prevSites) =>
                 prevSites.map((site) =>
-                    site.siteId === selectedSite.siteId ? {...site, ...updatedSite} : site
-                )
-            );
+                    site.siteId === selectedSite.siteId ? {...site, ...updatedSite} : site));
             setSecondModal(false); // 수정 확인 모달 창을 숨김
             setSelectedSite(null); // 선택된 구역 정보 초기화
             setNewSiteValue({}); // 수정된 값 초기화
             setError(''); // 에러 메시지 초기화
             alert("수정 성공");
-            //비동기식으로 정보를 다시 불러옴
+            //비동기식으로 정보를 다시 불러옴=새로고침과 유사한 경험을 위해
             await settingSites();
         } catch (error) {
             console.error('수정에 실패했습니다:', error);
@@ -208,7 +201,6 @@ const SiteManagements = () => {
                                     수정하기
                                 </Button>
                             </td>
-
                         </tr>
                     ))
                 ) : (
@@ -252,9 +244,7 @@ const SiteManagements = () => {
                                     maxLength={10} // 최대 10글자 제한
                                 />
                             </Form.Group>
-
                             <br/>
-
                             {/* **예약 제한 라디오 버튼** */}
                             <Form.Group className="mb-3">
                                 <Form.Label>예약 제한</Form.Label> {/*챠 1 - Y=예약 불가 ,N= 예약 가능*/}
@@ -319,7 +309,6 @@ const SiteManagements = () => {
                                     max={maxLimitPeople} // 최대값 설정
                                 />
                             </Form.Group>
-
                             {/* **평일 요금 입력 필드** */}
                             <Form.Group className="mb-3">
                                 <Form.Label>평일 요금</Form.Label>

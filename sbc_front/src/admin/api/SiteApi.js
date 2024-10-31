@@ -72,7 +72,6 @@ export const getSiteData = async (id) => {
 //update객체를 외부 컴포넌트에서 호출해서 값을 할당해서  axiosInstace로 put방식으로 값을 변경
 export const updateSiteData = async (id, updateData) => {
 
-
     try {//성공시 put방식 저장
         await axiosInstance.put(`/${id}`, updateData);
         console.log(updateData)

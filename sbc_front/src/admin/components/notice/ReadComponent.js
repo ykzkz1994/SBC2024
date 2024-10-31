@@ -65,10 +65,6 @@ const ReadComponent = () => {
 
     //pk로 로우를 삭제하는 함수
     const handleDeleteClick = async (nid) => {
-
-
-
-
         if (window.confirm("정말 삭제하시겠습니까?")) {   //삭제전에 창을 띄워 오클릭을 방지함
             try {
                 //비동기식으로 삭제로직 처리
@@ -124,8 +120,7 @@ const ReadComponent = () => {
             <div className="text-right space-x-2">
                 <button
                     onClick={handleBackToListClick}
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-                >
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">
                     목록으로
                 </button>
 
