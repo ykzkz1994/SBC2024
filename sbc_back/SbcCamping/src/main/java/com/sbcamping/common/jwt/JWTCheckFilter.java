@@ -109,10 +109,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.equals("/api/campers/list")) {
             return true;
         }
-        //캠퍼리스트 검색
-        if (path.equals("/api/campers/search")) {
-            return true;
-        }
 
         // 캠퍼리스트 상세
         if (path.matches("^/api/campers/\\d+$")) {
@@ -175,7 +171,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         // 문의 게시판 검색
         if (path.equals("/admin/qnas/search")) {
-
+            return true;
         }
 
         // qna list
@@ -205,7 +201,6 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
         // 분실물
         if (path.startsWith("/api/lost")){
-
             return true;
         }
 
