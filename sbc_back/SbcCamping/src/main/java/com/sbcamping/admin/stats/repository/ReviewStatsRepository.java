@@ -13,7 +13,7 @@ public interface ReviewStatsRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r " +
             "JOIN r.reservation res " +
             "WHERE r.reviewDate BETWEEN :startDate AND :endDate " +
-            "AND (:siteId IS NULL OR res.site.siteId = :siteId)") // Reservation 엔티티에 siteId 필드가 있다고 가정
+            "AND (:siteId IS NULL OR res.site.siteId = :siteId)")
     List<Review> findReviewsByDateRangeAndSiteId(@Param("startDate") LocalDate startDate,
                                                  @Param("endDate") LocalDate endDate,
                                                  @Param("siteId") Long siteId);

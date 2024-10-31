@@ -144,9 +144,7 @@ function ReadComponent() {
                     onClick={handleBackToListClick}
                     className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
                 >
-                    목록으로
-                </button>
-
+                    목록으로</button>
                 {loginState.member.memberRole === "ROLE_ADMIN" && (
                     <>
                         {/* 관리자는 항상 삭제 버튼을 볼 수 있고, 수정 버튼은 자신이 쓴 글만 */}
@@ -155,32 +153,27 @@ function ReadComponent() {
                                 onClick={() => handleModifyClick(qboard.qboardID)}
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                             >
-                                수정하기
-                            </button>
+                                수정하기</button>
                         )}
                         <button
                             onClick={() => handleDeleteClick(qboard.qboardID)}
                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
                         >
-                            삭제하기
-                        </button>
+                            삭제하기</button>
                     </>
                 )}
-
                 {loginState.member.memberRole !== "ROLE_ADMIN" && loginState.member.memberId === qboard.member.memberID && (
                     <>
                         <button
                             onClick={() => handleModifyClick(qboard.qboardID)}
                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
                         >
-                            수정하기
-                        </button>
+                            수정하기</button>
                         <button
                             onClick={() => handleDeleteClick(qboard.qboardID)}
                             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
                         >
-                            삭제하기
-                        </button>
+                            삭제하기</button>
                     </>
                 )}
             </div>

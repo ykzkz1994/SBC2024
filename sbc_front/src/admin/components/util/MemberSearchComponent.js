@@ -39,7 +39,6 @@ function MemberSearchComponent({ onSearch }) {
                 alert('회원명 전체 또는 일부를 입력하세요.');
                 return; // 검색 실행을 중단
             }
-
             const koreanRegex = /^[가-힣]+$/; // 한글만 허용하는 정규 표현식 (공백은 허용하지 않음)
             if (!koreanRegex.test(keyword)) {
                 alert('회원명은 한글만 입력 가능합니다.');
@@ -52,7 +51,6 @@ function MemberSearchComponent({ onSearch }) {
             alert('이메일 전체 또는 일부를 입력하세요.');
             return; // 검색 실행을 중단
         }
-
         // keyword가 공백인 경우 전체 목록 조회
         if (keyword.trim() === '') {
             onSearch(type, null); // 전체 목록 조회를 위해 null 또는 '' 전달

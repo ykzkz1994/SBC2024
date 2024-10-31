@@ -61,7 +61,7 @@ public class QnaController {
 
     // 4. 수정 (Update)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-    @PutMapping("/{qbID}")
+    @PutMapping("/mod/{qbID}")
     public Map<String, String> modify(@PathVariable("qbID") Long qbID, QnaReqDTO qnaDTO) {
         QnaDTO oldQnaDTO = qnaService.get(qbID);
         if (oldQnaDTO == null) {
@@ -86,15 +86,13 @@ public class QnaController {
                 }
             }
         }
-
         qnaService.modify(qnaDTO);
         return Map.of("RESULT", "SUCCESS");
     }
 
-
     // 5. 삭제 (Delete)
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
-    @DeleteMapping("/{qbID}")
+    @DeleteMapping("/del/{qbID}")
     @Transactional
     public Map<String, String> remove(@PathVariable("qbID") Long qbID) {
         try {
