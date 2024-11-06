@@ -113,10 +113,8 @@ const MainPage = () => {
             const now = new Date();
             setCurrentTime(now.toLocaleString());
         };
-
         updateCurrentTime(); // 처음 렌더링 시 바로 시간 업데이트
         const intervalId = setInterval(updateCurrentTime, 1000); // 1초마다 업데이트
-
         return () => clearInterval(intervalId); // 컴포넌트 언마운트 시 interval 해제
     }, []);
 
@@ -202,10 +200,11 @@ const MainPage = () => {
                         <div className="card-container">
                             <div className="card rounded-3 shadow">
                                 <div className="card-body text-center">
-                                    <h4 className="card-title mb-3">당월 등록 분실물</h4>
+                                    <h4 className="card-title mb-3">현재 등록 분실물</h4>
                                     <div className="mt-3 p-3 bg-light rounded">
                                         <div className="stats-number">
-                                            <span className="number">0</span>
+                                            {/* 분실물 갯수 API 호출 넣어야함 2024-10-30 */}
+                                            <span className="number">10</span>
                                             <span className="unit">개</span>
                                         </div>
                                     </div>

@@ -67,7 +67,6 @@ const Respage = () => {
 
     // check 상태를 동적으로 변경
     const checkRef = useRef();
-    const [isChecked, setIsChecked] = useState(false);
 
     // 모달 false true 함수
     const firstShowClose = () => firstSetShow(false);
@@ -175,10 +174,6 @@ const Respage = () => {
     };
 
     const handleCheckChange = () => {
-        if (checkRef.current) {
-            // IsChecked 상태 변경
-            setIsChecked(checkRef.current.checked);
-
             // 체크가 되면 사용자 명을 memberName으로 설정
             if (checkRef.current.checked) {
                 setRes((prevState) => ({
@@ -193,7 +188,6 @@ const Respage = () => {
                     resUserPhone: '',
                 }))
             }
-        }
     }
 
     const resFilter = (siteId, checkinDate, checkoutDate) => {

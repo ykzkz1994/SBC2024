@@ -46,39 +46,28 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
 
     }
 
-
     // 파일 업로드 작업
     public String saveFile(MultipartFile file) throws RuntimeException {
         if (file == null) {
             return null;
         }
-
         String savedName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
         Path savePath = Paths.get(uploadPath, savedName);
-
-
         if(!uploadPath.isEmpty()){
             log.info("업로드 경로================================:{}", uploadPath);
-
             try {
                 Files.copy(file.getInputStream(), savePath);
                 String contentType = file.getContentType();
-
                 // 이미지 여부 확인
                 if (contentType != null && contentType.startsWith("image")) {
                     Path thumbnailPath = Paths.get(uploadPath,"s_"+savedName);  // 's_'로 시작되는 썸네일 파일 함께 생성
                     Thumbnails.of(savePath.toFile()).size(200,200).toFile(thumbnailPath.toFile());
                 }
-
-
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
-
             return savedName;
-
         }
-
        return null;
     }
 
@@ -97,9 +86,7 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
             log.warn("파일을 찾을 수 없거나 읽을 수 없습니다: {}", fileName);
             return ResponseEntity.notFound().build();
         }
-
         HttpHeaders headers = new HttpHeaders();
-
         try {
             // Content-Type 설정
             String contentType = Files.probeContentType(resource.getFile().toPath());
@@ -108,7 +95,6 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
             log.error("파일 타입 확인 중 오류 발생: {}", fileName, e);
             return ResponseEntity.internalServerError().build();
         }
-
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
@@ -124,7 +110,6 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         Path filePath = Paths.get(uploadPath, fileName);
         log.info(filePath.toString());
         try {
-
             Files.deleteIfExists(filePath);
             log.info("원본 파일 삭제");
             Files.deleteIfExists(thumbnailPath);
@@ -132,6 +117,5 @@ public class CustomFileUtil {  // 파일 데이터 입출력 담당 util
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 }

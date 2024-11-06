@@ -2,8 +2,10 @@ package com.sbcamping.user.member.service;
 
 import com.sbcamping.domain.Member;
 import com.sbcamping.domain.Reservation;
+import com.sbcamping.domain.Review;
 import com.sbcamping.user.member.repository.MemberRepository;
 import com.sbcamping.user.reservation.repository.ReservationRepository;
+import com.sbcamping.user.review.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -25,7 +25,19 @@ public class MemberServiceImpl implements MemberService {
 
     private final ReservationRepository reservationRepository;
 
+    private final ReviewRepository reviewRepository;
+
     private final PasswordEncoder passwordEncoder;
+
+    // 예약번호로 리뷰 글 번호 가져오기
+    @Override
+    public Map<String, Long> getReviewNo(Long resID) {
+        Review re = reviewRepository.findByResId(resID);
+        Long reviewId = re.getReviewID();
+        Map<String, Long> map = new HashMap<>();
+        map.put("reviewId", reviewId);
+        return map;
+    }
 
     // 회원 비활동 처리(탈퇴)
     @Override

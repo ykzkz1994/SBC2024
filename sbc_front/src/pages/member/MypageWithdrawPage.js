@@ -81,7 +81,7 @@ const MypageWithdrawPage = () => {
     return (
         <>
             <div style={{marginTop: '30px'}}>
-                <h3>회원 인증</h3>
+                <h3>회원 탈퇴</h3>
                 <hr></hr>
             </div>
             <div id="loginwrap">

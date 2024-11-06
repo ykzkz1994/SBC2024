@@ -1,6 +1,5 @@
 package com.sbcamping.admin.stats.controller;
 
-
 import com.sbcamping.admin.stats.dto.CustomerStatsResponseDTO;
 import com.sbcamping.admin.stats.dto.ReviewStatsDTO;
 import com.sbcamping.admin.stats.service.CustomerStatsService;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor

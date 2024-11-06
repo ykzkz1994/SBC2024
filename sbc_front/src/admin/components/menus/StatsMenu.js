@@ -1,4 +1,4 @@
-import '../../css/menu.css';
+import '../../../admin/css/menu.css'
 import { Link } from "react-router-dom"
 
 var div2 = document.getElementsByClassName("menubutton");

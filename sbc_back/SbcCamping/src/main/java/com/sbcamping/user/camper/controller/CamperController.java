@@ -23,6 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/campers")
 public class CamperController {
     private final CamperService camperService;
+
     private final CustomFileUtil fileUtil;
 
     /**
@@ -60,18 +61,7 @@ public class CamperController {
             @RequestHeader("X-Refresh-Token") String refreshToken,
             @PathVariable("id") Long id, CamperBoardReqDTO camperDTO
     ) {
-//        if (!camperService.isBoardAuth(auth, refreshToken, camperBoardDTO.getCBoardID())) {
-//            return Map.of("res", "F", "code", "403");
-//        }
-//
-//        MultipartFile file = camperBoardDTO.getFile();
-//        String uploadFileName = fileUtil.saveFile(file);
-//        camperBoardDTO.setCBoardAttachment(uploadFileName);
-//
-//        camperBoardDTO.setCBoardID(id);
-//        camperService.modify(camperBoardDTO);
-//
-//        return Map.of("res", "S");
+
         log.info("modify....", id);
 
         CamperBoardDTO oldCamperDTO = camperService.get(id);
